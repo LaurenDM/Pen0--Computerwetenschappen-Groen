@@ -5,6 +5,7 @@ public class HelloWorld {
 		System.out.println("Hello World");
         System.out.println("New thing");
         System.out.println("Nog eens nieuw! Het werkt echt wel! ;) ");
+        System.out.println("dit is nu eens een testje van mij :p");
 	}
 	
 }
