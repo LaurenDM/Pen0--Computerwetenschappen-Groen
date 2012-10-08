@@ -1,12 +1,15 @@
+import lejos.robotics.localization.OdometryPoseProvider;
+
 
 public class Position {
-private int x;
-private int y;
-private int angle;
-public int getX(){
-	return x;}
-public int getY(){
-	return y;}
-public int getAngle(){
-	return angle;}
+	private OdometryPoseProvider OPP;
+	public Position(OdometryPoseProvider OPP){
+		this.OPP=OPP;
+	}
+public float getX(){
+	return OPP.getPose().getX();}
+public float getY(){
+	return  OPP.getPose().getY();}
+public float getAngle(){
+	return  OPP.getPose().getHeading();}
 }
