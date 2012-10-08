@@ -1,6 +1,4 @@
 import lejos.robotics.localization.OdometryPoseProvider;
-
-
 public class Position {
 	private OdometryPoseProvider OPP;
 	public Position(OdometryPoseProvider OPP){
