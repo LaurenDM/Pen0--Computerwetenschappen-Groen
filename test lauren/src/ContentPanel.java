@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -15,7 +16,7 @@ public class ContentPanel implements ActionListener {
 	
 	static JFrame frame = new JFrame("P&O - Groen");
     static JFrame variableFrame = new JFrame("P&O - Groen - Variables");
-    JPanel titlePanel,titlePanel2, buttonPanel, inputPanel, drawingPanel, variablePanel;
+    JPanel titlePanel,titlePanel2, buttonPanel, inputPanel, variablePanel;
     JLabel buttonLabel, actionLabel, titleLabel;
     JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton;
     final JPanel totalGUI = new JPanel();
@@ -24,6 +25,7 @@ public class ContentPanel implements ActionListener {
     static int totalYDimensions = 700;
     static int buttonXDimension = 90;
     static int buttonYDimension = 30;
+    DrawingPanel drawingPanel;
     
     public void fixPanelLayout(JPanel object, int xsize, int ysize, int xco, int yco){
     	object.setLayout(null);
@@ -193,7 +195,7 @@ public class ContentPanel implements ActionListener {
         buttonPanel.add(variableButton);
         buttonPanel.setFocusable(true);
         
-        DrawingPanel drawingPanel = new DrawingPanel();
+        drawingPanel = new DrawingPanel();
         fixPanelLayout(drawingPanel, 350, 500, 25, 50);
         drawingPanel.setBackground(Color.WHITE);
         //Graphics g = drawingPanel.getGraphics();
@@ -204,6 +206,8 @@ public class ContentPanel implements ActionListener {
         variableFrame.setContentPane(variablePanel.getContentPanel());;
         variableFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         variableFrame.setSize(400, 400);
+        
+        drawLine(100, 100, 300, 300);
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -249,4 +253,12 @@ public class ContentPanel implements ActionListener {
 	public JPanel getContentPanel(){
 		return totalGUI;
 	}
+	
+	public void drawLine(int x, int y, int z, int u){
+        Graphics g = drawingPanel.getGraphics(); 
+        g.setColor(Color.black);
+        g.drawLine(x, y, z, u);
+        drawingPanel.repaint();
+	}
+	
 }
