@@ -17,7 +17,7 @@ public class ContentPanel implements ActionListener {
 	static JFrame frame = new JFrame("P&O - Groen");
     static JFrame variableFrame = new JFrame("P&O - Groen - Variables");
     JPanel titlePanel,titlePanel2, buttonPanel, inputPanel, variablePanel;
-    JLabel buttonLabel, actionLabel, titleLabel;
+    JLabel buttonLabel, actionLabel, titleLabel, titleLabel2;
     JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
@@ -200,12 +200,18 @@ public class ContentPanel implements ActionListener {
         drawingPanel.setBackground(Color.WHITE);
         //Graphics g = drawingPanel.getGraphics();
         
+
+        
+        
         //________________________
         //Creating variable panel
         VariablePanel variablePanel = new VariablePanel();
         variableFrame.setContentPane(variablePanel.getContentPanel());;
         variableFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         variableFrame.setSize(400, 400);
+        
+        
+        
         
         drawLine(100, 100, 300, 300);
 	}
