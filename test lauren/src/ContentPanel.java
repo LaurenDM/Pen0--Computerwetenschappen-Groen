@@ -198,10 +198,6 @@ public class ContentPanel implements ActionListener {
         drawingPanel = new DrawingPanel();
         fixPanelLayout(drawingPanel, 350, 500, 25, 50);
         drawingPanel.setBackground(Color.WHITE);
-        //Graphics g = drawingPanel.getGraphics();
-        
-
-        
         
         //________________________
         //Creating variable panel
