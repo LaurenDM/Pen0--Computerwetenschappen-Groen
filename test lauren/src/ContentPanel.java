@@ -1,13 +1,27 @@
 import java.awt.Color;
+import java.awt.ScrollPane;
+import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.Element;
+import javax.swing.text.Position;
+import javax.swing.text.Segment;
 
 
 
@@ -15,9 +29,10 @@ public class ContentPanel implements ActionListener {
 	
 	static JFrame frame = new JFrame("P&O - Groen");
     static JFrame variableFrame = new JFrame("P&O - Groen - Variables");
-    JPanel titlePanel,titlePanel2, buttonPanel, inputPanel, drawingPanel, variablePanel;
-    JLabel buttonLabel, actionLabel, titleLabel;
-    JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton;
+    private JPanel titlePanel,titlePanel2, buttonPanel, inputPanel, drawingPanel, variablePanel, debugPanel;
+    private JLabel buttonLabel, actionLabel, titleLabel;
+    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton;
+    private JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
     static int totalXDimensions = 700;
@@ -193,6 +208,18 @@ public class ContentPanel implements ActionListener {
         buttonPanel.add(variableButton);
         buttonPanel.setFocusable(true);
         
+        debugPanel = new JPanel(null);
+        debugText = new JTextArea(5,22);
+        debugText.setLineWrap(true);
+        JScrollPane scrollPane = new JScrollPane(debugText);
+        debugText.setEditable(false);
+        debugPanel.add(scrollPane);
+        fixPanelLayout(debugPanel, 300, 300, 400, 50);
+        scrollPane.setLocation(0, 0);
+        scrollPane.setSize(250,200);
+        writeToDebug("Program started successfully");
+        
+        
         DrawingPanel drawingPanel = new DrawingPanel();
         fixPanelLayout(drawingPanel, 350, 500, 25, 50);
         drawingPanel.setBackground(Color.WHITE);
@@ -206,6 +233,14 @@ public class ContentPanel implements ActionListener {
         variableFrame.setSize(400, 400);
 	}
 	
+	/**
+	 * Write a line to the debugging text area.
+	 * @param text This line will appear at the bottom of the text area
+	 */
+	public void writeToDebug(String text) {
+		debugText.append(text + "\n");
+	}
+
 	public void actionPerformed(ActionEvent e) {
         if(e.getSource() == upButton){
         	actionLabel.setText("The robot is going forward!");
