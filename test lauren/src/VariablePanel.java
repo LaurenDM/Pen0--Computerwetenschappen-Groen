@@ -20,6 +20,9 @@ public class VariablePanel implements ActionListener {
 	static int buttonXDimension = 90;
 	static int buttonYDimension = 30;
 	private JButton okButton;
+	private JTextField edgeLengthIputfield;
+	private JTextField nbVerticesInputfield;
+	
 
 	public VariablePanel(JFrame surroundingFrame) {
 		if (surroundingFrame == null) {
@@ -44,16 +47,16 @@ public class VariablePanel implements ActionListener {
 		JLabel edgeLengthLabel = new JLabel("Fill in the edgelength:");
 		edgeLengthLabel.setBounds(20, 20, 200, 30);
 		titlePanel.add(edgeLengthLabel);
-		JTextField edgeLengthIputfield = new JTextField(16);
+		edgeLengthIputfield = new JTextField(16);
 		edgeLengthIputfield.setBounds(20, 50, 100, 30);
 		titlePanel.add(edgeLengthIputfield);
 
 		JLabel nBVerticesLabel = new JLabel("Fill in the number of vertices:");
 		nBVerticesLabel.setBounds(20, 80, 200, 30);
 		titlePanel.add(nBVerticesLabel);
-		JTextField nBVerticesInputfield = new JTextField(16);
-		nBVerticesInputfield.setBounds(20, 110, 100, 30);
-		titlePanel.add(nBVerticesInputfield);
+		nbVerticesInputfield = new JTextField(16);
+		nbVerticesInputfield.setBounds(20, 110, 100, 30);
+		titlePanel.add(nbVerticesInputfield);
 
 		variableGUI.setOpaque(true);
 
@@ -77,5 +80,13 @@ public class VariablePanel implements ActionListener {
 			surroundingFrame.setVisible(false);
 		}
 	}
+	
+	public int getNumberOfVertices(){
+		return Integer.parseInt(nbVerticesInputfield.getText());
+	}
+	public double getEdgeLength(){
+		return Integer.parseInt(edgeLengthIputfield.getSelectedText());
+	}
+	
 
 }
