@@ -1,44 +1,81 @@
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class VariablePanel {
-	
+public class VariablePanel implements ActionListener {
+
 	final JPanel variableGUI = new JPanel();
 	JPanel titlePanel;
 	JLabel titleLabel;
+	JFrame surroundingFrame;
 	static int totalXDimensions = 700;
-    static int totalYDimensions = 700;
-    static int buttonXDimension = 90;
-    static int buttonYDimension = 30;
-	
-	public VariablePanel() {
+	static int totalYDimensions = 700;
+	static int buttonXDimension = 90;
+	static int buttonYDimension = 30;
+	private JButton okButton;
+
+	public VariablePanel(JFrame surroundingFrame) {
+		if (surroundingFrame == null) {
+			throw new IllegalArgumentException();
+		}
+		this.surroundingFrame=surroundingFrame;
+		
 		variableGUI.setLayout(null);
-    	titlePanel = new JPanel();
-    	titlePanel.setLayout(null);
-    	titlePanel.setLocation(0, 0);
-    	titlePanel.setSize(400, 400);
-        variableGUI.add(titlePanel);
-        
-        
-        titleLabel = new JLabel("P&O - Team Groen - Variables");
-        titleLabel.setLocation(0, 0);
-        titleLabel.setSize(totalXDimensions, 30);
-        titleLabel.setHorizontalAlignment(0);
-        titleLabel.setForeground(Color.black);
-        titlePanel.add(titleLabel);
-        
-        
-        JTextField firstImputfield = new JTextField(16);
-        firstImputfield.setBounds(20, 20, 100, 30);
-        titlePanel.add(firstImputfield);
-        
-        variableGUI.setOpaque(true);
+		titlePanel = new JPanel();
+		titlePanel.setLayout(null);
+		titlePanel.setLocation(0, 0);
+		titlePanel.setSize(400, 400);
+		variableGUI.add(titlePanel);
+
+		titleLabel = new JLabel("P&O - Team Groen - Variables");
+		titleLabel.setLocation(0, 0);
+		titleLabel.setSize(400, 30);
+		titleLabel.setHorizontalAlignment(0);
+		titleLabel.setForeground(Color.black);
+		titlePanel.add(titleLabel);
+
+		JLabel edgeLengthLabel = new JLabel("Fill in the edgelength:");
+		edgeLengthLabel.setBounds(20, 20, 200, 30);
+		titlePanel.add(edgeLengthLabel);
+		JTextField edgeLengthIputfield = new JTextField(16);
+		edgeLengthIputfield.setBounds(20, 50, 100, 30);
+		titlePanel.add(edgeLengthIputfield);
+
+		JLabel nBVerticesLabel = new JLabel("Fill in the number of vertices:");
+		nBVerticesLabel.setBounds(20, 80, 200, 30);
+		titlePanel.add(nBVerticesLabel);
+		JTextField nBVerticesInputfield = new JTextField(16);
+		nBVerticesInputfield.setBounds(20, 110, 100, 30);
+		titlePanel.add(nBVerticesInputfield);
+
+		variableGUI.setOpaque(true);
+
+		okButton = new JButton();
+		okButton.setBounds(20, 140, 60, 30);
+		okButton.setText("OK");
+
+		okButton.addActionListener(this);
+		titlePanel.add(okButton);
 	}
-	
-	public JPanel getContentPanel(){
+
+	public JPanel getContentPanel() {
 		return variableGUI;
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == okButton) {
+			okButton.setSelected(false);
+			variableGUI.setVisible(false);
+			surroundingFrame.setVisible(false);
+		}
+	}
+
 }

@@ -201,7 +201,7 @@ public class ContentPanel implements ActionListener {
         
         //________________________
         //Creating variable panel
-        VariablePanel variablePanel = new VariablePanel();
+        VariablePanel variablePanel = new VariablePanel(variableFrame);
         variableFrame.setContentPane(variablePanel.getContentPanel());;
         variableFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         variableFrame.setSize(400, 400);
