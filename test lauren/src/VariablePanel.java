@@ -15,10 +15,8 @@ public class VariablePanel implements ActionListener {
 	JPanel titlePanel;
 	JLabel titleLabel;
 	JFrame surroundingFrame;
-	static int totalXDimensions = 700;
-	static int totalYDimensions = 700;
-	static int buttonXDimension = 90;
-	static int buttonYDimension = 30;
+	static int totalXDimensions = 400;
+	static int totalYDimensions = 400;
 	private JButton okButton;
 
 	public VariablePanel(JFrame surroundingFrame) {
@@ -31,12 +29,12 @@ public class VariablePanel implements ActionListener {
 		titlePanel = new JPanel();
 		titlePanel.setLayout(null);
 		titlePanel.setLocation(0, 0);
-		titlePanel.setSize(400, 400);
+		titlePanel.setSize(totalXDimensions, totalYDimensions);
 		variableGUI.add(titlePanel);
 
 		titleLabel = new JLabel("P&O - Team Groen - Variables");
 		titleLabel.setLocation(0, 0);
-		titleLabel.setSize(400, 30);
+		titleLabel.setSize(totalXDimensions, 30);
 		titleLabel.setHorizontalAlignment(0);
 		titleLabel.setForeground(Color.black);
 		titlePanel.add(titleLabel);
