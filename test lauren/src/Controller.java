@@ -1,5 +1,5 @@
 //Robotclass, generates/keeps track of current positioning.
-public class Robot {
+public class Controller {
 	private int xCo;
 	
 	public int getXCo(){

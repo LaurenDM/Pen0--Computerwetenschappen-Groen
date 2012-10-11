@@ -75,5 +75,6 @@ public class VariablePanel implements ActionListener {
 			surroundingFrame.setVisible(false);
 		}
 	}
+	
 
 }
