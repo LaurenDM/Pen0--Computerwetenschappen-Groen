@@ -1,3 +1,4 @@
+package Gui;
 import javax.swing.*;
 
 import java.awt.BasicStroke;

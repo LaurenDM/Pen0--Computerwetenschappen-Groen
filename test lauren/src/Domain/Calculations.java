@@ -1,3 +1,4 @@
+package Domain;
 
 public class Calculations {
 	public static int[] calculateNextCoordinates(float angle){
