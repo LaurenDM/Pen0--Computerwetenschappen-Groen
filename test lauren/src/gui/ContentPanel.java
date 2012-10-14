@@ -1,4 +1,4 @@
-package Gui;
+package gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.ScrollPane;

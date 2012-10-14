@@ -1,4 +1,4 @@
-package Controller;
+package controller;
 //Robotclass, generates/keeps track of current positioning.
 public class Controller {
 	

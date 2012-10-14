@@ -1,4 +1,4 @@
-package Robots;
+package domain.robots;
 
 public interface Robot {
 	

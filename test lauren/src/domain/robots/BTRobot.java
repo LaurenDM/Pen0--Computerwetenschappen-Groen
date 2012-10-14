@@ -1,4 +1,4 @@
-package Robots;
+package domain.robots;
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.navigation.DifferentialPilot;
 import lejos.util.PilotProps;

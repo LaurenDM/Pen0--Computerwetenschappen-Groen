@@ -1,4 +1,4 @@
-package Robots;
+package domain.robots;
 import java.lang.Math;
 
 public class Position {

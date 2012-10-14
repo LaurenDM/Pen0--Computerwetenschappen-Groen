@@ -1,4 +1,4 @@
-package Robots;
+package domain.robots;
 
 
 public class SimRobot implements Robot {
