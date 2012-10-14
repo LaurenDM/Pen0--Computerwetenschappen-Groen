@@ -1,5 +1,7 @@
 //Robotclass, generates/keeps track of current positioning.
 public class Controller {
+	
+	//Current coordinate in the GUI
 	private int xCo;
 	
 	public int getXCo(){
@@ -10,6 +12,7 @@ public class Controller {
 		xCo = co;
 	}
 	
+	//Current coordinate in the GUI
 	private int yCo;
 	
 	public int getYCo(){
