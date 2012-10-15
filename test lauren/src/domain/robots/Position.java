@@ -1,11 +1,17 @@
 package domain.robots;
 import java.lang.Math;
 
-public class Position {
-	
+import lejos.geom.Point;
+
+public class Position implements Cloneable {
+	// TODO waarom final in formele parameter?
 	public Position(final double x, final double y){
 		setX(x);
 		setY(y);
+	}
+	public Position(Point point){
+		setX(point.x);
+		setY(point.y);
 	}
 	
 	private double x;
@@ -26,6 +32,12 @@ public class Position {
 	}
 	public void setY(double y){
 		this.y=y;
+	}
+	
+	@Override 
+	public Position clone(){
+		return new Position(this.x, this.y);
+		
 	}
 	
 }
