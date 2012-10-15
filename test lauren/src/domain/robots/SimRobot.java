@@ -111,4 +111,10 @@ public class SimRobot implements Robot {
 	return movement;	
 	}
 
+	@Override
+	public void UpdateUntil(TimeStamp timestamp) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

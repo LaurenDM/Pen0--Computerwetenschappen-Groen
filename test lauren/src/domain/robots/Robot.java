@@ -3,6 +3,7 @@ package domain.robots;
 import lejos.geom.Point;
 
 public interface Robot {
+	public void UpdateUntil(TimeStamp timestamp);
 	
 	public Movement getMovementStatus();
 	
