@@ -1,5 +1,6 @@
 package domain.robots;
 
+import domain.Position.Position;
 import lejos.geom.Point;
 
 public interface Robot {

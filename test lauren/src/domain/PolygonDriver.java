@@ -1,5 +1,5 @@
 package domain;
-
+//TODO uitmaken of deze klasse wel bruikbaar is.
 import domain.robots.Robot;
 
 public class PolygonDriver {

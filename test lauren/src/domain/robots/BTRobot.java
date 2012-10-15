@@ -1,4 +1,5 @@
 package domain.robots;
+import domain.Position.Position;
 import lejos.geom.Point;
 
 import lejos.robotics.RegulatedMotor;

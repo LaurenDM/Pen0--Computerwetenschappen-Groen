@@ -1,4 +1,4 @@
-package domain.robots;
+package domain.Position;
 import java.lang.Math;
 
 import lejos.geom.Point;

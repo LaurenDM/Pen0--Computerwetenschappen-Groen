@@ -1,5 +1,7 @@
 package domain.robots;
 
+import domain.Position.Position;
+
 
 public class SimRobot implements Robot {
 	

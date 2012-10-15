@@ -1,4 +1,4 @@
-package domain;
+package domain.Position;
 
 public class Calculations {
 	public static int[] calculateNextCoordinates(float angle){
