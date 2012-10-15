@@ -26,12 +26,13 @@ import javax.swing.text.Element;
 import javax.swing.text.Position;
 import javax.swing.text.Segment;
 
-
+import controller.Controller;
 
 public class ContentPanel implements ActionListener {
 	
 	static JFrame frame = new JFrame("P&O - Groen");
     static JFrame variableFrame = new JFrame("P&O - Groen - Variables");
+    private static ControllerPoller controllerPoller;
     private JPanel titlePanel,titlePanel2, buttonPanel, inputPanel, variablePanel, debugPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
     private JLabel xLabel, yLabel, speedLabel, angleLabel;
@@ -45,6 +46,8 @@ public class ContentPanel implements ActionListener {
     static int buttonYDimension = 30;
     DrawingPanel drawingPanel;
 	
+    
+    Controller controller;
     
     public void fixPanelLayout(JPanel object, int xsize, int ysize, int xco, int yco){
     	object.setLayout(null);
@@ -75,6 +78,11 @@ public class ContentPanel implements ActionListener {
 	public ContentPanel() {
 		// We create a bottom JPanel to place everything on.
         totalGUI.setLayout(null);
+        // We create a controller
+        controller = new Controller();
+        // We create a controllerPoller to update the infolabel data
+        controllerPoller = new ControllerPoller(controller, this);
+        controllerPoller.start();
         
         //___________________________________________________________
         // Creation of a Panel to contain the title labels
@@ -100,15 +108,19 @@ public class ContentPanel implements ActionListener {
 			public void keyTyped(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT){
 					actionLabel.setText("The robot is turning right!");
+					controller.rotateRight();
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_UP){
 					actionLabel.setText("The robot is going forward!");
+					controller.moveForward();
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
 					actionLabel.setText("The robot is turning left!");
+					controller.rotateLeft();
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_DOWN){
 					actionLabel.setText("The robot is going back!");
+					controller.moveBack();
 				}
 				
 			}
@@ -124,18 +136,22 @@ public class ContentPanel implements ActionListener {
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT){
 					actionLabel.setText("The robot is doing nothing atm!");
 					rightButton.setSelected(false);
+					controller.cancel();
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
 					actionLabel.setText("The robot is doing nothing atm!");
 					leftButton.setSelected(false);
+					controller.cancel();
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_UP){
 					actionLabel.setText("The robot is doing nothing atm!");
 					upButton.setSelected(false);
+					controller.cancel();
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_DOWN){
 					actionLabel.setText("The robot is doing nothing atm!");
 					downButton.setSelected(false);
+					controller.cancel();
 				}
 				
 			}
@@ -145,18 +161,22 @@ public class ContentPanel implements ActionListener {
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT){
 					actionLabel.setText("The robot is turning right!");
 					rightButton.setSelected(true);
+					controller.rotateRight();
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_UP){
 					actionLabel.setText("The robot is going forward!");
 					upButton.setSelected(true);
+					controller.moveForward();
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
 					actionLabel.setText("The robot is turning left!");
 					leftButton.setSelected(true);
+					controller.rotateLeft();
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_DOWN){
 					actionLabel.setText("The robot is going back!");
 					downButton.setSelected(true);
+					controller.moveBack();
 				}
 			}
 		};
@@ -250,7 +270,7 @@ public class ContentPanel implements ActionListener {
         
         //________________________
         //Creating variable panel
-        VariablePanel variablePanel = new VariablePanel(variableFrame);
+        VariablePanel variablePanel = new VariablePanel(variableFrame,controller);
         variableFrame.setContentPane(variablePanel.getContentPanel());;
         variableFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         variableFrame.setSize(400, 400);
@@ -261,35 +281,76 @@ public class ContentPanel implements ActionListener {
         drawLine(100, 100, 300, 300);
 	}
 	
+	/**
+	 * A thread class that, while it's thread is running, polls the controller every 10 ms for changes to the 
+	 * robot's variables.
+	 */
+	private static class ControllerPoller extends Thread {
+    	Controller controller;
+    	ContentPanel contentPanel;
+    	
+    	/**
+    	 * Make a new ControllerPoller.
+    	 * @param controller The controller this ControllerPoller should poll
+    	 * @param contentPanel The parent object for this ControllerPoller
+    	 */
+		public ControllerPoller(Controller controller, ContentPanel contentPanel){
+    		this.controller = controller;
+    		this.contentPanel = contentPanel;
+    	}
+		
+		/**
+		 * Infinite loop that runs while the thread is active.
+		 */
+		public void run(){
+			try{
+				while(true){
+					contentPanel.setRobotX(controller.getXCo());
+					contentPanel.setRobotY(controller.getYCo());
+					contentPanel.setRobotSpeed(controller.getSpeed());
+					contentPanel.setRobotAngle(controller.getAngle());
+					sleep(10);
+				}
+			} catch(InterruptedException e){
+				//Do absolutely nothing
+			}
+		}
+    }
+	
 	public void actionPerformed(ActionEvent e) {
         if(e.getSource() == upButton){
         	actionLabel.setText("The robot is going forward!");
         	upButton.setSelected(false);
         	buttonPanel.requestFocusInWindow();
+        	controller.moveForward();
         }
             
         else if(e.getSource() == downButton){
         	actionLabel.setText("The robot is going back!");
         	downButton.setSelected(false);
         	buttonPanel.requestFocusInWindow();
+        	controller.moveBack();
         }
         	
         else if(e.getSource() == leftButton){
         	actionLabel.setText("The robot is turning left!");
         	leftButton.setSelected(false);
         	buttonPanel.requestFocusInWindow();
+        	controller.rotateLeft();
         }
         	
         else if(e.getSource() == rightButton){
         	actionLabel.setText("The robot is turning right!");
         	rightButton.setSelected(false);
         	buttonPanel.requestFocusInWindow();
+        	controller.rotateRight();
         }
         	
         else if(e.getSource() == cancelButton){
         	actionLabel.setText("The robot cancelled all actions.");
         	cancelButton.setSelected(false);
         	buttonPanel.requestFocusInWindow();
+        	controller.cancel();
         }
         else if(e.getSource() == variableButton){
         	variableFrame.setVisible(true);
