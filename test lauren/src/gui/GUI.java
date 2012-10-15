@@ -28,6 +28,7 @@ public class GUI{
     
     static JFrame frame = new JFrame("P&O - Groen");
     static JFrame variableFrame = new JFrame("P&O - Groen - Variables");
+    static ContentPanel contentPanel;
     static int totalXDimensions = 700;
     static int totalYDimensions = 700;
   
@@ -37,7 +38,7 @@ public class GUI{
     public static void createAndShowGUI() {
 
         JFrame.setDefaultLookAndFeelDecorated(true);
-        ContentPanel contentPanel = new ContentPanel();
+        contentPanel = new ContentPanel();
         frame.setContentPane(contentPanel.getContentPanel());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(totalXDimensions, totalYDimensions);
@@ -52,5 +53,42 @@ public class GUI{
             }
         });
     }
+    
+    /**
+     * Updates the x-coordinate info on the content panel.
+     */
+    public void setRobotX(double newX) {
+    	contentPanel.setRobotX(newX);
+    }
+    
+    /**
+     * Updates the y-coordinate info on the content panel.
+     */
+    public void setRobotY(double newY) {
+    	contentPanel.setRobotY(newY);
+    }
+    
+    /**
+     * Updates the speed info on the content panel.
+     */
+    public void setRobotSpeed(double speed){
+    	contentPanel.setRobotSpeed(speed);
+    }
+    
+    /**
+     * Updates the angle info on the content panel.
+     */
+    public void setRobotAngle(double angle){
+    	contentPanel.setRobotAngle(angle);
+    }
+    
+    /**
+     * Write a new line to the debug info panel
+     */
+    public void writeToDebug(String debugInfo){
+    	contentPanel.writeToDebug(debugInfo);
+    }
+    
+    
 
 }
