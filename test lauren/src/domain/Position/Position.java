@@ -40,4 +40,8 @@ public class Position implements Cloneable {
 		
 	}
 	
+	public double getDistance(Position other){
+		return Math.sqrt(Math.pow(other.getX()-getX(),2) + Math.pow(other.getY()-getY(),2));
+	}
+	
 }

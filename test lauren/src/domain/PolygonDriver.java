@@ -18,7 +18,7 @@ public class PolygonDriver {
 	}
 
 	private double calcPolygonAngles(int nbVertices) {
-		return ((double)((nbVertices-2)*180))/((double)nbVertices);
+		return 180-((double)((nbVertices-2)*180))/((double)nbVertices);
 	}
 	
 	

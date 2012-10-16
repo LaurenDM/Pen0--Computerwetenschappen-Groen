@@ -10,6 +10,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import controller.Controller;
+
 public class VariablePanel implements ActionListener {
 
 	final JPanel variableGUI = new JPanel();
@@ -21,13 +23,14 @@ public class VariablePanel implements ActionListener {
 	private JButton okButton;
 	private JTextField edgeLengthIputfield;
 	private JTextField nbVerticesInputfield;
-	
+	private Controller controller;
 
-	public VariablePanel(JFrame surroundingFrame) {
+	public VariablePanel(JFrame surroundingFrame, Controller controller) {
 		if (surroundingFrame == null) {
 			throw new IllegalArgumentException();
 		}
 		this.surroundingFrame=surroundingFrame;
+		this.controller = controller;
 		
 		variableGUI.setLayout(null);
 		titlePanel = new JPanel();
@@ -74,6 +77,7 @@ public class VariablePanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == okButton) {
+			controller.polygonDriver(getNumberOfVertices(), getEdgeLength());
 			okButton.setSelected(false);
 			variableGUI.setVisible(false);
 			surroundingFrame.setVisible(false);
@@ -83,7 +87,7 @@ public class VariablePanel implements ActionListener {
 		return Integer.parseInt(nbVerticesInputfield.getText());
 	}
 	public double getEdgeLength(){
-		return Integer.parseInt(edgeLengthIputfield.getSelectedText());
+		return Integer.parseInt(edgeLengthIputfield.getText());
 	}
 	
 }

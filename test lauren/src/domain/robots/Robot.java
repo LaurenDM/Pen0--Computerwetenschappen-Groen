@@ -1,60 +1,87 @@
 package domain.robots;
 
+import domain.TimeStamp;
 import domain.Position.Position;
-import lejos.geom.Point;
 
-public interface Robot {
-	public void UpdateUntil(TimeStamp timestamp);
+public abstract class Robot implements iRobot {
 	
-	public Movement getMovementStatus();
-	
-	public double getMovingSpeed();
-	
-	public double getTurningSpeed();
-	/**
-	 * Can be used to get a clone of the current position of the robot
-	 * @return a clone of the position
-	 */
-	public Position getPosition();
-	
-	public void forward();
-	
-	public void backward();
-	
-	public void stop();
+	private Movement movement;
+	//The wanted rotation Speed of the robot.
+	private double rotateSpeed;
 
-	/**
-	 * 
-	 * @param distance in cm
-	 */
-	public void move(double distance);
-	
-	/**
-	 * 
-	 * @param amount in degrees
-	 */
-	public void turn(double amount);
-	
-	public void turnRight();
-	
-	public void turnLeft();
-	
-	/**
-	 * returns the current Orientation relative to the original orientation.
-	 */
-	public double getOrientation();
-	/**
-	 * 
-	 * @param speed in cm/s
-	 */
-	public void setMovingSpeed(double speed);
-	
-	/**
-	 * 
-	 * @param speed in degrees/s
-	 */
-	public void setTurningSpeed(double speed);
-	
-	
-	
+	//The wanted travel Speed of the robot.
+	private double travelSpeed;
+
+	@Override
+	public void UpdateUntil(TimeStamp timestamp) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Movement getMovementStatus() {
+		return movement;
+	}
+
+	@Override
+	public double getMovingSpeed() {
+		return travelSpeed;
+	}
+
+	@Override
+	public double getTurningSpeed() {
+		return rotateSpeed;
+	}
+
+	@Override
+	public void forward(){
+		this.movement = Movement.FORWARD;
+	}
+
+	@Override
+	public void backward(){
+		this.movement = Movement.BACKWARD;
+	}
+
+	@Override
+	public void stop(){
+		this.movement = Movement.STOPPED;
+	}
+
+
+	@Override
+	public abstract void turn(double amount);
+
+	@Override
+	public void turnRight() {
+		turn(90);
+	}
+
+	@Override
+	public void turnLeft() {
+		turn(-90);
+	}
+
+	@Override
+	public abstract double getOrientation();
+
+	@Override
+	public void setMovingSpeed(double speed) {
+		this.travelSpeed = speed;
+	}
+
+	@Override
+	public void setTurningSpeed(double speed) {
+		this.rotateSpeed = speed;
+	}
+
+	@Override
+	public abstract boolean canMove();
+
+	@Override
+	public Position getPosition() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
