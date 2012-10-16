@@ -1,67 +1,68 @@
 package controller;
 
 import domain.PolygonDriver;
-import domain.robots.BTRobot;
+import domain.robots.BTRobotPilot;
+import domain.robots.Robot;
+import domain.robots.RobotPilot;
+import domain.robots.SimRobotPilot;
 
 //Robotclass, generates/keeps track of current positioning.
 public class Controller {
 	
-	private BTRobot btRobot;
+	private RobotPilot currentRobotPilot;
+	private Robot robot;
 	
 	public Controller() {
-		try {
-			btRobot = new BTRobot();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			currentRobotPilot=new BTRobotPilot();
+			robot = new Robot(currentRobotPilot);
+		
 	}
 	
 	public void polygonDriver(int numberOfVertices, double edgeLength) {
-		PolygonDriver driver = new PolygonDriver(btRobot);
+		PolygonDriver driver = new PolygonDriver(robot);
 		driver.drive(numberOfVertices, edgeLength);
 		
 	}
 
 	public void moveForward() {
-		btRobot.forward();
+		robot.forward();
 		
 	}
 
 	public void moveBack() {
-		btRobot.backward();
+		robot.backward();
 		
 	}
 
 	public void rotateRight() {
-		btRobot.turnRight();
+		robot.turnRight();
 		
 	}
 
 	public void rotateLeft() {
-		btRobot.turnRight();
+		robot.turnRight();
 		
 	}
 
 	public void cancel() {
-		btRobot.stop();
+		robot.stop();
 		
 	}
 	
 	public double getXCo(){
-		return btRobot.getPosition().getX();
+		return robot.getPosition().getX();
 	}
 
 	public double getYCo(){
-		return btRobot.getPosition().getY();
+		return robot.getPosition().getY();
 	}
 
 	public double getSpeed() {
-		return btRobot.getMovingSpeed();
+		return robot.getMovingSpeed();
 	}
 
 	public double getAngle() {
-		return btRobot.getOrientation();
+		return robot.getOrientation();
 	}
 
 

@@ -3,102 +3,99 @@ package domain.robots;
 import domain.TimeStamp;
 import domain.Position.Position;
 
-public abstract class Robot implements iRobot {
-	
+public class Robot {
+	RobotPilot robotPilot;
+	public Robot(RobotPilot robotPilot){
+		this.robotPilot=robotPilot;
+	}
 	private Movement movement;
-	//The wanted rotation Speed of the robot.
-	private double rotateSpeed;
 
-	//The wanted travel Speed of the robot.
-	private double travelSpeed;
-
-	@Override
 	public void UpdateUntil(TimeStamp timestamp) {
 		// TODO Auto-generated method stub
-
 	}
 
-	@Override
+
 	public Movement getMovementStatus() {
 		return movement;
 	}
 
-	@Override
+
 	public double getMovingSpeed() {
-		return travelSpeed;
+		return robotPilot.getMovingSpeed();
 	}
 
-	@Override
+
 	public double getTurningSpeed() {
-		return rotateSpeed;
+		return robotPilot.getTurningSpeed();
 	}
 
-	@Override
+
 	public void forward(){
 		this.movement = Movement.FORWARD;
+		robotPilot.forward();
 	}
 
-	@Override
+
 	public void backward(){
 		this.movement = Movement.BACKWARD;
+		robotPilot.backward();
 	}
 
-	@Override
+
 	public void stop(){
 		this.movement = Movement.STOPPED;
+		robotPilot.stop();
 	}
 
-	@Override
+
 	public void move(double distance) {
 		if (distance > 0)
 			movement = Movement.FORWARD;
 		else if (distance < 0)
 			movement = Movement.BACKWARD;
-		Position pos1 = getPosition();
-		boolean running = true;
-		while(running){
-			forward();
-			if(getPosition().getDistance(pos1) == distance || !canMove()){
-				running= false;
-				stop();
-			}
-		}
+		robotPilot.move(distance);
 		movement = Movement.STOPPED;
 	}
 
-	@Override
-	public abstract void turn(double amount);
 
-	@Override
+	public void turn(double amount){
+		robotPilot.turn(amount);
+	}
+
+
 	public void turnRight() {
-		turn(90);
+		robotPilot.turnRight();
 	}
 
-	@Override
+
 	public void turnLeft() {
-		turn(-90);
+		robotPilot.turnLeft();
 	}
 
-	@Override
-	public abstract double getOrientation();
 
-	@Override
+	public double getOrientation(){
+		robotPilot.getOrientation();
+		return 0;
+	}
+
+
 	public void setMovingSpeed(double speed) {
-		this.travelSpeed = speed;
+		robotPilot.setMovingSpeed(speed);
 	}
 
-	@Override
+
 	public void setTurningSpeed(double speed) {
-		this.rotateSpeed = speed;
+		robotPilot.setTurningSpeed(speed);
 	}
 
-	@Override
-	public abstract boolean canMove();
-
-	@Override
 	public Position getPosition() {
-		// TODO Auto-generated method stub
-		return null;
+		return robotPilot.getPosition();
+	}
+	//Method for testing whether the robot can move with takin into account the walls and otherobstructions.
+	public boolean canMove(){
+		//TODO
+		return true;
+		
 	}
 
 }

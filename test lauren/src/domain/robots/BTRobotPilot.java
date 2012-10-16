@@ -1,4 +1,7 @@
 package domain.robots;
+import java.io.IOException;
+
+import domain.TimeStamp;
 import domain.Position.Position;
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.localization.OdometryPoseProvider;
@@ -7,7 +10,7 @@ import lejos.util.PilotProps;
 
 
 
-public class BTRobot extends Robot implements iRobot  {
+public class BTRobotPilot implements RobotPilot  {
 	
 	private DifferentialPilot pilot;
 	private RegulatedMotor leftMotor;
@@ -17,10 +20,15 @@ public class BTRobot extends Robot implements iRobot  {
 	private OdometryPoseProvider poseProvider;
 	
 	
-	public BTRobot() throws Exception{
+	public BTRobotPilot(){
 		
 		PilotProps pp = new PilotProps();
-    	pp.loadPersistentValues();
+    	try {
+			pp.loadPersistentValues();
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException();
+		}
     	float wheelDiameter = Float.parseFloat(pp.getProperty(PilotProps.KEY_WHEELDIAMETER, "5.6"));
     	float trackWidth = Float.parseFloat(pp.getProperty(PilotProps.KEY_TRACKWIDTH, "11.72"));
     	leftMotor = PilotProps.getMotor(pp.getProperty(PilotProps.KEY_LEFTMOTOR, "C"));
@@ -39,31 +47,26 @@ public class BTRobot extends Robot implements iRobot  {
 	@Override
 	public void setMovingSpeed(double speed) {
 		pilot.setTravelSpeed(speed);
-		super.setMovingSpeed(speed);
 	}
 
 	@Override
 	public void setTurningSpeed(double speed) {
 		pilot.setRotateSpeed(speed);
-		super.setTurningSpeed(speed);
 	}
 
 	@Override
 	public void forward() {
 		pilot.forward();
-		super.forward();
 	}
 
 	@Override
 	public void backward() {
 		pilot.backward();
-		super.forward();
 	}
 
 	@Override
 	public void stop() {
 		pilot.stop();
-		super.stop();
 	}
 
 	@Override
@@ -77,14 +80,52 @@ public class BTRobot extends Robot implements iRobot  {
 		return poseProvider.getPose().getHeading();
 	}
 
-
-	@Override
-	public boolean canMove() {
-		return true;
-	}
-	
 	public boolean isMoving(){
 		return pilot.isMoving();
+	}
+
+
+	@Override
+	public void UpdateUntil(TimeStamp timestamp) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public double getMovingSpeed() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public double getTurningSpeed() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void move(double distance) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void turnRight() {
+		pilot.rotateRight();
+	}
+
+	@Override
+	public void turnLeft() {
+		pilot.rotateLeft();
+	}
+	
+	public boolean canMove(){
+		//TODO
+		return true;
+		
 	}
 
 }

@@ -3,11 +3,9 @@ package domain.robots;
 import domain.TimeStamp;
 import domain.Position.Position;
 
-public interface iRobot {
+public interface RobotPilot {
 	public void UpdateUntil(TimeStamp timestamp);
-	
-	public Movement getMovementStatus();
-	
+		
 	public double getMovingSpeed();
 	
 	public double getTurningSpeed();
@@ -55,8 +53,8 @@ public interface iRobot {
 	 */
 	public void setTurningSpeed(double speed);
 	
+	//Method for testing whether the robot can move with takin into account the walls and otherobstructions.
 	public boolean canMove();
-	
 	
 	
 }
