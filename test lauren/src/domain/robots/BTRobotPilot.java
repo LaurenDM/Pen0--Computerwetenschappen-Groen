@@ -16,7 +16,7 @@ public class BTRobotPilot implements RobotPilot  {
 	private RegulatedMotor leftMotor;
 	private RegulatedMotor rightMotor;
 	
-	//The poseProvider is an intantiation of a class that "LeJOS" provides for determining the pose of a NXT Robot.
+	//The poseProvider is an instantiation of a class that "LeJOS" provides for determining the pose of a NXT Robot.
 	private OdometryPoseProvider poseProvider;
 	
 	

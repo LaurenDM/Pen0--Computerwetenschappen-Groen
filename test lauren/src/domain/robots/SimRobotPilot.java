@@ -81,9 +81,10 @@ public class SimRobotPilot implements RobotPilot {
 	}
 
 	@Override
-	public void stop(){
-		if(moveThread!=null)
-		moveThread.interrupt();
+	public void stop() {
+		if (moveThread != null) {
+			moveThread.interrupt();
+		}
 	}
 
 	@Override

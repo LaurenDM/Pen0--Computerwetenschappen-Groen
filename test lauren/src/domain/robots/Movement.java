@@ -2,39 +2,7 @@ package domain.robots;
 
 public enum Movement {
 
-	FORWARD(1, " moving forward"){
-
-		@Override
-		public void execute(SimRobotPilot simRobotPilot) {
-			while(true){
-				double speed=simRobotPilot.getMovingSpeed();
-				double moveAmount=1;
-//				sleepTime=moveAmount/simRobotPilot.getMovingSpeed()
-				simRobotPilot.getPosition().move(simRobotPilot.getOrientation(), moveAmount);
-				int sleepTime=10;
-				try {
-					Thread.sleep(sleepTime);
-				} catch (InterruptedException e) {
-					break;
-				}
-			}
-		}
-		
-	} ,BACKWARD(-1,"moving backward" ){
-
-		@Override
-		public void execute(SimRobotPilot simRobotPilot) {
-			//TODO
-		}
-		
-	}
-	, STOPPED(0, "stopped"){
-
-		@Override
-		public void execute(SimRobotPilot simRobotPilot) {
-		}
-		
-	};
+	FORWARD(1, " moving forward"),BACKWARD(-1,"moving backward" ), STOPPED(0, "stopped");
 	private int speedMultiplier;
 	private String description;
 	Movement(int speedMultiplier, String description){
@@ -48,8 +16,19 @@ public enum Movement {
 	public String toString(){
 		return "the robot is "+ description;
 	}
-	public abstract void execute(SimRobotPilot simRobotPilot);
 	
 	
-	
+	public void execute(SimRobotPilot simRobotPilot) {
+		double speed=simRobotPilot.getMovingSpeed();
+		int sleepTime=100;
+		double moveAmount=sleepTime*speed *speedMultiplier;
+		while(true){
+			simRobotPilot.getPosition().move(simRobotPilot.getOrientation(), moveAmount);
+			try {
+				Thread.sleep(sleepTime);
+			} catch (InterruptedException e) {
+				break;
+			}
+		}
+	}
 }
