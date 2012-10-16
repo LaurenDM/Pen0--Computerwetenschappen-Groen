@@ -48,6 +48,23 @@ public abstract class Robot implements iRobot {
 		this.movement = Movement.STOPPED;
 	}
 
+	@Override
+	public void move(double distance) {
+		if (distance > 0)
+			movement = Movement.FORWARD;
+		else if (distance < 0)
+			movement = Movement.BACKWARD;
+		Position pos1 = getPosition();
+		boolean running = true;
+		while(running){
+			forward();
+			if(getPosition().getDistance(pos1) == distance || !canMove()){
+				running= false;
+				stop();
+			}
+		}
+		movement = Movement.STOPPED;
+	}
 
 	@Override
 	public abstract void turn(double amount);

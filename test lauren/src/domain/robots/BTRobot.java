@@ -25,10 +25,8 @@ public class BTRobot extends Robot implements iRobot  {
     	float trackWidth = Float.parseFloat(pp.getProperty(PilotProps.KEY_TRACKWIDTH, "11.72"));
     	leftMotor = PilotProps.getMotor(pp.getProperty(PilotProps.KEY_LEFTMOTOR, "C"));
     	rightMotor = PilotProps.getMotor(pp.getProperty(PilotProps.KEY_RIGHTMOTOR, "B"));
-    	    	
+    	
     	pilot = new DifferentialPilot(wheelDiameter, trackWidth, leftMotor, rightMotor);
-    	pilot.setTravelSpeed(10);
-    	pilot.setRotateSpeed(90);
     	poseProvider= new OdometryPoseProvider(pilot);
 	}
 	
@@ -87,14 +85,6 @@ public class BTRobot extends Robot implements iRobot  {
 	
 	public boolean isMoving(){
 		return pilot.isMoving();
-	}
-	
-	@Override
-	public void move(double distance) {
-
-//TODO
-		pilot.travel(distance);
-		
 	}
 
 }

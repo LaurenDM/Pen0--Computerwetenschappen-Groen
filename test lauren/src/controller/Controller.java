@@ -17,30 +17,9 @@ public class Controller {
 		}
 	}
 	
-	//Current coordinate in the GUI
-	private int xCo;
-	
-	public int getXCo(){
-		return xCo;
-	}
-	
-	public void setXCo(int co){
-		xCo = co;
-	}
-	
-	//Current coordinate in the GUI
-	private int yCo;
-	
-	public int getYCo(){
-		return yCo;
-	}
-	
-	public void setYCo(int co){
-		yCo = co;
-	}
-
-	public void rotateRight() {
-		btRobot.turnRight();
+	public void polygonDriver(int numberOfVertices, double edgeLength) {
+		PolygonDriver driver = new PolygonDriver(btRobot);
+		driver.drive(numberOfVertices, edgeLength);
 		
 	}
 
@@ -54,6 +33,11 @@ public class Controller {
 		
 	}
 
+	public void rotateRight() {
+		btRobot.turnRight();
+		
+	}
+
 	public void rotateLeft() {
 		btRobot.turnRight();
 		
@@ -64,15 +48,18 @@ public class Controller {
 		
 	}
 	
-	public void polygonDriver(int numberOfVertices, double edgeLength) {
-		PolygonDriver driver = new PolygonDriver(btRobot);
-		driver.drive(numberOfVertices, edgeLength);
-		
+	public double getXCo(){
+		return btRobot.getPosition().getX();
+	}
+
+	public double getYCo(){
+		return btRobot.getPosition().getY();
 	}
 
 	public double getSpeed() {
 		return btRobot.getMovingSpeed();
 	}
+
 	public double getAngle() {
 		return btRobot.getOrientation();
 	}
