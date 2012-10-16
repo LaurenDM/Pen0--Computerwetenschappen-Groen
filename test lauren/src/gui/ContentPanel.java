@@ -36,7 +36,7 @@ public class ContentPanel implements ActionListener {
     private JPanel titlePanel,titlePanel2, buttonPanel, inputPanel, variablePanel, debugPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
     private JLabel xLabel, yLabel, speedLabel, angleLabel;
-    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton;
+    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton;
     private JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
@@ -78,8 +78,6 @@ public class ContentPanel implements ActionListener {
 	public ContentPanel() {
 		// We create a bottom JPanel to place everything on.
         totalGUI.setLayout(null);
-        // We create a controller
-        controller = new Controller();
         // We create a controllerPoller to update the infolabel data
         controllerPoller = new ControllerPoller(controller, this);
         controllerPoller.start();
@@ -233,6 +231,12 @@ public class ContentPanel implements ActionListener {
         variableButton.addActionListener(this);
         buttonPanel.add(variableButton);
         
+        connectButton = new JButton("CONNECT TO ROBOT");
+        connectButton.setLocation(30, buttonYDimension + 220);
+        connectButton.setSize(240, 30);
+        connectButton.addActionListener(this);
+        buttonPanel.add(connectButton);
+        
         buttonPanel.setFocusable(true);
         
         //_____________________________________________________
@@ -358,7 +362,11 @@ public class ContentPanel implements ActionListener {
         	variableButton.setSelected(false);
         	buttonPanel.requestFocusInWindow();
         	
-        }	
+        }
+        else if(e.getSource() == connectButton){
+        	// We create a controller
+            controller = new Controller();
+        }
         
     }
 	
