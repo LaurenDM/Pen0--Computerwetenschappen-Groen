@@ -91,8 +91,8 @@ public class SimRobotPilot implements RobotPilot {
 	public void move(double distance) {
 		Position pos1 = getPosition();
 		boolean running = true;
+		forward();
 		while(running){
-			forward();
 			if(getPosition().getDistance(pos1) == distance || !canMove()){
 				running= false;
 				stop();
