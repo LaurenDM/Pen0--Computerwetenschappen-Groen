@@ -44,16 +44,7 @@ public class SimRobot extends Robot implements iRobot {
 	public double getOrientation() {
 		return orientation;
 	}
-	@Override
-	public void move(double distance) {
-//		if (distance > 0)
-//			movement = Movement.FORWARD;
-//		else if (distance < 0)
-//			movement = Movement.BACKWARD;
-		Position pos1 = getPosition();
-		boolean running = true;
-//		movement = Movement.STOPPED;
-	}
+
 
 	@Override
 	public void UpdateUntil(TimeStamp timestamp) {
