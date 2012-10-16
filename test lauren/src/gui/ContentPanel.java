@@ -1,4 +1,5 @@
 package gui;
+import domain.*;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.ScrollPane;
@@ -27,6 +28,8 @@ import javax.swing.text.Position;
 import javax.swing.text.Segment;
 
 import controller.Controller;
+import domain.pixels.Pixel;
+import domain.pixels.PixelCollection;
 
 public class ContentPanel implements ActionListener {
 	
@@ -79,8 +82,7 @@ public class ContentPanel implements ActionListener {
 		// We create a bottom JPanel to place everything on.
         totalGUI.setLayout(null);
         // We create a controllerPoller to update the infolabel data
-        controllerPoller = new ControllerPoller(controller, this);
-        controllerPoller.start();
+        
         
         //___________________________________________________________
         // Creation of a Panel to contain the title labels
@@ -280,9 +282,12 @@ public class ContentPanel implements ActionListener {
         variableFrame.setSize(400, 400);
         
         
-        
-        
-        drawLine(100, 100, 300, 300);
+	}
+	
+	public void updateBoard(Pixel[] collection){
+		for (int i = 0; i < collection.length; i++) {
+			drawLine(collection[i].getX(),collection[i].getY(),collection[i].getX(),collection[i].getY(), collection[i].getColor());
+		}
 	}
 	
 	/**
@@ -313,6 +318,7 @@ public class ContentPanel implements ActionListener {
 					contentPanel.setRobotY(controller.getYCo());
 					contentPanel.setRobotSpeed(controller.getSpeed());
 					contentPanel.setRobotAngle(controller.getAngle());
+					//TODO
 					sleep(10);
 				}
 			} catch(InterruptedException e){
@@ -366,6 +372,8 @@ public class ContentPanel implements ActionListener {
         else if(e.getSource() == connectButton){
         	// We create a controller
             controller = new Controller();
+            controllerPoller = new ControllerPoller(controller, this);
+            controllerPoller.start();
         }
         
     }
@@ -375,9 +383,9 @@ public class ContentPanel implements ActionListener {
 		return totalGUI;
 	}
 	
-	public void drawLine(int x, int y, int z, int u){
+	public void drawLine(int x, int y, int z, int u, Color color){
         Graphics g = drawingPanel.getGraphics(); 
-        g.setColor(Color.black);
+        g.setColor(color);
         g.drawLine(x, y, z, u);
         drawingPanel.repaint();
 	}
