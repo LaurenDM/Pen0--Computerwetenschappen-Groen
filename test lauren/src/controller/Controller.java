@@ -1,6 +1,9 @@
 package controller;
 
+import java.util.List;
+
 import domain.PolygonDriver;
+import domain.pixels.Pixel;
 import domain.robots.BTRobotPilot;
 import domain.robots.Robot;
 import domain.robots.RobotPilot;
@@ -69,6 +72,7 @@ public class Controller {
 		return currentRobot.getOrientation();
 	}
 
-	
-	
+	public List<Pixel> getPixels(){
+		return currentRobot.getPixelRobot().getPixels();
+	}
 }

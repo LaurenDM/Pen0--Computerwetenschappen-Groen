@@ -1,16 +1,25 @@
 package domain.robots;
 
+import java.util.List;
+
 import domain.TimeStamp;
 import domain.Position.Position;
+import domain.pixels.PixelRobot;
 
 public class Robot {
 	RobotPilot robotPilot;
+	PixelRobot pixelRobot;
 	public Robot(RobotPilot robotPilot){
 		this.robotPilot=robotPilot;
 		this.movement=Movement.STOPPED;
+		this.pixelRobot=new PixelRobot(this);
 	}
 	private Movement movement;
+	public PixelRobot getPixelRobot(){
+		return pixelRobot;
+	}
 
+	
 	public void UpdateUntil(TimeStamp timestamp) {
 		// TODO Auto-generated method stub
 	}

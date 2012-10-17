@@ -21,7 +21,7 @@ public enum Movement {
 	public void execute(SimRobotPilot simRobotPilot) {
 		double speed=simRobotPilot.getMovingSpeed();
 		int sleepTime=100;
-		double moveAmount=sleepTime*speed *speedMultiplier;
+		double moveAmount=sleepTime/1000.0*speed *speedMultiplier;
 		while(true){
 			simRobotPilot.getPosition().move(simRobotPilot.getOrientation(), moveAmount);
 			try {

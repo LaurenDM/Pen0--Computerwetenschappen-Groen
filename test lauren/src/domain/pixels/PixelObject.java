@@ -1,5 +1,7 @@
 package domain.pixels;
 
+import java.util.List;
+
 public interface PixelObject {
-public PixelCollection getPixels();
+public List<Pixel> getPixels();
 }

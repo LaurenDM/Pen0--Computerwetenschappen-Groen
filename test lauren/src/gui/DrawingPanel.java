@@ -6,8 +6,17 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 
+import controller.Controller;
+
 public class DrawingPanel extends JPanel
 {
+private Controller controller;
+private JPanel totalGui;
+public DrawingPanel(ContentPanel contentPanel) {
+	this.controller=contentPanel.getController();
+	totalGui= contentPanel.getTotalGuiPanel();
+}
+
 
 public static final int IMG_WIDTH = 400;
 public static final int IMG_HEIGHT = 400;
@@ -23,14 +32,21 @@ public static final int IMG_HEIGHT = 400;
       }
   }
   
-public void drawMyLine(int x1, int y1, int x2, int y2) {
+public void drawMyLine(int x1, int y1, int x2, int y2, Color color) {
  Graphics g = image.getGraphics();
-    g.setColor(Color.black);
+    g.setColor(color);
     g.drawLine(x1, y1, x2, y2);
-    this.repaint();
+    totalGui.repaint();
 }
 public Graphics getGraphics()
 {
  return image.getGraphics();
 }
+
+//This method makes the panel white agains
+public void clear() {
+	// TODO Auto-generated method stub
+	
+}
+
 }

@@ -39,7 +39,7 @@ public class GUI{
 
         JFrame.setDefaultLookAndFeelDecorated(true);
         contentPanel = new ContentPanel();
-        frame.setContentPane(contentPanel.getContentPanel());
+        frame.setContentPane(contentPanel.getTotalGuiPanel());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(totalXDimensions, totalYDimensions);
         frame.setVisible(true);

@@ -1,4 +1,4 @@
-package domain.pixels;
+package TOBEDELETED;
 
 public class PixelEnvironment {
 

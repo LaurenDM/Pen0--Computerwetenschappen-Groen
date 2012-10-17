@@ -10,7 +10,7 @@ public class PolygonDriver extends Thread {
 	}
 	
 	public void drive(int nbVertices, double edgeLength){
-		(new DriveThread(nbVertices, edgeLength)).run();
+		(new DriveThread(nbVertices, edgeLength)).start();
 	}
 	private class DriveThread extends Thread{
 		

@@ -1,38 +1,44 @@
 package domain.pixels;
 
+import java.util.Arrays;
+import java.util.List;
+
 import domain.Position.Position;
 import domain.robots.Robot;
 
 public class PixelRobot implements PixelObject {
 	
 	Pixel[] pixels;
-	Pixel center;
 	
 	double angle;
-
+	Robot robot;
 	public PixelRobot(Robot robot){
+		this.robot=robot;
 		this.angle = robot.getOrientation();
-		this.center = new Pixel(robot.getPosition());
+		
+	}
+	public Pixel getCenter(){
+		 return new Pixel(robot.getPosition());
 	}
 	@Override
-	public PixelCollection getPixels() {
+	public List<Pixel> getPixels() {
 		pixels = new Pixel[6];
-		pixels[0] = center;
+		pixels[0] = getCenter();
 		addTale();
 		addHead();
-		return new PixelCollection(pixels);
+		return Arrays.asList(pixels);
 		
 	}
 	
 	private void addTale(){
 		for(int i = 1; i<4; i++){
-			pixels[i] = new Pixel(new Position(center.getX()-i*Math.cos(angle),center.getY()-i*Math.sin(angle)));
+			pixels[i] = new Pixel(new Position(getCenter().getX()-i*Math.cos(angle),getCenter().getY()-i*Math.sin(angle)));
 		}
 	}
 	
 	private void addHead(){
 		 for(int i =1; i<3; i++){
-			 pixels[i+3] = new Pixel(new Position(center.getX()+Math.cos(angle+i*30),center.getY()+Math.sin(angle+i*30)));
+			 pixels[i+3] = new Pixel(new Position(getCenter().getX()+Math.cos(angle+i*30),getCenter().getY()+Math.sin(angle+i*30)));
 		 }
 		 
 	}

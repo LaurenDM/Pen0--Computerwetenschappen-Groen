@@ -27,9 +27,10 @@ import javax.swing.text.Element;
 import javax.swing.text.Position;
 import javax.swing.text.Segment;
 
+import lejos.pc.tools.Upload;
+
 import controller.Controller;
 import domain.pixels.Pixel;
-import domain.pixels.PixelCollection;
 
 public class ContentPanel implements ActionListener {
 	static JFrame frame = new JFrame("P&O - Groen");
@@ -180,6 +181,7 @@ public class ContentPanel implements ActionListener {
 					controller.moveBack();
 				}
 			}
+			
 		};
 
         //___________________________________________________
@@ -271,10 +273,9 @@ public class ContentPanel implements ActionListener {
         
         //_________________________________________________________________________
         // Creation of a Drawing Panel to display the map and the robot's movements
-        drawingPanel = new DrawingPanel();
+        drawingPanel = new DrawingPanel(this);
         fixPanelLayout(drawingPanel, 350, 500, 25, 50);
         drawingPanel.setBackground(Color.WHITE);
-        
         //________________________
         //Creating variable panel
         VariablePanel variablePanel = new VariablePanel(variableFrame,controller);
@@ -283,13 +284,23 @@ public class ContentPanel implements ActionListener {
         variableFrame.setSize(400, 400);
         
         
+    	
+	    //We create a controllerPoller that monitors debug info.
+	    controllerPoller = new ControllerPoller(controller, this);
+	    //We start the controllerPoller
+        controllerPoller.start();
+                
 	}
 	
-	public void updateBoard(Pixel[] collection){
-		for (int i = 0; i < collection.length; i++) {
-			drawLine(collection[i].getX(),collection[i].getY(),collection[i].getX(),collection[i].getY(), collection[i].getColor());
+	
+	
+
+	public void updateBoard(List<Pixel> collection){
+		drawingPanel.clear();
+		for (Pixel pixel:collection) {
+			drawingPanel.drawMyLine(pixel.getX(),pixel.getY(),pixel.getX(),pixel.getY(), pixel.getColor());
 		}
-	}
+	} 
 	
 	/**
 	 * A thread class that, while it's thread is running, polls the controller every 10 ms for changes to the 
@@ -315,6 +326,7 @@ public class ContentPanel implements ActionListener {
 		public void run(){
 			try{
 				while(true){
+					contentPanel.updateBoard(controller.getPixels());
 					contentPanel.setRobotX(controller.getXCo());
 					contentPanel.setRobotY(controller.getYCo());
 					contentPanel.setRobotSpeed(controller.getSpeed());
@@ -373,23 +385,21 @@ public class ContentPanel implements ActionListener {
         else if(e.getSource() == connectButton){
         	//We make the controller connect to a real robot
         	controller.connectNewBtRobot();
-            controllerPoller = new ControllerPoller(controller, this);
-            controllerPoller.start();
         }
         
     }
 	
 	
-	public JPanel getContentPanel(){
+	public JPanel getTotalGuiPanel(){
 		return totalGUI;
 	}
 	
-	public void drawLine(int x, int y, int z, int u, Color color){
-        Graphics g = drawingPanel.getGraphics(); 
-        g.setColor(color);
-        g.drawLine(x, y, z, u);
-        drawingPanel.repaint();
-	}
+//	public void drawLine(int x, int y, int z, int u, Color color){
+//        Graphics g = drawingPanel.getGraphics(); 
+//        g.setColor(color);
+//        g.drawLine(x, y, z, u);
+//        drawingPanel.repaint();
+//	} //TODO
 	
 	/**
 	 * Write a line to the debugging text area.
@@ -426,5 +436,9 @@ public class ContentPanel implements ActionListener {
     public void setRobotAngle(double angle){
     	angleLabel.setText("Angle: "+Double.valueOf(angle).intValue());
     }
+
+	public Controller getController() {
+		return controller;
+	}
 	
 }

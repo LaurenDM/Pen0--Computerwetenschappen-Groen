@@ -26,6 +26,8 @@ public class SimRobotPilot implements RobotPilot {
 	public SimRobotPilot(double orientation, Position position){
 		setOrientation(orientation);
 		this.position=position;
+		this.setMovingSpeed(31);
+		this.setTurningSpeed(10);//TODO
 	}
 	
 	private void setOrientation(double orientation) {
@@ -33,13 +35,13 @@ public class SimRobotPilot implements RobotPilot {
 	}
 		@Override
 	public Position getPosition(){
-		return position.clone();
+		return position;
 	}
 	
 	//TODO bedenken wat we willen doen met de orientation ivm met over 360 graden en negatieve hoeken.
 	@Override
 	public void turn(double amount) {
-		setOrientation(getOrientation()+amount);
+		setOrientation(getOrientation()+amount);//TODO dit moet geleidelijk gaan
 	}
 
 
@@ -71,7 +73,7 @@ public class SimRobotPilot implements RobotPilot {
 	public void startMoveThread(Movement movement) {
 		stop();
 		moveThread= new MoveThread(movement, this);
-		moveThread.run();
+		moveThread.start();
 	}
 	
 
@@ -90,11 +92,12 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void move(double distance) {
-		Position pos1 = getPosition();
+		Position pos1 = getPosition().clone();
 		boolean running = true;
 		forward();
 		while(running){
-			if(getPosition().getDistance(pos1) >= distance || !canMove()){
+			double wantedDistance=getPosition().getDistance(pos1);
+			if( wantedDistance>= distance || !canMove()){
 				running= false;
 				stop();
 			}
