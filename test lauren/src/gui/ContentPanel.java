@@ -434,7 +434,7 @@ public class ContentPanel implements ActionListener {
      * Updates the angle info on the debug panel.
      */
     public void setRobotAngle(double angle){
-    	angleLabel.setText("Angle: "+Double.valueOf(angle).intValue());
+    	angleLabel.setText("Angle: "+Double.valueOf(angle).intValue() % 360);
     }
 
 	public Controller getController() {
