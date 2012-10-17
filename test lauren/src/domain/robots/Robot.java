@@ -7,6 +7,7 @@ public class Robot {
 	RobotPilot robotPilot;
 	public Robot(RobotPilot robotPilot){
 		this.robotPilot=robotPilot;
+		this.movement=Movement.STOPPED;
 	}
 	private Movement movement;
 
@@ -20,10 +21,13 @@ public class Robot {
 	}
 
 
-	public double getMovingSpeed() {
+	public double getActualMovingSpeed() {
+		return robotPilot.getMovingSpeed()*movement.getSpeedMultiplier();
+	}
+	
+	public double getMovingSpeedSetting() {
 		return robotPilot.getMovingSpeed();
 	}
-
 
 	public double getTurningSpeed() {
 		return robotPilot.getTurningSpeed();
@@ -74,8 +78,7 @@ public class Robot {
 
 
 	public double getOrientation(){
-		robotPilot.getOrientation();
-		return 0;
+		return robotPilot.getOrientation();
 	}
 
 

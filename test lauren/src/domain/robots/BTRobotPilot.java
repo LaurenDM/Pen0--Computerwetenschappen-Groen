@@ -94,22 +94,19 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public double getMovingSpeed() {
-		// TODO Auto-generated method stub
-		return 0;
+		return pilot.getTravelSpeed();
 	}
 
 
 	@Override
 	public double getTurningSpeed() {
-		// TODO Auto-generated method stub
-		return 0;
+		return pilot.getRotateSpeed();
 	}
 
 
 	@Override
 	public void move(double distance) {
-		// TODO Auto-generated method stub
-		
+		pilot.travel(distance);
 	}
 
 	@Override

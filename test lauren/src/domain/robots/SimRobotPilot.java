@@ -25,6 +25,7 @@ public class SimRobotPilot implements RobotPilot {
 	
 	public SimRobotPilot(double orientation, Position position){
 		setOrientation(orientation);
+		this.position=position;
 	}
 	
 	private void setOrientation(double orientation) {
@@ -93,7 +94,7 @@ public class SimRobotPilot implements RobotPilot {
 		boolean running = true;
 		forward();
 		while(running){
-			if(getPosition().getDistance(pos1) == distance || !canMove()){
+			if(getPosition().getDistance(pos1) >= distance || !canMove()){
 				running= false;
 				stop();
 			}

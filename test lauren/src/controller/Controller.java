@@ -9,62 +9,65 @@ import domain.robots.SimRobotPilot;
 //Robotclass, generates/keeps track of current positioning.
 public class Controller {
 	
-	private RobotPilot currentRobotPilot;
-	private Robot robot;
-	
+	private Robot currentRobot;
 	public Controller() {
-			currentRobotPilot=new BTRobotPilot();
-			robot = new Robot(currentRobotPilot);
-		
+		currentRobot = new Robot(new SimRobotPilot());
+	}
+
+	public void connectNewBtRobot() {
+		currentRobot = new Robot(new BTRobotPilot());
+	}
+	
+	public void connectNewSimRobot() {
+		currentRobot = new Robot(new SimRobotPilot());
 	}
 	
 	public void polygonDriver(int numberOfVertices, double edgeLength) {
-		PolygonDriver driver = new PolygonDriver(robot);
+		PolygonDriver driver = new PolygonDriver(currentRobot);
 		driver.drive(numberOfVertices, edgeLength);
 		
 	}
 
 	public void moveForward() {
-		robot.forward();
+		currentRobot.forward();
 		
 	}
 
 	public void moveBack() {
-		robot.backward();
+		currentRobot.backward();
 		
 	}
 
 	public void rotateRight() {
-		robot.turnRight();
+		currentRobot.turnRight();
 		
 	}
 
 	public void rotateLeft() {
-		robot.turnRight();
+		currentRobot.turnRight();
 		
 	}
 
 	public void cancel() {
-		robot.stop();
+		currentRobot.stop();
 		
 	}
 	
 	public double getXCo(){
-		return robot.getPosition().getX();
+		return currentRobot.getPosition().getX();
 	}
 
 	public double getYCo(){
-		return robot.getPosition().getY();
+		return currentRobot.getPosition().getY();
 	}
 
 	public double getSpeed() {
-		return robot.getMovingSpeed();
+		return currentRobot.getActualMovingSpeed();
 	}
 
 	public double getAngle() {
-		return robot.getOrientation();
+		return currentRobot.getOrientation();
 	}
-
 
 	
 	

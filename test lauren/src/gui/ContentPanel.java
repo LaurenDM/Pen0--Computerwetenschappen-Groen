@@ -32,7 +32,6 @@ import domain.pixels.Pixel;
 import domain.pixels.PixelCollection;
 
 public class ContentPanel implements ActionListener {
-	
 	static JFrame frame = new JFrame("P&O - Groen");
     static JFrame variableFrame = new JFrame("P&O - Groen - Variables");
     private static ControllerPoller controllerPoller;
@@ -79,6 +78,8 @@ public class ContentPanel implements ActionListener {
     }
     
 	public ContentPanel() {
+		//We create a controller that controls communication with the domain.
+	    controller = new Controller();
 		// We create a bottom JPanel to place everything on.
         totalGUI.setLayout(null);
         // We create a controllerPoller to update the infolabel data
@@ -319,7 +320,7 @@ public class ContentPanel implements ActionListener {
 					contentPanel.setRobotSpeed(controller.getSpeed());
 					contentPanel.setRobotAngle(controller.getAngle());
 					//TODO
-					sleep(10);
+					sleep(50);
 				}
 			} catch(InterruptedException e){
 				//Do absolutely nothing
@@ -370,8 +371,8 @@ public class ContentPanel implements ActionListener {
         	
         }
         else if(e.getSource() == connectButton){
-        	// We create a controller
-            controller = new Controller();
+        	//We make the controller connect to a real robot
+        	controller.connectNewBtRobot();
             controllerPoller = new ControllerPoller(controller, this);
             controllerPoller.start();
         }

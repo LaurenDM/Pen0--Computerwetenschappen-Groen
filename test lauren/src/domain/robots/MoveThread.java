@@ -8,6 +8,7 @@ public class MoveThread extends Thread {
 		this.simRobotPilot=simRobotPilot;
 	}
 	
+	@Override
 	public void run(){
 		moveType.execute(simRobotPilot);
 	}
