@@ -23,11 +23,8 @@ public class Position implements Cloneable {
 		return y;}
 	
 	public void move(double orientation, double distance){
-		//TODO
-		System.out.println(getX()+Math.cos(orientation)*distance);
-		System.out.println(getY()+Math.sin(orientation)*distance);
-		setX(getX()+Math.cos(orientation)*distance);
-		setY(getY()+Math.sin(orientation)*distance);
+		setX(getX()+Math.cos(Math.toRadians(orientation))*distance);
+		setY(getY()+Math.sin(Math.toRadians(orientation))*distance);
 	}
 	
 	public void setX(double x){
