@@ -47,7 +47,7 @@ public class Controller {
 	}
 
 	public void rotateLeft() {
-		currentRobot.turnRight();
+		currentRobot.turnLeft();
 		
 	}
 
