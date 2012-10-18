@@ -20,7 +20,7 @@ public class VariablePanel implements ActionListener {
 	JFrame surroundingFrame;
 	static int totalXDimensions = 400;
 	static int totalYDimensions = 400;
-	private JButton okButton;
+	private JButton okButton, readyButton;
 	private JTextField edgeLengthIputfield;
 	private JTextField nbVerticesInputfield;
 	private Controller controller;
@@ -63,10 +63,16 @@ public class VariablePanel implements ActionListener {
 		variableGUI.setOpaque(true);
 
 		okButton = new JButton();
-		okButton.setBounds(20, 140, 60, 30);
+		okButton.setBounds(20, 140, 120, 30);
 		okButton.setText("OK");
-
 		okButton.addActionListener(this);
+		
+		readyButton = new JButton();
+		readyButton.setBounds(20, 170, 120, 30);
+		readyButton.setText("Ready to run.");
+		readyButton.addActionListener(this);
+		
+		titlePanel.add(readyButton);
 		titlePanel.add(okButton);
 	}
 
@@ -77,10 +83,11 @@ public class VariablePanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == okButton) {
-			controller.polygonDriver(getNumberOfVertices(), getEdgeLength());
 			okButton.setSelected(false);
-			variableGUI.setVisible(false);
 			surroundingFrame.setVisible(false);
+		}
+		if(e.getSource() == readyButton){
+			controller.polygonDriver(getNumberOfVertices(), getEdgeLength());
 		}
 	}
 	public int getNumberOfVertices(){
