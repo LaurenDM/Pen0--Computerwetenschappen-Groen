@@ -18,8 +18,8 @@ public DrawingPanel(ContentPanel contentPanel) {
 }
 
 
-public static final int IMG_WIDTH = 400;
-public static final int IMG_HEIGHT = 400;
+public static final int IMG_WIDTH = 350;
+public static final int IMG_HEIGHT = 500;
 
    private BufferedImage image = new BufferedImage(IMG_WIDTH, IMG_HEIGHT,
             BufferedImage.TYPE_INT_ARGB);
