@@ -36,10 +36,12 @@ public class SimRobotTest {
 	@Test
 	public void turnTest(){
 		simRobotpilot.turn(-90);
-		assertEquals(270, simRobotpilot.getOrientation(),0.1);
-		simRobotpilot.turn(90);
-		assertEquals(0, simRobotpilot.getOrientation(),0.1);
+		assertEquals(-90, simRobotpilot.getOrientation(),0.1);
+		simRobotpilot.turn(-40);
+		assertEquals(-130, simRobotpilot.getOrientation(),0.1);
+		simRobotpilot.turn(-100);
+		assertEquals(130, simRobotpilot.getOrientation(),0.1);
 		simRobotpilot.turn(30.5);
-		assertEquals(30.5, simRobotpilot.getOrientation(), 0.1);
+		assertEquals(160.5, simRobotpilot.getOrientation(), 0.1);
 	}
 }

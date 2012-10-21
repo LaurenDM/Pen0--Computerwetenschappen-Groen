@@ -42,10 +42,10 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public void turn(double amount) {
 		setOrientation(getOrientation()+amount);
-		while(getOrientation()<0){
+		while(getOrientation()<-179){
 			setOrientation(getOrientation()+360);
 		}
-		while(getOrientation()>359){
+		while(getOrientation()>180){
 			setOrientation(getOrientation()-360);
 		}
 	}
