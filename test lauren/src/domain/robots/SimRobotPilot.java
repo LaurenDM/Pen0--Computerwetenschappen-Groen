@@ -38,10 +38,16 @@ public class SimRobotPilot implements RobotPilot {
 		return position;
 	}
 	
-	//TODO bedenken wat we willen doen met de orientation ivm met over 360 graden en negatieve hoeken.
+	//TODO: moet geleidelijk?
 	@Override
 	public void turn(double amount) {
-		setOrientation(getOrientation()+amount);//TODO dit moet geleidelijk gaan
+		setOrientation(getOrientation()+amount);
+		while(getOrientation()<0){
+			setOrientation(getOrientation()+360);
+		}
+		while(getOrientation()>359){
+			setOrientation(getOrientation()-360);
+		}
 	}
 
 
