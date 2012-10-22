@@ -27,8 +27,8 @@ public class SimRobotPilot implements RobotPilot {
 	public SimRobotPilot(double orientation, Position position){
 		setOrientation(orientation);
 		this.position=position;
-		this.setMovingSpeed(31);
-		this.setTurningSpeed(10);//TODO
+		this.setMovingSpeed(30);
+		this.setTurningSpeed(90);
 	}
 	
 	private void setOrientation(double orientation) {
