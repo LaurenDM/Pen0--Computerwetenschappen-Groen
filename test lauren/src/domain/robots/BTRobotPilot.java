@@ -3,6 +3,10 @@ import java.io.IOException;
 
 import domain.Position.Position;
 import domain.util.TimeStamp;
+import lejos.nxt.LightSensor;
+import lejos.nxt.SensorPort;
+import lejos.nxt.TouchSensor;
+import lejos.nxt.UltrasonicSensor;
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.navigation.DifferentialPilot;
@@ -22,6 +26,9 @@ public class BTRobotPilot implements RobotPilot  {
 	private final double defaultTravelSpeed = 15;
 	private final double defaultTurnSpeed = 45;
 	
+	private TouchSensor touchSensor;
+	private UltrasonicSensor ultrasonicSensor;
+	private LightSensor lightSensor;
 	
 	public BTRobotPilot(){
 		
@@ -41,8 +48,10 @@ public class BTRobotPilot implements RobotPilot  {
     	setMovingSpeed(defaultTravelSpeed);
     	setTurningSpeed(defaultTurnSpeed);
     	poseProvider= new OdometryPoseProvider(pilot);
+    	touchSensor = new TouchSensor(SensorPort.S1);
+    	ultrasonicSensor = new UltrasonicSensor(SensorPort.S2);
+    	lightSensor = new LightSensor(SensorPort.S3);
 	}
-	
 
 	@Override
 	public void turn(double amount) {
@@ -125,9 +134,12 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 	
 	public boolean canMove(){
-		//TODO
-		return true;
-		
+		int distance = ultrasonicSensor.getDistance();	
+		int testDistance = 10; 
+		if(distance < testDistance)
+			return false;
+		else
+			return true;
 	}
 
 }
