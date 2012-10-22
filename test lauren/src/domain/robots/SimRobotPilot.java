@@ -64,7 +64,7 @@ public class SimRobotPilot implements RobotPilot {
 			//The Math.min is needed for when degrees go from 180 to -179
 			double latestAngleDif=Math.min(Math.abs(previousAngle-currAngle), Math.abs(previousAngle+currAngle));
 			totalAngleDif+=latestAngleDif;
-			if( totalAngleDif>= Math.abs((int)wantedAngleDif) || !canMove()){
+			if( totalAngleDif>= Math.abs(wantedAngleDif) || !canMove()){
 				turning= false;
 				stopThread(turnThread);
 			}
