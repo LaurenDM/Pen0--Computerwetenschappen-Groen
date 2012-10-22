@@ -1,4 +1,4 @@
-package domain;
+package domain.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

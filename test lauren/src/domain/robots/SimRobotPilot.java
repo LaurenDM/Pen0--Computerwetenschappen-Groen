@@ -1,7 +1,7 @@
 package domain.robots;
 
-import domain.TimeStamp;
 import domain.Position.Position;
+import domain.util.TimeStamp;
 
 
 public class SimRobotPilot implements RobotPilot {
@@ -14,6 +14,7 @@ public class SimRobotPilot implements RobotPilot {
 
 		//The wanted travel Speed of the robot.
 		private double travelSpeed;
+		private TurnThread turnThread;
 
 	
 	/**
@@ -31,6 +32,9 @@ public class SimRobotPilot implements RobotPilot {
 	}
 	
 	private void setOrientation(double orientation) {
+		if(Math.abs(orientation)>180){
+			throw new IllegalArgumentException();
+		}
 		this.orientation=orientation;
 	}
 		@Override
@@ -40,14 +44,35 @@ public class SimRobotPilot implements RobotPilot {
 	
 	//TODO: moet geleidelijk?
 	@Override
-	public void turn(double amount) {
-		setOrientation(getOrientation()+amount);
-		while(getOrientation()<-179){
-			setOrientation(getOrientation()+360);
+	public void turn(double wantedAngleDif) {
+		double previousAngle = getOrientation();
+		boolean turning = true;
+		if(wantedAngleDif>0){
+			keepTurningRight();
 		}
-		while(getOrientation()>180){
-			setOrientation(getOrientation()-360);
+		else{
+			keepTurningLeft();
 		}
+		double totalAngleDif=0;
+		while(turning){
+			double currAngle=getOrientation();
+			//The Math.min is needed for when degrees go from 180 to -179
+			double latestAngleDif=Math.min(Math.abs(previousAngle-currAngle), Math.abs(previousAngle+currAngle));
+			totalAngleDif+=latestAngleDif;
+			if( totalAngleDif>= Math.abs(wantedAngleDif) || !canMove()){
+				turning= false;
+				stopThread(turnThread);
+			}
+			previousAngle=currAngle;
+		}
+	}
+
+	public void keepTurningLeft(){
+		startTurnThread(true);
+	}
+	
+	public void keepTurningRight(){
+		startTurnThread(false);
 	}
 
 
@@ -77,11 +102,16 @@ public class SimRobotPilot implements RobotPilot {
 	}
 
 	public void startMoveThread(Movement movement) {
-		stop();
+		stopThread(moveThread);
 		moveThread= new MoveThread(movement, this);
 		moveThread.start();
 	}
 	
+	public void startTurnThread(boolean left) {
+		stopThread(turnThread);
+		turnThread= new TurnThread(left, this);
+		turnThread.start();
+	}
 
 	@Override
 	public void backward(){
@@ -94,18 +124,31 @@ public class SimRobotPilot implements RobotPilot {
 		if (moveThread != null) {
 			moveThread.interrupt();
 		}
+		if (turnThread != null) {
+			turnThread.interrupt();
+		}
 	}
-
+	
+	public void stopThread(Thread thread) {
+		if (thread != null) {
+			thread.interrupt();
+		}
+	}
+	
 	@Override
-	public void move(double distance) {
+	public void move(double wantedDistance) {
 		Position pos1 = getPosition().clone();
 		boolean running = true;
-		forward();
+		if (wantedDistance > 0) {
+			forward();
+		} else {
+			backward();
+		}
 		while(running){
-			double wantedDistance=getPosition().getDistance(pos1);
-			if( wantedDistance>= distance || !canMove()){
+			double currDistance=getPosition().getDistance(pos1);
+			if(currDistance>=Math.abs(wantedDistance)  || !canMove()){
 				running= false;
-				stop();
+				stopThread(moveThread);
 			}
 		}
 	}
@@ -135,6 +178,44 @@ public class SimRobotPilot implements RobotPilot {
 		return true;
 		
 	}
+	
+	
+	private class TurnThread extends Thread{
+		private boolean left;
+		private SimRobotPilot simRobotPilot;
+		public TurnThread(boolean left, SimRobotPilot simRobotPilot){
+			this.simRobotPilot=simRobotPilot;
+			this.left=left;
+		}
 
+		@Override
+		public void run() {
+			double speed = simRobotPilot.getMovingSpeed();
+			double turnAmount = left ? -1 : 1;
+			int sleepTime = Math.abs((int) (1000 * turnAmount / speed));
+			while (true) {
+				double newOrientation = calcNewOrientation(getOrientation()
+						+ turnAmount);
+				setOrientation(newOrientation);
+				try {
+					Thread.sleep(sleepTime);
+				} catch (InterruptedException e) {
+					break;
+				}
+			}
+		}
+
+		private double calcNewOrientation(double rawNewOrientation) {
+			double newOrientation = rawNewOrientation;
+			while (newOrientation < -179) {
+				newOrientation += 360;
+			}
+			while (newOrientation > 180) {
+				newOrientation -= 360;
+			}
+			return newOrientation;
+		}
+
+	}
 
 }

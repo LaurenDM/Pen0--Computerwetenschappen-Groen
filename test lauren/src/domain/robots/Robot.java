@@ -2,21 +2,21 @@ package domain.robots;
 
 import java.util.List;
 
-import domain.TimeStamp;
 import domain.Position.Position;
-import domain.pixels.PixelRobot;
+import domain.polygons.RobotPolygon;
+import domain.util.TimeStamp;
 
 public class Robot {
 	RobotPilot robotPilot;
-	PixelRobot pixelRobot;
+	RobotPolygon robotPolygon;
 	public Robot(RobotPilot robotPilot){
 		this.robotPilot=robotPilot;
 		this.movement=Movement.STOPPED;
-		this.pixelRobot=new PixelRobot(this);
+		this.robotPolygon=new RobotPolygon(this);
 	}
 	private Movement movement;
-	public PixelRobot getPixelRobot(){
-		return pixelRobot;
+	public RobotPolygon getRobotPolygon(){
+		return robotPolygon;
 	}
 
 	
@@ -40,6 +40,7 @@ public class Robot {
 
 	public double getTurningSpeed() {
 		return robotPilot.getTurningSpeed();
+		
 	}
 
 

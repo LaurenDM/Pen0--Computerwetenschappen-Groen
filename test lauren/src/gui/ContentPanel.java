@@ -30,7 +30,7 @@ import javax.swing.text.Segment;
 import lejos.pc.tools.Upload;
 
 import controller.Controller;
-import domain.pixels.Pixel;
+import domain.util.ColorPolygon;
 
 public class ContentPanel implements ActionListener {
 	static JFrame frame = new JFrame("P&O - Groen");
@@ -295,10 +295,9 @@ public class ContentPanel implements ActionListener {
 	
 	
 
-	public void updateBoard(List<Pixel> collection){
-		drawingPanel.clear();
-		for (Pixel pixel:collection) {
-			drawingPanel.drawMyLine(pixel.getX(),pixel.getY(),pixel.getX(),pixel.getY(), pixel.getColor());
+	public void updateBoard(List<ColorPolygon> collection){
+		for (ColorPolygon colorPoly:collection) {
+			drawingPanel.reDrawMyPolygon(colorPoly);
 		}
 	} 
 	
@@ -326,7 +325,7 @@ public class ContentPanel implements ActionListener {
 		public void run(){
 			try{
 				while(true){
-					contentPanel.updateBoard(controller.getPixels());
+					contentPanel.updateBoard(controller.getColorPolygons());
 					contentPanel.setRobotX(controller.getXCo());
 					contentPanel.setRobotY(controller.getYCo());
 					contentPanel.setRobotSpeed(controller.getSpeed());

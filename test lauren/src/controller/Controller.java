@@ -1,13 +1,15 @@
 package controller;
 
+import java.awt.Polygon;
+import java.util.ArrayList;
 import java.util.List;
 
 import domain.PolygonDriver;
-import domain.pixels.Pixel;
 import domain.robots.BTRobotPilot;
 import domain.robots.Robot;
 import domain.robots.RobotPilot;
 import domain.robots.SimRobotPilot;
+import domain.util.ColorPolygon;
 
 //Robotclass, generates/keeps track of current positioning.
 public class Controller {
@@ -72,7 +74,9 @@ public class Controller {
 		return currentRobot.getOrientation();
 	}
 
-	public List<Pixel> getPixels(){
-		return currentRobot.getPixelRobot().getPixels();
+	public List<ColorPolygon> getColorPolygons(){
+		List<ColorPolygon> colPolyList=new ArrayList<ColorPolygon>();
+		colPolyList.add(currentRobot.getRobotPolygon());
+		return colPolyList;
 	}
 }

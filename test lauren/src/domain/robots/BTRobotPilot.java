@@ -1,8 +1,8 @@
 package domain.robots;
 import java.io.IOException;
 
-import domain.TimeStamp;
 import domain.Position.Position;
+import domain.util.TimeStamp;
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.localization.OdometryPoseProvider;
 import lejos.robotics.navigation.DifferentialPilot;

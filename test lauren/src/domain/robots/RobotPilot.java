@@ -1,7 +1,7 @@
 package domain.robots;
 
-import domain.TimeStamp;
 import domain.Position.Position;
+import domain.util.TimeStamp;
 
 public interface RobotPilot {
 	public void UpdateUntil(TimeStamp timestamp);
