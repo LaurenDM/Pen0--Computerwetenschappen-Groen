@@ -47,23 +47,46 @@ public class SimRobotPilot implements RobotPilot {
 	public void turn(double wantedAngleDif) {
 		double previousAngle = getOrientation();
 		boolean turning = true;
+		//The turningMethod always turns 1 degree, that's why we first turn the non integer part of WantedAngleDIf.
+		double intDoubleDif=wantedAngleDif - (int)wantedAngleDif;
+		turnNonIntegerPart(intDoubleDif);
+		
+		//Now we start turning the integer part of wantedAngleDif
+		double totalAngleDif=intDoubleDif;
 		if(wantedAngleDif>0){
 			keepTurningRight();
 		}
 		else{
 			keepTurningLeft();
 		}
-		double totalAngleDif=0;
 		while(turning){
 			double currAngle=getOrientation();
 			//The Math.min is needed for when degrees go from 180 to -179
 			double latestAngleDif=Math.min(Math.abs(previousAngle-currAngle), Math.abs(previousAngle+currAngle));
 			totalAngleDif+=latestAngleDif;
-			if( totalAngleDif>= Math.abs(wantedAngleDif) || !canMove()){
+			if( totalAngleDif>= Math.abs((int)wantedAngleDif) || !canMove()){
 				turning= false;
 				stopThread(turnThread);
 			}
 			previousAngle=currAngle;
+		}
+	}
+	
+	/**
+	 * This method turns a degree between -1 and 1 and makes the thread sleep the right amount of time.
+	 * @param intDoubleDif
+	 */
+	public void turnNonIntegerPart(double intDoubleDif) {
+		if(intDoubleDif>=1||intDoubleDif<=-1){
+		throw new IllegalArgumentException();
+		}
+		setOrientation(calcNewOrientation(intDoubleDif));
+		long correctionSleeptime=Math.abs(Math.round(intDoubleDif/getTurningSpeed()/1000.0));
+		try {
+			Thread.sleep(correctionSleeptime);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -179,6 +202,16 @@ public class SimRobotPilot implements RobotPilot {
 		
 	}
 	
+	private double calcNewOrientation(double turnAmount) {
+			double newOrientation = getOrientation()+turnAmount;
+			while (newOrientation < -179) {
+				newOrientation += 360;
+			}
+			while (newOrientation > 180) {
+				newOrientation -= 360;
+			}
+			return newOrientation;
+		}
 	
 	private class TurnThread extends Thread{
 		private boolean left;
@@ -192,10 +225,9 @@ public class SimRobotPilot implements RobotPilot {
 		public void run() {
 			double speed = simRobotPilot.getMovingSpeed();
 			double turnAmount = left ? -1 : 1;
-			int sleepTime = Math.abs((int) (1000 * turnAmount / speed));
+			int sleepTime = Math.abs((int) Math.round( (1000 * turnAmount / speed)));
 			while (true) {
-				double newOrientation = calcNewOrientation(getOrientation()
-						+ turnAmount);
+				double newOrientation = calcNewOrientation(turnAmount);
 				setOrientation(newOrientation);
 				try {
 					Thread.sleep(sleepTime);
@@ -205,16 +237,7 @@ public class SimRobotPilot implements RobotPilot {
 			}
 		}
 
-		private double calcNewOrientation(double rawNewOrientation) {
-			double newOrientation = rawNewOrientation;
-			while (newOrientation < -179) {
-				newOrientation += 360;
-			}
-			while (newOrientation > 180) {
-				newOrientation -= 360;
-			}
-			return newOrientation;
-		}
+		
 
 	}
 

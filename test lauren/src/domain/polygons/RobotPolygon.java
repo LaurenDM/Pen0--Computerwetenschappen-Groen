@@ -40,16 +40,16 @@ public class RobotPolygon implements ColorPolygon {
 	}
 	private int[] calcYCoords(Position center, double angle,double length) {
 		int[] yCos= new int[3];
-		yCos[0]=(int) (center.getY()+length*Math.sin(angle));
-		yCos[1]=(int) (center.getY()+(length/2)*Math.sin(angle-90));
-		yCos[2]=(int) (center.getY()+(length/2)*Math.sin(angle+90));
+		yCos[0]=(int) Math.round((center.getY()+length*Math.sin(angle)));
+		yCos[1]=(int) Math.round((center.getY()+(length/2)*Math.sin(angle-90)));
+		yCos[2]=(int) Math.round((center.getY()+(length/2)*Math.sin(angle+90)));
 		return yCos;
 	}
 	private int[] calcXCoords(Position center,double angle, double length) {
 		int[] xCos= new int[3];
-		xCos[0]=(int) (center.getX()+length*Math.cos(angle));
-		xCos[1]=(int) (center.getX()+(length/2)*Math.cos(angle-90));
-		xCos[2]=(int) (center.getX()+(length/2)*Math.cos(angle+90));
+		xCos[0]=(int) Math.round((center.getX()+length*Math.cos(angle)));
+		xCos[1]=(int) Math.round((center.getX()+(length/2)*Math.cos(angle-90)));
+		xCos[2]=(int) Math.round((center.getX()+(length/2)*Math.cos(angle+90)));
 		return xCos;
 		
 	}
