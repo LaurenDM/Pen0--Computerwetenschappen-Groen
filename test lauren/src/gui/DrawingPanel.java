@@ -1,13 +1,12 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 
 import controller.Controller;
 import domain.util.ColorPolygon;

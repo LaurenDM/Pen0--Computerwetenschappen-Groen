@@ -1,15 +1,12 @@
 package controller;
 
-import java.awt.Polygon;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.omg.CORBA.CTX_RESTRICT_SCOPE;
 
 import domain.PolygonDriver;
 import domain.robots.BTRobotPilot;
 import domain.robots.Robot;
-import domain.robots.RobotPilot;
 import domain.robots.SimRobotPilot;
 import domain.util.ColorPolygon;
 
