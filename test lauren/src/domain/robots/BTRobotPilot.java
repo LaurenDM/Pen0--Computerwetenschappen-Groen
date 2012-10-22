@@ -24,7 +24,7 @@ public class BTRobotPilot implements RobotPilot  {
 	private OdometryPoseProvider poseProvider;
 	
 	private final double defaultTravelSpeed = 15;
-	private final double defaultTurnSpeed = 45;
+	private final double defaultTurnSpeed = 70;
 	
 	private TouchSensor touchSensor;
 	private UltrasonicSensor ultrasonicSensor;
@@ -39,8 +39,8 @@ public class BTRobotPilot implements RobotPilot  {
 			e.printStackTrace();
 			throw new RuntimeException();
 		}
-    	float wheelDiameter = Float.parseFloat(pp.getProperty(PilotProps.KEY_WHEELDIAMETER, "5.6"));
-    	float trackWidth = Float.parseFloat(pp.getProperty(PilotProps.KEY_TRACKWIDTH, "11.72"));
+    	float wheelDiameter = 5.55F;
+    	float trackWidth = 11.22F;
     	leftMotor = PilotProps.getMotor(pp.getProperty(PilotProps.KEY_LEFTMOTOR, "C"));
     	rightMotor = PilotProps.getMotor(pp.getProperty(PilotProps.KEY_RIGHTMOTOR, "B"));
     	

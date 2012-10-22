@@ -1,13 +1,12 @@
 package controller;
 
-import java.awt.Polygon;
 import java.util.ArrayList;
 import java.util.List;
+
 
 import domain.PolygonDriver;
 import domain.robots.BTRobotPilot;
 import domain.robots.Robot;
-import domain.robots.RobotPilot;
 import domain.robots.SimRobotPilot;
 import domain.util.ColorPolygon;
 
@@ -15,16 +14,25 @@ import domain.util.ColorPolygon;
 public class Controller {
 	
 	private Robot currentRobot;
+	private Robot btRobot;
+	private Robot simRobot;
+	
 	public Controller() {
-		currentRobot = new Robot(new SimRobotPilot());
+		simRobot = new Robot(new SimRobotPilot());
+		currentRobot=simRobot;
 	}
 
 	public void connectNewBtRobot() {
-		currentRobot = new Robot(new BTRobotPilot());
+		if(btRobot==null){
+			btRobot = new Robot(new BTRobotPilot());
+		}			
+		currentRobot=btRobot;
+
 	}
 	
 	public void connectNewSimRobot() {
-		currentRobot = new Robot(new SimRobotPilot());
+		simRobot = new Robot(new SimRobotPilot());
+		currentRobot = simRobot ;
 	}
 	
 	public void polygonDriver(int numberOfVertices, double edgeLength) {
