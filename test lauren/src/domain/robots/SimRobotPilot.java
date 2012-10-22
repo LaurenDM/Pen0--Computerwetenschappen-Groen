@@ -125,13 +125,13 @@ public class SimRobotPilot implements RobotPilot {
 	}
 
 	public void startMoveThread(Movement movement) {
-		stopThread(moveThread);
+		stop();
 		moveThread= new MoveThread(movement, this);
 		moveThread.start();
 	}
 	
 	public void startTurnThread(boolean left) {
-		stopThread(turnThread);
+		stop();
 		turnThread= new TurnThread(left, this);
 		turnThread.start();
 	}

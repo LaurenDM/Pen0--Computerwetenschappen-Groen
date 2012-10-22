@@ -19,8 +19,8 @@ public class BTRobotPilot implements RobotPilot  {
 	//The poseProvider is an instantiation of a class that "LeJOS" provides for determining the pose of a NXT Robot.
 	private OdometryPoseProvider poseProvider;
 	
-	private final double defaultTravelSpeed = 30;
-	private final double defaultTurnSpeed = 90;
+	private final double defaultTravelSpeed = 15;
+	private final double defaultTurnSpeed = 45;
 	
 	
 	public BTRobotPilot(){
@@ -116,12 +116,12 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void turnRight() {
-		pilot.rotateRight();
+		pilot.rotate(90);
 	}
 
 	@Override
 	public void turnLeft() {
-		pilot.rotateLeft();
+		pilot.rotate(90);
 	}
 	
 	public boolean canMove(){
