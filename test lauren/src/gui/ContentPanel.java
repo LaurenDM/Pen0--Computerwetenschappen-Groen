@@ -47,6 +47,7 @@ public class ContentPanel implements ActionListener {
     static int totalYDimensions = 700;
     static int buttonXDimension = 90;
     static int buttonYDimension = 30;
+    private boolean connected = false;
     DrawingPanel drawingPanel;
 	
     
@@ -382,12 +383,29 @@ public class ContentPanel implements ActionListener {
         	
         }
         else if(e.getSource() == connectButton){
-        	//We make the controller connect to a real robot
-        	controller.connectNewBtRobot();
+        	if(getConnected() == true ){
+        		connectButton.setText("Connect to robot");
+        		setConnected(false);
+        		controller.connectNewSimRobot();
+        	}
+        	else{
+        		connectButton.setText("Disconnect from robot");
+        		setConnected(true);
+        		controller.connectNewBtRobot();
+        	}
+        		
+        	
         }
         
     }
 	
+	public boolean getConnected(){
+		return this.connected;
+	}
+	
+	public void setConnected(boolean nowConnected){
+		this.connected = nowConnected;
+	}
 	
 	public JPanel getTotalGuiPanel(){
 		return totalGUI;
