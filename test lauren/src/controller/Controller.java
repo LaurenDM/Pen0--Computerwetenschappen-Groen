@@ -40,17 +40,14 @@ public class Controller {
 
 	public void moveBack() {
 		currentRobot.backward();
-		
 	}
 
-	public void rotateRight() {
-		currentRobot.turnRight();
-		
+	public void rotateRightNonBlocking() {
+		(new TurnRightThread()).start();
 	}
 
-	public void rotateLeft() {
-		currentRobot.turnLeft();
-		
+	public void rotateLeftNonBlocking() {
+		(new TurnLeftThread()).start();
 	}
 
 	public void cancel() {
@@ -78,5 +75,19 @@ public class Controller {
 		List<ColorPolygon> colPolyList=new ArrayList<ColorPolygon>();
 		colPolyList.add(currentRobot.getRobotPolygon());
 		return colPolyList;
+	}
+	
+	private class TurnRightThread extends Thread{
+		@Override
+		public void run(){
+			currentRobot.turnRight();
+		}
+	}
+	
+	private class TurnLeftThread extends Thread{
+		@Override
+		public void run(){
+			currentRobot.turnLeft();
+		}
 	}
 }

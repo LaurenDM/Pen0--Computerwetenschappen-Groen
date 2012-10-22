@@ -110,7 +110,7 @@ public class ContentPanel implements ActionListener {
 			public void keyTyped(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT){
 					actionLabel.setText("The robot is turning right!");
-					controller.rotateRight();
+					controller.rotateRightNonBlocking();
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_UP){
 					actionLabel.setText("The robot is going forward!");
@@ -118,7 +118,7 @@ public class ContentPanel implements ActionListener {
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
 					actionLabel.setText("The robot is turning left!");
-					controller.rotateLeft();
+					controller.rotateLeftNonBlocking();
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_DOWN){
 					actionLabel.setText("The robot is going back!");
@@ -163,7 +163,7 @@ public class ContentPanel implements ActionListener {
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT){
 					actionLabel.setText("The robot is turning right!");
 					rightButton.setSelected(true);
-					controller.rotateRight();
+					controller.rotateRightNonBlocking();
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_UP){
 					actionLabel.setText("The robot is going forward!");
@@ -173,7 +173,7 @@ public class ContentPanel implements ActionListener {
 				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
 					actionLabel.setText("The robot is turning left!");
 					leftButton.setSelected(true);
-					controller.rotateLeft();
+					controller.rotateLeftNonBlocking();
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_DOWN){
 					actionLabel.setText("The robot is going back!");
@@ -358,14 +358,14 @@ public class ContentPanel implements ActionListener {
         	actionLabel.setText("The robot is turning left!");
         	leftButton.setSelected(false);
         	buttonPanel.requestFocusInWindow();
-        	controller.rotateLeft();
+        	controller.rotateLeftNonBlocking();
         }
         	
         else if(e.getSource() == rightButton){
         	actionLabel.setText("The robot is turning right!");
         	rightButton.setSelected(false);
         	buttonPanel.requestFocusInWindow();
-        	controller.rotateRight();
+        	controller.rotateRightNonBlocking();
         }
         	
         else if(e.getSource() == cancelButton){
