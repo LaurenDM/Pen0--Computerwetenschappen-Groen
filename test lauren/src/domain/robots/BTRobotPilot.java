@@ -133,6 +133,10 @@ public class BTRobotPilot implements RobotPilot  {
 		pilot.rotate(90);
 	}
 	
+	public boolean isTouching(){
+		return touchSensor.isPressed();
+	}
+	
 	public boolean canMove(){
 		int distance = ultrasonicSensor.getDistance();	
 		int testDistance = 10; 
