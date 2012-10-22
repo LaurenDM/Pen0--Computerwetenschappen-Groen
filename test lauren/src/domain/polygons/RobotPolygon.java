@@ -33,7 +33,7 @@ public class RobotPolygon implements ColorPolygon {
 	public Polygon getPolygon() {
 		Position center=getCenter();
 		double angle= getAngle();
-		double length=30;
+		double length=16;
 		int[] xCos=calcXCoords(center, angle, length);
 		int[] yCos=calcYCoords(center, angle, length);
 		return new Polygon(xCos,yCos,3);
