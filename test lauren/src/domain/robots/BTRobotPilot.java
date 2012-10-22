@@ -19,6 +19,9 @@ public class BTRobotPilot implements RobotPilot  {
 	//The poseProvider is an instantiation of a class that "LeJOS" provides for determining the pose of a NXT Robot.
 	private OdometryPoseProvider poseProvider;
 	
+	private final double defaultTravelSpeed = 30;
+	private final double defaultTurnSpeed = 90;
+	
 	
 	public BTRobotPilot(){
 		
@@ -35,6 +38,8 @@ public class BTRobotPilot implements RobotPilot  {
     	rightMotor = PilotProps.getMotor(pp.getProperty(PilotProps.KEY_RIGHTMOTOR, "B"));
     	
     	pilot = new DifferentialPilot(wheelDiameter, trackWidth, leftMotor, rightMotor);
+    	setMovingSpeed(defaultTravelSpeed);
+    	setTurningSpeed(defaultTurnSpeed);
     	poseProvider= new OdometryPoseProvider(pilot);
 	}
 	
