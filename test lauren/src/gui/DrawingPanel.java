@@ -16,8 +16,9 @@ public class DrawingPanel extends JPanel {
 	private HashMap<ColorPolygon, Polygon> previousPolygons;
 	private Controller controller;
 	private JPanel totalGui;
-
+	private Graphics g;
 	public DrawingPanel(ContentPanel contentPanel) {
+		g=image.getGraphics();
 		this.controller = contentPanel.getController();
 		totalGui = contentPanel.getTotalGuiPanel();
 		previousPolygons = new HashMap<ColorPolygon, Polygon>();
@@ -37,7 +38,6 @@ public class DrawingPanel extends JPanel {
 	}
 
 	public void drawMyLine(int x1, int y1, int x2, int y2, Color color) {
-		Graphics g = image.getGraphics();
 		g.setColor(color);
 		g.drawLine(x1, y1, x2, y2);
 		totalGui.repaint();
@@ -49,28 +49,26 @@ public class DrawingPanel extends JPanel {
 
 	// This method makes the panel white agains
 	public void clear() {
-		Graphics g = image.getGraphics();
 		g.setColor(Color.white);
-		g.drawRect(0, 0, IMG_WIDTH, IMG_HEIGHT);
+		g.fillRect(0, 0, IMG_WIDTH, IMG_HEIGHT);
 		totalGui.repaint();
 	}
 
 	public void reDrawMyPolygon(ColorPolygon colorPoly) {
-		Graphics g = image.getGraphics();
 		Polygon previousPoly = previousPolygons.get(colorPoly);
 		if (previousPoly != null) {
 			g.setColor(Color.gray);
-			fillCenteredPolygon(previousPoly, g);
+			fillCenteredPolygon(previousPoly);
 		}
 		Polygon polygon = colorPoly.getPolygon();
 		previousPolygons.put(colorPoly, polygon);
 		g.setColor(colorPoly.getColor());
-		fillCenteredPolygon(polygon, g);
+		fillCenteredPolygon(polygon);
 		totalGui.repaint();
 		
 	}
 
-	private void fillCenteredPolygon(Polygon originalPoly, Graphics g) {
+	private void fillCenteredPolygon(Polygon originalPoly) {
 		int npoints=originalPoly.npoints;
 		Polygon centeredPoly= new Polygon();
 		centeredPoly.npoints=npoints;

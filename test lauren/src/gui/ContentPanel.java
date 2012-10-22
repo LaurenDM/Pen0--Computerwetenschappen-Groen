@@ -393,7 +393,8 @@ public class ContentPanel implements ActionListener {
         		setConnected(true);
         		controller.connectNewBtRobot();
         	}
-        		
+        	drawingPanel.clear();
+
         	
         }
         
