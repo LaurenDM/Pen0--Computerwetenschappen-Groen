@@ -1,9 +1,14 @@
 package gui;
+import domain.*;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.ScrollPane;
+import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -12,6 +17,17 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.UndoableEditListener;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.Element;
+import javax.swing.text.Position;
+import javax.swing.text.Segment;
+
+import lejos.pc.tools.Upload;
 
 import controller.Controller;
 import domain.util.ColorPolygon;
@@ -33,9 +49,19 @@ public class ContentPanel implements ActionListener {
     static int buttonYDimension = 30;
     private boolean connected = false;
     DrawingPanel drawingPanel;
+    private boolean upButtonPressed = false;
+    private boolean leftButtonPressed = false;
+    private boolean rightButtonPressed = false;
+    private boolean downButtonPressed = false;
+    public enum Button {
+        UP, LEFT, DOWN, RIGHT,NONE
+    }
 	
     
     Controller controller;
+    public void setFocusButtons(){
+    	buttonPanel.requestFocusInWindow();
+    }
     
     public void fixPanelLayout(JPanel object, int xsize, int ysize, int xco, int yco){
     	object.setLayout(null);
@@ -63,11 +89,36 @@ public class ContentPanel implements ActionListener {
     	source.add(object);
     }
     
+    public Button getCurrentPressedButton(){
+    	if(upButtonPressed == true)
+    		return Button.UP;
+    	else if(leftButtonPressed == true)
+    		return Button.LEFT;
+    	else if(rightButtonPressed == true)
+    		return Button.RIGHT;
+    	else if(downButtonPressed == true)
+    		return Button.DOWN;
+    	else
+    		return Button.NONE;
+    }
+    
+    public void setCurrentPressedButton(boolean pressed,Button button){
+    	if(button == Button.RIGHT)
+    		this.rightButtonPressed = pressed;
+    	else if(button == Button.LEFT)
+    		this.leftButtonPressed = pressed;
+    	else if(button == Button.UP)
+    		this.upButtonPressed = pressed;
+    	else if(button == Button.DOWN)
+    		this.downButtonPressed = pressed;
+    }
+    
 	public ContentPanel() {
 		//We create a controller that controls communication with the domain.
 	    controller = new Controller();
 		// We create a bottom JPanel to place everything on.
         totalGUI.setLayout(null);
+        totalGUI.requestFocusInWindow();
         // We create a controllerPoller to update the infolabel data
         
         
@@ -114,28 +165,27 @@ public class ContentPanel implements ActionListener {
 			
 			@Override
 			public void keyReleased(KeyEvent e) {
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e1) {
-					// never gets called.
-					e1.printStackTrace();
-				}
-				if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+				System.out.println("released");
+				if (e.getKeyCode() == KeyEvent.VK_RIGHT && getCurrentPressedButton() == Button.RIGHT){
+					setCurrentPressedButton(false,Button.RIGHT);
 					actionLabel.setText("The robot is doing nothing atm!");
 					rightButton.setSelected(false);
 					controller.cancel();
 				}
-				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
+				else if (e.getKeyCode() == KeyEvent.VK_LEFT && getCurrentPressedButton() == Button.LEFT){
+					setCurrentPressedButton(false,Button.LEFT);
 					actionLabel.setText("The robot is doing nothing atm!");
 					leftButton.setSelected(false);
 					controller.cancel();
 				}
-				else if (e.getKeyCode() == KeyEvent.VK_UP){
+				else if (e.getKeyCode() == KeyEvent.VK_UP && getCurrentPressedButton() == Button.UP){
+					setCurrentPressedButton(false,Button.UP);
 					actionLabel.setText("The robot is doing nothing atm!");
 					upButton.setSelected(false);
 					controller.cancel();
 				}
-				else if (e.getKeyCode() == KeyEvent.VK_DOWN){
+				else if (e.getKeyCode() == KeyEvent.VK_DOWN && getCurrentPressedButton() == Button.DOWN){
+					setCurrentPressedButton(false,Button.DOWN);
 					actionLabel.setText("The robot is doing nothing atm!");
 					downButton.setSelected(false);
 					controller.cancel();
@@ -145,25 +195,31 @@ public class ContentPanel implements ActionListener {
 			
 			@Override
 			public void keyPressed(KeyEvent e) {
+				if (getCurrentPressedButton() == Button.NONE){
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+					setCurrentPressedButton(true,Button.RIGHT);
 					actionLabel.setText("The robot is turning right!");
 					rightButton.setSelected(true);
 					controller.rotateRightNonBlocking();
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_UP){
+					setCurrentPressedButton(true,Button.UP);
 					actionLabel.setText("The robot is going forward!");
 					upButton.setSelected(true);
 					controller.moveForward();
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
+					setCurrentPressedButton(true,Button.LEFT);
 					actionLabel.setText("The robot is turning left!");
 					leftButton.setSelected(true);
 					controller.rotateLeftNonBlocking();
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_DOWN){
+					setCurrentPressedButton(true,Button.DOWN);
 					actionLabel.setText("The robot is going back!");
 					downButton.setSelected(true);
 					controller.moveBack();
+				}
 				}
 			}
 			
@@ -261,6 +317,7 @@ public class ContentPanel implements ActionListener {
         drawingPanel = new DrawingPanel(this);
         fixPanelLayout(drawingPanel, 350, 500, 25, 50);
         drawingPanel.setBackground(Color.WHITE);
+        
         //________________________
         //Creating variable panel
         VariablePanel variablePanel = new VariablePanel(variableFrame,controller);
@@ -274,6 +331,10 @@ public class ContentPanel implements ActionListener {
 	    controllerPoller = new ControllerPoller(controller, this);
 	    //We start the controllerPoller
         controllerPoller.start();
+        
+        frame.requestFocusInWindow(); 
+
+
                 
 	}
 	
@@ -377,8 +438,7 @@ public class ContentPanel implements ActionListener {
         		setConnected(true);
         		controller.connectNewBtRobot();
         	}
-        	drawingPanel.clear();
-
+        		
         	
         }
         
