@@ -70,7 +70,9 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void forward() {
-		pilot.forward();
+		if(canMove())
+			pilot.forward();
+		//TODO: wat als !canMove() ?
 	}
 
 	@Override
@@ -120,7 +122,15 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void move(double distance) {
-		pilot.travel(distance);
+		int testdistance = 10;
+		int n = (int) distance/testdistance;
+		for(int i = 0; i<n ; i++){
+			if(canMove()){
+				pilot.travel(Math.min(testdistance, distance));
+				distance = distance - testdistance;
+			}
+			//TODO: wat als !canMove() ?
+		}
 	}
 
 	@Override
@@ -140,7 +150,7 @@ public class BTRobotPilot implements RobotPilot  {
 	public boolean canMove(){
 		int distance = ultrasonicSensor.getDistance();	
 		int testDistance = 10; 
-		if(distance < testDistance)
+		if(distance < testDistance || isTouching())
 			return false;
 		else
 			return true;
