@@ -1,4 +1,5 @@
 package domain.robotFunctions;
+import domain.Position.Position;
 import domain.robots.Robot;
 
 /**
@@ -95,9 +96,9 @@ public class Straightener extends RobotFunction {
 		goUntilRising();
 		endX=robot.getPosition().getX();
 		endY=robot.getPosition().getY();
-		double edgeA = getDistance(startX,startY,endX,endY);
-		double edgeB = getDistance(topX,topY,endX,endY);
-		double fixedEdge = getDistance(startX,startY,topX,topY);
+		double edgeA = new Position(startX,startY).getDistance(new Position(endX,endY));
+		double edgeB = new Position(topX,topY).getDistance(new Position(endX,endY));
+		double fixedEdge = new Position(startX,startY).getDistance(new Position(topX,topY));
 		//beta=arccos((a²+c²-b²)/(2ac))
 		double betaAngle = Math.acos((Math.pow(fixedEdge,2)+Math.pow(edgeA,2)-Math.pow(edgeB,2))/(2*edgeA*fixedEdge));
 		//TODO finish this method
@@ -136,7 +137,7 @@ public class Straightener extends RobotFunction {
 		endX=robot.getPosition().getX();
 		endY=robot.getPosition().getY();
 		nextAngle=robot.getOrientation();
-		return getDistance(startX,startY,endX,endY);
+		return new Position(startX,startY).getDistance(new Position(endX,endY));
 	}
 
 	private void goUntilFalling() {
@@ -149,12 +150,7 @@ public class Straightener extends RobotFunction {
 		
 	}
 
-	/**
-	 * Returns the distance between the given coordinates.
-	 */
-	private static double getDistance(double startX, double startY, double endX, double endY) {
-		return Math.sqrt(Math.pow((endX-startX),2)+Math.pow((endY-startY),2));
-	}
+	
 	
 	
 }
