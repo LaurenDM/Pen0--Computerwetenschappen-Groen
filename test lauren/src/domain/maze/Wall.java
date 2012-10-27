@@ -2,20 +2,15 @@ package domain.maze;
 
 import domain.Position.Position;
 
-public class Wall {
+public class Wall extends MazeElement{
+	
 
-	private Position position;
-	
-	public Wall(Position position){
-		this.position = position;
+	public Wall(Position position,double angle) {
+		super(position,angle);
 	}
 	
-	public Wall(double x, double y){
-		this(new Position(x,y));
-	}
-	
-	public Position getPosition(){
-		return position;
+	public Wall(double x, double y, double angle){
+		super(x,y,angle);
 	}
 	
 }
