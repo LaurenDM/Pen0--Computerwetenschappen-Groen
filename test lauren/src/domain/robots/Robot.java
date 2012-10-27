@@ -44,7 +44,7 @@ public class Robot {
 	}
 
 
-	public void forward(){
+	public void forward() throws CannotMoveException{
 		this.movement = Movement.FORWARD;
 		robotPilot.forward();
 	}
@@ -62,7 +62,7 @@ public class Robot {
 	}
 
 
-	public void move(double distance) {
+	public void move(double distance) throws CannotMoveException {
 		if (distance > 0)
 			movement = Movement.FORWARD;
 		else if (distance < 0)

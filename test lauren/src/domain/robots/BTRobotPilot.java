@@ -69,10 +69,12 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 
 	@Override
-	public void forward() {
+	public void forward() throws CannotMoveException {
 		if(canMove())
 			pilot.forward();
-		//TODO: wat als !canMove() ?
+		else{
+			throw new CannotMoveException();
+		}
 	}
 
 	@Override
@@ -121,7 +123,7 @@ public class BTRobotPilot implements RobotPilot  {
 
 
 	@Override
-	public void move(double distance) {
+	public void move(double distance) throws CannotMoveException {
 		int testdistance = 10;
 		int n = (int) distance/testdistance;
 		for(int i = 0; i<n ; i++){
@@ -129,7 +131,9 @@ public class BTRobotPilot implements RobotPilot  {
 				pilot.travel(Math.min(testdistance, distance));
 				distance = distance - testdistance;
 			}
-			//TODO: wat als !canMove() ?
+			else{
+				throw new CannotMoveException();
+			}
 		}
 	}
 

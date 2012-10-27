@@ -30,6 +30,7 @@ import javax.swing.text.Segment;
 import lejos.pc.tools.Upload;
 
 import controller.Controller;
+import domain.robots.CannotMoveException;
 import domain.util.ColorPolygon;
 
 public class ContentPanel implements ActionListener {
@@ -150,7 +151,11 @@ public class ContentPanel implements ActionListener {
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_UP){
 					actionLabel.setText("The robot is going forward!");
-					controller.moveForward();
+					try {
+						controller.moveForward();
+					} catch (CannotMoveException e1) {
+						actionLabel.setText("The robot has encountered an obstacle!");
+					}
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
 					actionLabel.setText("The robot is turning left!");
@@ -206,7 +211,11 @@ public class ContentPanel implements ActionListener {
 					setCurrentPressedButton(true,Button.UP);
 					actionLabel.setText("The robot is going forward!");
 					upButton.setSelected(true);
-					controller.moveForward();
+					try {
+						controller.moveForward();
+					} catch (CannotMoveException e1) {
+						actionLabel.setText("The robot has encountered an obstacle");
+					}
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
 					setCurrentPressedButton(true,Button.LEFT);
@@ -390,7 +399,11 @@ public class ContentPanel implements ActionListener {
         	actionLabel.setText("The robot is going forward!");
         	upButton.setSelected(false);
         	buttonPanel.requestFocusInWindow();
-        	controller.moveForward();
+        	try {
+				controller.moveForward();
+			} catch (CannotMoveException e1) {
+				actionLabel.setText("The robot has encountered an obstacle");
+			}
         }
             
         else if(e.getSource() == downButton){

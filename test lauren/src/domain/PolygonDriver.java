@@ -1,4 +1,5 @@
 package domain;
+import domain.robots.CannotMoveException;
 //TODO uitmaken of deze klasse wel bruikbaar is.
 import domain.robots.Robot;
 
@@ -28,7 +29,12 @@ public class PolygonDriver extends Thread {
 		public void run(){
 			double turnAngle=calcPolygonAngles(nbVertices);
 			for(int i=0; i<nbVertices;i++){
-				robot.move(edgeLength);
+				System.out.println(i + ": " + edgeLength + "cm, " + turnAngle + "¡");
+				try {
+					robot.move(edgeLength);
+				} catch (CannotMoveException e) {
+					// polygon will not be asked in maze?
+				}
 				robot.turn(turnAngle);
 			}
 		}

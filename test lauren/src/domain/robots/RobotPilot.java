@@ -15,7 +15,7 @@ public interface RobotPilot {
 	 */
 	public Position getPosition();
 	
-	public void forward();
+	public void forward() throws CannotMoveException;
 	
 	public void backward();
 	
@@ -25,7 +25,7 @@ public interface RobotPilot {
 	 * 
 	 * @param distance in cm
 	 */
-	public void move(double distance);
+	public void move(double distance) throws CannotMoveException;
 	
 	/**
 	 * 

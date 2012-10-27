@@ -120,7 +120,7 @@ public class SimRobotPilot implements RobotPilot {
 	}
 
 	@Override
-	public void forward(){
+	public void forward() throws CannotMoveException {
 		startMoveThread(Movement.FORWARD);
 	}
 
@@ -159,7 +159,7 @@ public class SimRobotPilot implements RobotPilot {
 	}
 	
 	@Override
-	public void move(double wantedDistance) {
+	public void move(double wantedDistance) throws CannotMoveException {
 		Position pos1 = getPosition().clone();
 		boolean running = true;
 		if (wantedDistance > 0) {

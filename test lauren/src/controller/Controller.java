@@ -6,6 +6,7 @@ import java.util.List;
 
 import domain.PolygonDriver;
 import domain.robots.BTRobotPilot;
+import domain.robots.CannotMoveException;
 import domain.robots.Robot;
 import domain.robots.SimRobotPilot;
 import domain.util.ColorPolygon;
@@ -41,7 +42,7 @@ public class Controller {
 		
 	}
 
-	public void moveForward() {
+	public void moveForward() throws CannotMoveException {
 		currentRobot.forward();
 		
 	}

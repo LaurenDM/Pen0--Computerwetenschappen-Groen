@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import domain.robots.CannotMoveException;
 import domain.robots.SimRobotPilot;
 
 public class SimRobotTest {
@@ -17,7 +18,7 @@ public class SimRobotTest {
 	}
 
 	@Test
-	public void moveTest(){
+	public void moveTest() throws CannotMoveException{
 		assertEquals(0,simRobotpilot.getOrientation(),0);
 		assertEquals(0,simRobotpilot.getPosition().getX(),0);
 		assertEquals(0,simRobotpilot.getPosition().getY(),0);
