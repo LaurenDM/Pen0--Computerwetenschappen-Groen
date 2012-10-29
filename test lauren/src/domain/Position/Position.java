@@ -27,6 +27,12 @@ public class Position implements Cloneable {
 		setY(getY()+Math.sin(Math.toRadians(orientation))*distance);
 	}
 	
+	public Position getNewPosition(double orientation, double distance){
+		double x = getX()+Math.cos(Math.toRadians(orientation))*distance;
+		double y = getY()+Math.sin(Math.toRadians(orientation))*distance;
+		return new Position(x,y);
+	}
+	
 	public void setX(double x){
 		this.x= x;
 	}

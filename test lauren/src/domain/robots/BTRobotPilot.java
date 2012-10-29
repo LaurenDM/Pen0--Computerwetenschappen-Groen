@@ -161,11 +161,11 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 	
 	
-	public int readLightValue(){
+	public double readLightValue(){
 		return lightSensor.readValue();
 	}
 	
-	public int readUltrasonicValue(){
+	public double readUltrasonicValue(){
 		return ultrasonicSensor.getDistance();
 	}
 	

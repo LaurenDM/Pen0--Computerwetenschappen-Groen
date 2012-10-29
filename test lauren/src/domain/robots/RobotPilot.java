@@ -56,5 +56,12 @@ public interface RobotPilot {
 	//Method for testing whether the robot can move with takin into account the walls and otherobstructions.
 	public boolean canMove();
 	
+	public boolean isTouching();
+	
+	public double readLightValue();
+	
+	public double readUltrasonicValue();
+	
+	
 	
 }

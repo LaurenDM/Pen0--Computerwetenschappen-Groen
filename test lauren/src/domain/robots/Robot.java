@@ -1,7 +1,5 @@
 package domain.robots;
 
-import java.util.List;
-
 import domain.Position.Position;
 import domain.polygons.RobotPolygon;
 import domain.util.TimeStamp;
@@ -104,11 +102,17 @@ public class Robot {
 	public Position getPosition() {
 		return robotPilot.getPosition();
 	}
-	//Method for testing whether the robot can move with takin into account the walls and otherobstructions.
-	public boolean canMove(){
-		//TODO
-		return true;
-		
+	
+	public boolean isTouching(){
+		return robotPilot.isTouching();
+	}
+	
+	public double readLightValue(){
+		return robotPilot.readLightValue();
+	}
+	
+	public double readUltrasonicValue(){
+		return robotPilot.readUltrasonicValue();
 	}
 
 }

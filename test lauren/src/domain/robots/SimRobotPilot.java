@@ -1,6 +1,7 @@
 package domain.robots;
 
 import domain.Position.Position;
+import domain.maze.Board;
 import domain.util.TimeStamp;
 
 
@@ -15,6 +16,8 @@ public class SimRobotPilot implements RobotPilot {
 		//The wanted travel Speed of the robot.
 		private double travelSpeed;
 		private TurnThread turnThread;
+		
+		private Board board;
 
 	
 	/**
@@ -197,9 +200,12 @@ public class SimRobotPilot implements RobotPilot {
 	}
 
 	public boolean canMove(){
-		//TODO
-		return true;
-		
+		double distance = readUltrasonicValue();	
+		int testDistance = 10; 
+		if(distance < testDistance || isTouching())
+			return false;
+		else
+			return true;
 	}
 	
 	private double calcNewOrientation(double turnAmount) {
@@ -239,6 +245,31 @@ public class SimRobotPilot implements RobotPilot {
 
 		
 
+	}
+
+	@Override
+	public boolean isTouching() {
+		return board.detectWallAt(getPosition());
+	}
+
+	@Override
+	public double readLightValue() {
+		// TODO vragen aan domein of op witte lijn: indien ja: return 100
+		return 0;
+	}
+
+	@Override
+	public double readUltrasonicValue() {
+		final int MAX_REACH = 50;
+		final double MAX_VALUE = 100;
+		boolean foundWall = false;
+		for(int i = 0; i<MAX_REACH; i++){
+			foundWall = board.detectWallAt(getPosition().getNewPosition(getOrientation(), i));
+			if(foundWall){
+				return getPosition().getDistance(getPosition().getNewPosition(getOrientation(),i));
+			}
+		}
+		return MAX_VALUE;
 	}
 
 }
