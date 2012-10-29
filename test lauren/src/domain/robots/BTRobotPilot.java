@@ -159,5 +159,23 @@ public class BTRobotPilot implements RobotPilot  {
 		else
 			return true;
 	}
+	
+	
+	public int readLightValue(){
+		return lightSensor.readValue();
+	}
+	
+	public int readUltrasonicValue(){
+		return ultrasonicSensor.getDistance();
+	}
+	
+	
+	public void calibrateLightHigh(){
+		lightSensor.calibrateHigh();
+	}
+	
+	public void calibrateLightLow(){
+		lightSensor.calibrateLow();
+	}
 
 }
