@@ -274,4 +274,17 @@ public class SimRobotPilot implements RobotPilot {
 		return MAX_VALUE;
 	}
 
+	@Override
+	public void calibrateLightHigh() {
+		//TODO:
+	}
+
+	@Override
+	public void calibrateLightLow() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+
 }

@@ -99,4 +99,12 @@ public class Controller {
 			currentRobot.turnLeft();
 		}
 	}
+	
+	public void calibrateLightHigh(){
+		currentRobot.calibrateLightHigh();
+	}
+	
+	public void calibrateLightLow(){
+		currentRobot.calibrateLightLow();
+	}
 }

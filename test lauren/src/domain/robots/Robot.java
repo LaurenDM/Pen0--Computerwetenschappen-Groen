@@ -114,5 +114,13 @@ public class Robot {
 	public double readUltrasonicValue(){
 		return robotPilot.readUltrasonicValue();
 	}
+	
+	public void calibrateLightHigh(){
+		robotPilot.calibrateLightHigh();
+	}
+	
+	public void calibrateLightLow(){
+		robotPilot.calibrateLightLow();
+	}
 
 }

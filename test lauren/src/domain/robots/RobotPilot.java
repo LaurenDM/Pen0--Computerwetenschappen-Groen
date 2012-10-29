@@ -62,6 +62,9 @@ public interface RobotPilot {
 	
 	public double readUltrasonicValue();
 	
+	public void calibrateLightHigh();
+	
+	public void calibrateLightLow();
 	
 	
 }

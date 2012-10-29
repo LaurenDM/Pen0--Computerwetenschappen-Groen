@@ -36,11 +36,12 @@ import domain.util.ColorPolygon;
 public class ContentPanel implements ActionListener {
 	static JFrame frame = new JFrame("P&O - Groen");
     static JFrame variableFrame = new JFrame("P&O - Groen - Variables");
+    static JFrame calibrationFrame = new JFrame("P&O - Groen - Lightsensor Calibration");
     private static ControllerPoller controllerPoller;
-    private JPanel titlePanel,titlePanel2, buttonPanel, inputPanel, variablePanel, debugPanel;
+    private JPanel titlePanel,titlePanel2, buttonPanel, inputPanel, variablePanel, calibrationPanel, debugPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
     private JLabel xLabel, yLabel, speedLabel, angleLabel;
-    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton;
+    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, calibrateButton;
     private JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
@@ -292,6 +293,12 @@ public class ContentPanel implements ActionListener {
         connectButton.addActionListener(this);
         buttonPanel.add(connectButton);
         
+        calibrateButton = new JButton("CALIBRATE LIGHTSENSOR");
+        calibrateButton.setLocation(30, buttonYDimension + 250);
+        calibrateButton.setSize(240, 30);
+        calibrateButton.addActionListener(this);
+        buttonPanel.add(calibrateButton);
+        
         buttonPanel.setFocusable(true);
         
         //_____________________________________________________
@@ -333,6 +340,12 @@ public class ContentPanel implements ActionListener {
         variableFrame.setContentPane(variablePanel.getContentPanel());;
         variableFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         variableFrame.setSize(400, 400);
+        
+        //Creating calibration panel
+        CalibrationPanel calibrationPanel = new CalibrationPanel(calibrationFrame, controller);
+        calibrationFrame.setContentPane(calibrationPanel.getContentPanel());
+        calibrationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        calibrationFrame.setSize(400,400);
         
         
     	
@@ -451,8 +464,12 @@ public class ContentPanel implements ActionListener {
         		setConnected(true);
         		controller.connectNewBtRobot();
         	}
-        		
-        	
+        }
+        else if(e.getSource() == calibrateButton){
+        	calibrationFrame.setVisible(true);
+        	actionLabel.setText("The lightsensor is being calibrated.");
+        	calibrateButton.setSelected(false);
+        	buttonPanel.requestFocusInWindow();
         }
         
     }
