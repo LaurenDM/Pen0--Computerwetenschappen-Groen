@@ -254,8 +254,10 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public double readLightValue() {
-		// TODO vragen aan domein of op witte lijn: indien ja: return 100
-		return 0;
+		final double HIGH = 100;
+		final double LOW = 0;
+		if(board.detectLineAt(getPosition())) return HIGH;
+		else return LOW;
 	}
 
 	@Override
