@@ -40,7 +40,7 @@ public class ContentPanel implements ActionListener {
     private static ControllerPoller controllerPoller;
     private JPanel titlePanel,titlePanel2, buttonPanel, inputPanel, variablePanel, calibrationPanel, debugPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
-    private JLabel xLabel, yLabel, speedLabel, angleLabel;
+    private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, calibrateButton;
     private JTextArea debugText;
     final JPanel totalGUI = new JPanel();
@@ -326,6 +326,15 @@ public class ContentPanel implements ActionListener {
         angleLabel = new JLabel("Angle: 0 degrees");
         angleLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, angleLabel, 125, 20, 125, 120);
+        lightLabel = new JLabel("Lightsensor: 0");
+        lightLabel.setHorizontalTextPosition(JLabel.LEFT);
+        fixLabelLayout(debugPanel, lightLabel, 125, 20, 0, 140);
+        distanceLabel = new JLabel("Distance: 0");
+        distanceLabel.setHorizontalTextPosition(JLabel.LEFT);
+        fixLabelLayout(debugPanel, distanceLabel, 125, 20, 125, 140);
+        touchingLabel = new JLabel("Touching: FALSE");
+        touchingLabel.setHorizontalTextPosition(JLabel.LEFT);
+        fixLabelLayout(debugPanel, touchingLabel, 125, 20, 0, 160);
         
         
         //_________________________________________________________________________
@@ -398,6 +407,9 @@ public class ContentPanel implements ActionListener {
 					contentPanel.setRobotY(controller.getYCo());
 					contentPanel.setRobotSpeed(controller.getSpeed());
 					contentPanel.setRobotAngle(controller.getAngle());
+					contentPanel.setRobotLightValue(controller.readLightValue());
+					contentPanel.setRobotDistanceValue(controller.readUltrasonicValue());
+					contentPanel.setRobotTouchingValue(controller.isTouching());
 					//TODO
 					sleep(50);
 				}
@@ -527,6 +539,18 @@ public class ContentPanel implements ActionListener {
      */
     public void setRobotAngle(double angle){
     	angleLabel.setText("Angle: "+Double.valueOf(angle).intValue() % 360);
+    }
+    
+    public void setRobotLightValue(double value){
+    	lightLabel.setText("Lightsensor: " + Double.valueOf(value).intValue());
+    }
+    
+    public void setRobotDistanceValue(double value){
+    	distanceLabel.setText("Distance: " + Double.valueOf(value).intValue());
+    }
+    
+    public void setRobotTouchingValue(boolean value){
+    	touchingLabel.setText("Touching: " + Boolean.valueOf(value).toString());
     }
 
 	public Controller getController() {

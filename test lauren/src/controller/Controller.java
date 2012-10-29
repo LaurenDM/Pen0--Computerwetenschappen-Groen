@@ -107,4 +107,16 @@ public class Controller {
 	public void calibrateLightLow(){
 		currentRobot.calibrateLightLow();
 	}
+	
+	public double readLightValue(){
+		return currentRobot.readLightValue();
+	}
+	
+	public double readUltrasonicValue(){
+		return currentRobot.readUltrasonicValue();
+	}
+	
+	public boolean isTouching(){
+		return currentRobot.isTouching();
+	}
 }
