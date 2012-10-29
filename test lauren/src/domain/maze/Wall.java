@@ -4,6 +4,7 @@ import domain.Position.Position;
 
 public class Wall extends MazeElement{
 	
+	
 
 	public Wall(Position position,double angle) {
 		super(position,angle);
