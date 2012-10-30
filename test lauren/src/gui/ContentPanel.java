@@ -282,6 +282,7 @@ public class ContentPanel implements ActionListener {
 					contentPanel.setRobotTouchingValue(controller.isTouching());
 					contentPanel.setSensorAngleValue(controller.getSensorAngle());
 					contentPanel.setLineValue(controller.detectWhiteLine());
+					controller.makeWallIfNecessary();
 					//TODO
 					sleep(50);
 				}

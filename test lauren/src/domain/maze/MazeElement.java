@@ -24,6 +24,10 @@ public abstract class MazeElement {
 			pos1 = new Position(lowx,y);
 			pos2 = new Position(lowx + MAZECONSTANT,y);
 		}
+		else{
+			throw new IllegalArgumentException();
+		}
+		System.out.println("New Wall added from " + pos1 + " to " + pos2);
 	}
 	
 	

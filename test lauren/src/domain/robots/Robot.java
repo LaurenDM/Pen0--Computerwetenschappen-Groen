@@ -146,4 +146,8 @@ public class Robot {
 	public boolean detectWhiteLine(){
 		return robotPilot.detectWhiteLine();
 	}
+	
+	public void makeWallIfNecessary(){
+		robotPilot.makeWallIfNecessary();
+	}
 }

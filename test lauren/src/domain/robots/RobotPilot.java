@@ -78,5 +78,5 @@ public interface RobotPilot {
 	
 	public boolean detectWhiteLine();
 	
-	
+	public void makeWallIfNecessary();
 }

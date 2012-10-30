@@ -2,6 +2,8 @@ package domain.robots;
 import java.io.IOException;
 
 import domain.Position.Position;
+import domain.maze.Board;
+import domain.maze.Wall;
 import domain.util.TimeStamp;
 import lejos.nxt.LightSensor;
 import lejos.nxt.Motor;
@@ -32,6 +34,8 @@ public class BTRobotPilot implements RobotPilot  {
 	private UltrasonicSensor ultrasonicSensor;
 	private LightSensor lightSensor;
 	
+	private Board board;
+	
 	public BTRobotPilot(){
 		
 		PilotProps pp = new PilotProps();
@@ -54,6 +58,8 @@ public class BTRobotPilot implements RobotPilot  {
     	touchSensor = new TouchSensor(SensorPort.S2);
     	ultrasonicSensor = new UltrasonicSensor(SensorPort.S1);
     	lightSensor = new LightSensor(SensorPort.S4);
+    	
+    	board = new Board();
     	
 	}
 
@@ -214,6 +220,23 @@ public class BTRobotPilot implements RobotPilot  {
 		if(readLightValue() > 50) return true;
 		else return false;
 		//TODO: moet nog gespecifieerd worden
+	}
+
+	@Override
+	public void makeWallIfNecessary() {
+		final int DISTANCE_LIMIT = 50;
+		if(readUltrasonicValue()< DISTANCE_LIMIT){
+			Position pos1 = getPosition().getNewPosition(getOrientation(), readUltrasonicValue());
+			if(board.detectWallAt(pos1)) return;
+			turnUltrasonicSensor(5);
+			Position pos2 = getPosition().getNewPosition(getSensorAngle()+getOrientation(), readUltrasonicValue());
+			if(board.detectWallAt(pos2)) return;
+			turnUltrasonicSensor(-10);
+			Position pos3 = getPosition().getNewPosition(getSensorAngle()+getOrientation(), readUltrasonicValue());
+			if(board.detectWallAt(pos3)) return;
+			turnSensorForward();
+			board.addWall(new Wall(pos1, pos2, pos3));
+		}
 	}
 
 }

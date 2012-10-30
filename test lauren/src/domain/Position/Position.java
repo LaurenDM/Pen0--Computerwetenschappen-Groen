@@ -54,4 +54,9 @@ public class Position implements Cloneable {
 		return other.getX() == this.getX() && other.getY() == this.getY();
 	}
 	
+	@Override
+	public String toString(){
+		return "(" + getX() + "," + getY() + ")";
+	}
+	
 }

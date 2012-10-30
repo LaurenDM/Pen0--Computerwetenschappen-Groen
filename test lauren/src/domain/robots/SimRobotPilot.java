@@ -331,6 +331,11 @@ public class SimRobotPilot implements RobotPilot {
 	public boolean detectWhiteLine() {
 		return board.detectLineAt(getPosition());
 	}
+
+	@Override
+	public void makeWallIfNecessary() {
+		//do nothing
+	}
 	
 	
 	

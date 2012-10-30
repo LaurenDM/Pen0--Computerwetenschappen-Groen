@@ -154,4 +154,8 @@ public class Controller {
 	public boolean detectWhiteLine(){
 		return currentRobot.detectWhiteLine();
 	}
+	
+	public void makeWallIfNecessary(){
+		currentRobot.makeWallIfNecessary();
+	}
 }
