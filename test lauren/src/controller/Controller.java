@@ -13,7 +13,7 @@ import domain.util.ColorPolygon;
 
 //Robotclass, generates/keeps track of current positioning.
 public class Controller {
-	
+	private Thread executingThread;
 	private Robot currentRobot;
 	private Robot btRobot;
 	private Robot simRobot;
@@ -43,23 +43,34 @@ public class Controller {
 	}
 
 	public void moveForward() throws CannotMoveException {
+		startNewThread(null);
 		currentRobot.forward();
 		
 	}
 
 	public void moveBack() {
+		startNewThread(null);
 		currentRobot.backward();
 	}
 
 	public void rotateRightNonBlocking() {
-		(new TurnRightThread()).start();
+	startNewThread(new TurnRightThread());	
 	}
 
 	public void rotateLeftNonBlocking() {
-		(new TurnLeftThread()).start();
+		startNewThread(new TurnLeftThread());
 	}
-
+	public void startNewThread(Thread newThread){
+		if(executingThread!=null){
+			executingThread.interrupt();
+		}
+		executingThread=newThread;
+		if(executingThread!=null)
+		executingThread.start();
+	}
+	
 	public void cancel() {
+		startNewThread(null);
 		currentRobot.stop();
 		
 	}
