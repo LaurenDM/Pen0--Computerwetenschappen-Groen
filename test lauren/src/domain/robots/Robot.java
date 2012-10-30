@@ -143,4 +143,7 @@ public class Robot {
 		robotPilot.turnSensorForward();
 	}
 
+	public boolean detectWhiteLine(){
+		return robotPilot.detectWhiteLine();
+	}
 }

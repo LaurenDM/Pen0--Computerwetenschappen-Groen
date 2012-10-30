@@ -207,4 +207,11 @@ public class BTRobotPilot implements RobotPilot  {
 		return sensorAngle;
 	}
 
+	@Override
+	public boolean detectWhiteLine() {
+		if(readLightValue() > 50) return true;
+		else return false;
+		//TODO: moet nog gespecifieerd worden
+	}
+
 }

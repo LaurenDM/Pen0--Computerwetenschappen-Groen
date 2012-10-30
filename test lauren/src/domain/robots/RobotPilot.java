@@ -76,5 +76,7 @@ public interface RobotPilot {
 	
 	public int getSensorAngle();
 	
+	public boolean detectWhiteLine();
+	
 	
 }

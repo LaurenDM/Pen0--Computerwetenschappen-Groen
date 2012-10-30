@@ -265,8 +265,8 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public double readLightValue() {
-		final double HIGH = 100;
-		final double LOW = 0;
+		final double HIGH = 80;
+		final double LOW = 40;
 		if(board.detectLineAt(getPosition())) return HIGH;
 		else return LOW;
 	}
@@ -325,6 +325,11 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public void turnSensorForward() {
 		setSensorAngle((int) getOrientation());
+	}
+
+	@Override
+	public boolean detectWhiteLine() {
+		return board.detectLineAt(getPosition());
 	}
 	
 	

@@ -25,7 +25,7 @@ public class ContentPanel implements ActionListener {
     private static ControllerPoller controllerPoller;
     private JPanel titlePanel, buttonPanel, debugPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
-    private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, sensorAngleLabel;
+    private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, sensorAngleLabel, lineLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, calibrateButton, sensorOrientationButton;
     private JTextArea debugText;
     final JPanel totalGUI = new JPanel();
@@ -235,6 +235,9 @@ public class ContentPanel implements ActionListener {
         sensorAngleLabel = new JLabel("Angle Sensor: 0");
         sensorAngleLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, sensorAngleLabel, 125, 20, 125, 160);
+        lineLabel = new JLabel("Line: FALSE");
+        lineLabel.setHorizontalTextPosition(JLabel.LEFT);
+        fixLabelLayout(debugPanel, lineLabel, 125, 20, 0, 180);
 	}
 	
 	
@@ -278,6 +281,7 @@ public class ContentPanel implements ActionListener {
 					contentPanel.setRobotDistanceValue(controller.readUltrasonicValue());
 					contentPanel.setRobotTouchingValue(controller.isTouching());
 					contentPanel.setSensorAngleValue(controller.getSensorAngle());
+					contentPanel.setLineValue(controller.detectWhiteLine());
 					//TODO
 					sleep(50);
 				}
@@ -526,6 +530,10 @@ public class ContentPanel implements ActionListener {
     
     public void setSensorAngleValue(int angle){
     	sensorAngleLabel.setText("Angle Sensor: " + angle);
+    }
+    
+    public void setLineValue(boolean value){
+    	lineLabel.setText("Line: " + Boolean.valueOf(value).toString());
     }
 
 	public Controller getController() {

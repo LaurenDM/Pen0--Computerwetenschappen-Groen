@@ -150,4 +150,8 @@ public class Controller {
 	public void turnSensorForward(){
 		currentRobot.turnSensorForward();
 	}
+	
+	public boolean detectWhiteLine(){
+		return currentRobot.detectWhiteLine();
+	}
 }
