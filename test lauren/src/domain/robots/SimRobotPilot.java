@@ -18,6 +18,8 @@ public class SimRobotPilot implements RobotPilot {
 		private TurnThread turnThread;
 		
 		private Board board;
+		
+		private double sensorAngle;
 
 	
 	/**
@@ -32,6 +34,8 @@ public class SimRobotPilot implements RobotPilot {
 		this.position=position;
 		this.setMovingSpeed(30);
 		this.setTurningSpeed(90);
+		this.sensorAngle = orientation;
+		board = new Board();
 	}
 	
 	private void setOrientation(double orientation) {
@@ -43,6 +47,14 @@ public class SimRobotPilot implements RobotPilot {
 		@Override
 	public Position getPosition(){
 		return position;
+	}
+		
+	public double getSensorAngle(){
+		return sensorAngle;
+	}
+	
+	public void setSensorAngle(double angle){
+		this.sensorAngle = angle;
 	}
 	
 	//TODO: moet geleidelijk?
@@ -276,11 +288,36 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void calibrateLightHigh() {
-		//TODO:
+		//doet niets
 	}
 
 	@Override
 	public void calibrateLightLow() {
+		// doet niets
+		
+	}
+
+	@Override
+	public void turnUltrasonicSensor(int angle) {
+		double newAngle = getSensorAngle() + angle;
+		while(newAngle > 180) newAngle = newAngle - 360;
+		while(newAngle < -179) newAngle = newAngle + 360;
+		setSensorAngle(newAngle);
+	}
+
+	@Override
+	public void turnSensorRight() {
+		setSensorAngle(90);
+	}
+
+	@Override
+	public void turnSensorLeft() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void turnSensorForward() {
 		// TODO Auto-generated method stub
 		
 	}

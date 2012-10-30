@@ -4,6 +4,7 @@ import java.io.IOException;
 import domain.Position.Position;
 import domain.util.TimeStamp;
 import lejos.nxt.LightSensor;
+import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.UltrasonicSensor;
@@ -19,6 +20,7 @@ public class BTRobotPilot implements RobotPilot  {
 	private DifferentialPilot pilot;
 	private RegulatedMotor leftMotor;
 	private RegulatedMotor rightMotor;
+	private RegulatedMotor sensorMotor;
 	
 	//The poseProvider is an instantiation of a class that "LeJOS" provides for determining the pose of a NXT Robot.
 	private OdometryPoseProvider poseProvider;
@@ -43,14 +45,16 @@ public class BTRobotPilot implements RobotPilot  {
     	float trackWidth = 11.22F;
     	leftMotor = PilotProps.getMotor(pp.getProperty(PilotProps.KEY_LEFTMOTOR, "C"));
     	rightMotor = PilotProps.getMotor(pp.getProperty(PilotProps.KEY_RIGHTMOTOR, "B"));
+    	sensorMotor = Motor.A; 
     	
     	pilot = new DifferentialPilot(wheelDiameter, trackWidth, leftMotor, rightMotor);
     	setMovingSpeed(defaultTravelSpeed);
     	setTurningSpeed(defaultTurnSpeed);
     	poseProvider= new OdometryPoseProvider(pilot);
-    	touchSensor = new TouchSensor(SensorPort.S1);
-    	ultrasonicSensor = new UltrasonicSensor(SensorPort.S2);
-    	lightSensor = new LightSensor(SensorPort.S3);
+    	touchSensor = new TouchSensor(SensorPort.S2);
+    	ultrasonicSensor = new UltrasonicSensor(SensorPort.S1);
+    	lightSensor = new LightSensor(SensorPort.S4);
+    	
 	}
 
 	@Override
@@ -169,6 +173,23 @@ public class BTRobotPilot implements RobotPilot  {
 		return ultrasonicSensor.getDistance();
 	}
 	
+	public void turnUltrasonicSensor(int angle){
+		sensorMotor.rotate(angle);
+	}
+	
+	public void turnSensorRight(){
+		sensorMotor.rotateTo(90);
+		//TODO: testen of dit effectief rechts is
+	}
+	
+	public void turnSensorLeft(){
+		sensorMotor.rotateTo(-90);
+		//TODO: idem boven
+	}
+	
+	public void turnSensorForward(){
+		sensorMotor.rotateTo(0);
+	}
 	
 	public void calibrateLightHigh(){
 		lightSensor.calibrateHigh();

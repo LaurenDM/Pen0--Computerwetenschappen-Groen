@@ -66,5 +66,13 @@ public interface RobotPilot {
 	
 	public void calibrateLightLow();
 	
+	public void turnUltrasonicSensor(int angle);
+	
+	public void turnSensorRight();
+	
+	public void turnSensorLeft();
+	
+	public void turnSensorForward();
+	
 	
 }

@@ -12,7 +12,7 @@ public class Board {
 	private List<Wall> walls;
 	
 	
-	public Board(int width, int height){
+	public Board(){
 		walls = new ArrayList<Wall>();
 		}
 	
