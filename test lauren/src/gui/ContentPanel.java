@@ -25,7 +25,7 @@ public class ContentPanel implements ActionListener {
     private static ControllerPoller controllerPoller;
     private JPanel titlePanel, buttonPanel, debugPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
-    private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, sensorAngleLabel, lineLabel;
+    private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, lineLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, calibrateButton, sensorOrientationButton;
     private JTextArea debugText;
     final JPanel totalGUI = new JPanel();
@@ -232,9 +232,6 @@ public class ContentPanel implements ActionListener {
         touchingLabel = new JLabel("Touching: FALSE");
         touchingLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, touchingLabel, 125, 20, 0, 160);
-        sensorAngleLabel = new JLabel("Angle Sensor: 0");
-        sensorAngleLabel.setHorizontalTextPosition(JLabel.LEFT);
-        fixLabelLayout(debugPanel, sensorAngleLabel, 125, 20, 125, 160);
         lineLabel = new JLabel("Line: FALSE");
         lineLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, lineLabel, 125, 20, 0, 180);
@@ -280,9 +277,7 @@ public class ContentPanel implements ActionListener {
 					contentPanel.setRobotLightValue(controller.readLightValue());
 					contentPanel.setRobotDistanceValue(controller.readUltrasonicValue());
 					contentPanel.setRobotTouchingValue(controller.isTouching());
-					contentPanel.setSensorAngleValue(controller.getSensorAngle());
 					contentPanel.setLineValue(controller.detectWhiteLine());
-					controller.makeWallIfNecessary();
 					//TODO
 					sleep(50);
 				}
@@ -301,6 +296,7 @@ public class ContentPanel implements ActionListener {
 				controller.moveForward();
 			} catch (CannotMoveException e1) {
 				actionLabel.setText("The robot has encountered an obstacle");
+				controller.makeWall();
 			}
         }
             
@@ -340,7 +336,6 @@ public class ContentPanel implements ActionListener {
         }
         else if(e.getSource() == connectButton){
         	if(getConnected() == true ){
-        		System.out.println("test");
         		connectButton.setText("Connect to robot");
         		setConnected(false);
         		controller.connectNewSimRobot();
@@ -381,6 +376,7 @@ public class ContentPanel implements ActionListener {
 						controller.moveForward();
 					} catch (CannotMoveException e1) {
 						actionLabel.setText("The robot has encountered an obstacle");
+						controller.makeWall();
 					}
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
@@ -441,6 +437,7 @@ public class ContentPanel implements ActionListener {
 						controller.moveForward();
 					} catch (CannotMoveException e1) {
 						actionLabel.setText("The robot has encountered an obstacle");
+						controller.makeWall();
 					}
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
@@ -527,10 +524,6 @@ public class ContentPanel implements ActionListener {
     
     public void setRobotTouchingValue(boolean value){
     	touchingLabel.setText("Touching: " + Boolean.valueOf(value).toString());
-    }
-    
-    public void setSensorAngleValue(int angle){
-    	sensorAngleLabel.setText("Angle Sensor: " + angle);
     }
     
     public void setLineValue(boolean value){

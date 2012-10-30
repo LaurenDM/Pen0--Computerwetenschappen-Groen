@@ -333,7 +333,7 @@ public class SimRobotPilot implements RobotPilot {
 	}
 
 	@Override
-	public void makeWallIfNecessary() {
+	public void makeWall() {
 		//do nothing
 	}
 	

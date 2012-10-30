@@ -131,10 +131,6 @@ public class Controller {
 		return currentRobot.isTouching();
 	}
 	
-	public int getSensorAngle(){
-		return currentRobot.getSensorAngle();
-	}
-	
 	public void turnUltrasonicSensor(int angle){
 		currentRobot.turnUltrasonicSensor(angle);
 	}
@@ -155,7 +151,12 @@ public class Controller {
 		return currentRobot.detectWhiteLine();
 	}
 	
-	public void makeWallIfNecessary(){
-		currentRobot.makeWallIfNecessary();
+	public boolean wall(){
+		final int DISTANCE_LIMIT= 50;
+		return readUltrasonicValue() < DISTANCE_LIMIT;
+	}
+	
+	public void makeWall(){
+		currentRobot.makeWall();
 	}
 }

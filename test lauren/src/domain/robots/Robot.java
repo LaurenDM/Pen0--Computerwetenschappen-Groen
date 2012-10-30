@@ -123,10 +123,6 @@ public class Robot {
 		robotPilot.calibrateLightLow();
 	}
 	
-	public int getSensorAngle(){
-		return robotPilot.getSensorAngle();
-	}
-	
 	public void turnUltrasonicSensor(int angle){
 		robotPilot.turnUltrasonicSensor(angle);
 	}
@@ -147,7 +143,7 @@ public class Robot {
 		return robotPilot.detectWhiteLine();
 	}
 	
-	public void makeWallIfNecessary(){
-		robotPilot.makeWallIfNecessary();
+	public void makeWall(){
+		robotPilot.makeWall();
 	}
 }

@@ -74,9 +74,7 @@ public interface RobotPilot {
 	
 	public void turnSensorForward();
 	
-	public int getSensorAngle();
-	
 	public boolean detectWhiteLine();
 	
-	public void makeWallIfNecessary();
+	public void makeWall();
 }

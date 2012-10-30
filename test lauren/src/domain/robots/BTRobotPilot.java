@@ -208,14 +208,6 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 
 	@Override
-	public int getSensorAngle() {
-		int sensorAngle = sensorMotor.getTachoCount()*360 - (int) getOrientation();
-		while(sensorAngle > 180) sensorAngle= sensorAngle- 360;
-		while(sensorAngle < -179) sensorAngle = sensorAngle + 360;
-		return sensorAngle;
-	}
-
-	@Override
 	public boolean detectWhiteLine() {
 		if(readLightValue() > 50) return true;
 		else return false;
@@ -223,20 +215,19 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 
 	@Override
-	public void makeWallIfNecessary() {
-		final int DISTANCE_LIMIT = 50;
-		if(readUltrasonicValue()< DISTANCE_LIMIT){
-			Position pos1 = getPosition().getNewPosition(getOrientation(), readUltrasonicValue());
-			if(board.detectWallAt(pos1)) return;
-			turnUltrasonicSensor(5);
-			Position pos2 = getPosition().getNewPosition(getSensorAngle()+getOrientation(), readUltrasonicValue());
-			if(board.detectWallAt(pos2)) return;
-			turnUltrasonicSensor(-10);
-			Position pos3 = getPosition().getNewPosition(getSensorAngle()+getOrientation(), readUltrasonicValue());
-			if(board.detectWallAt(pos3)) return;
-			turnSensorForward();
-			board.addWall(new Wall(pos1, pos2, pos3));
-		}
+	public void makeWall() {
+		sensorMotor.setSpeed(2);
+		Position pos1 = getPosition().getNewPosition(getOrientation(), readUltrasonicValue());
+		if(board.detectWallAt(pos1)) return;
+		turnUltrasonicSensor(5);
+		Position pos2 = getPosition().getNewPosition(5+getOrientation(), readUltrasonicValue());
+		if(board.detectWallAt(pos2)) return;
+		turnUltrasonicSensor(-10);
+		Position pos3 = getPosition().getNewPosition(-5+getOrientation(), readUltrasonicValue());
+		if(board.detectWallAt(pos3)) return;
+		turnSensorForward();
+		board.addWall(new Wall(pos1, pos2, pos3));
+		sensorMotor.setSpeed(720);
 	}
 
 }
