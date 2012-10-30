@@ -312,8 +312,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void turnSensorLeft() {
-		// TODO Auto-generated method stub
-		
+		setSensorAngle(-90);
 	}
 
 	@Override
