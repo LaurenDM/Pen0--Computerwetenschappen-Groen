@@ -8,28 +8,24 @@ public abstract class MazeElement {
 	private Position pos1;
 	private Position pos2;
 	
-	public MazeElement(Position position, double robotangle){
-		generatePositions(position,robotangle);
-	}
-	
-	public MazeElement(double x, double y, double angle){
-		this(new Position(x,y), angle);
-	}
-	
-	
-	//ervan uitgaand dat 0,0 in de linkeronderhoek van het rastervenster van de beginpositie van de robot is.
-	private void generatePositions(Position position, double robotangle){
-		int x = (int) position.getX() / MAZECONSTANT;
-		int y = (int) position.getY() / MAZECONSTANT;
-		pos1 = new Position(MAZECONSTANT*x, MAZECONSTANT*y);
-		// wall = vertical
-		if(robotangle < 45){
-			pos2 = new Position(MAZECONSTANT*x, MAZECONSTANT * (y+1));
+	public MazeElement(Position pos1, Position pos2, Position pos3){
+		final double MARGE = 1;
+		if(Math.abs(pos1.getX() - pos2.getX())<=MARGE && Math.abs(pos1.getX() - pos2.getX())<=MARGE){
+			//wall = vertical
+			int x =(int) (Math.floor((pos1.getX())/MAZECONSTANT))*MAZECONSTANT;
+			int lowy = (int) (Math.floor((pos1.getY())/MAZECONSTANT))*MAZECONSTANT;
+			pos1 = new Position(x,lowy);
+			pos2 = new Position(x,lowy+MAZECONSTANT);
 		}
-		else { // wall = horizontal
-			pos2 = new Position(MAZECONSTANT*(x+1), MAZECONSTANT * y);
+		else if(Math.abs(pos1.getY() - pos2.getY())<=MARGE && Math.abs(pos1.getY() - pos2.getY())<=MARGE){
+			//wall = horizontal
+			int y =(int) (Math.floor((pos1.getY())/MAZECONSTANT))*MAZECONSTANT;
+			int lowx = (int) (Math.floor((pos1.getX())/MAZECONSTANT))*MAZECONSTANT;
+			pos1 = new Position(lowx,y);
+			pos2 = new Position(lowx + MAZECONSTANT,y);
 		}
 	}
+	
 	
 
 	public Position getPos1(){

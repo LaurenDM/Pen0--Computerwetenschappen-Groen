@@ -6,12 +6,8 @@ public class Wall extends MazeElement{
 	
 	
 
-	public Wall(Position position,double angle) {
-		super(position,angle);
-	}
-	
-	public Wall(double x, double y, double angle){
-		super(x,y,angle);
+	public Wall(Position pos1, Position pos2, Position pos3){
+		super(pos1,pos2,pos3);
 	}
 	
 }
