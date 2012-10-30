@@ -119,4 +119,8 @@ public class Controller {
 	public boolean isTouching(){
 		return currentRobot.isTouching();
 	}
+	
+	public int getSensorAngle(){
+		return currentRobot.getSensorAngle();
+	}
 }

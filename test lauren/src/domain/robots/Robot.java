@@ -122,5 +122,9 @@ public class Robot {
 	public void calibrateLightLow(){
 		robotPilot.calibrateLightLow();
 	}
+	
+	public int getSensorAngle(){
+		return robotPilot.getSensorAngle();
+	}
 
 }

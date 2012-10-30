@@ -199,4 +199,12 @@ public class BTRobotPilot implements RobotPilot  {
 		lightSensor.calibrateLow();
 	}
 
+	@Override
+	public int getSensorAngle() {
+		int sensorAngle = sensorMotor.getTachoCount()*360 - (int) getOrientation();
+		while(sensorAngle > 180) sensorAngle= sensorAngle- 360;
+		while(sensorAngle < -179) sensorAngle = sensorAngle + 360;
+		return sensorAngle;
+	}
+
 }

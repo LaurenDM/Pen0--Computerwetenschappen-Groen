@@ -19,7 +19,7 @@ public class SimRobotPilot implements RobotPilot {
 		
 		private Board board;
 		
-		private double sensorAngle;
+		private int sensorAngle;
 
 	
 	/**
@@ -34,7 +34,7 @@ public class SimRobotPilot implements RobotPilot {
 		this.position=position;
 		this.setMovingSpeed(30);
 		this.setTurningSpeed(90);
-		this.sensorAngle = orientation;
+		this.sensorAngle = (int) orientation;
 		board = new Board();
 	}
 	
@@ -49,15 +49,14 @@ public class SimRobotPilot implements RobotPilot {
 		return position;
 	}
 		
-	public double getSensorAngle(){
+	public int getSensorAngle(){
 		return sensorAngle;
 	}
 	
-	public void setSensorAngle(double angle){
+	public void setSensorAngle(int angle){
 		this.sensorAngle = angle;
 	}
 	
-	//TODO: moet geleidelijk?
 	@Override
 	public void turn(double wantedAngleDif) {
 		double previousAngle = getOrientation();
@@ -100,7 +99,7 @@ public class SimRobotPilot implements RobotPilot {
 		try {
 			Thread.sleep(correctionSleeptime);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	}
@@ -120,7 +119,7 @@ public class SimRobotPilot implements RobotPilot {
 	}
 	@Override
 	public void UpdateUntil(TimeStamp timestamp) {
-		// TODO Auto-generated method stub
+		//TODO
 	}
 
 
@@ -299,7 +298,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void turnUltrasonicSensor(int angle) {
-		double newAngle = getSensorAngle() + angle;
+		int newAngle = getSensorAngle() + angle;
 		while(newAngle > 180) newAngle = newAngle - 360;
 		while(newAngle < -179) newAngle = newAngle + 360;
 		setSensorAngle(newAngle);
@@ -307,24 +306,28 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void turnSensorRight() {
-		double newAngle = getOrientation() + 90;
+		int newAngle = (int) getOrientation() + 90;
 		while(newAngle > 180) newAngle = newAngle - 360;
 		while(newAngle < -179) newAngle = newAngle + 360;
 		setSensorAngle(newAngle);
+		//TODO: checken of +90 effectief rechts is
 	}
 
 	@Override
 	public void turnSensorLeft() {
-		double newAngle = getOrientation() - 90;
+		int newAngle = (int) getOrientation() - 90;
 		while(newAngle > 180) newAngle = newAngle - 360;
 		while(newAngle < -179) newAngle = newAngle + 360;
 		setSensorAngle(newAngle);
+		//TODO: idem 
 	}
 
 	@Override
 	public void turnSensorForward() {
-		setSensorAngle(getOrientation());
+		setSensorAngle((int) getOrientation());
 	}
+	
+	
 	
 	
 

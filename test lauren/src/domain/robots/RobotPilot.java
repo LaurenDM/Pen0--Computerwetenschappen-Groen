@@ -74,5 +74,7 @@ public interface RobotPilot {
 	
 	public void turnSensorForward();
 	
+	public int getSensorAngle();
+	
 	
 }

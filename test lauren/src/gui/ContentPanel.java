@@ -40,7 +40,7 @@ public class ContentPanel implements ActionListener {
     private static ControllerPoller controllerPoller;
     private JPanel titlePanel,titlePanel2, buttonPanel, inputPanel, variablePanel, calibrationPanel, debugPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
-    private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel;
+    private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, sensorAngleLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, calibrateButton;
     private JTextArea debugText;
     final JPanel totalGUI = new JPanel();
@@ -232,12 +232,15 @@ public class ContentPanel implements ActionListener {
 		lightLabel = new JLabel("Lightsensor: 0");
 	    lightLabel.setHorizontalTextPosition(JLabel.LEFT);
 	    fixLabelLayout(debugPanel, lightLabel, 125, 20, 0, 140);
-        distanceLabel = new JLabel("Distance: 0");
+        distanceLabel = new JLabel("Distance: 0 cm");
         distanceLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, distanceLabel, 125, 20, 125, 140);
         touchingLabel = new JLabel("Touching: FALSE");
         touchingLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, touchingLabel, 125, 20, 0, 160);
+        sensorAngleLabel = new JLabel("Angle Sensor: 0 degrees");
+        sensorAngleLabel.setHorizontalTextPosition(JLabel.LEFT);
+        fixLabelLayout(debugPanel, sensorAngleLabel, 125, 20, 125, 160);
 	}
 	
 	
@@ -280,6 +283,7 @@ public class ContentPanel implements ActionListener {
 					contentPanel.setRobotLightValue(controller.readLightValue());
 					contentPanel.setRobotDistanceValue(controller.readUltrasonicValue());
 					contentPanel.setRobotTouchingValue(controller.isTouching());
+					contentPanel.setSensorAngleValue(controller.getSensorAngle());
 					//TODO
 					sleep(50);
 				}
@@ -519,6 +523,10 @@ public class ContentPanel implements ActionListener {
     
     public void setRobotTouchingValue(boolean value){
     	touchingLabel.setText("Touching: " + Boolean.valueOf(value).toString());
+    }
+    
+    public void setSensorAngleValue(int angle){
+    	sensorAngleLabel.setText("Angle Sensor: " + angle);
     }
 
 	public Controller getController() {
