@@ -391,8 +391,7 @@ public class ContentPanel implements ActionListener {
 					try {
 						controller.moveForward();
 					} catch (CannotMoveException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						actionLabel.setText("The robot has encountered an obstacle");
 					}
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
@@ -452,8 +451,7 @@ public class ContentPanel implements ActionListener {
 					try {
 						controller.moveForward();
 					} catch (CannotMoveException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						actionLabel.setText("The robot has encountered an obstacle");
 					}
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
