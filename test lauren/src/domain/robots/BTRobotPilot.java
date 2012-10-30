@@ -193,10 +193,12 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	public void calibrateLightHigh(){
 		lightSensor.calibrateHigh();
+		lightSensor.setHigh(100);
 	}
 	
 	public void calibrateLightLow(){
 		lightSensor.calibrateLow();
+		lightSensor.setLow(0);
 	}
 
 	@Override
