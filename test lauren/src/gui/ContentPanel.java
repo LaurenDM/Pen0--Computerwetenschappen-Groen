@@ -236,19 +236,19 @@ public class ContentPanel implements ActionListener {
         speedLabel = new JLabel("Speed: 0");
         speedLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, speedLabel, 125, 20, 0, 120);
-        angleLabel = new JLabel("Angle: 0 degrees");
+        angleLabel = new JLabel("Angle: 0");
         angleLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, angleLabel, 125, 20, 125, 120);
 		lightLabel = new JLabel("Lightsensor: 0");
 	    lightLabel.setHorizontalTextPosition(JLabel.LEFT);
 	    fixLabelLayout(debugPanel, lightLabel, 125, 20, 0, 140);
-        distanceLabel = new JLabel("Distance: 0 cm");
+        distanceLabel = new JLabel("Distance: 0");
         distanceLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, distanceLabel, 125, 20, 125, 140);
         touchingLabel = new JLabel("Touching: FALSE");
         touchingLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, touchingLabel, 125, 20, 0, 160);
-        sensorAngleLabel = new JLabel("Angle Sensor: 0 degrees");
+        sensorAngleLabel = new JLabel("Angle Sensor: 0");
         sensorAngleLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, sensorAngleLabel, 125, 20, 125, 160);
 	}

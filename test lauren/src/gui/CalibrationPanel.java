@@ -45,10 +45,12 @@ public class CalibrationPanel implements ActionListener {
 		calibrateHighButton = new JButton("Calibrate High");
 		calibrateHighButton.setBounds(20, 20, 200, 30);
 		titlePanel.add(calibrateHighButton);
+		calibrateHighButton.addActionListener(this);
 
 		calibrateLowButton = new JButton("Calibrate Low");
 		calibrateLowButton.setBounds(20, 80, 200, 30);
 		titlePanel.add(calibrateLowButton);
+		calibrateLowButton.addActionListener(this);
 
 		variableGUI.setOpaque(true);
 

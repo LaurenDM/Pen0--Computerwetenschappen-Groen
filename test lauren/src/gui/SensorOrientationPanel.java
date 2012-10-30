@@ -46,16 +46,17 @@ public class SensorOrientationPanel implements ActionListener{
 		forwardButton = new JButton("Look Forward");
 		forwardButton.setBounds(20, 20, 200, 30);
 		titlePanel.add(forwardButton);
+		forwardButton.addActionListener(this);
 
 		leftButton = new JButton("Look Left");
 		leftButton.setBounds(20, 80, 200, 30);
 		titlePanel.add(leftButton);
+		leftButton.addActionListener(this);
 		
 		rightButton = new JButton("Look Right");
 		rightButton.setBounds(20,140,200,30);
 		titlePanel.add(rightButton);
-
-		variableGUI.setOpaque(true);
+		rightButton.addActionListener(this);
 
 		okButton = new JButton();
 		okButton.setBounds(20, 140, 120, 30);
@@ -63,6 +64,8 @@ public class SensorOrientationPanel implements ActionListener{
 		okButton.addActionListener(this);
 		
 		titlePanel.add(okButton);
+		
+		variableGUI.setOpaque(true);
 	}
 
 	public JPanel getContentPanel() {
