@@ -123,4 +123,20 @@ public class Controller {
 	public int getSensorAngle(){
 		return currentRobot.getSensorAngle();
 	}
+	
+	public void turnUltrasonicSensor(int angle){
+		currentRobot.turnUltrasonicSensor(angle);
+	}
+	
+	public void turnSensorRight(){
+		currentRobot.turnSensorRight();
+	}
+	
+	public void turnSensorLeft(){
+		currentRobot.turnSensorLeft();
+	}
+	
+	public void turnSensorForward(){
+		currentRobot.turnSensorForward();
+	}
 }

@@ -37,11 +37,12 @@ public class ContentPanel implements ActionListener {
 	static JFrame frame = new JFrame("P&O - Groen");
     static JFrame variableFrame = new JFrame("P&O - Groen - Variables");
     static JFrame calibrationFrame = new JFrame("P&O - Groen - Lightsensor Calibration");
+    static JFrame sensorOrientationFrame = new JFrame("P&O - Groen - Ultrasonicsensor Orientation");
     private static ControllerPoller controllerPoller;
-    private JPanel titlePanel,titlePanel2, buttonPanel, inputPanel, variablePanel, calibrationPanel, debugPanel;
+    private JPanel titlePanel,titlePanel2, buttonPanel, inputPanel, variablePanel, calibrationPanel, debugPanel, sensorOrientationPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
     private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, sensorAngleLabel;
-    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, calibrateButton;
+    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, calibrateButton, sensorOrientationButton;
     private JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
@@ -156,7 +157,7 @@ public class ContentPanel implements ActionListener {
         downButton = new JButton("DOWN");
         fixButtonLayout(buttonPanel, downButton, 120, 30, buttonXDimension, buttonYDimension + 60);
         
-        cancelButton = new JButton("CANCEL");
+        cancelButton = new JButton("STOP");
         fixButtonLayout(buttonPanel, cancelButton, 240, 30, 30, buttonYDimension + 110);
         
         variableButton = new JButton("EDIT POLYGON VARIABLES");
@@ -167,8 +168,11 @@ public class ContentPanel implements ActionListener {
         
         calibrateButton = new JButton("CALIBRATE LIGHTSENSOR");
         fixButtonLayout(buttonPanel, calibrateButton, 240, 30, 30, buttonYDimension + 250);
-        buttonPanel.setFocusable(true);
         
+        sensorOrientationButton = new JButton("SET SENSOR ORIENTATION");
+        fixButtonLayout(buttonPanel, sensorOrientationButton, 240, 30, 30, buttonYDimension + 280);
+        
+        buttonPanel.setFocusable(true);
         //_____________________________________________________
         // Creation of a Panel to contain the debug information
         createDebugPanel();
@@ -192,6 +196,12 @@ public class ContentPanel implements ActionListener {
         calibrationFrame.setContentPane(calibrationPanel.getContentPanel());
         calibrationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         calibrationFrame.setSize(400,400);
+        
+        //Creating sensorOrientation panel
+        SensorOrientationPanel sensorOrientationPanel = new SensorOrientationPanel(sensorOrientationFrame, controller);
+        sensorOrientationFrame.setContentPane(sensorOrientationPanel.getContentPanel());
+        sensorOrientationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        sensorOrientationFrame.setSize(400,400);
         
         
     	
@@ -356,6 +366,12 @@ public class ContentPanel implements ActionListener {
         	calibrationFrame.setVisible(true);
         	actionLabel.setText("The lightsensor is being calibrated.");
         	calibrateButton.setSelected(false);
+        	buttonPanel.requestFocusInWindow();
+        }
+        else if(e.getSource() == sensorOrientationButton){
+        	sensorOrientationFrame.setVisible(true);
+        	actionLabel.setText("The ultrasonicsensor is being oriented.");
+        	sensorOrientationButton.setSelected(false);
         	buttonPanel.requestFocusInWindow();
         }
         
