@@ -87,7 +87,7 @@ public class ContentPanel implements ActionListener {
     	object.setLayout(null);
     	object.setLocation(xco, yco);
     	object.setSize(xsize, ysize);
-    	//totalGUI.add(object);
+    	object.addActionListener(this);
     	source.add(object);
     }
     
@@ -341,6 +341,7 @@ public class ContentPanel implements ActionListener {
         }
         else if(e.getSource() == connectButton){
         	if(getConnected() == true ){
+        		System.out.println("test");
         		connectButton.setText("Connect to robot");
         		setConnected(false);
         		controller.connectNewSimRobot();
