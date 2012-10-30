@@ -55,8 +55,8 @@ public class BTRobotPilot implements RobotPilot  {
     	setMovingSpeed(defaultTravelSpeed);
     	setTurningSpeed(defaultTurnSpeed);
     	poseProvider= new OdometryPoseProvider(pilot);
-    	touchSensor = new TouchSensor(SensorPort.S2);
-    	ultrasonicSensor = new UltrasonicSensor(SensorPort.S1);
+    	touchSensor = new TouchSensor(SensorPort.S1);
+    	ultrasonicSensor = new UltrasonicSensor(SensorPort.S2);
     	lightSensor = new LightSensor(SensorPort.S4);
     	
     	board = new Board();
@@ -214,20 +214,20 @@ public class BTRobotPilot implements RobotPilot  {
 		//TODO: moet nog gespecifieerd worden
 	}
 
-	@Override
-	public void makeWall() {
-		sensorMotor.setSpeed(2);
-		Position pos1 = getPosition().getNewPosition(getOrientation(), readUltrasonicValue());
-		if(board.detectWallAt(pos1)) return;
-		turnUltrasonicSensor(5);
-		Position pos2 = getPosition().getNewPosition(5+getOrientation(), readUltrasonicValue());
-		if(board.detectWallAt(pos2)) return;
-		turnUltrasonicSensor(-10);
-		Position pos3 = getPosition().getNewPosition(-5+getOrientation(), readUltrasonicValue());
-		if(board.detectWallAt(pos3)) return;
-		turnSensorForward();
-		board.addWall(new Wall(pos1, pos2, pos3));
-		sensorMotor.setSpeed(720);
-	}
+//	@Override
+//	public void makeWall() {
+//		sensorMotor.setSpeed(2);
+//		Position pos1 = getPosition().getNewPosition(getOrientation(), readUltrasonicValue());
+//		if(board.detectWallAt(pos1)) return;
+//		turnUltrasonicSensor(5);
+//		Position pos2 = getPosition().getNewPosition(5+getOrientation(), readUltrasonicValue());
+//		if(board.detectWallAt(pos2)) return;
+//		turnUltrasonicSensor(-10);
+//		Position pos3 = getPosition().getNewPosition(-5+getOrientation(), readUltrasonicValue());
+//		if(board.detectWallAt(pos3)) return;
+//		turnSensorForward();
+//		board.addWall(new Wall(pos1, pos2, pos3));
+//		sensorMotor.setSpeed(720);
+//	}
 
 }

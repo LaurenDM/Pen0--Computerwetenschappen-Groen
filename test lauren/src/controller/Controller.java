@@ -156,7 +156,7 @@ public class Controller {
 		return readUltrasonicValue() < DISTANCE_LIMIT;
 	}
 	
-	public void makeWall(){
-		currentRobot.makeWall();
-	}
+//	public void makeWall(){
+//		currentRobot.makeWall();
+//	}
 }

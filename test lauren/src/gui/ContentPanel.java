@@ -296,7 +296,7 @@ public class ContentPanel implements ActionListener {
 				controller.moveForward();
 			} catch (CannotMoveException e1) {
 				actionLabel.setText("The robot has encountered an obstacle");
-				controller.makeWall();
+				//controller.makeWall();
 			}
         }
             
@@ -376,7 +376,7 @@ public class ContentPanel implements ActionListener {
 						controller.moveForward();
 					} catch (CannotMoveException e1) {
 						actionLabel.setText("The robot has encountered an obstacle");
-						controller.makeWall();
+						//controller.makeWall();
 					}
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
@@ -437,7 +437,7 @@ public class ContentPanel implements ActionListener {
 						controller.moveForward();
 					} catch (CannotMoveException e1) {
 						actionLabel.setText("The robot has encountered an obstacle");
-						controller.makeWall();
+						//controller.makeWall();
 					}
 				}
 				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
