@@ -10,14 +10,14 @@ public abstract class MazeElement {
 	
 	public MazeElement(Position pos1, Position pos2, Position pos3){
 		final double MARGE = 1;
-		if(Math.abs(pos1.getX() - pos2.getX())<=MARGE && Math.abs(pos1.getX() - pos2.getX())<=MARGE){
+		if(Math.abs(pos1.getX() - pos2.getX())<=MARGE && Math.abs(pos1.getX() - pos3.getX())<=MARGE){
 			//wall = vertical
 			int x =(int) (Math.floor((pos1.getX())/MAZECONSTANT))*MAZECONSTANT;
 			int lowy = (int) (Math.floor((pos1.getY())/MAZECONSTANT))*MAZECONSTANT;
 			pos1 = new Position(x,lowy);
 			pos2 = new Position(x,lowy+MAZECONSTANT);
 		}
-		else if(Math.abs(pos1.getY() - pos2.getY())<=MARGE && Math.abs(pos1.getY() - pos2.getY())<=MARGE){
+		else if(Math.abs(pos1.getY() - pos2.getY())<=MARGE && Math.abs(pos1.getY() - pos3.getY())<=MARGE){
 			//wall = horizontal
 			int y =(int) (Math.floor((pos1.getY())/MAZECONSTANT))*MAZECONSTANT;
 			int lowx = (int) (Math.floor((pos1.getX())/MAZECONSTANT))*MAZECONSTANT;
