@@ -307,18 +307,23 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void turnSensorRight() {
-		setSensorAngle(90);
+		double newAngle = getOrientation() + 90;
+		while(newAngle > 180) newAngle = newAngle - 360;
+		while(newAngle < -179) newAngle = newAngle + 360;
+		setSensorAngle(newAngle);
 	}
 
 	@Override
 	public void turnSensorLeft() {
-		setSensorAngle(-90);
+		double newAngle = getOrientation() - 90;
+		while(newAngle > 180) newAngle = newAngle - 360;
+		while(newAngle < -179) newAngle = newAngle + 360;
+		setSensorAngle(newAngle);
 	}
 
 	@Override
 	public void turnSensorForward() {
-		// TODO Auto-generated method stub
-		
+		setSensorAngle(getOrientation());
 	}
 	
 	
