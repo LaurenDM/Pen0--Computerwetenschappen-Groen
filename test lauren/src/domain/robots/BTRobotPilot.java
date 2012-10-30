@@ -184,12 +184,12 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 	
 	public void turnSensorRight(){
-		sensorMotor.rotateTo(90);
+		sensorMotor.rotateTo(-90);
 		//TODO: testen of dit effectief rechts is
 	}
 	
 	public void turnSensorLeft(){
-		sensorMotor.rotateTo(-90);
+		sensorMotor.rotateTo(90);
 		//TODO: idem boven
 	}
 	
