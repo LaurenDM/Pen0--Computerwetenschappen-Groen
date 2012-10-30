@@ -121,119 +121,16 @@ public class ContentPanel implements ActionListener {
 		// We create a bottom JPanel to place everything on.
         totalGUI.setLayout(null);
         totalGUI.requestFocusInWindow();
-        // We create a controllerPoller to update the infolabel data
-        
-        
         //___________________________________________________________
         // Creation of a Panel to contain the title labels
         titlePanel = new JPanel();
-        titlePanel.setLayout(null);
-        titlePanel.setLocation(0, 0);
-        titlePanel.setSize(totalXDimensions, 30);
-        totalGUI.add(titlePanel);
-        
+        fixPanelLayout(titlePanel, totalXDimensions, 30, 0, 0);
         //Set the titleLabel
         titleLabel = new JLabel("P&O - Team Groen");
-        titleLabel.setLocation(0, 0);
-        titleLabel.setSize(totalXDimensions, 30);
-        titleLabel.setHorizontalAlignment(0);
-        titleLabel.setForeground(Color.black);
-        titlePanel.add(titleLabel);
+        fixLabelLayout(titlePanel, titleLabel, totalXDimensions, 30, 0, 0);
         
         //Definition of the KeyListener
-        KeyListener l;
-		l = new KeyListener() {
-			
-			@Override
-			public void keyTyped(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_RIGHT){
-					actionLabel.setText("The robot is turning right!");
-					controller.rotateRightNonBlocking();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_UP){
-					actionLabel.setText("The robot is going forward!");
-					try {
-						controller.moveForward();
-					} catch (CannotMoveException e1) {
-						actionLabel.setText("The robot has encountered an obstacle!");
-					}
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
-					actionLabel.setText("The robot is turning left!");
-					controller.rotateLeftNonBlocking();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_DOWN){
-					actionLabel.setText("The robot is going back!");
-					controller.moveBack();
-				}
-				
-			}
-			
-			@Override
-			public void keyReleased(KeyEvent e) {
-				System.out.println("released");
-				if (e.getKeyCode() == KeyEvent.VK_RIGHT && getCurrentPressedButton() == Button.RIGHT){
-					setCurrentPressedButton(false,Button.RIGHT);
-					actionLabel.setText("The robot is doing nothing atm!");
-					rightButton.setSelected(false);
-					controller.cancel();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_LEFT && getCurrentPressedButton() == Button.LEFT){
-					setCurrentPressedButton(false,Button.LEFT);
-					actionLabel.setText("The robot is doing nothing atm!");
-					leftButton.setSelected(false);
-					controller.cancel();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_UP && getCurrentPressedButton() == Button.UP){
-					setCurrentPressedButton(false,Button.UP);
-					actionLabel.setText("The robot is doing nothing atm!");
-					upButton.setSelected(false);
-					controller.cancel();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_DOWN && getCurrentPressedButton() == Button.DOWN){
-					setCurrentPressedButton(false,Button.DOWN);
-					actionLabel.setText("The robot is doing nothing atm!");
-					downButton.setSelected(false);
-					controller.cancel();
-				}
-				
-			}
-			
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (getCurrentPressedButton() == Button.NONE){
-				if (e.getKeyCode() == KeyEvent.VK_RIGHT){
-					setCurrentPressedButton(true,Button.RIGHT);
-					actionLabel.setText("The robot is turning right!");
-					rightButton.setSelected(true);
-					controller.rotateRightNonBlocking();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_UP){
-					setCurrentPressedButton(true,Button.UP);
-					actionLabel.setText("The robot is going forward!");
-					upButton.setSelected(true);
-					try {
-						controller.moveForward();
-					} catch (CannotMoveException e1) {
-						actionLabel.setText("The robot has encountered an obstacle");
-					}
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
-					setCurrentPressedButton(true,Button.LEFT);
-					actionLabel.setText("The robot is turning left!");
-					leftButton.setSelected(true);
-					controller.rotateLeftNonBlocking();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_DOWN){
-					setCurrentPressedButton(true,Button.DOWN);
-					actionLabel.setText("The robot is going back!");
-					downButton.setSelected(true);
-					controller.moveBack();
-				}
-				}
-			}
-			
-		};
+        KeyListener l = createListener();
 
         //___________________________________________________
         // Creation of a Panel to contain all the JButtons.
@@ -245,96 +142,36 @@ public class ContentPanel implements ActionListener {
         fixLabelLayout(buttonPanel, buttonLabel, 300, 20, 0, 0);
         
         actionLabel = new JLabel("The robot is doing nothing at this moment.");
-        actionLabel.setLocation(0, buttonYDimension + 180);
-        actionLabel.setSize(300, 30);
-        actionLabel.setHorizontalAlignment(0);
-        actionLabel.setForeground(Color.black);
-        buttonPanel.add(actionLabel);
+        fixLabelLayout(buttonPanel, actionLabel, 300, 30, 0, buttonYDimension + 180);
 
         upButton = new JButton("UP");
-        upButton.setLocation(buttonXDimension, buttonYDimension);
-        upButton.setSize(120, 30);
-        upButton.addActionListener(this);
-        buttonPanel.add(upButton);
+        fixButtonLayout(buttonPanel, upButton, 120, 30, buttonXDimension, buttonYDimension);
 
         rightButton = new JButton("RIGHT");
-        rightButton.setLocation(155, buttonYDimension + 30);
-        rightButton.setSize(120, 30);
-        rightButton.addActionListener(this);
-        buttonPanel.add(rightButton);
+        fixButtonLayout(buttonPanel, rightButton, 120, 30, 155, buttonYDimension + 30);
 
         leftButton = new JButton("LEFT");
-        leftButton.setLocation(25, buttonYDimension + 30);
-        leftButton.setSize(120, 30);
-        leftButton.addActionListener(this);
-        buttonPanel.add(leftButton);
+        fixButtonLayout(buttonPanel, leftButton, 120, 30, 25, buttonYDimension + 30);
         
         downButton = new JButton("DOWN");
-        downButton.setLocation(buttonXDimension, buttonYDimension + 60);
-        downButton.setSize(120, 30);
-        downButton.addActionListener(this);
-        buttonPanel.add(downButton);
+        fixButtonLayout(buttonPanel, downButton, 120, 30, buttonXDimension, buttonYDimension + 60);
         
         cancelButton = new JButton("CANCEL");
-        cancelButton.setLocation(30, buttonYDimension + 110);
-        cancelButton.setSize(240, 30);
-        cancelButton.addActionListener(this);
-        buttonPanel.add(cancelButton);
+        fixButtonLayout(buttonPanel, cancelButton, 240, 30, 30, buttonYDimension + 110);
         
         variableButton = new JButton("EDIT POLYGON VARIABLES");
-        variableButton.setLocation(30, buttonYDimension + 140);
-        variableButton.setSize(240, 30);
-        variableButton.addActionListener(this);
-        buttonPanel.add(variableButton);
+        fixButtonLayout(buttonPanel, variableButton, 240, 30, 30, buttonYDimension + 140);
         
         connectButton = new JButton("CONNECT TO ROBOT");
-        connectButton.setLocation(30, buttonYDimension + 220);
-        connectButton.setSize(240, 30);
-        connectButton.addActionListener(this);
-        buttonPanel.add(connectButton);
+        fixButtonLayout(buttonPanel, connectButton, 240, 30, 30, buttonYDimension + 220);
         
         calibrateButton = new JButton("CALIBRATE LIGHTSENSOR");
-        calibrateButton.setLocation(30, buttonYDimension + 250);
-        calibrateButton.setSize(240, 30);
-        calibrateButton.addActionListener(this);
-        buttonPanel.add(calibrateButton);
-        
+        fixButtonLayout(buttonPanel, calibrateButton, 240, 30, 30, buttonYDimension + 250);
         buttonPanel.setFocusable(true);
         
         //_____________________________________________________
         // Creation of a Panel to contain the debug information
-        debugPanel = new JPanel(null);
-        debugText = new JTextArea(5,22);
-        debugText.setLineWrap(true);
-        JScrollPane scrollPane = new JScrollPane(debugText);
-        debugText.setEditable(false);
-        debugPanel.add(scrollPane);
-        fixPanelLayout(debugPanel, 300, 300, 400, 50);
-        scrollPane.setLocation(0, 0);
-        scrollPane.setSize(250,100);
-        writeToDebug("Program started successfully");
-        //Infolabels
-        xLabel = new JLabel("X: 0");
-        xLabel.setHorizontalTextPosition(JLabel.LEFT);
-        fixLabelLayout(debugPanel, xLabel, 125, 20, 0, 100);
-        yLabel = new JLabel("Y: 0");
-        yLabel.setHorizontalTextPosition(JLabel.LEFT);
-        fixLabelLayout(debugPanel, yLabel, 125, 20, 125, 100);
-        speedLabel = new JLabel("Speed: 0");
-        speedLabel.setHorizontalTextPosition(JLabel.LEFT);
-        fixLabelLayout(debugPanel, speedLabel, 125, 20, 0, 120);
-        angleLabel = new JLabel("Angle: 0 degrees");
-        angleLabel.setHorizontalTextPosition(JLabel.LEFT);
-        fixLabelLayout(debugPanel, angleLabel, 125, 20, 125, 120);
-        lightLabel = new JLabel("Lightsensor: 0");
-        lightLabel.setHorizontalTextPosition(JLabel.LEFT);
-        fixLabelLayout(debugPanel, lightLabel, 125, 20, 0, 140);
-        distanceLabel = new JLabel("Distance: 0");
-        distanceLabel.setHorizontalTextPosition(JLabel.LEFT);
-        fixLabelLayout(debugPanel, distanceLabel, 125, 20, 125, 140);
-        touchingLabel = new JLabel("Touching: FALSE");
-        touchingLabel.setHorizontalTextPosition(JLabel.LEFT);
-        fixLabelLayout(debugPanel, touchingLabel, 125, 20, 0, 160);
+        createDebugPanel();
         
         
         //_________________________________________________________________________
@@ -368,7 +205,40 @@ public class ContentPanel implements ActionListener {
 
                 
 	}
-	
+	private void createDebugPanel() {
+		debugPanel = new JPanel(null);
+        debugText = new JTextArea(5,22);
+        debugText.setLineWrap(true);
+        JScrollPane scrollPane = new JScrollPane(debugText);
+        debugText.setEditable(false);
+        debugPanel.add(scrollPane);
+        fixPanelLayout(debugPanel, 300, 300, 400, 50);
+        scrollPane.setLocation(0, 0);
+        scrollPane.setSize(250,100);
+        writeToDebug("Program started successfully");
+        //Infolabels
+        xLabel = new JLabel("X: 0");
+        xLabel.setHorizontalTextPosition(JLabel.LEFT);
+        fixLabelLayout(debugPanel, xLabel, 125, 20, 0, 100);
+        yLabel = new JLabel("Y: 0");
+        yLabel.setHorizontalTextPosition(JLabel.LEFT);
+        fixLabelLayout(debugPanel, yLabel, 125, 20, 125, 100);
+        speedLabel = new JLabel("Speed: 0");
+        speedLabel.setHorizontalTextPosition(JLabel.LEFT);
+        fixLabelLayout(debugPanel, speedLabel, 125, 20, 0, 120);
+        angleLabel = new JLabel("Angle: 0 degrees");
+        angleLabel.setHorizontalTextPosition(JLabel.LEFT);
+        fixLabelLayout(debugPanel, angleLabel, 125, 20, 125, 120);
+		lightLabel = new JLabel("Lightsensor: 0");
+	    lightLabel.setHorizontalTextPosition(JLabel.LEFT);
+	    fixLabelLayout(debugPanel, lightLabel, 125, 20, 0, 140);
+        distanceLabel = new JLabel("Distance: 0");
+        distanceLabel.setHorizontalTextPosition(JLabel.LEFT);
+        fixLabelLayout(debugPanel, distanceLabel, 125, 20, 125, 140);
+        touchingLabel = new JLabel("Touching: FALSE");
+        touchingLabel.setHorizontalTextPosition(JLabel.LEFT);
+        fixLabelLayout(debugPanel, touchingLabel, 125, 20, 0, 160);
+	}
 	
 	
 
@@ -485,6 +355,104 @@ public class ContentPanel implements ActionListener {
         }
         
     }
+	private KeyListener createListener() {
+		KeyListener l;
+		l = new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+					actionLabel.setText("The robot is turning right!");
+					controller.rotateRightNonBlocking();
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_UP){
+					actionLabel.setText("The robot is going forward!");
+					try {
+						controller.moveForward();
+					} catch (CannotMoveException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
+					actionLabel.setText("The robot is turning left!");
+					controller.rotateLeftNonBlocking();
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_DOWN){
+					actionLabel.setText("The robot is going back!");
+					controller.moveBack();
+				}
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				System.out.println("released");
+				if (e.getKeyCode() == KeyEvent.VK_RIGHT && getCurrentPressedButton() == Button.RIGHT){
+					setCurrentPressedButton(false,Button.RIGHT);
+					actionLabel.setText("The robot is doing nothing atm!");
+					rightButton.setSelected(false);
+					controller.cancel();
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_LEFT && getCurrentPressedButton() == Button.LEFT){
+					setCurrentPressedButton(false,Button.LEFT);
+					actionLabel.setText("The robot is doing nothing atm!");
+					leftButton.setSelected(false);
+					controller.cancel();
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_UP && getCurrentPressedButton() == Button.UP){
+					setCurrentPressedButton(false,Button.UP);
+					actionLabel.setText("The robot is doing nothing atm!");
+					upButton.setSelected(false);
+					controller.cancel();
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_DOWN && getCurrentPressedButton() == Button.DOWN){
+					setCurrentPressedButton(false,Button.DOWN);
+					actionLabel.setText("The robot is doing nothing atm!");
+					downButton.setSelected(false);
+					controller.cancel();
+				}
+				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (getCurrentPressedButton() == Button.NONE){
+				if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+					setCurrentPressedButton(true,Button.RIGHT);
+					actionLabel.setText("The robot is turning right!");
+					rightButton.setSelected(true);
+					controller.rotateRightNonBlocking();
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_UP){
+					setCurrentPressedButton(true,Button.UP);
+					actionLabel.setText("The robot is going forward!");
+					upButton.setSelected(true);
+					try {
+						controller.moveForward();
+					} catch (CannotMoveException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
+					setCurrentPressedButton(true,Button.LEFT);
+					actionLabel.setText("The robot is turning left!");
+					leftButton.setSelected(true);
+					controller.rotateLeftNonBlocking();
+				}
+				else if (e.getKeyCode() == KeyEvent.VK_DOWN){
+					setCurrentPressedButton(true,Button.DOWN);
+					actionLabel.setText("The robot is going back!");
+					downButton.setSelected(true);
+					controller.moveBack();
+				}
+				}
+			}
+			
+		};
+		return l;
+	}
 	
 	public boolean getConnected(){
 		return this.connected;
