@@ -471,13 +471,6 @@ public class ContentPanel implements ActionListener {
 		return totalGUI;
 	}
 	
-//	public void drawLine(int x, int y, int z, int u, Color color){
-//        Graphics g = drawingPanel.getGraphics(); 
-//        g.setColor(color);
-//        g.drawLine(x, y, z, u);
-//        drawingPanel.repaint();
-//	} //TODO
-	
 	/**
 	 * Write a line to the debugging text area.
 	 * @param text This line will appear at the bottom of the text area.
