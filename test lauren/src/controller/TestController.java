@@ -1,7 +1,10 @@
 package controller;
 
 import java.io.Console;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +19,8 @@ public class TestController {
 	
 	private Controller robotController;
 	private TestDriver testDriver;
-	private ArrayList<Method> methodList;
-	private ArrayList<Method> selectedMethods;
+	private ArrayList<Method> methodList = new ArrayList<Method>();
+	private ArrayList<Method> selectedMethods = new ArrayList<Method>();
 	
 	public static void main(String[] args) {
 		TestController testController = new TestController();
@@ -25,15 +28,18 @@ public class TestController {
 	
 	public TestController(){
 		robotController = new Controller();
-		testDriver = new TestDriver(robotController.getRobot(), null);
+		testDriver = new TestDriver(robotController.getRobot(), this);
 		loadTests();
-		//robotController.connectNewBtRobot();	
 		TestTextInterface.printWelcome();
         TestTextInterface.execCommandLoop(this);
 	}
 	
+	public void connectNewBtRobot(){
+		robotController.connectNewBtRobot();
+	}
+	
 	private void loadTests(){
-		ArrayList<Method> methodList = new ArrayList<Method>();
+		methodList = new ArrayList<Method>();
 		for(Method meth:TestDriver.class.getMethods()){
 			if(meth.getName().startsWith("test")){ methodList.add(meth); }
 		}
@@ -58,7 +64,7 @@ public class TestController {
 	public void selectTestMethodsOnName(String partOfName) throws IllegalArgumentException{
 		selectedMethods.clear();
 		for(Method meth:methodList){
-			if(meth.getName().contains(partOfName)){ selectedMethods.add(meth); }
+			if(meth.getName().toLowerCase().contains(partOfName)){ selectedMethods.add(meth); }
 		}
 		if(selectedMethods.isEmpty()){ throw(new IllegalArgumentException("No commands were selected!")); }
 	}
@@ -66,14 +72,14 @@ public class TestController {
 	/**
 	 * Returns all test methods
 	 */
-	public List<Method> getTestMethodList(){
+	public ArrayList<Method> getTestMethodList(){
 		return methodList;
 	}
 	
 	/**
 	 * Returns all selected test methods
 	 */
-	public List<Method> getSelectedMethodList(){
+	public ArrayList<Method> getSelectedMethodList(){
 		return selectedMethods;
 	}
 	
@@ -82,7 +88,20 @@ public class TestController {
 			throw(new IllegalArgumentException("No commands are selected!"));
 		} else {
 			for(Method meth:selectedMethods){
-				meth.
+				try {
+					System.out.println(meth.getName());
+					Double doubleArgument = Double.parseDouble(TestTextInterface.getUserInput(meth.getParameterTypes()[0].getSimpleName()));
+//					Class<?> otherType = (meth.getParameterTypes().length>1?meth.getParameterTypes()[1]:null);
+//					if(otherType!=null){
+//						Object otherArgument = TestTextInterface.getUserInput(meth.getParameterTypes()[1].getSimpleName());
+//						meth.invoke(testDriver,doubleArgument,meth.getParameterTypes()[1],otherType.cast(otherArgument));
+//					}
+					meth.invoke(testDriver,doubleArgument);
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -95,8 +114,8 @@ public class TestController {
 		return robotController;
 	}
 
-	public String askUserInput(String...strings) {
-		return null;
+	public String askUserInput(String string) {
+		return TestTextInterface.getUserInput(string);
 	}
 
 }

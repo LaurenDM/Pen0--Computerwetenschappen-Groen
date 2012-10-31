@@ -10,6 +10,14 @@ import controller.TestController;
 
 public enum TestCommand
 {
+	CONNECT(new Action()
+    {
+        @Override
+        public void exec(TestController testController, String[] params)
+        {
+            testController.connectNewBtRobot();
+        }
+    }, false),
     EXIT(new Action()
     {
         @Override
@@ -48,23 +56,43 @@ public enum TestCommand
         @Override
         public void exec(TestController testController, String[] params) throws Exception
         {
-        	System.out.println("Give one of the following names as parameter:");
         	ArrayList<Method> methList=new ArrayList<Method>();
         	methList.addAll(testController.getTestMethodList());
-        	if(params[0].equals("?"))
+        	if(params[0]==null || params[0].equals("") || params[0].equals("?"))
         	{
+        		System.out.println("Give (part of) one of the following names as parameter:");
         		for(Method meth:methList){
         			String methName = meth.getName();
         			methName=methName.substring(4,methName.length());
         			System.out.println(methName);
         		}
         	} else {
-        		for(Method meth:methList){
-        			if(meth.getName().contains)
+        		try{
+        			testController.selectTestMethodsOnName(params[0].toLowerCase());
+        			System.out.println("Following method(s) was/were selected:");
+            		for(Method meth:testController.getSelectedMethodList()){
+            			String methName = meth.getName();
+            			methName=methName.substring(4,methName.length());
+            			System.out.println(methName);
+            		}
+        		} catch(IllegalArgumentException e) {
+        			System.out.println(e.getMessage());
         		}
         	}
         }
-    }, true);
+    }, true),
+    RUNSELECTED(new Action()
+    {
+        @Override
+        public void exec(TestController testController, String[] params) throws Exception
+        {
+        	try{
+        		testController.runSelectedTests();
+        	} catch(IllegalArgumentException e) {
+    			System.out.println(e.getMessage());
+    		}
+        }
+    }, false);
 
     
     private interface Action

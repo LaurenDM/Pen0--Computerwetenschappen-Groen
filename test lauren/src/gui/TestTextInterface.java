@@ -13,8 +13,8 @@ import controller.TestController;
 //Code for this class was adapted from a page on littletutorials.com
 public class TestTextInterface {
 	
-	private static final String COMMAND_ERROR = "Command error \n";
-	private static final String UNKNOWN_COMMAND = "Unknown command \n";
+	private static final String COMMAND_ERROR = "Command error: ";
+	private static final String UNKNOWN_COMMAND = "Unknown command: ";
 
 	public static void execCommandLoop(TestController testController)
     {
@@ -49,6 +49,16 @@ public class TestTextInterface {
         }
     }
 
+	public static String getUserInput(String question){
+		System.out.println(question);
+		Scanner scanner = getInScanner();
+		if (scanner.hasNext()){
+			return scanner.next().trim();
+		} else {
+			return "";
+		}
+	}
+	
 	/**
 	 * @return
 	 */
