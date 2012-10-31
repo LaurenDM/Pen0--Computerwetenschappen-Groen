@@ -155,6 +155,10 @@ public class Controller {
 		final int DISTANCE_LIMIT= 50;
 		return readUltrasonicValue() < DISTANCE_LIMIT;
 	}
+
+	public Robot getRobot() {
+		return currentRobot;
+	}
 	
 //	public void makeWall(){
 //		currentRobot.makeWall();

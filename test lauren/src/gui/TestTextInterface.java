@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.Console;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 
 import controller.TestController;
 
+//Code for this class was adapted from a page on littletutorials.com
 public class TestTextInterface {
 	
 	private static final String COMMAND_ERROR = "Command error \n";
@@ -18,14 +20,7 @@ public class TestTextInterface {
     {
         while (true)
         {
-        	BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-        	String commandLine = "";
-			try {
-				commandLine = bufferedReader.readLine();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-            Scanner scanner = new Scanner(commandLine);
+        	Scanner scanner = getInScanner();
 
             if (scanner.hasNext())
             {
@@ -54,7 +49,28 @@ public class TestTextInterface {
         }
     }
 
+	/**
+	 * @return
+	 */
+	public static Scanner getInScanner() {
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+		String commandLine = "";
+		try {
+			commandLine = bufferedReader.readLine();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		Scanner scanner = new Scanner(commandLine);
+		return scanner;
+	}
+
 	public static void printWelcome() {
-		System.out.println("Welcome to the PenOCW Team Green Test App! \nAvailable commands: testdrive, testlight, testdistance and exit.");
+		String commandList = "";
+		for(TestCommand tc:TestCommand.values()){
+			commandList+=tc.name().toLowerCase()+(tc.hasParam()?" <param>":"")+", ";
+		}
+		commandList = commandList.substring(0, commandList.length()-2);
+		System.out.println("Welcome to the PenOCW Team Green Test App!");
+		System.out.println("Available commands: "+commandList);
 	}
 }

@@ -37,7 +37,7 @@ public class TestDriver {
 		TestDriver.testRunning=false;
 	}
 	
-	private void test(TestType testType, StepType stepType, int steps, double distance, boolean requireSetup, String extraConditions) throws CannotMoveException{
+	public void test(TestType testType, StepType stepType, int steps, double distance, boolean requireSetup, String extraConditions) throws CannotMoveException{
 		for(int i=0; i<=steps; i++){
 			if(requireSetup){
 				testType.setup(stepType, distance);
