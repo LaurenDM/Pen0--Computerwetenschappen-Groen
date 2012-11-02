@@ -89,6 +89,7 @@ public class BTRobotPilot implements RobotPilot  {
 		else{
 			throw new CannotMoveException();
 		}
+		canMove();
 	}
 
 	@Override
@@ -136,9 +137,10 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 
 
+	// TESTEN! Indien te schokkerig, moet geleidelijker
 	@Override
 	public void move(double distance) throws CannotMoveException {
-		int testdistance = 10;
+		int testdistance = 50;
 		int n = (int) distance/testdistance;
 		for(int i = 0; i<n ; i++){
 			if(canMove()){
@@ -154,11 +156,13 @@ public class BTRobotPilot implements RobotPilot  {
 	@Override
 	public void turnRight() {
 		pilot.rotate(90);
+		canMove();
 	}
 
 	@Override
 	public void turnLeft() {
 		pilot.rotate(90);
+		canMove();
 	}
 	
 	public boolean isTouching(){
@@ -167,9 +171,11 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	public boolean canMove(){
 		int distance = ultrasonicSensor.getDistance();	
-		int testDistance = 10; 
-		if(distance < testDistance || isTouching())
+		int testDistance = 50; 
+		if(distance < testDistance || isTouching()){
+			makeWall();
 			return false;
+		}
 		else
 			return true;
 	}
@@ -189,14 +195,17 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	public void turnSensorRight(){
 		sensorMotor.rotateTo(-90);
+		canMove();
 	}
 	
 	public void turnSensorLeft(){
 		sensorMotor.rotateTo(90);
+		canMove();
 	}
 	
 	public void turnSensorForward(){
 		sensorMotor.rotateTo(0);
+		canMove();
 	}
 	
 	public void calibrateLightHigh(){
@@ -217,20 +226,19 @@ public class BTRobotPilot implements RobotPilot  {
 		//TODO: moet nog gespecifieerd worden
 	}
 
-//	@Override
-//	public void makeWall() {
-//		sensorMotor.setSpeed(2);
-//		Position pos1 = getPosition().getNewPosition(getOrientation(), readUltrasonicValue());
-//		if(board.detectWallAt(pos1)) return;
-//		turnUltrasonicSensor(5);
-//		Position pos2 = getPosition().getNewPosition(5+getOrientation(), readUltrasonicValue());
-//		if(board.detectWallAt(pos2)) return;
-//		turnUltrasonicSensor(-10);
-//		Position pos3 = getPosition().getNewPosition(-5+getOrientation(), readUltrasonicValue());
-//		if(board.detectWallAt(pos3)) return;
-//		turnSensorForward();
-//		board.addWall(new Wall(pos1, pos2, pos3));
-//		sensorMotor.setSpeed(720);
-//	}
+	public void makeWall() {
+		sensorMotor.setSpeed(2);
+		Position pos1 = getPosition().getNewPosition(getOrientation(), readUltrasonicValue());
+		if(board.detectWallAt(pos1)) return;
+		turnUltrasonicSensor(5);
+		Position pos2 = getPosition().getNewPosition(5+getOrientation(), readUltrasonicValue());
+		if(board.detectWallAt(pos2)) return;
+		turnUltrasonicSensor(-10);
+		Position pos3 = getPosition().getNewPosition(-5+getOrientation(), readUltrasonicValue());
+		if(board.detectWallAt(pos3)) return;
+		turnSensorForward();
+		board.addWall(new Wall(pos1, pos2, pos3));
+		sensorMotor.setSpeed(720);
+	}
 
 }

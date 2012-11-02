@@ -129,7 +129,7 @@ public class ContentPanel implements ActionListener {
         actionLabel = new JLabel("The robot is doing nothing at this moment.");
         fixLabelLayout(buttonPanel, actionLabel, 300, 30, 0, buttonYDimension + 180);
 
-        upButton = new JButton("UP");
+        upButton = new JButton("FORWARD");
         fixButtonLayout(buttonPanel, upButton, 120, 30, buttonXDimension, buttonYDimension);
 
         rightButton = new JButton("RIGHT");
@@ -138,7 +138,7 @@ public class ContentPanel implements ActionListener {
         leftButton = new JButton("LEFT");
         fixButtonLayout(buttonPanel, leftButton, 120, 30, 25, buttonYDimension + 30);
         
-        downButton = new JButton("DOWN");
+        downButton = new JButton("BACKWARD");
         fixButtonLayout(buttonPanel, downButton, 120, 30, buttonXDimension, buttonYDimension + 60);
         
         cancelButton = new JButton("STOP");
