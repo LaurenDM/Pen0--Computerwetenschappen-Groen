@@ -152,7 +152,7 @@ public class Robot {
 		return robotPilot.detectWhiteLine();
 	}
 	
-//	public void makeWall(){
-//		robotPilot.makeWall();
-//	}
+	public void findOrigin(){
+		robotPilot.findOrigin();
+	}
 }

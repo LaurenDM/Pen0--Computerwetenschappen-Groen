@@ -27,8 +27,9 @@ public class Controller {
 	public void connectNewBtRobot() {
 		if(btRobot==null){
 			btRobot = new Robot(new BTRobotPilot());
-		}			
+		}		
 		currentRobot=btRobot;
+		currentRobot.findOrigin();
 		currentRobot.setBoard(new Board());
 
 	}

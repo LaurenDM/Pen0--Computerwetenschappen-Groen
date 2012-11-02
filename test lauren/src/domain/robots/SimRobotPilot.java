@@ -340,9 +340,9 @@ public class SimRobotPilot implements RobotPilot {
 		return board.detectLineAt(getPosition());
 	}
 
-	
-	public void makeWall() {
-		//do nothing
+	@Override
+	public void findOrigin() {
+		// do nothing
 	}
 	
 	

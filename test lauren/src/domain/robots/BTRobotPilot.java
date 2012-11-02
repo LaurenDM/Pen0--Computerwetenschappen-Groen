@@ -244,5 +244,27 @@ public class BTRobotPilot implements RobotPilot  {
 		board.addWall(new Wall(pos1, pos2, pos3));
 		sensorMotor.setSpeed(720);
 	}
+	
+	// TODO: method moet gebruik maken van rechtzetten op witte lijn
+	public void findOrigin(){
+		boolean found = false;
+		while(!found){
+			pilot.forward();
+			found = detectWhiteLine();
+		}
+		pilot.stop();
+		// rechtzetten op witte lijn
+		pilot.travel(20);
+		turnRight();
+		found= false;
+		while(!found){
+			pilot.forward();
+			found = detectWhiteLine();
+		}
+		pilot.stop();
+		turnLeft();
+		pilot.travel(20);
+		// the robot is in position (0,0)
+	}
 
 }
