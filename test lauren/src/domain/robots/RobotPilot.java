@@ -18,6 +18,8 @@ public interface RobotPilot {
 	
 	public void setBoard(Board board);
 	
+	public Board getBoard();
+	
 	public void forward() throws CannotMoveException;
 	
 	public void backward();

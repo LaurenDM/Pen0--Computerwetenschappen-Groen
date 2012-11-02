@@ -26,6 +26,10 @@ public class Robot {
 	public void setBoard(Board board){
 		robotPilot.setBoard(board);
 	}
+	
+	public Board getBoard(){
+		return robotPilot.getBoard();
+	}
 
 
 	public Movement getMovementStatus() {

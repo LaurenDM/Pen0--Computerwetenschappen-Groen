@@ -164,7 +164,4 @@ public class Controller {
 		return currentRobot;
 	}
 	
-//	public void makeWall(){
-//		currentRobot.makeWall();
-//	}
 }

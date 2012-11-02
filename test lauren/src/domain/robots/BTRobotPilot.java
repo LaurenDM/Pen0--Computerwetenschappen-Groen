@@ -66,6 +66,10 @@ public class BTRobotPilot implements RobotPilot  {
 	public void setBoard(Board board){
 		this.board=  board;
 	}
+	
+	public Board getBoard(){
+		return board;
+	}
 
 	@Override
 	public void turn(double amount) {
