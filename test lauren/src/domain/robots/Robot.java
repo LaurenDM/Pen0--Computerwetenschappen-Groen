@@ -1,6 +1,7 @@
 package domain.robots;
 
 import domain.Position.Position;
+import domain.maze.Board;
 import domain.polygons.RobotPolygon;
 import domain.util.TimeStamp;
 
@@ -20,6 +21,10 @@ public class Robot {
 	
 	public void UpdateUntil(TimeStamp timestamp) {
 		// TODO Auto-generated method stub
+	}
+	
+	public void setBoard(Board board){
+		robotPilot.setBoard(board);
 	}
 
 

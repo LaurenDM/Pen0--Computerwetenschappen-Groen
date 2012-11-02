@@ -1,6 +1,7 @@
 package domain.robots;
 
 import domain.Position.Position;
+import domain.maze.Board;
 import domain.util.TimeStamp;
 
 public interface RobotPilot {
@@ -14,6 +15,8 @@ public interface RobotPilot {
 	 * @return a clone of the position
 	 */
 	public Position getPosition();
+	
+	public void setBoard(Board board);
 	
 	public void forward() throws CannotMoveException;
 	

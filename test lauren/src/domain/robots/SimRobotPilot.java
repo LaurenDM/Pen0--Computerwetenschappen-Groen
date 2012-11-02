@@ -49,6 +49,10 @@ public class SimRobotPilot implements RobotPilot {
 		return position;
 	}
 		
+	public void setBoard(Board board){
+		this.board = board;
+	}
+		
 	public int getSensorAngle(){
 		return sensorAngle;
 	}

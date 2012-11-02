@@ -62,6 +62,10 @@ public class BTRobotPilot implements RobotPilot  {
     	board = new Board();
     	
 	}
+	
+	public void setBoard(Board board){
+		this.board=  board;
+	}
 
 	@Override
 	public void turn(double amount) {
@@ -185,12 +189,10 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	public void turnSensorRight(){
 		sensorMotor.rotateTo(-90);
-		//TODO: testen of dit effectief rechts is
 	}
 	
 	public void turnSensorLeft(){
 		sensorMotor.rotateTo(90);
-		//TODO: idem boven
 	}
 	
 	public void turnSensorForward(){
@@ -200,6 +202,7 @@ public class BTRobotPilot implements RobotPilot  {
 	public void calibrateLightHigh(){
 		lightSensor.calibrateHigh();
 		lightSensor.setHigh(100);
+		//TODO klopt nog niet
 	}
 	
 	public void calibrateLightLow(){
@@ -209,7 +212,7 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public boolean detectWhiteLine() {
-		if(readLightValue() > 50) return true;
+		if(readLightValue() > 600) return true;
 		else return false;
 		//TODO: moet nog gespecifieerd worden
 	}
