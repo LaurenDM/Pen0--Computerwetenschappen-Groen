@@ -1,5 +1,7 @@
 package domain.robotFunctions;
 import domain.Position.Position;
+import domain.robots.BTRobotPilot;
+import domain.robots.CannotMoveException;
 import domain.robots.Robot;
 
 /**
@@ -8,7 +10,7 @@ import domain.robots.Robot;
  */
 public class Straightener extends RobotFunction {
 	//The robot that needs to be straightened
-	private Robot robot;
+	private BTRobotPilot robot;
 	//The actual width of the line 
 	private double realLineWidth;
 	//Whether we know the real linewidth
@@ -19,10 +21,6 @@ public class Straightener extends RobotFunction {
 	private double previousLineWidth;
 	//The current angle (reference point is not really important)
 	private double angle;
-	//Starting coordinates of the line
-	private double startX, startY;
-	//End coordinates of the line
-	private double endX, endY;
 	//Angle before and after adjustment
 	private double previousAngle, nextAngle;
 	//Whether the algorithm decreases or increases the angle
@@ -37,7 +35,7 @@ public class Straightener extends RobotFunction {
 	 * Use this constructor if the real linewidth is NOT known.
 	 * @param robot
 	 */
-	public Straightener(Robot robot){
+	public Straightener(BTRobotPilot robot){
 		this.robot = robot;
 		this.realLineWidth = 0d;
 		this.knowRealLineWidth = false;
@@ -49,7 +47,7 @@ public class Straightener extends RobotFunction {
 	 * @param robot
 	 * @param realLineWidth
 	 */
-	public Straightener(Robot robot, double realLineWidth){
+	public Straightener(BTRobotPilot robot, double realLineWidth){
 		this.robot = robot;
 		this.realLineWidth = realLineWidth;
 		this.knowRealLineWidth = true;
@@ -75,7 +73,35 @@ public class Straightener extends RobotFunction {
 	 * The straightening method when the real linewidth is known
 	 */
 	private void straightenKnown(){
-		
+		robot.setMovingSpeed(0.1);
+		while(robot.detectWhiteLine()){
+			robot.backward();
+		}
+		robot.stop();
+		Position pos1 = robot.getPosition();
+		try {
+			robot.forward();
+		} catch (CannotMoveException e) {
+			//TODO: mogen we ervan uitgaan dat bij het rechtzetten geen muren in de buurt zijn?
+		}
+		while(robot.detectWhiteLine()){
+			try {
+				robot.forward();
+			} catch (CannotMoveException e) {
+				
+			}
+		}
+		robot.stop();
+		Position pos2 = robot.getPosition();
+		double l = pos1.getDistance(pos2);
+		double alpha = Math.acos(lineWidth/l)*180/Math.PI;
+		robot.turn(90 - alpha); //TODO: robot moet naar rechts of links draaien? hoe bepalen?
+		try {
+			robot.move(-lineWidth/2);
+		} catch (CannotMoveException e) {
+			
+		}
+		robot.setMovingSpeed(2); //TODO: wat is standaardsnelheid robot?
 	}
 	
 	/**
@@ -86,20 +112,17 @@ public class Straightener extends RobotFunction {
 		//We save the linewidth for later use.
 		lineWidth=findLineWidth();
 		//Reset the "starting position" to the current postion.
-		startX=robot.getPosition().getX();
-		startY=robot.getPosition().getY();
+		Position startpos = robot.getPosition();
 		moveAndTurn();
-		double topX=robot.getPosition().getX();
-		double topY=robot.getPosition().getY();
+		Position toppos = robot.getPosition();
 		toggle(forward);
 		//Find the edge of the line again
 		goUntilRising();
-		endX=robot.getPosition().getX();
-		endY=robot.getPosition().getY();
-		double edgeA = new Position(startX,startY).getDistance(new Position(endX,endY));
-		double edgeB = new Position(topX,topY).getDistance(new Position(endX,endY));
-		double fixedEdge = new Position(startX,startY).getDistance(new Position(topX,topY));
-		//beta=arccos((a²+c²-b²)/(2ac))
+		Position endpos = robot.getPosition();
+		double edgeA = startpos.getDistance(endpos);
+		double edgeB = toppos.getDistance(endpos);
+		double fixedEdge = startpos.getDistance(toppos);
+		//beta=arccos((aï¿½+cï¿½-bï¿½)/(2ac))
 		double betaAngle = Math.acos((Math.pow(fixedEdge,2)+Math.pow(edgeA,2)-Math.pow(edgeB,2))/(2*edgeA*fixedEdge));
 		//TODO finish this method
 		
@@ -129,15 +152,13 @@ public class Straightener extends RobotFunction {
 	 */
 	private double findLineWidth() {
 		goUntilRising();
-		startX=robot.getPosition().getX();
-		startY=robot.getPosition().getY();
+		Position startPos = robot.getPosition();
 		previousAngle=robot.getOrientation();
 		
 		goUntilFalling();
-		endX=robot.getPosition().getX();
-		endY=robot.getPosition().getY();
+		Position endPos = robot.getPosition();
 		nextAngle=robot.getOrientation();
-		return new Position(startX,startY).getDistance(new Position(endX,endY));
+		return startPos.getDistance(endPos);
 	}
 
 	private void goUntilFalling() {

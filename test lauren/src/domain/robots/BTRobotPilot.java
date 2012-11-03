@@ -4,6 +4,7 @@ import java.io.IOException;
 import domain.Position.Position;
 import domain.maze.Board;
 import domain.maze.Wall;
+import domain.robotFunctions.Straightener;
 import domain.util.TimeStamp;
 import lejos.nxt.LightSensor;
 import lejos.nxt.Motor;
@@ -165,7 +166,7 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void turnLeft() {
-		pilot.rotate(90);
+		pilot.rotate(-90);
 		canMove();
 	}
 	
@@ -247,13 +248,14 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	// TODO: method moet gebruik maken van rechtzetten op witte lijn
 	public void findOrigin(){
+		Straightener s = new Straightener(this, 2);
 		boolean found = false;
 		while(!found){
 			pilot.forward();
 			found = detectWhiteLine();
 		}
 		pilot.stop();
-		// rechtzetten op witte lijn
+		s.straighten();
 		pilot.travel(20);
 		turnRight();
 		found= false;
