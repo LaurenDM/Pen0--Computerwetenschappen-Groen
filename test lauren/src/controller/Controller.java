@@ -1,7 +1,9 @@
 package controller;
 
+import java.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
+
 
 
 import domain.PolygonDriver;
@@ -11,6 +13,7 @@ import domain.robots.CannotMoveException;
 import domain.robots.Robot;
 import domain.robots.SimRobotPilot;
 import domain.util.ColorPolygon;
+import exception.BlockedSystemExitError;
 
 //Robotclass, generates/keeps track of current positioning.
 public class Controller {
@@ -20,17 +23,39 @@ public class Controller {
 	private Robot simRobot;
 	
 	public Controller() {
+		forbidSystemExitCall();
 		simRobot = new Robot(new SimRobotPilot());
 		currentRobot=simRobot;
 	}
 
+	  private void forbidSystemExitCall() {
+	    final SecurityManager securityManager = new SecurityManager() {
+	    	@Override
+	    	public void checkPermission( Permission permission ) {
+	        if( "exitVM".equals( permission.getName() ) ) {
+	        	throw new BlockedSystemExitError();
+	        }
+	        else{
+	            java.security.AccessController.checkPermission(permission);
+
+	        }
+	      }
+	    } ;
+	    System.setSecurityManager( securityManager ) ;
+	  }
+	  
 	public void connectNewBtRobot() {
+		try{
 		if(btRobot==null){
 			btRobot = new Robot(new BTRobotPilot());
-		}		
+		}	
 		currentRobot=btRobot;
 		currentRobot.findOrigin();
 		currentRobot.setBoard(new Board());
+		}catch(BlockedSystemExitError e)
+		{
+			System.out.println("Verbinden met de bluetoothRobot is niet gelukt");
+		}
 
 	}
 	
