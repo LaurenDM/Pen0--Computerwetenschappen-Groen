@@ -12,8 +12,6 @@ import lejos.nxt.SensorPort;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.UltrasonicSensor;
 import lejos.robotics.RegulatedMotor;
-import lejos.robotics.localization.OdometryPoseProvider;
-import lejos.robotics.navigation.DifferentialPilot;
 import lejos.util.PilotProps;
 
 
@@ -25,8 +23,6 @@ public class BTRobotPilot implements RobotPilot  {
 	private RegulatedMotor rightMotor;
 	private RegulatedMotor sensorMotor;
 	
-	//The poseProvider is an instantiation of a class that "LeJOS" provides for determining the pose of a NXT Robot.
-	private OdometryPoseProvider poseProvider;
 	
 	private final double defaultTravelSpeed = 15;
 	private final double defaultTurnSpeed = 70;
@@ -39,23 +35,16 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	public BTRobotPilot(){
 		
-		PilotProps pp = new PilotProps();
-    	try {
-			pp.loadPersistentValues();
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException();
-		}
+		
     	float wheelDiameter = 5.55F;
     	float trackWidth = 11.22F;
-    	leftMotor = PilotProps.getMotor(pp.getProperty(PilotProps.KEY_LEFTMOTOR, "C"));
-    	rightMotor = PilotProps.getMotor(pp.getProperty(PilotProps.KEY_RIGHTMOTOR, "B"));
+    	leftMotor = Motor.C;
+    	rightMotor = Motor.B;
     	sensorMotor = Motor.A; 
     	
     	pilot = new DifferentialPilot(wheelDiameter, trackWidth, leftMotor, rightMotor);
     	setMovingSpeed(defaultTravelSpeed);
     	setTurningSpeed(defaultTurnSpeed);
-    	poseProvider= new OdometryPoseProvider(pilot);
     	touchSensor = new TouchSensor(SensorPort.S1);
     	ultrasonicSensor = new UltrasonicSensor(SensorPort.S2);
     	lightSensor = new LightSensor(SensorPort.S4);
@@ -109,13 +98,19 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public Position getPosition() {
-		return new Position(poseProvider.getPose().getLocation());
+		//TODO
+		return new Position(0,0);
+
+//		return new Position(poseProvider.getPose().getLocation());
 	}
 	
 	//TODO checken of de getheading waarden tussen 0 en 180 graden teruggeeft
 	@Override
 	public double getOrientation() {
-		return poseProvider.getPose().getHeading();
+		//TODO
+		return (leftMotor.getTachoCount()-rightMotor.getTachoCount())%360;
+
+		//		return poseProvider.getPose().getHeading();
 	}
 
 	public boolean isMoving(){
