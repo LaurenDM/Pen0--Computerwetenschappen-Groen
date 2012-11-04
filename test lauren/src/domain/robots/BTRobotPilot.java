@@ -1,6 +1,4 @@
 package domain.robots;
-import java.io.IOException;
-
 import domain.Position.Position;
 import domain.maze.Board;
 import domain.maze.Wall;
@@ -12,7 +10,6 @@ import lejos.nxt.SensorPort;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.UltrasonicSensor;
 import lejos.robotics.RegulatedMotor;
-import lejos.util.PilotProps;
 
 
 
@@ -241,7 +238,6 @@ public class BTRobotPilot implements RobotPilot  {
 		sensorMotor.setSpeed(720);
 	}
 	
-	// TODO: method moet gebruik maken van rechtzetten op witte lijn
 	public void findOrigin(){
 		setMovingSpeed(0.1); //TODO: testen
 		Straightener s = new Straightener(this, 2); // TODO: wat is de lijndikte?
