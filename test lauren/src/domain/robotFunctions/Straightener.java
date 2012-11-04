@@ -95,6 +95,7 @@ public class Straightener extends RobotFunction {
 		Position pos2 = robot.getPosition();
 		double l = pos1.getDistance(pos2);
 		double alpha = Math.acos(lineWidth/l)*180/Math.PI;
+		
 		robot.turn(90 - alpha); //TODO: robot moet naar rechts of links draaien? hoe bepalen?
 		try {
 			robot.move(-lineWidth/2);

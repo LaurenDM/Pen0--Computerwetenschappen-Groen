@@ -248,7 +248,8 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	// TODO: method moet gebruik maken van rechtzetten op witte lijn
 	public void findOrigin(){
-		Straightener s = new Straightener(this, 2);
+		setMovingSpeed(0.1); //TODO: testen
+		Straightener s = new Straightener(this, 2); // TODO: wat is de lijndikte?
 		boolean found = false;
 		while(!found){
 			pilot.forward();
