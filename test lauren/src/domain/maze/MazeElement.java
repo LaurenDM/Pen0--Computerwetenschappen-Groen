@@ -41,7 +41,7 @@ public abstract class MazeElement {
 	}
 	
 	public boolean hasPosition(Position position){
-		final double MARGE = 0.5;
+		final double MARGE = 0.5; //TODO: hangt af van dikte muren
 		if(position1.getX() == position2.getX()){
 			//wall = vertical
 			if(Math.abs(position1.getX() - position.getX()) > MARGE) return false;

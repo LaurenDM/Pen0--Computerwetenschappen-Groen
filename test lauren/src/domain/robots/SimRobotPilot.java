@@ -278,16 +278,18 @@ public class SimRobotPilot implements RobotPilot {
 		if(board.detectLineAt(getPosition())) return HIGH;
 		else return LOW;
 	}
+	//TODO: waardes hangen af van kalibratie van echte sensor
 
 	@Override
 	public double readUltrasonicValue() {
 		final int MAX_REACH = 50;
-		final double MAX_VALUE = 100;
+		final double MAX_VALUE = 255;
 		boolean foundWall = false;
 		for(int i = 0; i<MAX_REACH; i++){
-			foundWall = board.detectWallAt(getPosition().getNewPosition(getOrientation(), i));
+			Position pos = getPosition().getNewPosition(getOrientation()+ getSensorAngle(), i);
+			foundWall = board.detectWallAt(pos);
 			if(foundWall){
-				return getPosition().getDistance(getPosition().getNewPosition(getOrientation(),i));
+				return getPosition().getDistance(pos);
 			}
 		}
 		return MAX_VALUE;

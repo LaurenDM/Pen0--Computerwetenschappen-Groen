@@ -28,7 +28,7 @@ public class Board {
 	}
 	
 	public boolean detectLineAt(Position position){
-		final int MARGE = 1;
+		final int MARGE = 2; // TODO: hangt af van dikte lijnen
 		double x_mod = Math.abs(position.getX()%MAZECONSTANT);
 		if(Math.min(x_mod, MAZECONSTANT-x_mod) <MARGE) return true;
 		double y_mod = Math.abs(position.getY()%MAZECONSTANT);
