@@ -1,14 +1,20 @@
 package domain.robots;
+import java.io.IOException;
+
 import domain.Position.Position;
 import domain.maze.Board;
 import domain.maze.Wall;
 import domain.robotFunctions.Straightener;
 import domain.util.TimeStamp;
+import exceptions.ConnectErrorException;
 import lejos.nxt.LightSensor;
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.TouchSensor;
 import lejos.nxt.UltrasonicSensor;
+import lejos.nxt.remote.NXTCommand;
+import lejos.pc.comm.NXTComm;
+import lejos.pc.comm.NXTCommandConnector;
 import lejos.robotics.RegulatedMotor;
 
 
@@ -29,25 +35,34 @@ public class BTRobotPilot implements RobotPilot  {
 	private LightSensor lightSensor;
 	
 	private Board board;
-	
+	private NXTCommand nxtCommand;
 	public BTRobotPilot(){
-		
-		
-    	float wheelDiameter = 5.55F;
-    	float trackWidth = 11.22F;
-    	leftMotor = Motor.C;
-    	rightMotor = Motor.B;
-    	sensorMotor = Motor.A; 
-    	
-    	pilot = new DifferentialPilot(wheelDiameter, trackWidth, leftMotor, rightMotor);
-    	setMovingSpeed(defaultTravelSpeed);
-    	setTurningSpeed(defaultTurnSpeed);
-    	touchSensor = new TouchSensor(SensorPort.S1);
-    	ultrasonicSensor = new UltrasonicSensor(SensorPort.S2);
-    	lightSensor = new LightSensor(SensorPort.S4);
-    	
-    	board = new Board();
-    	
+
+		try {
+			NXTComm nxtComm=NXTCommandConnector.open();
+			if(nxtComm==null){
+				throw new ConnectErrorException();
+			}
+			nxtCommand=NXTCommandConnector.getSingletonOpen();
+			float wheelDiameter = 5.55F;
+			float trackWidth = 11.22F;
+			leftMotor = Motor.C;
+			rightMotor = Motor.B;
+			sensorMotor = Motor.A;
+
+			pilot = new DifferentialPilot(wheelDiameter, trackWidth, leftMotor,
+					rightMotor);
+			setMovingSpeed(defaultTravelSpeed);
+			setTurningSpeed(defaultTurnSpeed);
+			touchSensor = new TouchSensor(SensorPort.S1);
+			ultrasonicSensor = new UltrasonicSensor(SensorPort.S2);
+			lightSensor = new LightSensor(SensorPort.S4);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		board = new Board();
+
 	}
 	
 	public void setBoard(Board board){
@@ -259,6 +274,14 @@ public class BTRobotPilot implements RobotPilot  {
 		turnLeft();
 		pilot.travel(20);
 		// the robot is in position (0,0)
+	}
+	
+	public int getBatteryVoltage(){
+		try {
+			return nxtCommand.getBatteryLevel();
+		} catch (IOException e) {
+			return 0;
+		}
 	}
 
 }

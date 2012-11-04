@@ -16,6 +16,7 @@ import javax.swing.JTextArea;
 import controller.Controller;
 import domain.robots.CannotMoveException;
 import domain.util.ColorPolygon;
+import exceptions.ConnectErrorException;
 
 public class ContentPanel implements ActionListener {
 	static JFrame frame = new JFrame("P&O - Groen");
@@ -340,9 +341,12 @@ public class ContentPanel implements ActionListener {
         		controller.connectNewSimRobot();
         	}
         	else{
-        		connectButton.setText("Disconnect from robot");
-        		setConnected(true);
+        		try{
         		controller.connectNewBtRobot();
+        		connectButton.setText("Disconnect from robot");
+        		setConnected(true);}
+        		catch(ConnectErrorException e1){
+        		}
         	}
         }
         else if(e.getSource() == calibrateButton){

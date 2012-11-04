@@ -1,10 +1,12 @@
 package controller;
 
+import java.io.IOException;
 import java.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
 
 import lejos.nxt.Motor;
+import lejos.pc.comm.NXTCommandConnector;
 
 
 
@@ -15,7 +17,6 @@ import domain.robots.CannotMoveException;
 import domain.robots.Robot;
 import domain.robots.SimRobotPilot;
 import domain.util.ColorPolygon;
-import exception.BlockedSystemExitException;
 
 //Robotclass, generates/keeps track of current positioning.
 public class Controller {
