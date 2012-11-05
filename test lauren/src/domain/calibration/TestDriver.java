@@ -49,7 +49,7 @@ public class TestDriver {
 			testType.log("\n");
 			testType.step(stepType, i*distance/steps, (double)calcPolygonAngles(steps));
 		}
-		logTestResults(testType.logFileName()+stepType.logFileExtension()+extraConditions, testType.getLog());
+		logTestResults(testType.logFileName()+stepType.logFileExtension()+extraConditions, testType.popLog());
 	}
 	
 	private void test(TestType testType, StepType stepType, int steps, double distance, boolean requireSetup, String extraConditions, int times) throws CannotMoveException{
@@ -115,8 +115,10 @@ public class TestDriver {
 				log+=string+" ";
 			}
 		}
-		public String getLog(){
-			return log;
+		public String popLog(){
+			String ret = log;
+			log = "";
+			return ret;
 		}
 	}
 	
@@ -196,9 +198,10 @@ public class TestDriver {
 	}
 	
 	public void logTestResults(String logFileName, String log){
-		BufferedWriter logOutputWriter = null;
+		FileWriter logOutputWriter = null;
 		try {
-			logOutputWriter = new BufferedWriter(new FileWriter(logFileName + ".txt"));
+			logOutputWriter = new FileWriter(logFileName + ".txt",true);
+			for(int i = log.length()-1; log.charAt(i)==' ';i--){log=log.substring(0, i);}
 			logOutputWriter.append(log);
 			logOutputWriter.flush();
 		} catch (IOException e) {

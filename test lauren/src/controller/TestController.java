@@ -53,7 +53,7 @@ public class TestController {
 	public void selectTestMethodsOnType(String type) throws IllegalArgumentException{
 		selectedMethods.clear();
 		for(Method meth:methodList){
-			if(meth.getName().startsWith(type,4)){ selectedMethods.add(meth); }
+			if(meth.getName().toLowerCase().startsWith(type,4)){ selectedMethods.add(meth); }
 		}
 		if(selectedMethods.isEmpty()){ throw(new IllegalArgumentException("No commands were selected!")); }
 	}

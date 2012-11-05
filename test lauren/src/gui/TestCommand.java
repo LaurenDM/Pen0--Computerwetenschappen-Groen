@@ -28,28 +28,31 @@ public enum TestCommand
             System.exit(0);
         }
     }, false),
-    TESTDRIVESTANDARD(new Action()
+    TESTDRIVE(new Action()
     {
         @Override
         public void exec(TestController testController, String[] params) throws Exception
         {
-        	
+        	testController.selectTestMethodsOnType("drive");
+        	testController.runSelectedTests();
         }
     }, false),
-    TESTLIGHTSTANDARD(new Action()
+    TESTLIGHT(new Action()
     {
         @Override
         public void exec(TestController testController, String[] params) throws Exception
         {
-        	
+        	testController.selectTestMethodsOnType("light");
+        	testController.runSelectedTests();
         }
     }, false),
-    TESTDISTANCESTANDARD(new Action()
+    TESTDISTANCE(new Action()
     {
         @Override
         public void exec(TestController testController, String[] params) throws Exception
         {
-        	
+        	testController.selectTestMethodsOnType("distance");
+        	testController.runSelectedTests();
         }
     }, false),
     TESTDIRECT(new Action()
