@@ -1,12 +1,8 @@
 package domain.robots;
 
-import java.io.FileNotFoundException;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import lejos.nxt.Button;
 import lejos.nxt.LightSensor;
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
@@ -21,28 +17,28 @@ public class LightSensorTester {
 		robot = new DifferentialPilot(5.55F, 11.22F, Motor.C, Motor.B);
 		
 
-		FileOutputStream output1 = new FileOutputStream("woodValues.txt");
-		FileOutputStream output2 = new FileOutputStream("whiteValues.txt");
+//		FileOutputStream output1 = new FileOutputStream("woodValues.txt");
+//		FileOutputStream output2 = new FileOutputStream("whiteValues.txt");
 		
 		System.out.println("Calibrate high");
-		Button.waitForAnyPress();
+		System.in.read();
 		sensor.calibrateHigh();
 		System.out.println("Calibrate Low");
-		Button.waitForAnyPress();
+		System.in.read();
 		sensor.calibrateLow();
 		
 		System.out.println("Wood values");
-		Button.waitForAnyPress();
+		System.in.read();
 		for(int i= 0; i<100; i++){
 			robot.rotate(5);
-			output1.write(sensor.readValue());
+			System.out.println(sensor.readValue());
 		}
-		
+		robot.setTravelSpeed(1);
 		System.out.println("White values");
-		Button.waitForAnyPress();
+		System.in.read();
 		for(int i=0; i<100; i++){
 			robot.travel(2);
-			output2.write(sensor.readValue());
+			System.out.println(sensor.readValue());
 		}
 		
 		
