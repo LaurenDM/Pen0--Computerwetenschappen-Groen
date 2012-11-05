@@ -82,4 +82,14 @@ public interface RobotPilot {
 	public boolean detectWhiteLine();
 	
 	public void findOrigin();
+	
+	//Starts moving de robot so that it makes an arc forward.
+	public void arcForward(boolean left);
+
+	//Starts moving de robot so that it makes an arc backward.
+	public void arcBackward(boolean left);
+	
+	//Makes the robot make an arc of the specified angle. This method does not return immediately.
+	public void steer(double angle);
+	
 }

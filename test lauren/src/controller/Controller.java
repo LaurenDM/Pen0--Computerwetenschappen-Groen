@@ -76,12 +76,13 @@ public class Controller {
 		startNewThread(new TurnLeftThread());
 	}
 	public void startNewThread(Thread newThread){
-		if(executingThread!=null){
+
+		if (executingThread != null) {
 			executingThread.interrupt();
 		}
-		executingThread=newThread;
-		if(executingThread!=null)
-		executingThread.start();
+		executingThread = newThread;
+		if (executingThread != null)
+			executingThread.start();
 	}
 	
 	public void cancel() {
@@ -174,5 +175,10 @@ public class Controller {
 	public Robot getRobot() {
 		return currentRobot;
 	}
-	
+	public void arcForward(boolean left){
+		currentRobot.arcForward(left);
+	};
+	public void arcBackward(boolean left){
+		currentRobot.arcBackward(left);
+	};
 }

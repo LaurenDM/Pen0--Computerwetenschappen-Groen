@@ -36,6 +36,8 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	private Board board;
 	private NXTCommand nxtCommand;
+	private final float wheelDiameter = 5.55F;
+	private final float trackWidth = 11.22F;
 	public BTRobotPilot(){
 
 		try {
@@ -44,8 +46,7 @@ public class BTRobotPilot implements RobotPilot  {
 				throw new ConnectErrorException();
 			}
 			nxtCommand=NXTCommandConnector.getSingletonOpen();
-			float wheelDiameter = 5.55F;
-			float trackWidth = 11.22F;
+			
 			leftMotor = Motor.C;
 			rightMotor = Motor.B;
 			sensorMotor = Motor.A;
@@ -282,6 +283,38 @@ public class BTRobotPilot implements RobotPilot  {
 		} catch (IOException e) {
 			return 0;
 		}
+	}
+
+	@Override
+	public void arcForward(boolean left) {
+		
+		pilot.steer(calcTurnRate(left));
+	}
+
+	@Override
+	public void arcBackward(boolean left) {
+		pilot.steerBackward(calcTurnRate(left));
+	}
+
+	@Override
+	public void steer(double angle) {
+		double turnrate=calcTurnRate(angle<0);
+		pilot.steer(turnrate, angle);
+	}
+	
+	/**
+	 * Calculates the turnrate (asked by the steer method of differentialPilot)
+	 * to simulate adding the turn-speed to the forward speed
+	 */
+	private double calcTurnRate(boolean left) {
+		double turnWheelSpeed = defaultTurnSpeed * trackWidth * Math.PI / 360;
+		if (left)
+			return (defaultTravelSpeed + turnWheelSpeed)
+					/ (defaultTravelSpeed - turnWheelSpeed);
+		else
+			return (defaultTravelSpeed - turnWheelSpeed)
+					/ (defaultTravelSpeed + turnWheelSpeed);
+		//TODO kijken of left en right wel kloppen
 	}
 
 }

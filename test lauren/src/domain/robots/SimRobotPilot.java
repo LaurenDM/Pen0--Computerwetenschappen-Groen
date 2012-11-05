@@ -86,7 +86,7 @@ public class SimRobotPilot implements RobotPilot {
 			//The Math.min is needed for when degrees go from 180 to -179
 			double latestAngleDif=Math.min(Math.abs(previousAngle-currAngle), Math.abs(previousAngle+currAngle));
 			totalAngleDif+=latestAngleDif;
-			if( totalAngleDif>= Math.abs(wantedAngleDif) || !canMove()){
+			if( totalAngleDif>= Math.abs(wantedAngleDif) || !canMove() || Thread.interrupted()){
 				turning= false;
 				stopThread(turnThread);
 			}
@@ -113,10 +113,12 @@ public class SimRobotPilot implements RobotPilot {
 	}
 
 	public void keepTurningLeft(){
+		stop();
 		startTurnThread(true);
 	}
 	
 	public void keepTurningRight(){
+		stop();
 		startTurnThread(false);
 	}
 
@@ -143,35 +145,33 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void forward() throws CannotMoveException {
+		stop();
 		startMoveThread(Movement.FORWARD);
 	}
 
-	public void startMoveThread(Movement movement) {
-		stop();
+	private void startMoveThread(Movement movement) {
+		stopThread(moveThread);
 		moveThread= new MoveThread(movement, this);
 		moveThread.start();
 	}
 	
-	public void startTurnThread(boolean left) {
-		stop();
+	private void startTurnThread(boolean left) {
+		stopThread(turnThread);
 		turnThread= new TurnThread(left, this);
 		turnThread.start();
 	}
 
 	@Override
 	public void backward(){
+		stop();
 		startMoveThread(Movement.BACKWARD);
 
 	}
 
 	@Override
 	public void stop() {
-		if (moveThread != null) {
-			moveThread.interrupt();
-		}
-		if (turnThread != null) {
-			turnThread.interrupt();
-		}
+		stopThread(moveThread);
+		stopThread(turnThread);
 	}
 	
 	public void stopThread(Thread thread) {
@@ -189,7 +189,7 @@ public class SimRobotPilot implements RobotPilot {
 		} else {
 			backward();
 		}
-		while(running){
+		while(running && !Thread.interrupted()){
 			double currDistance=getPosition().getDistance(pos1);
 			if(currDistance>=Math.abs(wantedDistance)  || !canMove()){
 				running= false;
@@ -248,7 +248,7 @@ public class SimRobotPilot implements RobotPilot {
 
 		@Override
 		public void run() {
-			double speed = simRobotPilot.getMovingSpeed();
+			double speed = simRobotPilot.getTurningSpeed();
 			double turnAmount = left ? -1 : 1;
 			int sleepTime = Math.abs((int) Math.round( (1000 * turnAmount / speed)));
 			while (true) {
@@ -345,6 +345,24 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public void findOrigin() {
 		// do nothing
+	}
+
+	@Override
+	public void arcForward(boolean left) {
+		startMoveThread(Movement.FORWARD);
+		startTurnThread(left);
+	}
+
+	@Override
+	public void arcBackward(boolean left) {
+		startMoveThread(Movement.BACKWARD);
+		startTurnThread(left);
+	}
+	@Override
+	public void steer(double angle) {
+		startMoveThread(Movement.FORWARD);
+		turn(angle);
+		
 	}
 	
 	

@@ -155,4 +155,19 @@ public class Robot {
 	public void findOrigin(){
 		robotPilot.findOrigin();
 	}
+	
+	//Starts moving de robot so that it makes an arc forward.
+	public void arcForward(boolean left){
+		robotPilot.arcForward(left);
+	}
+
+	//Starts moving de robot so that it makes an arc backward.
+	public void arcBackward(boolean left){
+		robotPilot.arcBackward(left);
+	}
+	
+	//Makes the robot make an arc of the specified angle. This method does not return immediately.
+	public void steer(double angle){
+		robotPilot.steer(angle);
+	}
 }
