@@ -14,7 +14,11 @@ import lejos.nxt.TouchSensor;
 import lejos.nxt.UltrasonicSensor;
 import lejos.nxt.remote.NXTCommand;
 import lejos.pc.comm.NXTComm;
+import lejos.pc.comm.NXTCommException;
+import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTCommandConnector;
+import lejos.pc.comm.NXTConnector;
+import lejos.pc.comm.NXTInfo;
 import lejos.robotics.RegulatedMotor;
 
 
@@ -40,13 +44,17 @@ public class BTRobotPilot implements RobotPilot  {
 	private final float trackWidth = 11.22F;
 	public BTRobotPilot(){
 
-		try {
-			NXTComm nxtComm=NXTCommandConnector.open();
-			if(nxtComm==null){
-				throw new ConnectErrorException();
-			}
-			nxtCommand=NXTCommandConnector.getSingletonOpen();
+			NXTComm nxtComm;
+			NXTConnector conn = new NXTConnector();
+			NXTInfo[] nxtInfo= conn.search(null, null, NXTCommFactory.BLUETOOTH);
+			try {
+				nxtComm = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
+				System.out.println(nxtInfo[0].name);//TODO
+				nxtComm.open(nxtInfo[0]);
+				nxtCommand=new NXTCommand(nxtComm);
+				System.out.println("Bluetooth succeeded!"); //TODO
 			
+			NXTCommandConnector.setNXTCommand(nxtCommand);
 			leftMotor = Motor.C;
 			rightMotor = Motor.B;
 			sensorMotor = Motor.A;
@@ -58,10 +66,10 @@ public class BTRobotPilot implements RobotPilot  {
 			touchSensor = new TouchSensor(SensorPort.S1);
 			ultrasonicSensor = new UltrasonicSensor(SensorPort.S2);
 			lightSensor = new LightSensor(SensorPort.S3);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			} catch (NXTCommException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		board = new Board();
 
 	}
