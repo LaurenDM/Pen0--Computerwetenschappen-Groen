@@ -57,7 +57,7 @@ public class BTRobotPilot implements RobotPilot  {
 			setTurningSpeed(defaultTurnSpeed);
 			touchSensor = new TouchSensor(SensorPort.S1);
 			ultrasonicSensor = new UltrasonicSensor(SensorPort.S2);
-			lightSensor = new LightSensor(SensorPort.S4);
+			lightSensor = new LightSensor(SensorPort.S3);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -223,18 +223,16 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	public void calibrateLightHigh(){
 		lightSensor.calibrateHigh();
-		lightSensor.setHigh(100);
 		//TODO klopt nog niet
 	}
 	
 	public void calibrateLightLow(){
 		lightSensor.calibrateLow();
-		lightSensor.setLow(0);
 	}
 
 	@Override
 	public boolean detectWhiteLine() {
-		if(readLightValue() > 600) return true;
+		if(readLightValue() > 50) return true;
 		else return false;
 		//TODO: moet nog gespecifieerd worden
 	}
