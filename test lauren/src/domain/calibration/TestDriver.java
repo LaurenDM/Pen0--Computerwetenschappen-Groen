@@ -52,6 +52,12 @@ public class TestDriver {
 		logTestResults(testType.logFileName()+stepType.logFileExtension()+extraConditions, testType.getLog());
 	}
 	
+	private void test(TestType testType, StepType stepType, int steps, double distance, boolean requireSetup, String extraConditions, int times) throws CannotMoveException{
+		for(int i=0;i<times;i++){
+			test(testType,stepType,steps,distance,requireSetup,extraConditions);
+		}
+	}
+	
 	
 	public static enum TestType {
 		LIGHT_SENSOR{
@@ -85,7 +91,7 @@ public class TestDriver {
 				return retString;
 			}
 		};
-		private String log;
+		private String log="";
 		public abstract String logFileName();
 		public void setup(StepType stepType, double... input){
 			if(input!=null){
@@ -155,40 +161,39 @@ public class TestDriver {
 	}
 	
 	
-	public void testDriveDistance(double distance) throws CannotMoveException{
-		test(TestType.DRIVE,StepType.MOVE,1,distance,false,"Fixed");
+	public void testDriveDistance(double distance, int times) throws CannotMoveException{
+		test(TestType.DRIVE,StepType.MOVE,1,distance,false,"Fixed",times);
 	}
-	public void testDriveTurn(double angle){
+	public void testDriveTurn(double angle, int times){
 		try {
-			test(TestType.DRIVE,StepType.TURN,1,angle,false,"Fixed");
+			test(TestType.DRIVE,StepType.TURN,1,angle,false,"Fixed",times);
 		} catch (CannotMoveException e) {
 			//Unreachable
 		}
 	}
-	public void testDrivePolygon(double edgelength, int sides) throws CannotMoveException{
-		test(TestType.DRIVE,StepType.POLYGON,sides,edgelength,false,"");
+	//Deze test is een speciaal geval... 
+//	public void testDrivePolygon(double edgelength, int sides) throws CannotMoveException{
+//		test(TestType.DRIVE,StepType.POLYGON,sides,edgelength,false,"");
+//	}
+	public void testLightWood(double distance, int times) throws CannotMoveException{
+		test(TestType.LIGHT_SENSOR,StepType.MOVE,20,distance,false,"Wood",times);
 	}
-	public void testLightWood(double distance, boolean shade) throws CannotMoveException{
-		test(TestType.LIGHT_SENSOR,StepType.MOVE,20,distance,false,"Wood"+(shade?"Dark":"Light"));
+	public void testLightLine(double distance, int times) throws CannotMoveException{
+		test(TestType.LIGHT_SENSOR,StepType.MOVE,20,distance,false,"Line",times);
 	}
-	public void testLightLine(double distance, boolean shade) throws CannotMoveException{
-		test(TestType.LIGHT_SENSOR,StepType.MOVE,20,distance,false,"Line"+(shade?"Dark":"Light"));
+	public void testLightBarcode(double distance, int times) throws CannotMoveException{
+		test(TestType.LIGHT_SENSOR,StepType.MOVE,20,distance,false,"Barcode",times);
 	}
-	public void testLightBarcode(double distance, boolean shade) throws CannotMoveException{
-		test(TestType.LIGHT_SENSOR,StepType.MOVE,20,distance,false,"Barcode"+(shade?"Dark":"Light"));
+	public void testDistanceDrive(double distance, int times) throws CannotMoveException{
+		test(TestType.DISTANCE_SENSOR,StepType.MOVE,20,distance,false,"",times);
 	}
-	public void testDistanceDrive(double distance) throws CannotMoveException{
-		test(TestType.DISTANCE_SENSOR,StepType.MOVE,20,distance,false,"");
-	}
-	public void testDistanceTurn(double angle){
+	public void testDistanceTurn(double angle, int times){
 		try {
-			test(TestType.DISTANCE_SENSOR,StepType.TURN,(int) (angle/5),angle,true,"");
+			test(TestType.DISTANCE_SENSOR,StepType.TURN,(int) (angle/5),angle,true,"",times);
 		} catch (CannotMoveException e) {
 			//Unreachable
 		}
 	}
-	
-		
 	
 	public void logTestResults(String logFileName, String log){
 		BufferedWriter logOutputWriter = null;

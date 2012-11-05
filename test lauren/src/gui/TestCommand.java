@@ -23,11 +23,12 @@ public enum TestCommand
         @Override
         public void exec(TestController testController, String[] params)
         {
+        	testController.endTest();
             System.out.println("Bye!");
             System.exit(0);
         }
     }, false),
-    TESTDRIVE(new Action()
+    TESTDRIVESTANDARD(new Action()
     {
         @Override
         public void exec(TestController testController, String[] params) throws Exception
@@ -35,7 +36,7 @@ public enum TestCommand
         	
         }
     }, false),
-    TESTLIGHT(new Action()
+    TESTLIGHTSTANDARD(new Action()
     {
         @Override
         public void exec(TestController testController, String[] params) throws Exception
@@ -43,7 +44,7 @@ public enum TestCommand
         	
         }
     }, false),
-    TESTDISTANCE(new Action()
+    TESTDISTANCESTANDARD(new Action()
     {
         @Override
         public void exec(TestController testController, String[] params) throws Exception
