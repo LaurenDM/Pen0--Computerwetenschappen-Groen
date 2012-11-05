@@ -8,7 +8,7 @@ public abstract class MazeElement {
 	private Position position1;
 	private Position position2;
 	
-	public MazeElement(Position p1, Position p2, Position p3){
+	public MazeElement(Position p1, Position p2, Position p3) throws NotAWallException{
 		final double MARGE = 1;
 		if(Math.abs(p1.getX() - p2.getX())<=MARGE && Math.abs(p1.getX() - p3.getX())<=MARGE){
 			//wall = vertical
@@ -25,7 +25,7 @@ public abstract class MazeElement {
 			this.position2 = new Position(lowx + MAZECONSTANT,y);
 		}
 		else{
-			throw new IllegalArgumentException();
+			throw new NotAWallException();
 		}
 		System.out.println("New Wall added from " + this.position1 + " to " + this.position2);
 	}

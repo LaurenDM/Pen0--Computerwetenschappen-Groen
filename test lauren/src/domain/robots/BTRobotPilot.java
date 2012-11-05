@@ -3,6 +3,7 @@ import java.io.IOException;
 
 import domain.Position.Position;
 import domain.maze.Board;
+import domain.maze.NotAWallException;
 import domain.maze.Wall;
 import domain.robotFunctions.Straightener;
 import domain.util.TimeStamp;
@@ -256,7 +257,12 @@ public class BTRobotPilot implements RobotPilot  {
 		Position pos3 = getPosition().getNewPosition(-5+getOrientation(), readUltrasonicValue());
 		if(board.detectWallAt(pos3)) return;
 		turnSensorForward();
-		board.addWall(new Wall(pos1, pos2, pos3));
+		try {
+			Wall wall = new Wall(pos1,pos2,pos3);
+			board.addWall(wall);
+		} catch (NotAWallException e) {
+			// no real wall was detected
+		}
 		sensorMotor.setSpeed(720);
 	}
 	
