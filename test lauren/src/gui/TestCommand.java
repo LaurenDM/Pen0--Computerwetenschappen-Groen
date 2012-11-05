@@ -23,6 +23,7 @@ public enum TestCommand
         @Override
         public void exec(TestController testController, String[] params)
         {
+        	testController.endTest();
             System.out.println("Bye!");
             System.exit(0);
         }
@@ -32,7 +33,8 @@ public enum TestCommand
         @Override
         public void exec(TestController testController, String[] params) throws Exception
         {
-        	
+        	testController.selectTestMethodsOnType("drive");
+        	testController.runSelectedTests();
         }
     }, false),
     TESTLIGHT(new Action()
@@ -40,7 +42,8 @@ public enum TestCommand
         @Override
         public void exec(TestController testController, String[] params) throws Exception
         {
-        	
+        	testController.selectTestMethodsOnType("light");
+        	testController.runSelectedTests();
         }
     }, false),
     TESTDISTANCE(new Action()
@@ -48,7 +51,8 @@ public enum TestCommand
         @Override
         public void exec(TestController testController, String[] params) throws Exception
         {
-        	
+        	testController.selectTestMethodsOnType("distance");
+        	testController.runSelectedTests();
         }
     }, false),
     TESTDIRECT(new Action()

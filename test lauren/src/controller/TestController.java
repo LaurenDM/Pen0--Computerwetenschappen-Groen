@@ -19,6 +19,7 @@ public class TestController {
 	
 	private Controller robotController;
 	private TestDriver testDriver;
+	private int testAmount;
 	private ArrayList<Method> methodList = new ArrayList<Method>();
 	private ArrayList<Method> selectedMethods = new ArrayList<Method>();
 	
@@ -52,7 +53,7 @@ public class TestController {
 	public void selectTestMethodsOnType(String type) throws IllegalArgumentException{
 		selectedMethods.clear();
 		for(Method meth:methodList){
-			if(meth.getName().startsWith(type,4)){ selectedMethods.add(meth); }
+			if(meth.getName().toLowerCase().startsWith(type,4)){ selectedMethods.add(meth); }
 		}
 		if(selectedMethods.isEmpty()){ throw(new IllegalArgumentException("No commands were selected!")); }
 	}
@@ -90,13 +91,14 @@ public class TestController {
 			for(Method meth:selectedMethods){
 				try {
 					System.out.println(meth.getName());
-					Double doubleArgument = Double.parseDouble(TestTextInterface.getUserInput(meth.getParameterTypes()[0].getSimpleName()));
-//					Class<?> otherType = (meth.getParameterTypes().length>1?meth.getParameterTypes()[1]:null);
-//					if(otherType!=null){
-//						Object otherArgument = TestTextInterface.getUserInput(meth.getParameterTypes()[1].getSimpleName());
-//						meth.invoke(testDriver,doubleArgument,meth.getParameterTypes()[1],otherType.cast(otherArgument));
-//					}
-					meth.invoke(testDriver,doubleArgument);
+					Double doubleArgument = Double.parseDouble(TestTextInterface.getUserInput("Distance/Angle? "));
+					Class<?> otherType = (meth.getParameterTypes().length>1?meth.getParameterTypes()[1]:null);
+					if(otherType!=null){
+						Integer otherArgument = Integer.valueOf((TestTextInterface.getUserInput("How many times? ")));
+						meth.invoke(testDriver,doubleArgument,otherArgument);
+					} else {
+						meth.invoke(testDriver,doubleArgument);
+					}
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
 				} catch (InvocationTargetException e) {
@@ -112,6 +114,10 @@ public class TestController {
 	
 	public Controller getRobotController(){
 		return robotController;
+	}
+	
+	public void endTest(){
+		testDriver.endTest();
 	}
 
 	public String askUserInput(String string) {
