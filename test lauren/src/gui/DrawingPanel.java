@@ -5,10 +5,14 @@ import java.awt.Graphics;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.JPanel;
 
 import controller.Controller;
+import domain.Position.Position;
+import domain.maze.MazeElement;
+import domain.maze.Wall;
 import domain.util.ColorPolygon;
 
 public class DrawingPanel extends JPanel {
@@ -16,11 +20,14 @@ public class DrawingPanel extends JPanel {
 	private Controller controller;
 	private JPanel totalGui;
 	private Graphics g;
+	private final int OFFSET = 120; //offset of (0,0) against top left corner
 	public DrawingPanel(ContentPanel contentPanel) {
 		g=image.getGraphics();
 		this.controller = contentPanel.getController();
 		totalGui = contentPanel.getTotalGuiPanel();
 		previousPolygons = new HashMap<ColorPolygon, Polygon>();
+		drawWhiteLines();
+		drawWalls();
 	}
 
 	public static final int IMG_WIDTH = 350;
@@ -39,6 +46,48 @@ public class DrawingPanel extends JPanel {
 	public void drawMyLine(int x1, int y1, int x2, int y2, Color color) {
 		g.setColor(color);
 		g.drawLine(x1, y1, x2, y2);
+		totalGui.repaint();
+	}
+	
+	public void drawWhiteLines(){
+		int MAZECONSTANT = MazeElement.getMazeConstant();
+		int numberOfLines = 100;
+		int lengthOfLines = 10000;
+		for(int i=0; i<numberOfLines; i++){
+			drawMyLine(-lengthOfLines,MAZECONSTANT*i,lengthOfLines,MAZECONSTANT*i, Color.gray);//horizontal
+			drawMyLine(MAZECONSTANT*i,-lengthOfLines,MAZECONSTANT*i,lengthOfLines, Color.gray);//vertical
+		}
+	}
+	
+	public void drawWalls(){
+		List<Wall> walls = controller.getRobot().getBoard().getWalls();
+		for(Wall w: walls){
+			drawWall(w);
+		}
+	}
+	
+	public void drawWall(Wall wall){
+		Polygon pol = new Polygon();
+		int pos1X = (int)wall.getPos1().getX()+OFFSET;
+		int pos1Y = (int)wall.getPos1().getY()+OFFSET;
+		int pos2X = (int)wall.getPos2().getX()+OFFSET;
+		int pos2Y = (int)wall.getPos2().getY()+OFFSET;
+
+		if(wall.getPos1().getY()==wall.getPos2().getY()){
+			pol.addPoint(pos1X, pos1Y+1);
+			pol.addPoint(pos1X, pos1Y-1);
+			pol.addPoint(pos2X, pos2Y-1);
+			pol.addPoint(pos2X, pos2Y+1);
+		}
+		else if(wall.getPos1().getX()==wall.getPos2().getX()){
+			pol.addPoint(pos1X+1, pos1Y);
+			pol.addPoint(pos1X-1, pos1Y);
+			pol.addPoint(pos2X-1, pos2Y);
+			pol.addPoint(pos2X+1, pos2Y);	
+		}
+		g.setColor(Color.blue);
+		g.drawPolygon(pol);
+		g.fillPolygon(pol);
 		totalGui.repaint();
 	}
 
@@ -72,8 +121,10 @@ public class DrawingPanel extends JPanel {
 		Polygon centeredPoly= new Polygon();
 		centeredPoly.npoints=npoints;
 		for(int i=0;i<npoints; i++){
-			centeredPoly.xpoints[i]=originalPoly.xpoints[i]+IMG_WIDTH/2;
-			centeredPoly.ypoints[i]=originalPoly.ypoints[i]+IMG_HEIGHT/2;
+			centeredPoly.xpoints[i]=originalPoly.xpoints[i]+OFFSET;
+			centeredPoly.ypoints[i]=originalPoly.ypoints[i]+OFFSET;
+//			centeredPoly.xpoints[i]=originalPoly.xpoints[i]+IMG_WIDTH/2;
+//			centeredPoly.ypoints[i]=originalPoly.ypoints[i]+IMG_HEIGHT/2;
 		}
 		g.fillPolygon(centeredPoly);
 	}

@@ -10,4 +10,9 @@ public class Wall extends MazeElement{
 		super(pos1,pos2,pos3);
 	}
 	
+	//used in simulator for loading maze from file
+	public Wall(Position pos1, Position pos2){
+		super(pos1,pos2);
+	}
+	
 }

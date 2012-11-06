@@ -4,7 +4,7 @@ import domain.Position.Position;
 
 public abstract class MazeElement {
 	
-	private final int MAZECONSTANT = 40; //zijdelengte van de rastervensters
+	private static final int MAZECONSTANT = 40; //zijdelengte van de rastervensters
 	private Position position1;
 	private Position position2;
 	
@@ -30,7 +30,15 @@ public abstract class MazeElement {
 		System.out.println("New Wall added from " + this.position1 + " to " + this.position2);
 	}
 	
+	public MazeElement(Position pos1, Position pos2){
+		this.position1 = pos1;
+		this.position2 = pos2;
+		System.out.println("New Wall added using 2nd method from " + this.position1 + " to " + this.position2);
+	}
 	
+	public static int getMazeConstant(){
+		return MAZECONSTANT;
+	}
 
 	public Position getPos1(){
 		return position1;

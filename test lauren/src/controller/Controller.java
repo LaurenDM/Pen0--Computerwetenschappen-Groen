@@ -12,6 +12,7 @@ import lejos.pc.comm.NXTCommandConnector;
 
 import domain.PolygonDriver;
 import domain.maze.Board;
+import domain.maze.MazeInterpreter;
 import domain.robots.BTRobotPilot;
 import domain.robots.CannotMoveException;
 import domain.robots.Robot;
@@ -183,4 +184,9 @@ public class Controller {
 	public void arcBackward(boolean left){
 		currentRobot.arcBackward(left);
 	};
+	
+	public void readMazeFromFile(String fileLocation){
+		MazeInterpreter MI = new MazeInterpreter(this.getRobot().getBoard());
+		MI.readFile(fileLocation);
+	}
 }

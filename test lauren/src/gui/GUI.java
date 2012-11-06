@@ -10,7 +10,7 @@ public class GUI{
     static JFrame variableFrame = new JFrame("P&O - Groen - Variables");
     static ContentPanel contentPanel;
     static int totalXDimensions = 700;
-    static int totalYDimensions = 700;
+    static int totalYDimensions = 750;
   
     
     //Definition of creation of new GUI.

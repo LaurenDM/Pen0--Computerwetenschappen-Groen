@@ -1,5 +1,6 @@
 package gui;
 import java.awt.Color;
+import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -27,7 +28,7 @@ public class ContentPanel implements ActionListener {
     private JPanel titlePanel, buttonPanel, debugPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
     private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, lineLabel;
-    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, calibrateButton, sensorOrientationButton;
+    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, calibrateButton, sensorOrientationButton, loadMazeButton;
     private JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
@@ -157,6 +158,9 @@ public class ContentPanel implements ActionListener {
         sensorOrientationButton = new JButton("SET SENSOR ORIENTATION");
         fixButtonLayout(buttonPanel, sensorOrientationButton, 240, 30, 30, buttonYDimension + 280);
         
+        loadMazeButton = new JButton("LOAD MAZE FROM FILE");
+        fixButtonLayout(buttonPanel, loadMazeButton, 240, 30, 30, buttonYDimension + 310);
+        
         buttonPanel.setFocusable(true);
         //_____________________________________________________
         // Creation of a Panel to contain the debug information
@@ -244,6 +248,7 @@ public class ContentPanel implements ActionListener {
 		for (ColorPolygon colorPoly:collection) {
 			drawingPanel.reDrawMyPolygon(colorPoly);
 		}
+		drawingPanel.drawWalls();
 	} 
 	
 	/**
@@ -348,7 +353,6 @@ public class ContentPanel implements ActionListener {
         		catch(ConnectErrorException e1){
         		}
         	}
-        	buttonPanel.requestFocusInWindow();
         }
         else if(e.getSource() == calibrateButton){
         	calibrationFrame.setVisible(true);
@@ -360,6 +364,15 @@ public class ContentPanel implements ActionListener {
         	sensorOrientationFrame.setVisible(true);
         	actionLabel.setText("The ultrasonicsensor is being oriented.");
         	sensorOrientationButton.setSelected(false);
+        	buttonPanel.requestFocusInWindow();
+        }
+        else if(e.getSource() == loadMazeButton){
+        	actionLabel.setText("Maze loaded from file.");
+        	FileDialog fileDialog = new FileDialog(frame, "Choose a file", FileDialog.LOAD);
+            fileDialog.setVisible(true);
+            String fileName = fileDialog.getFile();
+            String fileDirectory = fileDialog.getDirectory();
+        	controller.readMazeFromFile(fileDirectory+fileName);
         	buttonPanel.requestFocusInWindow();
         }
         

@@ -26,7 +26,7 @@ public class SimRobotPilot implements RobotPilot {
 	 * Assenstelsel wordt geinitialiseerd met oorsprong waar de robot begint
 	 */
 	public SimRobotPilot(){
-		this(0, new Position(0,0));
+		this(0, new Position(20,20));
 	}
 	
 	public SimRobotPilot(double orientation, Position position){
@@ -86,7 +86,7 @@ public class SimRobotPilot implements RobotPilot {
 			//The Math.min is needed for when degrees go from 180 to -179
 			double latestAngleDif=Math.min(Math.abs(previousAngle-currAngle), Math.abs(previousAngle+currAngle));
 			totalAngleDif+=latestAngleDif;
-			if( totalAngleDif>= Math.abs(wantedAngleDif) || !canMove() || Thread.interrupted()){
+			if( totalAngleDif>= Math.abs(wantedAngleDif) || Thread.interrupted()){
 				turning= false;
 				stopThread(turnThread);
 			}
@@ -146,6 +146,7 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public void forward() throws CannotMoveException {
 		stop();
+		if(canMove())
 		startMoveThread(Movement.FORWARD);
 	}
 

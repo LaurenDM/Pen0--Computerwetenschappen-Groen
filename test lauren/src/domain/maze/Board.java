@@ -7,7 +7,7 @@ import domain.Position.Position;
 
 public class Board {
 	
-	private final int MAZECONSTANT = 40;
+	private static final int MAZECONSTANT = 40;
 	
 	private List<Wall> walls;
 	
@@ -19,6 +19,11 @@ public class Board {
 	public void addWall(Wall wall){
 		walls.add(wall);
 	}
+	
+	public List<Wall> getWalls(){
+		return walls;
+	}
+	
 	
 	public boolean detectWallAt(Position position){
 		for(Wall wall: walls){
