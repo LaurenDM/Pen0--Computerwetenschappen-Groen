@@ -38,7 +38,9 @@ public class Controller {
 			btRobot = new Robot(new BTRobotPilot());
 		}	
 		currentRobot=btRobot;
-		currentRobot.findOrigin();
+
+//		currentRobot.findOrigin();
+
 		currentRobot.setBoard(new Board());
 
 

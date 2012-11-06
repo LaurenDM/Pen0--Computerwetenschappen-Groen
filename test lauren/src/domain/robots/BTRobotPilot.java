@@ -42,7 +42,7 @@ public class BTRobotPilot implements RobotPilot  {
 	private Board board;
 	private NXTCommand nxtCommand;
 	private final float wheelDiameter = 5.55F;
-	private final float trackWidth = 11.22F;
+	private final float trackWidth = 17.22F;
 	public BTRobotPilot(){
 
 			NXTComm nxtComm;
@@ -50,28 +50,34 @@ public class BTRobotPilot implements RobotPilot  {
 			NXTInfo[] nxtInfo= conn.search(null, null, NXTCommFactory.BLUETOOTH);
 			try {
 				nxtComm = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
-				System.out.println(nxtInfo[0].name);//TODO
+				System.out.println("We found this NXT: "+nxtInfo[0].name);//TODO
 				nxtComm.open(nxtInfo[0]);
 				nxtCommand=new NXTCommand(nxtComm);
-				System.out.println("Bluetooth succeeded!"); //TODO
+				try {
+					System.out.println("Bluetooth succeeded with " + nxtCommand.getFriendlyName());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} //TODO
 			
 			NXTCommandConnector.setNXTCommand(nxtCommand);
-			leftMotor = Motor.C;
-			rightMotor = Motor.B;
-			sensorMotor = Motor.A;
 
-			pilot = new DifferentialPilot(wheelDiameter, trackWidth, leftMotor,
-					rightMotor);
+			sensorMotor = Motor.A;
+			pilot = new DifferentialPilot(wheelDiameter, trackWidth, nxtCommand);
+
 			setMovingSpeed(defaultTravelSpeed);
 			setTurningSpeed(defaultTurnSpeed);
 			touchSensor = new TouchSensor(SensorPort.S1);
 			ultrasonicSensor = new UltrasonicSensor(SensorPort.S2);
 			lightSensor = new LightSensor(SensorPort.S3);
 			} catch (NXTCommException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("unable to connect");
+				throw new ConnectErrorException();
 			}
+		
+
 		board = new Board();
+
 
 	}
 	
@@ -130,14 +136,14 @@ public class BTRobotPilot implements RobotPilot  {
 	@Override
 	public double getOrientation() {
 		//TODO
-		return (leftMotor.getTachoCount()-rightMotor.getTachoCount())%360;
-
+//		return (leftMotor.getTachoCount()-rightMotor.getTachoCount())%360;
+return 0;
 		//		return poseProvider.getPose().getHeading();
 	}
 
-	public boolean isMoving(){
-		return pilot.isMoving();
-	}
+//	public boolean isMoving(){
+//		return pilot.isMoving();
+//	}
 
 
 	@Override
@@ -300,18 +306,18 @@ public class BTRobotPilot implements RobotPilot  {
 	@Override
 	public void arcForward(boolean left) {
 		
-		pilot.steer(calcTurnRate(left));
+//		pilot.steer(calcTurnRate(left)); TODO i2
 	}
 
 	@Override
 	public void arcBackward(boolean left) {
-		pilot.steerBackward(calcTurnRate(left));
+//		pilot.steerBackward(calcTurnRate(left)); TODO i2
 	}
 
 	@Override
 	public void steer(double angle) {
 		double turnrate=calcTurnRate(angle<0);
-		pilot.steer(turnrate, angle);
+//		pilot.steer(turnrate, angle); TODO i2
 	}
 	
 	/**
