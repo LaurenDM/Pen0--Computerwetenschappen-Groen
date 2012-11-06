@@ -9,8 +9,10 @@ import domain.robots.Robot;
  * @author Joren
  */
 public class Straightener extends RobotFunction {
+	//TODO: hier de echte lengte van de robot van maken
+	private static final int DISTANCE_BETWEEN_SENSOR_AND_WHEELS = 20;
 	//The robot that needs to be straightened
-	private BTRobotPilot robot;
+	private Robot robot;
 	//The actual width of the line 
 	private double realLineWidth;
 	//Whether we know the real linewidth
@@ -35,7 +37,7 @@ public class Straightener extends RobotFunction {
 	 * Use this constructor if the real linewidth is NOT known.
 	 * @param robot
 	 */
-	public Straightener(BTRobotPilot robot){
+	public Straightener(Robot robot){
 		this.robot = robot;
 		this.realLineWidth = 0d;
 		this.knowRealLineWidth = false;
@@ -47,7 +49,7 @@ public class Straightener extends RobotFunction {
 	 * @param robot
 	 * @param realLineWidth
 	 */
-	public Straightener(BTRobotPilot robot, double realLineWidth){
+	public Straightener(Robot robot, double realLineWidth){
 		this.robot = robot;
 		this.realLineWidth = realLineWidth;
 		this.knowRealLineWidth = true;
@@ -123,7 +125,7 @@ public class Straightener extends RobotFunction {
 		double edgeA = startpos.getDistance(endpos);
 		double edgeB = toppos.getDistance(endpos);
 		double fixedEdge = startpos.getDistance(toppos);
-		//beta=arccos((a�+c�-b�)/(2ac))
+		//beta=arccos((a^2+c^2-b^2)/(2ac))
 		double betaAngle = Math.acos((Math.pow(fixedEdge,2)+Math.pow(edgeA,2)-Math.pow(edgeB,2))/(2*edgeA*fixedEdge));
 		//TODO finish this method
 		
@@ -131,6 +133,45 @@ public class Straightener extends RobotFunction {
 		
 	}
 	
+	public void straightenNew(){
+		boolean rightOrLeft = true;
+		boolean detect = true;
+		boolean wood = false;
+		goUntilRising();
+		try {
+			robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
+		} catch (CannotMoveException e) {
+			try { robot.move(-DISTANCE_BETWEEN_SENSOR_AND_WHEELS/2); } catch (CannotMoveException e1) {}
+			turnUntil(detect, rightOrLeft);
+			try {
+				robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
+			} catch (CannotMoveException e1) {
+				//I don't really know if this is possible
+				System.out.println("Apparently you where wrong.");
+			}
+		}
+		turnUntil(detect, rightOrLeft);
+		//Now the robot is aligned with the line
+		robot.turn(90);
+		
+	}
+	
+	private void turnUntil(boolean detect, boolean rightOrLeft) {
+		while(!robot.detectWhiteLine()){
+			if(rightOrLeft){
+				robot.turnRight();
+			} else {
+				robot.turnLeft();
+			}
+		}
+	}
+
+	private void turnUntilWood(boolean right) {
+		while(robot.detectWhiteLine()){
+			robot.turnRight();
+		}
+	}
+
 	/**
 	 * Toggles the given boolean.
 	 */
