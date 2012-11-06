@@ -348,6 +348,7 @@ public class ContentPanel implements ActionListener {
         		catch(ConnectErrorException e1){
         		}
         	}
+        	buttonPanel.requestFocusInWindow();
         }
         else if(e.getSource() == calibrateButton){
         	calibrationFrame.setVisible(true);
