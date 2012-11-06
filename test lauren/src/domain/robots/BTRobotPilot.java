@@ -47,7 +47,7 @@ public class BTRobotPilot implements RobotPilot  {
 
 			NXTComm nxtComm;
 			NXTConnector conn = new NXTConnector();
-			NXTInfo[] nxtInfo= conn.search(null, null, NXTCommFactory.BLUETOOTH);
+			NXTInfo[] nxtInfo= conn.search("GroeneHulk", null, NXTCommFactory.BLUETOOTH);
 			try {
 				nxtComm = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
 				System.out.println("We found this NXT: "+nxtInfo[0].name);//TODO
