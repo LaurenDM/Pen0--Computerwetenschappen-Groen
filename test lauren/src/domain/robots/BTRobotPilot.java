@@ -57,10 +57,13 @@ public class BTRobotPilot implements RobotPilot  {
 				try {
 					System.out.println("Bluetooth succeeded with " + nxtCommand.getFriendlyName());
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					throw new ConnectErrorException();
+					// TODO i3+
 				} //TODO
-			
+				catch(IndexOutOfBoundsException indE){
+					throw new ConnectErrorException();
+					//TODO i3+
+				}
 			NXTCommandConnector.setNXTCommand(nxtCommand);
 
 			sensorMotor = Motor.A;
