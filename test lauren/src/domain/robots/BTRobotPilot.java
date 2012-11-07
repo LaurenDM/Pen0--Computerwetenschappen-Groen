@@ -204,7 +204,7 @@ return 0;
 	
 	public boolean canMove(){
 		int distance = ultrasonicSensor.getDistance();	
-		int testDistance = 50; 
+		int testDistance = 10; 
 		if(distance < testDistance || isTouching()){
 			makeWall();
 			return false;

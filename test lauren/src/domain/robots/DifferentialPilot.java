@@ -69,6 +69,8 @@ public class DifferentialPilot
   public DifferentialPilot(final double leftWheelDiameter,
           final double rightWheelDiameter, final double trackWidth, NXTCommand nxtCommand, int leftPort, int rightPort)
   {
+	Thread poseUpdateThread=new Thread(new PoseUpdater());
+	poseUpdateThread.start();
 	this.nxtCommand= nxtCommand;
     this.leftPort = leftPort;
     _leftWheelDiameter = (float)leftWheelDiameter;
@@ -245,6 +247,7 @@ public class DifferentialPilot
 		_angle = 0;
 
 		  try {
+		    	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 				nxtCommand.setOutputState(leftPort, (byte) -tMotorSpeed[0], 0, 0, 0, 0, 0);
 				nxtCommand.setOutputState(rightPort, (byte) -tMotorSpeed[1], 0, 0, 0, 0, 0);
 			} catch (IOException e) {
@@ -259,6 +262,7 @@ public class DifferentialPilot
 	    _angle = Double.NEGATIVE_INFINITY;
 	    int[] speed= {-Math.round(_robotRotateSpeed * _leftTurnRatio), Math.round(_robotRotateSpeed * _rightTurnRatio)};
 	    try {
+	    	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 	  		nxtCommand.setOutputState(leftPort, (byte) speed[0], 0, 0, 0, 0, 0);
 	  		nxtCommand.setOutputState(rightPort, (byte) speed[1], 0, 0, 0, 0, 0);
 	  	} catch (IOException e) {
@@ -273,8 +277,10 @@ public class DifferentialPilot
     _angle = Double.NEGATIVE_INFINITY;
     int[] speed= {Math.round(_robotRotateSpeed * _leftTurnRatio), -Math.round(_robotRotateSpeed * _rightTurnRatio)};
     try {
+    	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
   		nxtCommand.setOutputState(leftPort, (byte) speed[0], 0, 0, 0, 0, 0);
   		nxtCommand.setOutputState(rightPort, (byte) speed[1], 0, 0, 0, 0, 0);
+  		
   	} catch (IOException e) {
   		//TODO i3+
   	}
@@ -300,6 +306,7 @@ public class DifferentialPilot
     int rotateAngleRight = (int) (angle * _rightTurnRatio);
     int[] lim={-rotateAngleLeft,rotateAngleRight};
     try {
+    	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
   		nxtCommand.setOutputState(leftPort, (byte) speed[0], 0, 0, 0, 0, lim[0]);
   		nxtCommand.setOutputState(rightPort, (byte) speed[1], 0, 0, 0, 0, lim[1]);
 		Thread.sleep(Math.abs((long) ( angle/_robotRotateSpeed+0.5)*1000));
@@ -326,6 +333,7 @@ public class DifferentialPilot
   public void stop()
  {
 		try {
+	    	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 			nxtCommand.setOutputState(leftPort, (byte) 0, 0, 0, 0, 0, 0);
 			nxtCommand.setOutputState(rightPort, (byte) 0, 0, 0, 0, 0, 0);
 		} catch (IOException e) {
@@ -372,9 +380,10 @@ public class DifferentialPilot
 
     
     try {
+    	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 		nxtCommand.setOutputState(leftPort, (byte) tMotorSpeed[0], 0, 0, 0, 0, lim[0]);
 		nxtCommand.setOutputState(rightPort, (byte) tMotorSpeed[1], 0, 0, 0, 0, lim[1]);
-		Thread.sleep(Math.abs((long) (distance/_robotTravelSpeed+0.5)*10000));
+		Thread.sleep(Math.abs((long) (distance/_robotTravelSpeed+0.05)*10000));
 
 	} catch (IOException e) {
 		//TODO i3+
@@ -826,5 +835,35 @@ public class DifferentialPilot
   private int _acceleration;
    private int  _quickAcceleration; // used for quick stop.
   
+   private class PoseUpdater implements Runnable{
+		//previous tachoCount of left[0] and right[1] motor
+		long[] prevTacho= {0,0};
+		@Override
+		public void run() {
+			while(true){
+				long[] diffTacho=new long[2];
+				for(int i=0; i<2; i++){
+				try {
+					diffTacho[i]=nxtCommand.getTachoCount(leftPort)-prevTacho[i];
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				prevTacho[i]+=diffTacho[i];
+				}
+				
+				try {
+					Thread.sleep(300);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			
+		}
+		
+	}
 
 }
+
