@@ -152,6 +152,22 @@ public class Robot {
 		return robotPilot.detectWhiteLine();
 	}
 	
+	public void findWhiteLine(){
+		boolean found=false;
+		while(!found){
+			try {
+				robotPilot.forward();
+			} catch (CannotMoveException e) {
+				robotPilot.turnRight();
+			}
+			found = detectWhiteLine();
+		}
+	}
+	
+	public void straighten(){
+		robotPilot.straighten();
+	}
+	
 	public void findOrigin(){
 		robotPilot.findOrigin();
 	}

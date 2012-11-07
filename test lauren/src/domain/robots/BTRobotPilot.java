@@ -41,7 +41,8 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	private Board board;
 	private NXTCommand nxtCommand;
-	private final float wheelDiameter = 5.55F;
+	private final float wheelDiameterLeft = 5.47F;
+	private final float wheelDiameterRight = 5.515F;
 	private final float trackWidth = 17.22F;
 	public BTRobotPilot(){
 
@@ -63,7 +64,7 @@ public class BTRobotPilot implements RobotPilot  {
 			NXTCommandConnector.setNXTCommand(nxtCommand);
 
 			sensorMotor = Motor.A;
-			pilot = new DifferentialPilot(wheelDiameter, trackWidth, nxtCommand);
+			pilot = new DifferentialPilot(wheelDiameterLeft, wheelDiameterRight, trackWidth, nxtCommand, 1, 2);
 
 			setMovingSpeed(defaultTravelSpeed);
 			setTurningSpeed(defaultTurnSpeed);
@@ -168,17 +169,18 @@ return 0;
 	// TESTEN! Indien te schokkerig, moet geleidelijker
 	@Override
 	public void move(double distance) throws CannotMoveException {
-		int testdistance = 50;
-		int n = (int) distance/testdistance;
-		for(int i = 0; i<n ; i++){
-			if(canMove()){
-				pilot.travel(Math.min(testdistance, distance));
-				distance = distance - testdistance;
-			}
-			else{
-				throw new CannotMoveException();
-			}
-		}
+//		int testdistance = 50;
+//		int n = (int) distance/testdistance;
+//		for(int i = 0; i<n ; i++){
+//			if(canMove()){
+//				pilot.travel(Math.min(testdistance, distance));
+//				distance = distance - testdistance;
+//			}
+//			else{
+//				throw new CannotMoveException();
+//			}
+//		}
+		pilot.travel(distance);
 	}
 
 	@Override
@@ -210,7 +212,12 @@ return 0;
 	
 	
 	public double readLightValue(){
-		return lightSensor.readValue();
+		try{
+			return lightSensor.readValue();
+		}catch(Exception e){
+			return -100;
+			//TODO i3+
+		}
 	}
 	
 	public double readUltrasonicValue(){
@@ -293,6 +300,10 @@ return 0;
 		turnLeft();
 		pilot.travel(20);
 		// the robot is in position (0,0)
+	}
+	
+	public void straighten(){
+		new Straightener(new Robot(this)).straightenNew();
 	}
 	
 	public int getBatteryVoltage(){

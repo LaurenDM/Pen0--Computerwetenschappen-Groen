@@ -28,7 +28,7 @@ public class ContentPanel implements ActionListener {
     private JPanel titlePanel, buttonPanel, debugPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
     private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, lineLabel;
-    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, calibrateButton, sensorOrientationButton, loadMazeButton;
+    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton;
     private JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
@@ -160,6 +160,9 @@ public class ContentPanel implements ActionListener {
         
         loadMazeButton = new JButton("LOAD MAZE FROM FILE");
         fixButtonLayout(buttonPanel, loadMazeButton, 240, 30, 30, buttonYDimension + 310);
+        
+        straightenButton = new JButton("STRAIGHTEN AT WHITE LINE");
+        fixButtonLayout(buttonPanel, straightenButton, 240, 30, 30, buttonYDimension + 340);
         
         buttonPanel.setFocusable(true);
         //_____________________________________________________
@@ -373,6 +376,11 @@ public class ContentPanel implements ActionListener {
             String fileName = fileDialog.getFile();
             String fileDirectory = fileDialog.getDirectory();
         	controller.readMazeFromFile(fileDirectory+fileName);
+        	buttonPanel.requestFocusInWindow();
+        }
+        else if(e.getSource() == loadMazeButton){
+        	actionLabel.setText("Finding white line and straightening");
+        	controller.findLineAndStraighten();
         	buttonPanel.requestFocusInWindow();
         }
         

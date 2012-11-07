@@ -189,4 +189,9 @@ public class Controller {
 		MazeInterpreter MI = new MazeInterpreter(this.getRobot().getBoard());
 		MI.readFile(fileLocation);
 	}
+
+	public void findLineAndStraighten() {
+		currentRobot.findWhiteLine();
+		currentRobot.straighten();
+	}
 }
