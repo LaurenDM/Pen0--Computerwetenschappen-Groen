@@ -10,7 +10,7 @@ import domain.robots.Robot;
  */
 public class Straightener extends RobotFunction {
 	//TODO: hier de echte lengte van de robot van maken
-	private static final int DISTANCE_BETWEEN_SENSOR_AND_WHEELS = 20;
+	private static final int DISTANCE_BETWEEN_SENSOR_AND_WHEELS = 8;
 	//The robot that needs to be straightened
 	private Robot robot;
 	//The actual width of the line 
@@ -137,7 +137,6 @@ public class Straightener extends RobotFunction {
 		boolean rightOrLeft = true;
 		boolean detect = true;
 		boolean wood = false;
-		goUntilRising();
 		try {
 			robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 		} catch (CannotMoveException e) {

@@ -281,7 +281,7 @@ return 0;
 			found = detectWhiteLine();
 		}
 		pilot.stop();
-		s.straighten();
+		s.straightenNew();
 		pilot.travel(20);
 		turnRight();
 		found= false;
