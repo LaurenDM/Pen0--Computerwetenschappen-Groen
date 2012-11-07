@@ -164,9 +164,9 @@ public class Straightener extends RobotFunction {
 		}
 		while(consecutiveDetections < 4){
 			if(rightOrLeft){
-				robot.turn(-3);
+				robot.turn(-1.5);
 			} else {
-				robot.turn(3);
+				robot.turn(1.5);
 			}
 			if(robot.detectWhiteLine()){
 				if(onLine){
