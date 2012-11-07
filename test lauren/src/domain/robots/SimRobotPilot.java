@@ -2,6 +2,7 @@ package domain.robots;
 
 import domain.Position.Position;
 import domain.maze.Board;
+import domain.robotFunctions.Straightener;
 import domain.util.TimeStamp;
 
 
@@ -363,6 +364,12 @@ public class SimRobotPilot implements RobotPilot {
 	public void steer(double angle) {
 		startMoveThread(Movement.FORWARD);
 		turn(angle);
+		
+	}
+
+	@Override
+	public void straighten() {
+		new Straightener(new Robot(this)).straighten();
 		
 	}
 	
