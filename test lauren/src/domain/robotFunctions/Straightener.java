@@ -156,11 +156,27 @@ public class Straightener extends RobotFunction {
 	}
 	
 	private void turnUntil(boolean detect, boolean rightOrLeft) {
-		while(!robot.detectWhiteLine()){
+		int consecutiveDetections = 0;
+		boolean onLine = false;
+		while(!onLine){
+			
+			
+		}
+		while(consecutiveDetections < 4){
 			if(rightOrLeft){
 				robot.turn(-3);
 			} else {
 				robot.turn(3);
+			}
+			if(robot.detectWhiteLine()){
+				if(onLine){
+					consecutiveDetections++;
+				} else {
+					onLine=true;
+				}
+			} else {
+				onLine=false;
+				consecutiveDetections=0;
 			}
 		}
 	}
