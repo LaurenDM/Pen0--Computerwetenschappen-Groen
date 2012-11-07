@@ -274,7 +274,7 @@ return 0;
 	
 	public void findOrigin(){
 		setMovingSpeed(0.1); //TODO: testen
-		Straightener s = new Straightener(this, 2); // TODO: wat is de lijndikte?
+		Straightener s = new Straightener(new Robot(this), 2); // TODO: wat is de lijndikte?
 		boolean found = false;
 		while(!found){
 			pilot.forward();
