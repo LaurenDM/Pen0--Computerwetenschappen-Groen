@@ -865,5 +865,15 @@ public class DifferentialPilot
 		
 	}
 
+public void keepTurning(boolean left) {
+	  int[] speed= {Math.round(_robotRotateSpeed * _leftTurnRatio), Math.round(_robotRotateSpeed * _rightTurnRatio)};
+	      try {
+	    	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+	  		nxtCommand.setOutputState(leftPort, (byte) speed[0], 0, 0, 0, 0, 0);
+	  		nxtCommand.setOutputState(rightPort, (byte) speed[1], 0, 0, 0, 0, 0);
+	  	} catch (IOException e) {
+	  		//TODO i3+
+	  		}
 }
 
+}

@@ -187,4 +187,13 @@ public class Robot {
 	public void steer(double angle){
 		robotPilot.steer(angle);
 	}
+	
+	/**
+	 * keep turning left or right.
+	 * returns immediatly
+	 * @param left
+	 */
+	public void keepTurning(boolean left){
+		robotPilot.keepTurning(left);
+	}
 }

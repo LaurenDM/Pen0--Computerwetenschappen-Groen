@@ -54,16 +54,8 @@ public class BTRobotPilot implements RobotPilot  {
 				System.out.println("We found this NXT: "+nxtInfo[0].name);//TODO
 				nxtComm.open(nxtInfo[0]);
 				nxtCommand=new NXTCommand(nxtComm);
-				try {
-					System.out.println("Bluetooth succeeded with " + nxtCommand.getFriendlyName());
-				} catch (IOException e) {
-					throw new ConnectErrorException();
-					// TODO i3+
-				} //TODO
-				catch(ArrayIndexOutOfBoundsException indE){
-					throw new ConnectErrorException();
-					//TODO i3+
-				}
+				System.out.println("Bluetooth succeeded with " + nxtCommand.getFriendlyName());
+			
 			NXTCommandConnector.setNXTCommand(nxtCommand);
 
 			sensorMotor = Motor.A;
@@ -77,6 +69,13 @@ public class BTRobotPilot implements RobotPilot  {
 			} catch (NXTCommException e) {
 				System.out.println("unable to connect");
 				throw new ConnectErrorException();
+			}	 catch (IOException e) {
+				throw new ConnectErrorException();
+				// TODO i3+
+			} //TODO
+			catch(ArrayIndexOutOfBoundsException indE){
+				throw new ConnectErrorException();
+				//TODO i3+
 			}
 		
 
@@ -347,6 +346,11 @@ return 0;
 			return (defaultTravelSpeed - turnWheelSpeed)
 					/ (defaultTravelSpeed + turnWheelSpeed);
 		//TODO kijken of left en right wel kloppen
+	}
+
+	@Override
+	public void keepTurning(boolean left) {
+		pilot.keepTurning(left);
 	}
 
 }

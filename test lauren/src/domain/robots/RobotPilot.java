@@ -93,5 +93,7 @@ public interface RobotPilot {
 	
 	//Makes the robot make an arc of the specified angle. This method does not return immediately.
 	public void steer(double angle);
+
+	public void keepTurning(boolean left);
 	
 }

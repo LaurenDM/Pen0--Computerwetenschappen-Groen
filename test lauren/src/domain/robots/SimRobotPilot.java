@@ -372,6 +372,11 @@ public class SimRobotPilot implements RobotPilot {
 		new Straightener(new Robot(this)).straighten();
 		
 	}
+
+	@Override
+	public void keepTurning(boolean left) {
+		startTurnThread(left);
+	}
 	
 	
 	

@@ -151,7 +151,7 @@ public class Straightener extends RobotFunction {
 		}
 		turnUntil(detect, rightOrLeft);
 		//Now the robot is aligned with the line
-		robot.turn(-105);
+		robot.turn(-90);
 		robot.setMovingSpeed(15);
 		robot.setTurningSpeed(10);
 		
