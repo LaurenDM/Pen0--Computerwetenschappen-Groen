@@ -379,7 +379,7 @@ public class ContentPanel implements ActionListener {
         	controller.readMazeFromFile(fileDirectory+fileName);
         	buttonPanel.requestFocusInWindow();
         }
-        else if(e.getSource() == loadMazeButton){
+        else if(e.getSource() == straightenButton){
         	actionLabel.setText("Finding white line and straightening");
         	controller.findLineAndStraighten();
         	buttonPanel.requestFocusInWindow();

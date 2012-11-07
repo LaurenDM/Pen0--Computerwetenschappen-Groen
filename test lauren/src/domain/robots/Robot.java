@@ -153,6 +153,7 @@ public class Robot {
 	}
 	
 	public void findWhiteLine(){
+		robotPilot.setMovingSpeed(2);
 		boolean found=false;
 		while(!found){
 			try {

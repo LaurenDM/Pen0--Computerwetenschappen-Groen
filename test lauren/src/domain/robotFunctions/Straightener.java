@@ -151,23 +151,19 @@ public class Straightener extends RobotFunction {
 		}
 		turnUntil(detect, rightOrLeft);
 		//Now the robot is aligned with the line
-		robot.turn(120);
+		robot.turn(-105);
+		robot.setMovingSpeed(15);
+		robot.setTurningSpeed(10);
 		
 	}
 	
 	private void turnUntil(boolean detect, boolean rightOrLeft) {
+		robot.setTurningSpeed(5);
 		int consecutiveDetections = 0;
 		boolean onLine = false;
-		while(!onLine){
-			
-			
-		}
-		while(consecutiveDetections < 4){
-			if(rightOrLeft){
-				robot.turn(-1.5);
-			} else {
-				robot.turn(1.5);
-			}
+		while(consecutiveDetections < 5){
+			System.out.println("test");
+			robot.turn(1);
 			if(robot.detectWhiteLine()){
 				if(onLine){
 					consecutiveDetections++;
