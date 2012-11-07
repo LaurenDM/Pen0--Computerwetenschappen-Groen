@@ -60,7 +60,7 @@ public class BTRobotPilot implements RobotPilot  {
 					throw new ConnectErrorException();
 					// TODO i3+
 				} //TODO
-				catch(IndexOutOfBoundsException indE){
+				catch(ArrayIndexOutOfBoundsException indE){
 					throw new ConnectErrorException();
 					//TODO i3+
 				}
