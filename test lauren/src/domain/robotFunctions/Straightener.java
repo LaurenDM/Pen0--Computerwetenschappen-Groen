@@ -162,8 +162,7 @@ public class Straightener extends RobotFunction {
 		int consecutiveDetections = 0;
 		boolean onLine = false;
 		while(consecutiveDetections < 5){
-			System.out.println("test");
-			robot.turn(1);
+			robot.keepTurning(true);
 			if(robot.detectWhiteLine()){
 				if(onLine){
 					consecutiveDetections++;
@@ -175,12 +174,7 @@ public class Straightener extends RobotFunction {
 				consecutiveDetections=0;
 			}
 		}
-	}
-
-	private void turnUntilWood(boolean right) {
-		while(robot.detectWhiteLine()){
-			robot.turnRight();
-		}
+		robot.stop();
 	}
 
 	/**
