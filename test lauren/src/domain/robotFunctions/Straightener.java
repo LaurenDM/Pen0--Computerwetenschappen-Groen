@@ -146,21 +146,21 @@ public class Straightener extends RobotFunction {
 				robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 			} catch (CannotMoveException e1) {
 				//I don't really know if this is possible
-				System.out.println("Apparently you where wrong.");
+				System.out.println("Apparently you were wrong.");
 			}
 		}
 		turnUntil(detect, rightOrLeft);
 		//Now the robot is aligned with the line
-		robot.turn(90);
+		robot.turn(120);
 		
 	}
 	
 	private void turnUntil(boolean detect, boolean rightOrLeft) {
 		while(!robot.detectWhiteLine()){
 			if(rightOrLeft){
-				robot.turnRight();
+				robot.turn(-3);
 			} else {
-				robot.turnLeft();
+				robot.turn(3);
 			}
 		}
 	}
