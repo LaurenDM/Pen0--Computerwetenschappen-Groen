@@ -107,12 +107,12 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void forward() throws CannotMoveException {
-		if(canMove())
+//		if(canMove())
 			pilot.forward();
-		else{
-			throw new CannotMoveException();
-		}
-		canMove();
+//		else{
+//			throw new CannotMoveException();
+//		}
+//		canMove();
 	}
 
 	@Override
@@ -186,13 +186,13 @@ return 0;
 	@Override
 	public void turnRight() {
 		pilot.rotate(90);
-		canMove();
+//		canMove();
 	}
 
 	@Override
 	public void turnLeft() {
 		pilot.rotate(-90);
-		canMove();
+//		canMove();
 	}
 	
 	public boolean isTouching(){
