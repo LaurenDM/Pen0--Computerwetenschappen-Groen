@@ -374,7 +374,7 @@ public class DifferentialPilot
     try {
 		nxtCommand.setOutputState(leftPort, (byte) tMotorSpeed[0], 0, 0, 0, 0, lim[0]);
 		nxtCommand.setOutputState(rightPort, (byte) tMotorSpeed[1], 0, 0, 0, 0, lim[1]);
-		Thread.sleep(Math.abs((long) (distance/_robotTravelSpeed+0.5)*1000));
+		Thread.sleep(Math.abs((long) (distance/_robotTravelSpeed+0.5)*10000));
 
 	} catch (IOException e) {
 		//TODO i3+
