@@ -100,9 +100,9 @@ public class TestController {
 						meth.invoke(testDriver,doubleArgument);
 					}
 				} catch (IllegalAccessException e) {
-					e.printStackTrace();
+					
 				} catch (InvocationTargetException e) {
-					e.printStackTrace();
+					
 				}
 			}
 		}

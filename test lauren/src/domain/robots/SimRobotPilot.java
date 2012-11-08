@@ -109,7 +109,7 @@ public class SimRobotPilot implements RobotPilot {
 			Thread.sleep(correctionSleeptime);
 		} catch (InterruptedException e) {
 			
-			e.printStackTrace();
+			
 		}
 	}
 
@@ -147,8 +147,11 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public void forward() throws CannotMoveException {
 		stop();
-		if(canMove())
+		try{
 		startMoveThread(Movement.FORWARD);
+		} catch(RuntimeException e){
+			throw new CannotMoveException();
+		}
 	}
 
 	private void startMoveThread(Movement movement) {

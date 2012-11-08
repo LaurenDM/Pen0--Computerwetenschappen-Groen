@@ -83,6 +83,7 @@ public interface RobotPilot {
 	
 	public void straighten();
 	
+	
 	public void findOrigin();
 	
 	//Starts moving de robot so that it makes an arc forward.

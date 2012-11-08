@@ -212,8 +212,7 @@ private long[] prevTachoCount={0,0,0};
 				try {
 					poseUpdateThread.join();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					// TODO Auto-generated catch bloc
 				}
 			}
 			Thread.currentThread().setPriority(

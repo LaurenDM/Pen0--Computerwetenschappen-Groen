@@ -18,11 +18,14 @@ public enum Movement {
 	}
 	
 	
-	public void execute(SimRobotPilot simRobotPilot) {
+	public void execute(SimRobotPilot simRobotPilot)  {
 		double speed=simRobotPilot.getMovingSpeed();
-		double moveAmount = 1* speedMultiplier;
+		double moveAmount = 0.5* speedMultiplier;
 		int sleepTime= Math.abs((int) Math.round((1000* moveAmount/speed)));
 		while(true){
+			if(!simRobotPilot.canMove()) {
+				throw new RuntimeException(new CannotMoveException());
+			}
 			simRobotPilot.getPosition().move(simRobotPilot.getOrientation(), moveAmount);
 			try {
 				Thread.sleep(sleepTime);
