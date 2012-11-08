@@ -28,8 +28,8 @@ public class DifferentialPilot
 
 private final int[] rSpeed=new int[2];
 
-private Position position;
-private int angle;
+private Position position= new Position(0,0);
+private int angle=0;
 private long[] prevTachoCount={0,0,0};
 /**
    * Allocates a DifferentialPilot object, and sets the physical parameters of the
@@ -109,7 +109,7 @@ private long[] prevTachoCount={0,0,0};
 
 	public boolean isMoving() {
 		try {
-			OutputState o = nxtCommand.getOutputState(0);
+			OutputState o = nxtCommand.getOutputState(leftPort);
 			// return ((MOTORON & o.mode) == MOTORON);
 			return o.runState != MOTOR_RUN_STATE_IDLE; // Peter's bug fix
 		} catch (IOException ioe) {
@@ -202,18 +202,17 @@ private long[] prevTachoCount={0,0,0};
 	private void setOutputState(int[] power, int[] limit) {
 		try {
 			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-			nxtCommand.setOutputState(leftPort, (byte) tMotorSpeed[0], 0, 0, 0,
+			nxtCommand.setOutputState(leftPort, (byte) power[0], 0, 0, 0,
 					0, limit[0]);
-			nxtCommand.setOutputState(rightPort, (byte) tMotorSpeed[1], 0, 0,
+			nxtCommand.setOutputState(rightPort, (byte) power[1], 0, 0,
 					0, 0, limit[1]);
-			poseUpdateThread.interrupt();
-			poseUpdateThread = new Thread(new PoseUpdater());
-			if (limit[0] != 0) {
-				try {
-					poseUpdateThread.join();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch bloc
-				}
+			if (poseUpdateThread != null) {
+				poseUpdateThread.interrupt();}
+			if (limit[0] == 0) {
+				poseUpdateThread = new Thread(new PoseUpdater());	
+			}
+			else{
+				(new PoseUpdater()).run();
 			}
 			Thread.currentThread().setPriority(
 					(Thread.MAX_PRIORITY - Thread.MIN_PRIORITY) / 2);
@@ -272,7 +271,7 @@ private long[] prevTachoCount={0,0,0};
  {
 	  int[] power={0,0};
 	  int[] limit={0,0};
-		setOppOutputState(power, limit);
+		setOutputState(power, limit);
 	}
 
 
@@ -300,8 +299,8 @@ private long[] prevTachoCount={0,0,0};
     {
       backward();
       return;
-    }    int[] lim= {(int) (distance * _leftDegPerDistance), (int) (distance * _rightDegPerDistance)};
-
+    }    
+ int[] lim= {(int) (distance * _leftDegPerDistance), (int) (distance * _rightDegPerDistance)};
  setOutputState(tMotorSpeed, lim);
 
   }
@@ -430,12 +429,14 @@ private long[] prevTachoCount={0,0,0};
 				long[] diffTacho = new long[2];
 				try {
 					for (int i = 0; i < 2; i++) {
-						diffTacho[i] = nxtCommand.getTachoCount(leftPort)
+						diffTacho[i] = nxtCommand.getTachoCount(i+1)
 								- prevTachoCount[i];
 						prevTachoCount[i] += diffTacho[i];
 					}
 					if (_type == MoveType.TRAVEL) {
-						position.move(angle, diffTacho[0] / _leftDegPerDistance);
+						position.move(angle,
+								diffTacho[0] /
+								_leftDegPerDistance);
 					} else if (_type == MoveType.ROTATE) {
 						angle += (diffTacho[0] / _leftTurnRatio) * 2;
 
