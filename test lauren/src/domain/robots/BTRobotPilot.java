@@ -352,5 +352,20 @@ return 0;
 	public void keepTurning(boolean left) {
 		pilot.keepTurning(left);
 	}
+	
+	@Override
+	public void findWhiteLine(){
+		setMovingSpeed(2);
+		boolean found=false;
+		try {
+			forward();
+		} catch (CannotMoveException e) {
+			turnRight();
+		}
+		while(!found){
+			found = detectWhiteLine();
+		}
+	}
+
 
 }

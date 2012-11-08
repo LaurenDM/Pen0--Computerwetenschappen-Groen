@@ -18,7 +18,7 @@ public enum Movement {
 	}
 	
 	
-	public void execute(SimRobotPilot simRobotPilot)  {
+	public void execute(SimRobotPilot simRobotPilot, boolean whiteLine)  {
 		double speed=simRobotPilot.getMovingSpeed();
 		double moveAmount = 0.5* speedMultiplier;
 		int sleepTime= Math.abs((int) Math.round((1000* moveAmount/speed)));
@@ -26,6 +26,10 @@ public enum Movement {
 			if(!simRobotPilot.canMove()) {
 				throw new RuntimeMoveException();
 			}
+			if(whiteLine && simRobotPilot.detectWhiteLine()){
+				break;
+			}
+
 			simRobotPilot.getPosition().move(simRobotPilot.getOrientation(), moveAmount);
 			try {
 				Thread.sleep(sleepTime);

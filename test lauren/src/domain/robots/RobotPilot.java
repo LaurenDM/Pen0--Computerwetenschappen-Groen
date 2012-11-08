@@ -96,5 +96,7 @@ public interface RobotPilot {
 	public void steer(double angle);
 
 	public void keepTurning(boolean left);
+
+	void findWhiteLine();
 	
 }

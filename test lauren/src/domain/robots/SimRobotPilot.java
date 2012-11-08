@@ -153,6 +153,16 @@ public class SimRobotPilot implements RobotPilot {
 			throw new CannotMoveException();
 		}
 	}
+	
+	public void forward(boolean whiteLine) throws CannotMoveException{
+		stop();
+		try{
+			startMoveThread(Movement.FORWARD);
+		} catch(RuntimeMoveException e){
+			throw new CannotMoveException();
+		}
+	}
+
 
 	private void startMoveThread(Movement movement) {
 		stopThread(moveThread);
@@ -283,7 +293,13 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public boolean isTouching() {
-		return board.detectWallAt(getPosition());
+		if(moveThread == null || moveThread.getMovement().equals(Movement.FORWARD)){
+			return board.detectWallAt(getPosition().getNewPosition(getOrientation(), 5));
+		}
+		else{
+			return board.detectWallAt(getPosition().getNewPosition(getOrientation()+180, 5));
+		}
+
 	}
 
 	@Override
@@ -354,7 +370,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public boolean detectWhiteLine() {
-		return board.detectLineAt(getPosition());
+		return board.detectLineAt(getPosition().getNewPosition(getOrientation(), 8));
 	}
 
 	@Override
@@ -390,6 +406,18 @@ public class SimRobotPilot implements RobotPilot {
 	public void keepTurning(boolean left) {
 		startTurnThread(left);
 	}
+
+	@Override
+	public void findWhiteLine(){
+		setMovingSpeed(2);
+		boolean found=false;
+		try {
+			forward(true);
+		} catch (CannotMoveException e) {
+			turnRight();
+		}
+	}
+
 	
 	
 	
