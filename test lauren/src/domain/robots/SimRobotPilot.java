@@ -224,11 +224,21 @@ public class SimRobotPilot implements RobotPilot {
 	}
 
 	public boolean canMove(){
+		if(moveThread.getMovement().equals(Movement.BACKWARD)){
+			return canMoveBackward();
+		}
 		double distance = readUltrasonicValue();	
-		int testDistance = 10; 
+		int testDistance = 15; 
 		if(distance < testDistance || isTouching())
 			return false;
 		else
+			return true;
+	}
+	
+	public boolean canMoveBackward(){
+		if(isTouching())
+			return false;
+		else 
 			return true;
 	}
 	
