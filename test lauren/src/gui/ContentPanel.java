@@ -8,6 +8,7 @@ import java.awt.event.KeyListener;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -28,7 +29,7 @@ public class ContentPanel implements ActionListener {
     private JPanel titlePanel, buttonPanel, debugPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
     private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, lineLabel;
-    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton;
+    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton;
     private JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
@@ -42,6 +43,7 @@ public class ContentPanel implements ActionListener {
     private boolean leftButtonPressed = false;
     private boolean rightButtonPressed = false;
     private boolean downButtonPressed = false;
+    private boolean showRawData = false;
     public enum Button {
         UP, LEFT, DOWN, RIGHT,NONE
     }
@@ -122,7 +124,7 @@ public class ContentPanel implements ActionListener {
         //___________________________________________________
         // Creation of a Panel to contain all the JButtons.
         buttonPanel = new JPanel();
-        fixPanelLayout(buttonPanel, 300, 400, 400, 300);
+        fixPanelLayout(buttonPanel, 300, 500, 400, 250);
         buttonPanel.addKeyListener(l);
         
         buttonLabel = new JLabel("Control the robot here");
@@ -163,6 +165,9 @@ public class ContentPanel implements ActionListener {
         
         straightenButton = new JButton("STRAIGHTEN AT WHITE LINE");
         fixButtonLayout(buttonPanel, straightenButton, 240, 30, 30, buttonYDimension + 340);
+        
+        sensorButton = new JButton("SHOW SENSOR DATA ON MAP");
+        fixButtonLayout(buttonPanel, sensorButton, 240, 30, 30, buttonYDimension + 370);
         
         buttonPanel.setFocusable(true);
         //_____________________________________________________
@@ -243,6 +248,7 @@ public class ContentPanel implements ActionListener {
         lineLabel = new JLabel("Line: FALSE");
         lineLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, lineLabel, 125, 20, 0, 180);
+
 	}
 	
 	
@@ -287,6 +293,7 @@ public class ContentPanel implements ActionListener {
 					contentPanel.setRobotDistanceValue(controller.readUltrasonicValue());
 					contentPanel.setRobotTouchingValue(controller.isTouching());
 					contentPanel.setLineValue(controller.detectWhiteLine());
+					contentPanel.drawRawData();
 					//TODO
 					sleep(50);
 				}
@@ -382,6 +389,11 @@ public class ContentPanel implements ActionListener {
         else if(e.getSource() == straightenButton){
         	actionLabel.setText("Finding white line and straightening");
         	controller.findLineAndStraighten();
+        	buttonPanel.requestFocusInWindow();
+        }
+        else if(e.getSource() == sensorButton){
+        	actionLabel.setText("Showing raw distance data");
+        	showRawData = true;
         	buttonPanel.requestFocusInWindow();
         }
         
@@ -549,6 +561,11 @@ public class ContentPanel implements ActionListener {
 
 	public Controller getController() {
 		return controller;
+	}
+	
+	public void drawRawData(){
+		if(showRawData)
+		drawingPanel.drawRawSensorData();
 	}
 	
 }

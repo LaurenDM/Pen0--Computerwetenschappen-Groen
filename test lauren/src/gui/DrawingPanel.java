@@ -94,6 +94,26 @@ public class DrawingPanel extends JPanel {
 	public Graphics getGraphics() {
 		return image.getGraphics();
 	}
+	
+	public void drawRawSensorData(){
+		double distance = controller.readUltrasonicValue();
+		if(distance<250){
+		double xD = (controller.getXCo())+((Math.cos(Math.toRadians(controller.getAngle()))*distance));
+		double yD = (controller.getYCo())+((Math.sin(Math.toRadians(controller.getAngle()))*distance));
+		Polygon pol = new Polygon();
+		int x = (int) xD + OFFSET; 
+		int y = (int) yD + OFFSET;
+		pol.addPoint(x, y);
+		pol.addPoint(x, y+1);
+		pol.addPoint(x-1, y+1);
+		pol.addPoint(x-1, y);
+		g.setColor(Color.red);
+//		g.drawLine(x, y, x, y);
+		g.drawPolygon(pol);
+		g.fillPolygon(pol);
+		totalGui.repaint();
+		}
+	}
 
 	// This method makes the panel white agains
 	public void clear() {
