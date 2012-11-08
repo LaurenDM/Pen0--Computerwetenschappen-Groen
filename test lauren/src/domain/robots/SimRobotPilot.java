@@ -149,7 +149,7 @@ public class SimRobotPilot implements RobotPilot {
 		stop();
 		try{
 		startMoveThread(Movement.FORWARD);
-		} catch(RuntimeException e){
+		} catch(RuntimeMoveException e){
 			throw new CannotMoveException();
 		}
 	}

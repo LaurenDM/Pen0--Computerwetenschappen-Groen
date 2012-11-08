@@ -24,7 +24,7 @@ public enum Movement {
 		int sleepTime= Math.abs((int) Math.round((1000* moveAmount/speed)));
 		while(true){
 			if(!simRobotPilot.canMove()) {
-				throw new RuntimeException(new CannotMoveException());
+				throw new RuntimeMoveException();
 			}
 			simRobotPilot.getPosition().move(simRobotPilot.getOrientation(), moveAmount);
 			try {

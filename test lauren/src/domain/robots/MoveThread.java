@@ -10,11 +10,9 @@ public class MoveThread extends Thread {
 	
 	@Override
 	public void run(){
-		try{
+		
 			moveType.execute(simRobotPilot);
-		} catch(RuntimeException e){
-			throw e;
-		}
+		
 	}
 	
 	
