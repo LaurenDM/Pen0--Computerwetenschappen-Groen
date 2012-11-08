@@ -283,14 +283,14 @@ return 0;
 	
 	public void findOrigin(){
 		setMovingSpeed(0.1); //TODO: testen
-		Straightener s = new Straightener(new Robot(this), 2); // TODO: wat is de lijndikte?
+		Straightener s = new Straightener(new Robot(this));
 		boolean found = false;
 		while(!found){
 			pilot.forward();
 			found = detectWhiteLine();
 		}
 		pilot.stop();
-		s.straightenNew();
+		s.straighten();
 		pilot.travel(20);
 		turnRight();
 		found= false;
@@ -305,7 +305,7 @@ return 0;
 	}
 	
 	public void straighten(){
-		new Straightener(new Robot(this)).straightenNew();
+		new Straightener(new Robot(this)).straighten();
 	}
 	
 	public int getBatteryVoltage(){
