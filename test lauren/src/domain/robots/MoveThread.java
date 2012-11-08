@@ -12,7 +12,10 @@ public class MoveThread extends Thread {
 	public void run(){
 		
 			moveType.execute(simRobotPilot);
-		
+	}
+	
+	public Movement getMovement(){
+		return this.moveType;
 	}
 	
 	
