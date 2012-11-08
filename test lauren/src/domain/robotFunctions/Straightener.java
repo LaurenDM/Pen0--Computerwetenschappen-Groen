@@ -158,7 +158,7 @@ public class Straightener extends RobotFunction {
 	}
 	
 	private void turnUntil(boolean detect, boolean rightOrLeft) {
-		robot.setTurningSpeed(5);
+		robot.setTurningSpeed(2);
 		int consecutiveDetections = 0;
 		boolean onLine = false;
 		while(consecutiveDetections < 5){

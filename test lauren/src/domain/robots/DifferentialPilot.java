@@ -4,9 +4,14 @@ package domain.robots;
 
 import java.io.IOException;
 
+import domain.Position.Position;
+
 import lejos.nxt.remote.NXTCommand;
+import lejos.nxt.remote.OutputState;
+import lejos.nxt.remote.RemoteMotor;
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.navigation.Move;
+import lejos.robotics.navigation.Move.MoveType;
 
 /*
  /**
@@ -20,6 +25,12 @@ public class DifferentialPilot
 	int[] tMotorSpeed=new int[2];
 
   private NXTCommand nxtCommand;
+
+private final int[] rSpeed=new int[2];
+
+private Position position;
+private int angle;
+private long[] prevTachoCount={0,0,0};
 /**
    * Allocates a DifferentialPilot object, and sets the physical parameters of the
    * NXT robot.<br>
@@ -69,8 +80,7 @@ public class DifferentialPilot
   public DifferentialPilot(final double leftWheelDiameter,
           final double rightWheelDiameter, final double trackWidth, NXTCommand nxtCommand, int leftPort, int rightPort)
   {
-	Thread poseUpdateThread=new Thread(new PoseUpdater());
-	poseUpdateThread.start();
+	
 	this.nxtCommand= nxtCommand;
     this.leftPort = leftPort;
     _leftWheelDiameter = (float)leftWheelDiameter;
@@ -85,7 +95,6 @@ public class DifferentialPilot
     _trackWidth = (float)trackWidth;
     setTravelSpeed(15);
     setRotateSpeed(45);
-    setAcceleration((int)(_robotTravelSpeed * 2));
   }
 
   /*
@@ -96,7 +105,22 @@ public class DifferentialPilot
   {
     return leftPort;
   }
+  
 
+	public boolean isMoving() {
+		try {
+			OutputState o = nxtCommand.getOutputState(0);
+			// return ((MOTORON & o.mode) == MOTORON);
+			return o.runState != MOTOR_RUN_STATE_IDLE; // Peter's bug fix
+		} catch (IOException ioe) {
+			System.out.println(ioe.getMessage());
+			return false;
+		}
+	}
+	// "RunState":
+	/** Output will be idle */
+	public static final byte MOTOR_RUN_STATE_IDLE = 0x00;
+	
   /*
    * returns the right motor.
    * @return right motor.
@@ -106,51 +130,20 @@ public class DifferentialPilot
     return rightPort;
   }
 
-//  /** TODO
-//   * Returns the tachoCount of the left motor
-//   * @return tachoCount of left motor. Positive value means motor has moved
-//   *         the robot forward.
-//   */
-//  private int getLeftCount()
-//  {
-//    return _left.getTachoCount();
-//  }
-
-//  /** TODO
-//   * Returns the tachoCount of the right motor
-//   * @return tachoCount of the right motor. Positive value means motor has
-//   *         moved the robot forward.
-//   */
-//  private int getRightCount()
-//  {
-//    return _right.getTachoCount();
-//  }
-
-  /*
-   * Returns the actual speed of the left motor
-   * @return actual speed of left motor in degrees per second. A negative
-   *         value if motor is rotating backwards.
-   **/
-  /*public int getLeftActualSpeed()
+  /** TODO
+   * Returns the tachoCount of the left motor
+   * @return tachoCount of left motor. Positive value means motor has moved
+   *         the robot forward.
+   */
+  private long getTachoCount(int port)
   {
-    return _left.getRotationSpeed();
-  }*/
-
-  /*
-   * Returns the actual speed of right motor
-   * @return actual speed of right motor in degrees per second. A negative
-   *         value if motor is rotating backwards.
-   **/
-  /*public int getRightActualSpeed()
-  {
-    return _right.getRotationSpeed();
-  }*/
-
-//  private void setSpeed(final int leftSpeed, final int rightSpeed)
-//  {
-//    _left.setSpeed(leftSpeed);
-//    _right.setSpeed(rightSpeed);
-//  }
+    try {
+    	prevTachoCount[port]=nxtCommand.getTachoCount(port);
+	} catch (IOException e) {
+		//TODO i3+
+	}
+	return prevTachoCount[port];
+  }
 
  /**
   * set travel speed in cm per second
@@ -169,29 +162,7 @@ public class DifferentialPilot
     return _robotTravelSpeed;
   }
 
-  /**
-   * Sets the normal acceleration of the robot in distance/second/second  where
-   * distance is in the units of wheel diameter. The default value is 4 times the 
-   * maximum travel speed.  
-   * @param acceleration
-   */
-  public void setAcceleration(int acceleration)
-  {
-   
-  _acceleration = acceleration;
-//   setMotorAccel(_acceleration);
-  }
-// /**
-//   * helper method for setAcceleration and quickStop
-//   * @param acceleration 
-//   */
-//  private void setMotorAccel(int acceleration)         
-//  {
-//       int motorAccel  = (int)Math.round(0.5 * acceleration * (_leftDegPerDistance + _rightDegPerDistance));
-//    _left.setAcceleration(motorAccel);
-//    _right.setAcceleration(motorAccel); 
-//  }
-
+  
   /**
    * sets the rotation speed of the vehicle, degrees per second
    * @param rotateSpeed
@@ -199,7 +170,8 @@ public class DifferentialPilot
   public void setRotateSpeed(double rotateSpeed)
   {
     _robotRotateSpeed = (float)rotateSpeed;
-//    int[] speed= {(int)Math.round(rotateSpeed * _leftTurnRatio), (int)Math.round(rotateSpeed * _rightTurnRatio)};
+    rSpeed[0]= (int)Math.round(rotateSpeed * _leftTurnRatio);
+    rSpeed[1]= (int)Math.round(rotateSpeed * _rightTurnRatio);
   }
 
 
@@ -209,83 +181,60 @@ public class DifferentialPilot
   }
 
 
-//  public float getMaxRotateSpeed()
-//  {
-//    return Math.min(_left.getMaxSpeed(), _right.getMaxSpeed()) / Math.max(_leftTurnRatio, _rightTurnRatio);
-//    // max degree/second divided by degree/unit = unit/second
-//  }
-
-
-//  public double getRotateMaxSpeed()
-//  {
-//    return getMaxRotateSpeed();
-//  }
-
   /**
    * Starts the NXT robot moving forward.
    */
   public void forward()
   {
-//  // _type = Move.MoveType.TRAVEL;
-    _angle = 0;
-   // _distance = Double.POSITIVE_INFINITY;
-    try {
-  		nxtCommand.setOutputState(leftPort, (byte) tMotorSpeed[0], 0, 0, 0, 0, 0);
-  		nxtCommand.setOutputState(rightPort, (byte) tMotorSpeed[1], 0, 0, 0, 0, 0);
-  	} catch (IOException e) {
-  		//TODO i3+
-  	}
-  
+   _type = Move.MoveType.TRAVEL;
+//    _angle = 0;
+    _distance = Double.POSITIVE_INFINITY;
+   
+   int[] limit={0,0};
+  setOutputState(tMotorSpeed, limit);
   }
+  
+  private void setOppOutputState(int[] power, int[] limit){
+	  int[] oppPower= {-power[0],-power[1]};
+		setOutputState(oppPower, limit);
+	 }
 
+	private void setOutputState(int[] power, int[] limit) {
+		try {
+			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+			nxtCommand.setOutputState(leftPort, (byte) tMotorSpeed[0], 0, 0, 0,
+					0, limit[0]);
+			nxtCommand.setOutputState(rightPort, (byte) tMotorSpeed[1], 0, 0,
+					0, 0, limit[1]);
+			poseUpdateThread.interrupt();
+			poseUpdateThread = new Thread(new PoseUpdater());
+			if (limit[0] != 0) {
+				try {
+					poseUpdateThread.join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			Thread.currentThread().setPriority(
+					(Thread.MAX_PRIORITY - Thread.MIN_PRIORITY) / 2);
+		} catch (IOException e) {
+			// TODO i3+
+		}
+	}
   /**
    *  Starts the NXT robot moving backward.
    */
 	public void backward() {
-//		_type = Move.MoveType.TRAVEL;
-//		_distance = Double.NEGATIVE_INFINITY;
+		_type = Move.MoveType.TRAVEL;
+		_distance = Double.NEGATIVE_INFINITY;
 		_angle = 0;
 
-		  try {
-		    	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-				nxtCommand.setOutputState(leftPort, (byte) -tMotorSpeed[0], 0, 0, 0, 0, 0);
-				nxtCommand.setOutputState(rightPort, (byte) -tMotorSpeed[1], 0, 0, 0, 0, 0);
-			} catch (IOException e) {
-				//TODO i3+
-			}
+		  int[] limit={0,0};
+		  setOppOutputState(tMotorSpeed, limit);
   }
 
-  public void rotateLeft()
-  {
-	  // _type = Move.MoveType.ROTATE;
-	   // _distance = 0;
-	    _angle = Double.NEGATIVE_INFINITY;
-	    int[] speed= {-Math.round(_robotRotateSpeed * _leftTurnRatio), Math.round(_robotRotateSpeed * _rightTurnRatio)};
-	    try {
-	    	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-	  		nxtCommand.setOutputState(leftPort, (byte) speed[0], 0, 0, 0, 0, 0);
-	  		nxtCommand.setOutputState(rightPort, (byte) speed[1], 0, 0, 0, 0, 0);
-	  	} catch (IOException e) {
-	  		//TODO i3+
-	  	}
-  }
 
-  public void rotateRight()
-  {
-  // _type = Move.MoveType.ROTATE;
-   // _distance = 0;
-    _angle = Double.NEGATIVE_INFINITY;
-    int[] speed= {Math.round(_robotRotateSpeed * _leftTurnRatio), -Math.round(_robotRotateSpeed * _rightTurnRatio)};
-    try {
-    	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-  		nxtCommand.setOutputState(leftPort, (byte) speed[0], 0, 0, 0, 0, 0);
-  		nxtCommand.setOutputState(rightPort, (byte) speed[1], 0, 0, 0, 0, 0);
-  		
-  	} catch (IOException e) {
-  		//TODO i3+
-  	}
-   
-  }
 
   /**
    * Rotates the NXT robot through a specific angle. Returns when angle is
@@ -298,23 +247,13 @@ public class DifferentialPilot
    */
   public void rotate(final double angle)
   {
-//  // _type = Move.MoveType.ROTATE;
-   // _distance = 0;
+   _type = Move.MoveType.ROTATE;
+    _distance = 0;
     _angle = angle;
-    int[] speed= {Math.round(_robotRotateSpeed * _leftTurnRatio), Math.round(_robotRotateSpeed * _rightTurnRatio)};
     int rotateAngleLeft = (int) (angle * _leftTurnRatio);
     int rotateAngleRight = (int) (angle * _rightTurnRatio);
     int[] lim={-rotateAngleLeft,rotateAngleRight};
-    try {
-    	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-  		nxtCommand.setOutputState(leftPort, (byte) speed[0], 0, 0, 0, 0, lim[0]);
-  		nxtCommand.setOutputState(rightPort, (byte) speed[1], 0, 0, 0, 0, lim[1]);
-		Thread.sleep(Math.abs((long) ( angle/_robotRotateSpeed+0.5)*1000));
-  	} catch (IOException e) {
-  		//TODO i3+
-  	} catch (InterruptedException e) {
-		// TODO i3+
-	}
+    setOutputState(rSpeed, lim);
     
   }
 
@@ -332,26 +271,12 @@ public class DifferentialPilot
    */
   public void stop()
  {
-		try {
-	    	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-			nxtCommand.setOutputState(leftPort, (byte) 0, 0, 0, 0, 0, 0);
-			nxtCommand.setOutputState(rightPort, (byte) 0, 0, 0, 0, 0, 0);
-		} catch (IOException e) {
-			// TODO i3+
-		}
-//		setMotorAccel(_acceleration); // restror acceleration value
+	  int[] power={0,0};
+	  int[] limit={0,0};
+		setOppOutputState(power, limit);
 	}
 
-//  /**
-//   * Stops the robot almost immediately.   Use this method if the normal {@link #stop()}
-//   * is too slow;
-//   */ 
-//  public void quickStop()
-//  {
-//     setMotorAccel(_quickAcceleration);
-//     stop();
-//     setMotorAccel(_acceleration);
-//  }
+
   /**
    * Moves the NXT robot a specific distance in an (hopefully) straight line.<br>
    * A positive distance causes forward motion, a negative distance moves
@@ -364,7 +289,7 @@ public class DifferentialPilot
    **/
   public void travel(final double distance)
   {
-//  // _type = Move.MoveType.TRAVEL;
+   _type = Move.MoveType.TRAVEL;
    // _distance = distance;
     _angle = 0;
     if (distance == Double.POSITIVE_INFINITY)
@@ -378,344 +303,11 @@ public class DifferentialPilot
       return;
     }    int[] lim= {(int) (distance * _leftDegPerDistance), (int) (distance * _rightDegPerDistance)};
 
-    
-    try {
-    	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-		nxtCommand.setOutputState(leftPort, (byte) tMotorSpeed[0], 0, 0, 0, 0, lim[0]);
-		nxtCommand.setOutputState(rightPort, (byte) tMotorSpeed[1], 0, 0, 0, 0, lim[1]);
-		Thread.sleep(Math.abs((long) (distance/_robotTravelSpeed+0.05)*10000));
-
-	} catch (IOException e) {
-		//TODO i3+
-	} catch (InterruptedException e) {
-		// TODO i3+
-	}
+ setOutputState(tMotorSpeed, lim);
 
   }
 
-//  public void arcForward(final double radius)
-//  {
-//  // _type = Move.MoveType.ARC;
-//    if (radius > 0)
-//    {
-//      _angle = Double.POSITIVE_INFINITY;
-//     // _distance = Double.POSITIVE_INFINITY;
-//    } else
-//    {
-//      _angle = Double.NEGATIVE_INFINITY;
-//     // _distance = Double.NEGATIVE_INFINITY;
-//    }
-//    
-//    double turnRate = turnRate(radius);
-//    steerPrep(turnRate); // sets motor speeds
-//    if(_parity >0)_outside.forward();
-//    else _outside.backward();
-//    if (_steerRatio > 0)  _inside.forward();
-//    else _inside.backward();
-//  }
 
-//  public void arcBackward(final double radius)
-//  {
-//   // _type = Move.MoveType.ARC;
-//    if (radius < 0)
-//    {
-//      _angle = Double.POSITIVE_INFINITY;
-//    // _distance = Double.NEGATIVE_INFINITY;
-//    } else
-//    {
-//     _angle = Double.NEGATIVE_INFINITY;
-//     // _distance = Double.POSITIVE_INFINITY;
-//    }
-//    
-//    double turnRate = turnRate(radius);
-//    steerPrep(turnRate);// sets motor speeds
-//    if(_parity > 0)_outside.backward();
-//    else _outside.forward();
-//    if (_steerRatio > 0)_inside.backward();
-//     else _inside.forward();
-//  }
-
-//  public void arc(final double radius, final double angle)
-//  {
-//     arc(radius, angle, false);
-//  }
-//
-//  public void  arc(final double radius, final double angle,
-//          final boolean immediateReturn)
-//  {
-//    if (radius == Double.POSITIVE_INFINITY || radius == Double.NEGATIVE_INFINITY)
-//    {
-//      forward();
-//      return;
-//    }
-//    steer(turnRate(radius), angle, immediateReturn);// type and move started called by steer()
-//    // if (!immediateReturn) waitComplete(); redundant I think - BB
-//  }
-
-//  public  void  travelArc(double radius, double distance)
-//  {
-//     travelArc(radius, distance, false);
-//  }
-//
-//  public void travelArc(double radius, double distance, boolean immediateReturn)
-//  {
-//    if (radius == Double.POSITIVE_INFINITY || radius == Double.NEGATIVE_INFINITY)
-//    {
-//      travel(distance, immediateReturn);
-//      return;
-//    }
-////  // _type = Move.MoveType.ARC;
-//    if (radius == 0)
-//    {
-//      throw new IllegalArgumentException("Zero arc radius");
-//    }
-//    double angle = (distance * 180) / ((float) Math.PI * radius);
-//    arc(radius, angle, immediateReturn);
-//  }
-
-//  /**
-//   * Calculates the turn rate corresponding to the turn radius; <br>
-//   * use as the parameter for steer() negative argument means center of turn
-//   * is on right, so angle of turn is negative
-//   * @param radius
-//   * @return turnRate to be used in steer()
-//   */
-//  private double turnRate(final double radius)
-//  {
-//    int direction;
-//    double radiusToUse;
-//    if (radius < 0)
-//    {
-//      direction = -1;
-//      radiusToUse = -radius;
-//    } else
-//    {
-//      direction = 1;
-//      radiusToUse = radius;
-//    }
-//    double ratio = (2 * radiusToUse - _trackWidth) / (2 * radiusToUse + _trackWidth);
-//    return (direction * 100 * (1 - ratio));
-//  }
-  
-//  
-//  /**
-//   * Returns the radius of the turn made by steer(turnRate)
-//   * Used in for planned distance at start of arc and steer moves.
-//   * @param turnRate
-//   * @return radius of the turn.    
-//   */
-//  private  double radius(double turnRate)
-//  {
-//    double radius = 100*_trackWidth / turnRate;
-//    if(turnRate > 0 ) radius -= _trackWidth/2;
-//    else radius += _trackWidth/2;  
-//    return radius;  
-//  }
-
-///**
-//   * Starts the robot moving forward along a curved path. This method is similar to the
-//   * {@link #arcForward(double radius )} method except it uses the <code> turnRate</code> parameter
-//   * do determine the curvature of the path and therefore has the ability to drive straight. This makes
-//   * it useful for line following applications.
-//   * <p>
-//   * The <code>turnRate</code> specifies the sharpness of the turn.  Use values  between -200 and +200.<br>
-//   * A positive value means that center of the turn is on the left.  If the
-// * robot is traveling toward the top of the page the arc looks like this: <b>)</b>. <br>
-//   * A negative  value means that center of the turn is on the  right so the arc looks  this: <b>(</b>. <br>.
-//   *  In this class,  this parameter determines the  ratio of inner wheel speed to outer wheel speed <b>as a percent</b>.<br>
-//   * <I>Formula:</I> <code>ratio = 100 - abs(turnRate)</code>.<br>
-//   * When the ratio is negative, the outer and inner wheels rotate in
-//   * opposite directions.
-//   * Examples of how the formula works:
-//   * <UL>
-//   * <LI><code>steer(0)</code> -> inner and outer wheels turn at the same speed, travel  straight
-//   * <LI><code>steer(25)</code> -> the inner wheel turns at 75% of the speed of the outer wheel, turn left
-//   * <LI><code>steer(100)</code> -> the inner wheel stops and the outer wheel is at 100 percent, turn left
-//   * <LI><code>steer(200)</code> -> the inner wheel turns at the same speed as the outer wheel - a zero radius turn.
-//   * </UL>
-//   * <p>
-//   * Note: If you have specified a drift correction in the constructor it will not be applied in this method.
-//   *
-//   * @param turnRate If positive, the left side of the robot is on the inside of the turn. If negative,
-//   * the left side is on the outside.
-//   */
-//  public void steer(double turnRate)
-//  {
-//    if (turnRate == 0)
-//    {
-//      forward();
-//      return;
-//    }
-//    steerPrep(turnRate);
-//    if(_parity >0)_outside.forward();
-//    else _outside.backward();
-//    if (!_steering)  //only call movement start if this is the most recent methoc called
-//    {
-//    // _type = Move.MoveType.ARC;
-//         if(turnRate > 0 )
-//     {
-//       _angle = Double.POSITIVE_INFINITY;
-//      // _distance = Double.POSITIVE_INFINITY;
-//     }
-//     else 
-//     {
-//       _angle = Double.NEGATIVE_INFINITY;
-//      // _distance = Double.NEGATIVE_INFINITY;
-//     }
-//      
-//      _steering = true;
-//    }
-//    if (_steerRatio > 0) _inside.forward();
-//    else _inside.backward();
-//  }
-
-//  /**
-//   * Starts the robot moving backward  along a curved path. This method is essentially
-//   * the same as
-//   * {@link #steer(double)} except that the robot moves backward instead of forward.
-//   * @param turnRate
-//   */
-//  public void steerBackward(final double turnRate)
-//  {
-//   TODO i2
-//  }
-
-
-
-//  /** TODO i2
-//   * steers the robot a certain angle, rotation-speed is accumulated with forward-speed
-//   */
-//  public void steer(final double angle)
-//  {
-//    if (angle == 0)
-//    {
-//      return;
-//    }
-//   _angle = angle;
-//  // _distance = 2*Math.toRadians(angle)*radius(turnRate); 
-//    steerPrep(turnRate);
-//    int side = (int) Math.signum(turnRate);
-//    int rotAngle = (int) (angle * _trackWidth * 2 / (_leftWheelDiameter * (1 - _steerRatio)));
-//    _inside.rotate((int) (side * rotAngle * _steerRatio), true);
-//    _outside.rotate(side * rotAngle, immediateReturn);
-//    setMotorAccel(_acceleration);
-//    if (immediateReturn)
-//    {
-//      return;
-//    }
-//     waitComplete();
-//    _inside.setSpeed(_outside.getSpeed());
-//  }
-
-//  /**
-//   * helper method used by steer(float) and steer(float,float,boolean)
-//   * sets _outsideSpeed, _insideSpeed, _steerRatio
-//   * @param turnRate
-//   * .
-//   */
-//    void steerPrep(final double turnRate)
-//  {
-//
-//    double rate = turnRate;
-//    if (rate < -200) rate = -200;
-//    if (rate > 200) rate = 200;
-//
-//    if (turnRate < 0)
-//    {
-//      insidePort = rightPort;
-//      outsidePort = leftPort;
-//      rate = -rate;
-//    } else
-//    {
-//      insidePort = leftPort;
-//      outsidePort = rightPort;
-//    }
-//    _outside.setSpeed(_motorSpeed);
-//    _steerRatio = (float)(1 - rate / 100.0);
-//    _inside.setSpeed((int) (_motorSpeed * _steerRatio));
-//     int insideAccel  = (int)Math.round(0.5 * _acceleration*_steerRatio * (_leftDegPerDistance + _rightDegPerDistance));
-//    _inside.setAcceleration(insideAccel) ;
-//  }
-
-
-//  /**
-//   * called by RegulatedMotor when a motor rotation is complete
-//   * calls movementStop() after both motors stop;
-//   * @param motor
-//   * @param tachoCount
-//   * @param  stall : true if motor is sealled
-//   * @param ts  s time stamp
-//   */
-//  public synchronized void rotationStopped(RegulatedMotor motor, int tachoCount, boolean stall,long ts)
-//  {
-//   if(motor.isStalled())stop();
-////   else if (!isMoving());// a motor has stopped
-//  }
-
-//  /**
-//   * MotorListener interface method is called by RegulatedMotor when a motor rotation starts.
-//   * 
-//   * @param motor
-//   * @param tachoCount
-//   * @param stall    true of the motor is stalled
-//   * @param ts  time stamp
-//   */
-//  public synchronized void rotationStarted(RegulatedMotor motor, int tachoCount, boolean stall,long ts)
-//  { // Not used
-//  }
-
-  
-//  /** TODO
-//   * @return true if the NXT robot is moving.
-//   **/
-//  public boolean isMoving()
-//  {
-//    return _left.isMoving() || _right.isMoving();
-//  }
-
-//  /** TODO
-//   * wait for the current operation on both motors to complete
-//   */
-//  private void waitComplete()
-//  {
-//    while(isMoving())
-//    {
-//      _left.waitComplete();
-//      _right.waitComplete();
-//    }
-//  }
-
-//  public boolean isStalled() TODO
-//  {
-//    return _left.isStalled() || _right.isStalled();
-//  }
-  
-//  /** TODO
-//   * Resets tacho count for both motors.
-//   **/
-//  public void reset()
-//  { 
-//    _leftTC = getLeftCount();
-//    _rightTC = getRightCount();
-//    _steering = false;
-//  }
-
-//  /** TODO
-//   * Set the radius of the minimum turning circle.
-//   * Note: A DifferentialPilot robot can simulate a SteeringPilot robot by calling DifferentialPilot.setMinRadius()
-//   * and setting the value to something greater than zero (example: 15 cm).
-//   * 
-//   * @param radius  in degrees
-//   */
-//  public void setMinRadius(double radius)
-//  {
-//    _turnRadius = (float)radius;
-//  }
-
-//  public double getMinRadius() TODO
-//  {
-//    return _turnRadius;
-//  }
 
 //  /** TODO TODO
 //   * @return The move distance since it last started moving
@@ -735,11 +327,6 @@ public class DifferentialPilot
 //  {
 //    return /**/(((getRightCount() - _rightTC) / _rightTurnRatio) -
 //            ((getLeftCount()  - _leftTC) / _leftTurnRatio)) / 2.0f;
-//  }
-
-//  public Move getMovement()
-//  {
-//    return  new Move(_type, getMovementIncrement(), getAngleIncrement(), isMoving());
 //  }
 
   private float _turnRadius = 0;
@@ -815,18 +402,17 @@ public class DifferentialPilot
    */
   private final float _rightWheelDiameter;
 
-  private  int _leftTC; // left tacho count
-  private  int _rightTC; //right tacho count
 
   
-//  /**
-//   */
-//   protected Move.MoveType _type;
-//   
+  /**
+   * type of movement the robot is doing;
+   */
+   protected Move.MoveType _type;
+   
    /**
     * Distance about to travel - used by movementStarted
     */
-//   private double _distance;
+   private double _distance;
    
    /**
     * Angle about to turn - used by movementStopped
@@ -835,45 +421,48 @@ public class DifferentialPilot
   private int _acceleration;
    private int  _quickAcceleration; // used for quick stop.
   
-   private class PoseUpdater implements Runnable{
-		//previous tachoCount of left[0] and right[1] motor
-		long[] prevTacho= {0,0};
+   Thread poseUpdateThread;
+
+	private class PoseUpdater implements Runnable {
+		// previous tachoCount of left[0] and right[1] motor
 		@Override
 		public void run() {
-			while(true){
-				long[] diffTacho=new long[2];
-				for(int i=0; i<2; i++){
+			while (!Thread.interrupted() && isMoving()) {
+				long[] diffTacho = new long[2];
 				try {
-					diffTacho[i]=nxtCommand.getTachoCount(leftPort)-prevTacho[i];
+					for (int i = 0; i < 2; i++) {
+						diffTacho[i] = nxtCommand.getTachoCount(leftPort)
+								- prevTachoCount[i];
+						prevTachoCount[i] += diffTacho[i];
+					}
+					if (_type == MoveType.TRAVEL) {
+						position.move(angle, diffTacho[0] / _leftDegPerDistance);
+					} else if (_type == MoveType.ROTATE) {
+						angle += (diffTacho[0] / _leftTurnRatio) * 2;
+
+					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
-				prevTacho[i]+=diffTacho[i];
-				}
-				
+
 				try {
 					Thread.sleep(300);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
-				
 			}
 			
+
 		}
-		
 	}
 
 public void keepTurning(boolean left) {
-	  int[] speed= {Math.round(_robotRotateSpeed * _leftTurnRatio), Math.round(_robotRotateSpeed * _rightTurnRatio)};
-	      try {
-	    	Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-	  		nxtCommand.setOutputState(leftPort, (byte) speed[0], 0, 0, 0, 0, 0);
-	  		nxtCommand.setOutputState(rightPort, (byte) speed[1], 0, 0, 0, 0, 0);
-	  	} catch (IOException e) {
-	  		//TODO i3+
-	  		}
-}
+		int[] limit = { 0, 0 };
+		if (left)
+			setOutputState(rSpeed, limit);
+		else
+			setOppOutputState(rSpeed, limit);
+
+	}
 
 }
