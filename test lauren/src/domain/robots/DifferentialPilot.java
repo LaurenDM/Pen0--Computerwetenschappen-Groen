@@ -1,17 +1,11 @@
 package domain.robots;
 
-
-
 import java.io.IOException;
-
-import domain.Position.Position;
 
 import lejos.nxt.remote.NXTCommand;
 import lejos.nxt.remote.OutputState;
-import lejos.nxt.remote.RemoteMotor;
-import lejos.robotics.RegulatedMotor;
-import lejos.robotics.navigation.Move;
 import lejos.robotics.navigation.Move.MoveType;
+import domain.Position.Position;
 
 /*
  /**
@@ -29,8 +23,8 @@ public class DifferentialPilot
 private final int[] rSpeed=new int[2];
 
 private Position position= new Position(0,0);
-private int angle=0;
-private long[] prevTachoCount={0,0,0};
+private int rotation=0;
+private long[] prevTachoCount={0,0};
 /**
    * Allocates a DifferentialPilot object, and sets the physical parameters of the
    * NXT robot.<br>
@@ -95,8 +89,25 @@ private long[] prevTachoCount={0,0,0};
     _trackWidth = (float)trackWidth;
     setTravelSpeed(15);
     setRotateSpeed(45);
+   try { 
+	nxtCommand.resetMotorPosition(1, true);
+    nxtCommand.resetMotorPosition(2, true);
+	nxtCommand.resetMotorPosition(1, false);
+    nxtCommand.resetMotorPosition(2, false);
+    } catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+    
   }
 
+  public Position getPosition(){
+	  return position.clone();
+  }
+  
+  public int getRotation(){
+	  return rotation;
+  }
   /*
    * Returns the left motor.
    * @return left motor.
@@ -138,11 +149,11 @@ private long[] prevTachoCount={0,0,0};
   private long getTachoCount(int port)
   {
     try {
-    	prevTachoCount[port]=nxtCommand.getTachoCount(port);
+    	prevTachoCount[port-1]=nxtCommand.getTachoCount(port);
 	} catch (IOException e) {
 		//TODO i3+
 	}
-	return prevTachoCount[port];
+	return prevTachoCount[port-1];
   }
 
  /**
@@ -170,7 +181,7 @@ private long[] prevTachoCount={0,0,0};
   public void setRotateSpeed(double rotateSpeed)
   {
     _robotRotateSpeed = (float)rotateSpeed;
-    rSpeed[0]= (int)Math.round(rotateSpeed * _leftTurnRatio);
+    rSpeed[0]= -(int)Math.round(rotateSpeed * _leftTurnRatio);
     rSpeed[1]= (int)Math.round(rotateSpeed * _rightTurnRatio);
   }
 
@@ -186,7 +197,7 @@ private long[] prevTachoCount={0,0,0};
    */
   public void forward()
   {
-   _type = Move.MoveType.TRAVEL;
+   _type = MoveType.TRAVEL;
 //    _angle = 0;
     _distance = Double.POSITIVE_INFINITY;
    
@@ -209,7 +220,8 @@ private long[] prevTachoCount={0,0,0};
 			if (poseUpdateThread != null) {
 				poseUpdateThread.interrupt();}
 			if (limit[0] == 0) {
-				poseUpdateThread = new Thread(new PoseUpdater());	
+				poseUpdateThread = new Thread(new PoseUpdater());
+				poseUpdateThread.start();
 			}
 			else{
 				(new PoseUpdater()).run();
@@ -224,7 +236,7 @@ private long[] prevTachoCount={0,0,0};
    *  Starts the NXT robot moving backward.
    */
 	public void backward() {
-		_type = Move.MoveType.TRAVEL;
+		_type = MoveType.TRAVEL;
 		_distance = Double.NEGATIVE_INFINITY;
 		_angle = 0;
 
@@ -245,12 +257,12 @@ private long[] prevTachoCount={0,0,0};
    */
   public void rotate(final double angle)
   {
-   _type = Move.MoveType.ROTATE;
+   _type = MoveType.ROTATE;
     _distance = 0;
     _angle = angle;
     int rotateAngleLeft = (int) (angle * _leftTurnRatio);
     int rotateAngleRight = (int) (angle * _rightTurnRatio);
-    int[] lim={-rotateAngleLeft,rotateAngleRight};
+    int[] lim={rotateAngleLeft,rotateAngleRight};
     setOutputState(rSpeed, lim);
     
   }
@@ -269,6 +281,7 @@ private long[] prevTachoCount={0,0,0};
    */
   public void stop()
  {
+	  _type=MoveType.STOP;
 	  int[] power={0,0};
 	  int[] limit={0,0};
 		setOutputState(power, limit);
@@ -287,7 +300,7 @@ private long[] prevTachoCount={0,0,0};
    **/
   public void travel(final double distance)
   {
-   _type = Move.MoveType.TRAVEL;
+   _type = MoveType.TRAVEL;
    // _distance = distance;
     _angle = 0;
     if (distance == Double.POSITIVE_INFINITY)
@@ -405,7 +418,7 @@ private long[] prevTachoCount={0,0,0};
   /**
    * type of movement the robot is doing;
    */
-   protected Move.MoveType _type;
+   protected MoveType _type;
    
    /**
     * Distance about to travel - used by movementStarted
@@ -427,22 +440,18 @@ private long[] prevTachoCount={0,0,0};
 		public void run() {
 			while (!Thread.interrupted() && isMoving()) {
 				long[] diffTacho = new long[2];
-				try {
-					for (int i = 0; i < 2; i++) {
-						diffTacho[i] = nxtCommand.getTachoCount(i+1)
-								- prevTachoCount[i];
-						prevTachoCount[i] += diffTacho[i];
-					}
-					if (_type == MoveType.TRAVEL) {
-						position.move(angle,
-								diffTacho[0] /
-								_leftDegPerDistance);
-					} else if (_type == MoveType.ROTATE) {
-						angle += (diffTacho[0] / _leftTurnRatio) * 2;
+				for (int i = 0; i < 1; i++) {
+					
+					diffTacho[i] = - prevTachoCount[i] + getTachoCount(i+1);
+					prevTachoCount[i] += diffTacho[i];
+				}
+				if (_type.equals(MoveType.TRAVEL)) {
+					position.move(rotation,
+							((float) diffTacho[0]) /
+							_leftDegPerDistance);
+				} else if (_type.equals(MoveType.ROTATE)) {
+					rotation += (((float) diffTacho[0]) / _leftTurnRatio) * 2;
 
-					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
 				}
 
 				try {
@@ -457,6 +466,7 @@ private long[] prevTachoCount={0,0,0};
 	}
 
 public void keepTurning(boolean left) {
+		_type=MoveType.ROTATE;
 		int[] limit = { 0, 0 };
 		if (left)
 			setOutputState(rSpeed, limit);

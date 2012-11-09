@@ -129,19 +129,13 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public Position getPosition() {
-		//TODO
-		return new Position(0,0);
-
-//		return new Position(poseProvider.getPose().getLocation());
+		return pilot.getPosition();
 	}
 	
 	//TODO checken of de getheading waarden tussen 0 en 180 graden teruggeeft
 	@Override
 	public double getOrientation() {
-		//TODO
-//		return (leftMotor.getTachoCount()-rightMotor.getTachoCount())%360;
-return 0;
-		//		return poseProvider.getPose().getHeading();
+	return pilot.getRotation();
 	}
 
 //	public boolean isMoving(){
@@ -217,6 +211,7 @@ return 0;
 		try{
 			return lightSensor.readValue();
 		}catch(Exception e){
+			System.out.println("could not read light value from robot ");
 			return -100;
 			//TODO i3+
 		}
@@ -232,17 +227,17 @@ return 0;
 	
 	public void turnSensorRight(){
 		sensorMotor.rotateTo(-90);
-		//canMove();
+		canMove();
 	}
 	
 	public void turnSensorLeft(){
 		sensorMotor.rotateTo(90);
-		//canMove();
+		canMove();
 	}
 	
 	public void turnSensorForward(){
 		sensorMotor.rotateTo(0);
-		//canMove();
+		canMove();
 	}
 	
 	public void calibrateLightHigh(){

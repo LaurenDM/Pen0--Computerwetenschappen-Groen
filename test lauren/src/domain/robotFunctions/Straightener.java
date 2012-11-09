@@ -50,14 +50,14 @@ public class Straightener extends RobotFunction {
 	}
 	
 	private void turnUntil(boolean detect, boolean rightOrLeft) {
-		robot.setTurningSpeed(2);
+		robot.setTurningSpeed(1);
 		int consecutiveDetections = 0;
 		boolean onLine = false;
-		while(consecutiveDetections < 5){
+		robot.keepTurning(true);
+		while(consecutiveDetections < 2){
 			//TODO does not work after testing? -Koen.
 			//Temp fix with 
 			//robot.turn(1);
-			robot.keepTurning(true);
 			if(robot.detectWhiteLine()){
 				if(onLine){
 					consecutiveDetections++;
