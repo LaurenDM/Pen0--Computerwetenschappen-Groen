@@ -232,17 +232,17 @@ return 0;
 	
 	public void turnSensorRight(){
 		sensorMotor.rotateTo(-90);
-		canMove();
+		//canMove();
 	}
 	
 	public void turnSensorLeft(){
 		sensorMotor.rotateTo(90);
-		canMove();
+		//canMove();
 	}
 	
 	public void turnSensorForward(){
 		sensorMotor.rotateTo(0);
-		canMove();
+		//canMove();
 	}
 	
 	public void calibrateLightHigh(){
