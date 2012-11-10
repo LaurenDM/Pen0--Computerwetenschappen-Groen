@@ -1,7 +1,5 @@
 package domain.maze;
 
-import java.awt.FileDialog;
-import java.awt.Frame;
 import java.io.BufferedReader;
 
 
@@ -86,7 +84,7 @@ public class MazeInterpreter {
 		Position pos = new Position(XCoo, YCoo);
 		switch (orientation) {
         case NORTH: 
-        	//   |¨|
+        	//   ||
         		 makeWall(pos, ORIENTATION.NORTH);
         		 makeWall(pos, ORIENTATION.EAST);
         		 makeWall(pos, ORIENTATION.WEST);
@@ -120,12 +118,12 @@ public class MazeInterpreter {
 		Position pos = new Position(XCoo, YCoo);
 		switch (orientation) {
         case NORTH: 
-        	//   |¨
+        	//   |
         		 makeWall(pos, ORIENTATION.NORTH);
         		 makeWall(pos, ORIENTATION.WEST);
                  break;
 		case EAST:
-			//	¨|
+			//	|
 				makeWall(pos, ORIENTATION.NORTH);
 				makeWall(pos, ORIENTATION.EAST);
 				break;

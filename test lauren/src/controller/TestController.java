@@ -1,18 +1,12 @@
 package controller;
 
-import java.io.Console;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
-import java.util.List;
 
-import javax.swing.SwingUtilities;
 
 import domain.calibration.TestDriver;
 
-import gui.TestGUI;
 import gui.TestTextInterface;
 
 public class TestController {
@@ -22,9 +16,10 @@ public class TestController {
 	private int testAmount;
 	private ArrayList<Method> methodList = new ArrayList<Method>();
 	private ArrayList<Method> selectedMethods = new ArrayList<Method>();
+	private static TestController testController;
 	
 	public static void main(String[] args) {
-		TestController testController = new TestController();
+		setTestController(new TestController());
 	}
 	
 	public TestController(){
@@ -122,6 +117,22 @@ public class TestController {
 
 	public String askUserInput(String string) {
 		return TestTextInterface.getUserInput(string);
+	}
+
+	public static TestController getTestController() {
+		return testController;
+	}
+
+	public static void setTestController(TestController testController) {
+		TestController.testController = testController;
+	}
+
+	public int getTestAmount() {
+		return testAmount;
+	}
+
+	public void setTestAmount(int testAmount) {
+		this.testAmount = testAmount;
 	}
 
 }

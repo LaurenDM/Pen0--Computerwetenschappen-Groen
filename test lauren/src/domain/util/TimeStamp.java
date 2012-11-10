@@ -80,24 +80,24 @@ public final class TimeStamp implements Comparable<TimeStamp> {
 	}
 
 	/**
-	 * Kopieer gegeven timestamp in een nieuw, gelijk object. Een Timestamp is
-	 * immutable van uit het standpunt van andere klasse, maar kan intern wel
-	 * zichzelf veranderen, deze methode is nuttig voor de addedTotimestamp
-	 * methode.
-	 * 
-	 * @param otherTimeStamp
-	 *            Gegeven tijdsmoment
-	 * @return | result == timeStamp -> timeStamp.equals(otherTimeStamp)
-	 */
-	private static TimeStamp copyTimeStamp(TimeStamp otherTimeStamp) {
-		int year = otherTimeStamp.get(Calendar.YEAR), month = otherTimeStamp
-				.get(Calendar.MONTH), day_of_month = otherTimeStamp
-				.get(Calendar.DAY_OF_MONTH), hour = otherTimeStamp
-				.get(Calendar.HOUR_OF_DAY), minute = otherTimeStamp
-				.get(Calendar.MINUTE), second = otherTimeStamp
-				.get(Calendar.SECOND);
-		return new TimeStamp(year, month, day_of_month, hour, minute, second);
-	}
+//	 * Kopieer gegeven timestamp in een nieuw, gelijk object. Een Timestamp is
+//	 * immutable van uit het standpunt van andere klasse, maar kan intern wel
+//	 * zichzelf veranderen, deze methode is nuttig voor de addedTotimestamp
+//	 * methode.
+//	 * 
+//	 * @param otherTimeStamp
+//	 *            Gegeven tijdsmoment
+//	 * @return | result == timeStamp -> timeStamp.equals(otherTimeStamp)
+//	 */
+//	private static TimeStamp copyTimeStamp(TimeStamp otherTimeStamp) {
+//		int year = otherTimeStamp.get(Calendar.YEAR), month = otherTimeStamp
+//				.get(Calendar.MONTH), day_of_month = otherTimeStamp
+//				.get(Calendar.DAY_OF_MONTH), hour = otherTimeStamp
+//				.get(Calendar.HOUR_OF_DAY), minute = otherTimeStamp
+//				.get(Calendar.MINUTE), second = otherTimeStamp
+//				.get(Calendar.SECOND);
+//		return new TimeStamp(year, month, day_of_month, hour, minute, second);
+//	}
 
 
 	

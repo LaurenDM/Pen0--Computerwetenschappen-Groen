@@ -1,14 +1,7 @@
 package controller;
 
-import java.io.IOException;
-import java.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
-
-import lejos.nxt.Motor;
-import lejos.pc.comm.NXTCommandConnector;
-
-
 
 import domain.PolygonDriver;
 import domain.maze.Board;

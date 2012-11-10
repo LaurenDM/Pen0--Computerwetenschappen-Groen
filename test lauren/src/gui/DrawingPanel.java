@@ -10,12 +10,15 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import controller.Controller;
-import domain.Position.Position;
 import domain.maze.MazeElement;
 import domain.maze.Wall;
 import domain.util.ColorPolygon;
 
 public class DrawingPanel extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private HashMap<ColorPolygon, Polygon> previousPolygons;
 	private Controller controller;
 	private JPanel totalGui;

@@ -1,6 +1,4 @@
 package domain.robotFunctions;
-import domain.Position.Position;
-import domain.robots.BTRobotPilot;
 import domain.robots.CannotMoveException;
 import domain.robots.Robot;
 
@@ -28,7 +26,6 @@ public class Straightener extends RobotFunction {
 	public void straighten(){
 		boolean rightOrLeft = true;
 		boolean detect = true;
-		boolean wood = false;
 		try {
 			robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 		} catch (CannotMoveException e) {

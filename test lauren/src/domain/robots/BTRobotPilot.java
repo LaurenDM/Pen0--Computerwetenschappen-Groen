@@ -27,8 +27,6 @@ import lejos.robotics.RegulatedMotor;
 public class BTRobotPilot implements RobotPilot  {
 	
 	private DifferentialPilot pilot;
-	private RegulatedMotor leftMotor;
-	private RegulatedMotor rightMotor;
 	private RegulatedMotor sensorMotor;
 	
 	

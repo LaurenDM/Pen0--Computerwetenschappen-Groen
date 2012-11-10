@@ -364,8 +364,9 @@ private long[] prevTachoCount={0,0};
    * set by steer(turnRate)
    * used by other steer methods;
    */
-  private float _steerRatio;
-  private boolean _steering = false;
+
+private float _steerRatio;
+private boolean _steering = false;
   /**
    * Left motor degrees per unit of travel.
    */
@@ -399,19 +400,23 @@ private long[] prevTachoCount={0,0};
   /**
    * Motor speed degrees per second. Used by forward(),backward() and steer().
    */
-  private int _motorSpeed;
+  @SuppressWarnings("unused")
+private int _motorSpeed;
   /**
    * Distance between wheels. Used in steer() and rotate().
    */
-  private final float _trackWidth;
+  @SuppressWarnings("unused")
+private final float _trackWidth;
   /**
    * Diameter of left wheel.
    */
-  private final float _leftWheelDiameter;
+  @SuppressWarnings("unused")
+private final float _leftWheelDiameter;
   /**
    * Diameter of right wheel.
    */
-  private final float _rightWheelDiameter;
+  @SuppressWarnings("unused")
+private final float _rightWheelDiameter;
 
 
   
@@ -423,14 +428,18 @@ private long[] prevTachoCount={0,0};
    /**
     * Distance about to travel - used by movementStarted
     */
-   private double _distance;
+   @SuppressWarnings("unused")
+private double _distance;
    
    /**
     * Angle about to turn - used by movementStopped
     */
-   private double _angle;
-  private int _acceleration;
-   private int  _quickAcceleration; // used for quick stop.
+   @SuppressWarnings("unused")
+private double _angle;
+  @SuppressWarnings("unused")
+private int _acceleration;
+   @SuppressWarnings("unused")
+private int  _quickAcceleration; // used for quick stop.
   
    Thread poseUpdateThread;
 
@@ -474,5 +483,37 @@ public void keepTurning(boolean left) {
 			setOppOutputState(rSpeed, limit);
 
 	}
+
+public float get_turnRadius() {
+	return _turnRadius;
+}
+
+public void set_turnRadius(float _turnRadius) {
+	this._turnRadius = _turnRadius;
+}
+
+public int getInsidePort() {
+	return insidePort;
+}
+
+public void setInsidePort(int insidePort) {
+	this.insidePort = insidePort;
+}
+
+public float get_steerRatio() {
+	return _steerRatio;
+}
+
+public void set_steerRatio(float _steerRatio) {
+	this._steerRatio = _steerRatio;
+}
+
+public boolean is_steering() {
+	return _steering;
+}
+
+public void set_steering(boolean _steering) {
+	this._steering = _steering;
+}
 
 }

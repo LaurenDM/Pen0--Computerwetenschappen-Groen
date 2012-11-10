@@ -15,10 +15,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import controller.Controller;
 import controller.TestController;
 import domain.robots.CannotMoveException;
 
@@ -379,6 +377,7 @@ public class TestGUI {
 		 * Write a line to the debugging text area.
 		 * @param text This line will appear at the bottom of the text area.
 		 */
+		@SuppressWarnings("unused")
 		public void writeToDebug(String text) {
 			debugText.append(text + "\n");
 		}
@@ -386,7 +385,8 @@ public class TestGUI {
 		/**
 	     * Updates the x-coordinate info on the debug panel.
 	     */
-	    public void setRobotX(double newX) {
+	    @SuppressWarnings("unused")
+		public void setRobotX(double newX) {
 	    	xLabel.setText("X: "+Double.valueOf(newX).intValue());
 	    }
 	    

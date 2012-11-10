@@ -5,12 +5,9 @@ package domain.calibration;
 
 import controller.*;
 
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import domain.calibration.TestDriver.StepType;
 import domain.robots.CannotMoveException;
 import domain.robots.Robot;
 

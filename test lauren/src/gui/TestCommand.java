@@ -1,8 +1,5 @@
 package gui;
 
-import java.io.Console;
-
-import java.io.Console;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 

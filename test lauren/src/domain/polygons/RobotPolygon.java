@@ -1,11 +1,7 @@
 package domain.polygons;
 
 import java.awt.Color;
-import java.awt.Point;
 import java.awt.Polygon;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import domain.Position.Position;
 import domain.robots.Robot;
