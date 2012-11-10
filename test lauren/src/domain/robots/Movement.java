@@ -29,12 +29,11 @@ public enum Movement {
 			if(whiteLine && simRobotPilot.detectWhiteLine()){
 				break;
 			}
-
 			simRobotPilot.getPosition().move(simRobotPilot.getOrientation(), moveAmount);
 			try {
 				Thread.sleep(sleepTime);
 			} catch (InterruptedException e) {
-				break;
+				
 			}
 		}
 	}

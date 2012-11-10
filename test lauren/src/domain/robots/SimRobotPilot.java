@@ -146,18 +146,13 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void forward() throws CannotMoveException {
-		stop();
-		try{
-		startMoveThread(Movement.FORWARD);
-		} catch(RuntimeMoveException e){
-			throw new CannotMoveException();
-		}
+		forward(false);
 	}
 	
 	public void forward(boolean whiteLine) throws CannotMoveException{
 		stop();
 		try{
-			startMoveThread(Movement.FORWARD);
+			startMoveThread(Movement.FORWARD, whiteLine);
 		} catch(RuntimeMoveException e){
 			throw new CannotMoveException();
 		}
@@ -165,8 +160,12 @@ public class SimRobotPilot implements RobotPilot {
 
 
 	private void startMoveThread(Movement movement) {
+		startMoveThread(movement, false);
+	}
+	
+	private void startMoveThread(Movement movement, boolean whiteLine){
 		stopThread(moveThread);
-		moveThread= new MoveThread(movement, this);
+		moveThread= new MoveThread(movement, this, whiteLine);
 		moveThread.start();
 	}
 	
@@ -410,11 +409,13 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public void findWhiteLine(){
 		setMovingSpeed(2);
-		boolean found=false;
 		try {
 			forward(true);
 		} catch (CannotMoveException e) {
 			turnRight();
+		}
+		while(!moveThread.getState().equals(Thread.State.TERMINATED)){
+			// wait
 		}
 	}
 

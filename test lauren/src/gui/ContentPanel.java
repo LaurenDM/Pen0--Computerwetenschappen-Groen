@@ -276,6 +276,7 @@ public class ContentPanel implements ActionListener {
 		public ControllerPoller(Controller controller, ContentPanel contentPanel){
     		this.controller = controller;
     		this.contentPanel = contentPanel;
+    		setPriority(Thread.MAX_PRIORITY);
     	}
 		
 		/**
