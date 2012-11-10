@@ -27,13 +27,13 @@ public abstract class MazeElement {
 		else{
 			throw new NotAWallException();
 		}
-		System.out.println("New Wall added from " + this.position1 + " to " + this.position2);
+		//System.out.println("New Wall added from " + this.position1 + " to " + this.position2);
 	}
 	
 	public MazeElement(Position pos1, Position pos2){
 		this.position1 = pos1;
 		this.position2 = pos2;
-		System.out.println("New Wall added using 2nd method from " + this.position1 + " to " + this.position2);
+		//System.out.println("New Wall added using 2nd method from " + this.position1 + " to " + this.position2);
 	}
 	
 	public static int getMazeConstant(){

@@ -26,6 +26,7 @@ public enum Movement {
 			if(!simRobotPilot.canMove()) {
 				throw new RuntimeMoveException();
 			}
+			//System.out.println(whiteLine + "          " + simRobotPilot.detectWhiteLine());
 			if(whiteLine && simRobotPilot.detectWhiteLine()){
 				break;
 			}
@@ -33,7 +34,7 @@ public enum Movement {
 			try {
 				Thread.sleep(sleepTime);
 			} catch (InterruptedException e) {
-				
+				break;
 			}
 		}
 	}

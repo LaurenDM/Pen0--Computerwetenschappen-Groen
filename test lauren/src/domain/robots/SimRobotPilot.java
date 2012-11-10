@@ -293,10 +293,10 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public boolean isTouching() {
 		if(moveThread == null || moveThread.getMovement().equals(Movement.FORWARD)){
-			return board.detectWallAt(getPosition().getNewPosition(getOrientation(), 5));
+			return board.detectWallAt(getPosition().getNewPosition(getOrientation(), 15));
 		}
 		else{
-			return board.detectWallAt(getPosition().getNewPosition(getOrientation()+180, 5));
+			return board.detectWallAt(getPosition().getNewPosition(getOrientation()+180, 3));
 		}
 
 	}
@@ -312,10 +312,10 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public double readUltrasonicValue() {
-		final int MAX_REACH = 50;
+		//final int MAX_REACH = 50;
 		final double MAX_VALUE = 255;
 		boolean foundWall = false;
-		for(int i = 0; i<MAX_REACH; i++){
+		for(int i = 0; i<MAX_VALUE; i++){
 			Position pos = getPosition().getNewPosition(getOrientation()+ getSensorAngle(), i);
 			foundWall = board.detectWallAt(pos);
 			if(foundWall){

@@ -29,7 +29,7 @@ public class PolygonDriver extends Thread {
 		public void run(){
 			double turnAngle=calcPolygonAngles(nbVertices);
 			for(int i=0; i<nbVertices;i++){
-				System.out.println(i + ": " + edgeLength + "cm, " + turnAngle + "¡");
+				//System.out.println(i + ": " + edgeLength + "cm, " + turnAngle + "?");
 				try {
 					robot.move(edgeLength);
 				} catch (CannotMoveException e) {

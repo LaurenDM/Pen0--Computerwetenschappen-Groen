@@ -429,7 +429,7 @@ public class ContentPanel implements ActionListener {
 			
 			@Override
 			public void keyReleased(KeyEvent e) {
-				System.out.println("released");
+				//System.out.println("released");
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT && getCurrentPressedButton() == Button.RIGHT){
 					setCurrentPressedButton(false,Button.RIGHT);
 					actionLabel.setText("The robot is doing nothing atm!");
