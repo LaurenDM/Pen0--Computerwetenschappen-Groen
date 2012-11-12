@@ -61,8 +61,10 @@ public class Barcode {
 		}
 	}
 	
-	public Barcode(Action action, Position pos){
+	public Barcode(Action action, Position pos1, Position pos2){
 		this.action = action;
+		this.pos1 = pos1;
+		this.pos2 = pos2;
 	}
 	
 	public Action getAction(){
@@ -74,9 +76,15 @@ public class Barcode {
 	}
 	
 	public int getBitAtPosition(Position pos){
-		int distance = (int) pos.getDistance(pos1);
-		return bits[distance/2 - 1];
+		int distance;
+		if(horizontal()){
+			 distance = (int) Math.abs(pos.getY()- pos1.getY());
 		}
+		else{
+			 distance = (int) Math.abs(pos.getX() - pos1.getX());
+		}
+		return bits[distance/2 - 1];
+	}
 	
 	public boolean isBlackAt(Position pos){
 		if(getBitAtPosition(pos) == 0){
@@ -87,6 +95,13 @@ public class Barcode {
 	
 	public boolean isWhiteAt(Position pos){
 		return !isBlackAt(pos);
+	}
+	
+	public boolean horizontal(){
+		final int MARGE = 1;
+		if(Math.abs(pos1.getX()-pos2.getX()) < MARGE)
+			return true;
+		else return false;
 	}
 	
 }
