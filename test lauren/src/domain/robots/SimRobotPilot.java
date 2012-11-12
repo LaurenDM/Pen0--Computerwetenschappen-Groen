@@ -36,7 +36,7 @@ public class SimRobotPilot implements RobotPilot {
 		this.position=position;
 		this.setMovingSpeed(defaultMovingSpeed);
 		this.setTurningSpeed(defaultTurningSpeed);
-		this.sensorAngle = (int) orientation;
+		this.sensorAngle = 0;
 		board = new Board();
 	}
 	
@@ -308,10 +308,9 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public double readUltrasonicValue() {
-		final int MAX_REACH = 50;
 		final double MAX_VALUE = 255;
 		boolean foundWall = false;
-		for(int i = 0; i<MAX_REACH; i++){
+		for(int i = 0; i<MAX_VALUE; i++){
 			Position pos = getPosition().getNewPosition(getOrientation()+ getSensorAngle(), i);
 			foundWall = board.detectWallAt(pos);
 			if(foundWall){
@@ -342,25 +341,17 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void turnSensorRight() {
-		int newAngle = (int) getOrientation() + 90;
-		while(newAngle > 180) newAngle = newAngle - 360;
-		while(newAngle < -179) newAngle = newAngle + 360;
-		setSensorAngle(newAngle);
-		//TODO: checken of +90 effectief rechts is
-	}
+		setSensorAngle(90);
+		}
 
 	@Override
 	public void turnSensorLeft() {
-		int newAngle = (int) getOrientation() - 90;
-		while(newAngle > 180) newAngle = newAngle - 360;
-		while(newAngle < -179) newAngle = newAngle + 360;
-		setSensorAngle(newAngle);
-		//TODO: idem 
+		setSensorAngle(-90);
 	}
 
 	@Override
 	public void turnSensorForward() {
-		setSensorAngle((int) getOrientation());
+		setSensorAngle(0);
 	}
 
 	@Override

@@ -30,7 +30,7 @@ public class DrawingPanel extends JPanel {
 		totalGui = contentPanel.getTotalGuiPanel();
 		previousPolygons = new HashMap<ColorPolygon, Polygon>();
 		drawWhiteLines();
-		drawWalls();
+		//drawWalls();
 	}
 
 	public static final int IMG_WIDTH = 350;
