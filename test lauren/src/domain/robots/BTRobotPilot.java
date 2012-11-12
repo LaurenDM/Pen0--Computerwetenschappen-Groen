@@ -61,6 +61,7 @@ public class BTRobotPilot implements RobotPilot  {
 			NXTCommandConnector.setNXTCommand(nxtCommand);
 
 			sensorMotor = Motor.A;
+			sensorMotor.resetTachoCount();
 			pilot = new DifferentialPilot(wheelDiameterLeft, wheelDiameterRight, trackWidth, nxtCommand, 1, 2);
 
 			setMovingSpeed(defaultTravelSpeed);
@@ -191,6 +192,11 @@ public class BTRobotPilot implements RobotPilot  {
 	public void turnLeft() {
 		pilot.rotate(90);
 //		canMove();
+	}
+	
+	@Override
+	public int getSensorAngle(){
+		return sensorMotor.getTachoCount();
 	}
 	
 	public boolean isTouching(){

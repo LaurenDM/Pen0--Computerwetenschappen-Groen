@@ -11,6 +11,7 @@ import lejos.pc.comm.NXTCommandConnector;
 
 
 import domain.PolygonDriver;
+import domain.Position.Position;
 import domain.maze.Board;
 import domain.maze.MazeInterpreter;
 import domain.robots.BTRobotPilot;
@@ -91,6 +92,10 @@ public class Controller {
 		currentRobot.stop();
 	}
 	
+	public Position getPosition(){
+		return currentRobot.getPosition();
+	}
+	
 	public double getXCo(){
 		return currentRobot.getPosition().getX();
 	}
@@ -149,6 +154,10 @@ public class Controller {
 	
 	public void turnUltrasonicSensor(int angle){
 		currentRobot.turnUltrasonicSensor(angle);
+	}
+	
+	public int getSensorAngle(){
+		return currentRobot.getSensorAngle();
 	}
 	
 	public void turnSensorRight(){

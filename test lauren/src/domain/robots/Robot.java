@@ -136,6 +136,10 @@ public class Robot {
 		robotPilot.turnUltrasonicSensor(angle);
 	}
 	
+	public int getSensorAngle(){
+		return robotPilot.getSensorAngle();
+	}
+	
 	public void turnSensorRight(){
 		robotPilot.turnSensorRight();
 	}

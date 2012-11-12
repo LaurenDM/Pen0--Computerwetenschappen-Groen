@@ -42,6 +42,9 @@ public interface RobotPilot {
 	
 	public void turnLeft();
 	
+	public int getSensorAngle();
+	
+	
 	/**
 	 * returns the current Orientation relative to the original orientation.
 	 */

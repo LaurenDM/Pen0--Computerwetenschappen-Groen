@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import controller.Controller;
+import domain.Position.Position;
 import domain.maze.MazeElement;
 import domain.maze.Wall;
 import domain.util.ColorPolygon;
@@ -101,11 +102,11 @@ public class DrawingPanel extends JPanel {
 	public void drawRawSensorData(){
 		double distance = controller.readUltrasonicValue();
 		if(distance<250){
-		double xD = (controller.getXCo())+((Math.cos(Math.toRadians(controller.getAngle()))*distance));
-		double yD = (controller.getYCo())+((Math.sin(Math.toRadians(controller.getAngle()))*distance));
+		int orientation = ((int) controller.getAngle()) + controller.getSensorAngle();
+		Position pos = controller.getPosition().getNewPosition(orientation, distance);
 		Polygon pol = new Polygon();
-		int x = (int) xD + OFFSET; 
-		int y = (int) yD + OFFSET;
+		int x = (int) pos.getX() + OFFSET; 
+		int y = (int) pos.getY() + OFFSET;
 		pol.addPoint(x, y);
 		pol.addPoint(x, y+1);
 		pol.addPoint(x-1, y+1);
