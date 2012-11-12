@@ -308,10 +308,9 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public double readUltrasonicValue() {
-		final int MAX_REACH = 50;
 		final double MAX_VALUE = 255;
 		boolean foundWall = false;
-		for(int i = 0; i<MAX_REACH; i++){
+		for(int i = 0; i<MAX_VALUE; i++){
 			Position pos = getPosition().getNewPosition(getOrientation()+ getSensorAngle(), i);
 			foundWall = board.detectWallAt(pos);
 			if(foundWall){
