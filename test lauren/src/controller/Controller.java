@@ -220,7 +220,15 @@ public class Controller {
 	}
 
 	public void startExplore() {
-		currentRobot.startExplore();
+		Runnable straightener = new Runnable() {
+
+			@Override
+			public void run() {
+				currentRobot.startExplore();
+			}
+		};
+		(new Thread(straightener)).start();
+		
 		
 	}
 }

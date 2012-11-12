@@ -12,7 +12,7 @@ public class ExploreMaze {
 	    LEFT,FORWARD,RIGHT,BACKWARD
 	}
 	private RobotPilot robot;
-	private final int valuedDistance = 30;
+	private final int valuedDistance = 25;
 	private final int distanceBlocks = 40;
 	
 	public ExploreMaze(RobotPilot simRobotPilot){
@@ -21,9 +21,14 @@ public class ExploreMaze {
 	public void start(){
 		//TODO stopcondition needs to be determined.
 		while(true){
+			System.out.println("test");
 			double[] distances = new double[3];
-			makeWall(distances);
+			
+			//makeWall(distances);
 			distances = checkDistances();
+			for (int i = 0; i < distances.length; i++) {
+				System.out.println(distances[i]);
+			}
 			Direction direction = getNextDirection(distances);
 			move(direction);
 		}
@@ -74,23 +79,12 @@ public class ExploreMaze {
 	private double[] checkDistances(){
 		double[] distances = new double[3];
 		robot.turnSensorLeft();
-		sleep();
 		distances[0] = robot.readUltrasonicValue();
 		robot.turnSensorForward();
-		sleep();
 		distances[1] = robot.readUltrasonicValue();
 		robot.turnSensorRight();
-		sleep();
 		distances[2] = robot.readUltrasonicValue();
 		robot.turnSensorForward();
 		return distances;
-	}
-	private void sleep(){
-		 try {
-			Thread.sleep(50);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }

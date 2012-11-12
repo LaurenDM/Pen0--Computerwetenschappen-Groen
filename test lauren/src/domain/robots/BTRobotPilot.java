@@ -411,7 +411,8 @@ pilot.setPose(orientation, x, y);
 
 	@Override
 	public void startExplore() {
-		//TODO
+		ExploreMaze maze = new ExploreMaze(this);
+		maze.start();
 	}
 	
 	
