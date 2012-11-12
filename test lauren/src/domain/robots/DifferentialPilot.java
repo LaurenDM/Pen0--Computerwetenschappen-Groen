@@ -235,7 +235,7 @@ private MoveType previousType;
 	 }
 
 	private void setOutputState(int[] power, int[] limit) {
-		System.out.println("from " + previousType + " to " + _type);
+		//System.out.println("from " + previousType + " to " + _type);
 		if (poseUpdateRunnable != null) {
 			poseUpdateRunnable.stop();
 			try {
@@ -655,5 +655,10 @@ public void keepTurning(boolean left) {
 			setOppOutputState(rSpeed, limit);
 
 	}
+
+public void setPose(double orientation, int x, int y) {
+rotation=orientation;
+position=new Position(x,y);
+}
 
 }

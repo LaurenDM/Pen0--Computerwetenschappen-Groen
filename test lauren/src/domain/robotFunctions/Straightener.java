@@ -85,5 +85,6 @@ public class Straightener extends RobotFunction {
 		robot.setTurningSpeed(robot.getDefaultTurningSpeed());
 		robot.turnRight();
 		robot.resetToDefaultSpeeds();		
+		robot.setPose(0,20,0);
 	}
 	}

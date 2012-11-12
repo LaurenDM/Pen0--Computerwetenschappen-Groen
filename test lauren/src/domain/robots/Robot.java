@@ -209,5 +209,10 @@ public class Robot {
 	public double getDefaultMovingSpeed(){
 		return robotPilot.getDefaultMovingSpeed();
 	}
+
+
+	public void setPose(double orientation, int x, int y) {
+		robotPilot.setPose(orientation, x, y);
+	}
 	
 }

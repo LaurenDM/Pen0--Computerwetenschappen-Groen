@@ -110,5 +110,7 @@ public interface RobotPilot {
 	
 	public void playSong(String name);
 
+	public void setPose(double orientation, int x, int y);
+
 	
 }

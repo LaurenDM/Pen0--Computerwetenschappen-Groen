@@ -441,6 +441,13 @@ public class SimRobotPilot implements RobotPilot {
 		
 	}
 
+	@Override
+	public void setPose(double orientation, int x, int y) {
+this.orientation=orientation;
+this.position=new Position(x,y);
+
+	}
+
 	
 	
 	

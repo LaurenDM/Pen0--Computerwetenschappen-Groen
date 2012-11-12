@@ -402,6 +402,11 @@ public class BTRobotPilot implements RobotPilot  {
 			System.out.println("There is no sound file with this name!");
 		}
 	}
+
+	@Override
+	public void setPose(double orientation, int x, int y) {
+pilot.setPose(orientation, x, y);		
+	}
 	
 	
 
