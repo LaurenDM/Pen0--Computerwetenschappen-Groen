@@ -144,6 +144,10 @@ private MoveType previousType;
 			System.out.println(ioe.getMessage());
 			return false;
 		}
+		  catch (ArrayIndexOutOfBoundsException e) {
+			return false;
+		}
+		
 	}
 	// "RunState":
 	/** Output will be idle */
@@ -170,6 +174,8 @@ private MoveType previousType;
 	} catch (IOException e) {
 		//TODO i3+
 		return  prevTachoCount[port];
+	} catch(ArrayIndexOutOfBoundsException e){
+		return prevTachoCount[port];
 	}
     
   }
