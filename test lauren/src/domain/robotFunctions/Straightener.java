@@ -26,7 +26,7 @@ public class Straightener extends RobotFunction {
 	 * This method assumes that the robot's light sensor is already at a white line.
 	 */
 	public void straighten(){
-		straighten(3);
+		straighten(0);
 		
 	}
 	
@@ -62,7 +62,7 @@ public class Straightener extends RobotFunction {
 		robot.setTurningSpeed(5);
 	}
 
-	public void straighten(int wantedDetections) {
+	public void straighten(int angleCorrection) {
 		boolean left = true;
 		boolean detect = true;
 		boolean wood = false;
@@ -70,7 +70,7 @@ public class Straightener extends RobotFunction {
 			robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 		} catch (CannotMoveException e) {
 			try { robot.move(-DISTANCE_BETWEEN_SENSOR_AND_WHEELS/2); } catch (CannotMoveException e1) {}
-			turnUntil(detect, left, wantedDetections);
+			turnUntil(detect, left, 3);
 			try {
 				robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 			} catch (CannotMoveException e1) {
@@ -78,8 +78,10 @@ public class Straightener extends RobotFunction {
 				System.out.println("Apparently you were wrong.");
 			}
 		}
-			turnUntil(detect, left, wantedDetections);
+			turnUntil(detect, left, 3);
 			//Now the robot is aligned with the line
+			if(angleCorrection!=0)
+			robot.turn(angleCorrection);
 		robot.turnRight();
 		robot.resetToDefaultSpeeds();		
 	}
