@@ -202,7 +202,7 @@ public class Controller {
 
 			@Override
 			public void run() {
-				currentRobot.findOpening();
+				//currentRobot.findOpening();
 				currentRobot.findWhiteLine();
 				currentRobot.straighten();
 			}
