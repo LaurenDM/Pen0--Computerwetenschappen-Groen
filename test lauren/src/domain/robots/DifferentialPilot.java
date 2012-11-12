@@ -26,6 +26,7 @@ private final int[] rSpeed=new int[2];
 private Position position= new Position(0,0);
 private double rotation=0;
 private long[] prevTachoCount={0,0,0};
+final int[] zeros={0,0,0};
 
 private MoveType previousType;
 /**
@@ -244,8 +245,7 @@ private MoveType previousType;
 		}
 		if (!previousType.equals(MoveType.STOP)&& !_type.equals(MoveType.STOP)) {
 			try {
-				nxtCommand.setOutputState(leftPort, (byte) 0, 0, 0, 0, 0, 0);
-				nxtCommand.setOutputState(rightPort, (byte) 0, 0, 0, 0, 0, 0);
+				lowLevelSetOutputStates(zeros, zeros);
 				previousType = MoveType.STOP;
 			} catch (IOException e) {
 				// TODO i3+;
@@ -254,13 +254,9 @@ private MoveType previousType;
 		}
 		runPoseUpdater(true);
 		try {
-			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-			nxtCommand.setOutputState(leftPort, (byte) power[0], 0, 0, 0, 0,
-					limit[0]);
-			nxtCommand.setOutputState(rightPort, (byte) power[1], 0, 0, 0, 0,
-					limit[1]);
-			Thread.currentThread().setPriority(
-					(Thread.MAX_PRIORITY - Thread.MIN_PRIORITY) / 2);
+
+			lowLevelSetOutputStates(power, limit);
+			
 			if (power[0] != 0 && limit[0] == 0) {
 				poseUpdateRunnable = new PoseUpdater();
 				poseUpdateThread = new Thread(poseUpdateRunnable);
@@ -275,6 +271,19 @@ private MoveType previousType;
 		} catch (IOException e) {
 			// TODO i3+
 		}
+	}
+
+	public void lowLevelSetOutputStates(int[] power, int[] limit)
+			throws IOException {
+		Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+		RobotChecker.disAllowInterruption();
+		nxtCommand.setOutputState(leftPort, (byte) power[0], 0, 0, 0, 0,
+				limit[0]);
+		nxtCommand.setOutputState(rightPort, (byte) power[1], 0, 0, 0, 0,
+				limit[1]);
+		RobotChecker.allowInterruption();
+		Thread.currentThread().setPriority(
+				(Thread.MAX_PRIORITY - Thread.MIN_PRIORITY) / 2);
 	}
 
 	public void runPoseUpdater(boolean once) {
@@ -542,8 +551,7 @@ private float _turnRadius = 0;
 				while ( (diffTacho[leftPort]!=0|| diffTacho[leftPort]!=0|| isMoving())) {
 					if(Thread.interrupted()||shouldStop){
 						try {
-							nxtCommand.setOutputState(leftPort, (byte) 0, 0, 0, 0, 0, 0);
-							nxtCommand.setOutputState(rightPort, (byte) 0, 0, 0, 0, 0, 0);
+							lowLevelSetOutputStates(zeros, zeros);
 						} catch (IOException e) {
 							// TODO i3+;
 						}
@@ -569,8 +577,7 @@ private float _turnRadius = 0;
 					} catch (InterruptedException e) {
 						
 							try {
-								nxtCommand.setOutputState(leftPort, (byte) 0, 0, 0, 0, 0, 0);
-								nxtCommand.setOutputState(rightPort, (byte) 0, 0, 0, 0, 0, 0);
+								lowLevelSetOutputStates(zeros, zeros);
 							} catch (IOException e2) {
 								// TODO i3+;
 							}

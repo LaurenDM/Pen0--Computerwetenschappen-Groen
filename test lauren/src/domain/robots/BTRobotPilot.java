@@ -43,6 +43,9 @@ public class BTRobotPilot implements RobotPilot  {
 	private final float wheelDiameterRight = 5.505F;
 //	private final float wheelDiameterRight = 5.515F;
 	private final float trackWidth = 17.10F;
+	private int previousLightValue;
+	private int prevUltrasonicValue;
+	private boolean prevTouchBool;
 	public BTRobotPilot(){
 
 			NXTComm nxtComm;
@@ -191,11 +194,13 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 	
 	public boolean isTouching(){
-		return touchSensor.isPressed();
+		if(RobotChecker.interruptionAllowed())
+		 prevTouchBool=touchSensor.isPressed();
+		return prevTouchBool;
 	}
 	
 	public boolean canMove(){
-		int distance = ultrasonicSensor.getDistance();	
+		int distance = (int) readUltrasonicValue();	
 		int testDistance = 10; 
 		if(distance < testDistance || isTouching()){
 			makeWall();
@@ -208,7 +213,10 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	public double readLightValue(){
 		try{
-			return lightSensor.readValue();
+			if(RobotChecker.interruptionAllowed()){
+				previousLightValue=lightSensor.readValue();
+			}
+			return previousLightValue;
 		}catch(Exception e){
 			System.out.println("could not read light value from robot ");
 			return -100;
@@ -217,7 +225,10 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 	
 	public double readUltrasonicValue(){
-		return ultrasonicSensor.getDistance();
+		if(RobotChecker.interruptionAllowed()){
+			prevUltrasonicValue= ultrasonicSensor.getDistance();}
+		return prevUltrasonicValue;
+		
 	}
 	
 	public void turnUltrasonicSensor(int angle){
@@ -304,7 +315,9 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	public int getBatteryVoltage(){
 		try {
-			return nxtCommand.getBatteryLevel();
+		if(RobotChecker.interruptionAllowed())
+				return nxtCommand.getBatteryLevel();
+		else return 0; //TODO
 		} catch (IOException e) {
 			return 0;
 		}
@@ -323,24 +336,24 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void steer(double angle) {
-		double turnrate=calcTurnRate(angle<0);
+//		double turnrate=calcTurnRate(angle<0);
 //		pilot.steer(turnrate, angle); TODO i2
 	}
 	
-	/**
-	 * Calculates the turnrate (asked by the steer method of differentialPilot)
-	 * to simulate adding the turn-speed to the forward speed
-	 */
-	private double calcTurnRate(boolean left) {
-		double turnWheelSpeed = defaultTurnSpeed * trackWidth * Math.PI / 360;
-		if (left)
-			return (defaultTravelSpeed + turnWheelSpeed)
-					/ (defaultTravelSpeed - turnWheelSpeed);
-		else
-			return (defaultTravelSpeed - turnWheelSpeed)
-					/ (defaultTravelSpeed + turnWheelSpeed);
-		//TODO kijken of left en right wel kloppen
-	}
+//	/**
+//	 * Calculates the turnrate (asked by the steer method of differentialPilot)
+//	 * to simulate adding the turn-speed to the forward speed
+//	 */
+//	private double calcTurnRate(boolean left) {
+//		double turnWheelSpeed = defaultTurnSpeed * trackWidth * Math.PI / 360;
+//		if (left)
+//			return (defaultTravelSpeed + turnWheelSpeed)
+//					/ (defaultTravelSpeed - turnWheelSpeed);
+//		else
+//			return (defaultTravelSpeed - turnWheelSpeed)
+//					/ (defaultTravelSpeed + turnWheelSpeed);
+//		//TODO kijken of left en right wel kloppen
+//	}
 
 	@Override
 	public void keepTurning(boolean left) {
