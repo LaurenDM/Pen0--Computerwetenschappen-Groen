@@ -394,5 +394,21 @@ public class BTRobotPilot implements RobotPilot  {
 		return defaultTurnSpeed;
 	}
 
+	@Override
+	public void playSong(String name) {
+		try {
+			nxtCommand.playSoundFile(name, false);
+		} catch (IOException e) {
+			System.out.println("There is no sound file with this name!");
+		}
+	}
+
+	@Override
+	public void setPose(double orientation, int x, int y) {
+pilot.setPose(orientation, x, y);		
+	}
+	
+	
+
 
 }

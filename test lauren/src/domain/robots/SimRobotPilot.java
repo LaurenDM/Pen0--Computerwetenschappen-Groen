@@ -435,6 +435,19 @@ public class SimRobotPilot implements RobotPilot {
 		return defaultTurningSpeed;
 	}
 
+	@Override
+	public void playSong(String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setPose(double orientation, int x, int y) {
+this.orientation=orientation;
+this.position=new Position(x,y);
+
+	}
+
 	
 	
 	

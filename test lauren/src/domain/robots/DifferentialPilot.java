@@ -235,7 +235,7 @@ private MoveType previousType;
 	 }
 
 	private void setOutputState(int[] power, int[] limit) {
-		System.out.println("from " + previousType + " to " + _type);
+		//System.out.println("from " + previousType + " to " + _type);
 		if (poseUpdateRunnable != null) {
 			poseUpdateRunnable.stop();
 			try {
@@ -613,9 +613,9 @@ private float _turnRadius = 0;
 						((float) diffTacho[leftPort]) /
 						_leftDegPerDistance);
 			} else if (applicableType.equals(MoveType.ROTATE)) {
-				rotation =calcNewOrientation(-((float)diffTacho[leftPort]) / _leftTurnRatio /2.0);
+				rotation =calcNewOrientation( ((float)diffTacho[leftPort]) / _leftTurnRatio /2.0);
 				
-				rotation=calcNewOrientation( ((float)diffTacho[rightPort]) / _rightTurnRatio/ 2.0);
+				rotation=calcNewOrientation( -((float)diffTacho[rightPort]) / _rightTurnRatio/ 2.0);
 				
 			}
 			else if(applicableType.equals(MoveType.STOP)){
@@ -624,9 +624,9 @@ private float _turnRadius = 0;
 							((float) diffTacho[leftPort]) /
 							_leftDegPerDistance);
 				} else if (otherType.equals(MoveType.ROTATE)) {
-					rotation =calcNewOrientation( -((float)diffTacho[leftPort]) / _leftTurnRatio /2.0);
+					rotation =calcNewOrientation( ((float)diffTacho[leftPort]) / _leftTurnRatio /2.0);
 					
-					rotation= calcNewOrientation( ((float)diffTacho[rightPort]) / _rightTurnRatio/ 2.0);
+					rotation= calcNewOrientation( -((float)diffTacho[rightPort]) / _rightTurnRatio/ 2.0);
 				}
 			}
 			prevTachoCount[leftPort] += diffTacho[leftPort];
@@ -655,5 +655,10 @@ public void keepTurning(boolean left) {
 			setOppOutputState(rSpeed, limit);
 
 	}
+
+public void setPose(double orientation, int x, int y) {
+rotation=orientation;
+position=new Position(x,y);
+}
 
 }
