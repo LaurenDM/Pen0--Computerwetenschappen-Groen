@@ -305,8 +305,7 @@ private MoveType previousType;
 		_distance = Double.NEGATIVE_INFINITY;
 		_angle = 0;
 
-		  int[] limit={0,0};
-		  setOppOutputState(tMotorSpeed, limit);
+		  setOppOutputState(tMotorSpeed, zeros);
   }
 
 
