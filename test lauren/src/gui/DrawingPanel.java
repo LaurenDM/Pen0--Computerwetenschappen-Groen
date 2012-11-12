@@ -24,7 +24,7 @@ public class DrawingPanel extends JPanel {
 	private Controller controller;
 	private JPanel totalGui;
 	private Graphics g;
-	private final int OFFSET = 120; //offset of (0,0) against top left corner
+	private final int OFFSET = 80; //offset of (0,0) against top left corner
 	public DrawingPanel(ContentPanel contentPanel) {
 		g=image.getGraphics();
 		this.controller = contentPanel.getController();
