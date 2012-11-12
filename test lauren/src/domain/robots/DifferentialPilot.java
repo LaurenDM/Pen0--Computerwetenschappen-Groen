@@ -144,10 +144,9 @@ private MoveType previousType;
 			System.out.println(ioe.getMessage());
 			return false;
 		}
-		  catch (ArrayIndexOutOfBoundsException e) {
-			return false;
+		catch(ArrayIndexOutOfBoundsException e){
+			return true;
 		}
-		
 	}
 	// "RunState":
 	/** Output will be idle */
@@ -174,8 +173,9 @@ private MoveType previousType;
 	} catch (IOException e) {
 		//TODO i3+
 		return  prevTachoCount[port];
-	} catch(ArrayIndexOutOfBoundsException e){
-		return prevTachoCount[port];
+	}catch(ArrayIndexOutOfBoundsException e2){
+		return  prevTachoCount[port];
+
 	}
     
   }
@@ -281,6 +281,12 @@ private MoveType previousType;
 
 	public void lowLevelSetOutputStates(int[] power, int[] limit)
 			throws IOException {
+		if(power[leftPort]==0){
+			nxtCommand.setOutputState(0xFF,(byte) 0, 0, 0, 0, 0, 0);
+		}
+		else{
+			
+		
 		Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 		RobotChecker.disAllowInterruption();
 		nxtCommand.setOutputState(leftPort, (byte) power[0], 0, 0, 0, 0,
@@ -290,6 +296,7 @@ private MoveType previousType;
 		RobotChecker.allowInterruption();
 		Thread.currentThread().setPriority(
 				(Thread.MAX_PRIORITY - Thread.MIN_PRIORITY) / 2);
+		}
 	}
 
 	public void runPoseUpdater(boolean once) {
@@ -606,9 +613,9 @@ private float _turnRadius = 0;
 						((float) diffTacho[leftPort]) /
 						_leftDegPerDistance);
 			} else if (applicableType.equals(MoveType.ROTATE)) {
-				rotation =calcNewOrientation( ((float)diffTacho[leftPort]) / _leftTurnRatio /2.0);
+				rotation =calcNewOrientation(-((float)diffTacho[leftPort]) / _leftTurnRatio /2.0);
 				
-				rotation=calcNewOrientation( -((float)diffTacho[rightPort]) / _rightTurnRatio/ 2.0);
+				rotation=calcNewOrientation( ((float)diffTacho[rightPort]) / _rightTurnRatio/ 2.0);
 				
 			}
 			else if(applicableType.equals(MoveType.STOP)){
@@ -617,9 +624,9 @@ private float _turnRadius = 0;
 							((float) diffTacho[leftPort]) /
 							_leftDegPerDistance);
 				} else if (otherType.equals(MoveType.ROTATE)) {
-					rotation =calcNewOrientation( ((float)diffTacho[leftPort]) / _leftTurnRatio /2.0);
+					rotation =calcNewOrientation( -((float)diffTacho[leftPort]) / _leftTurnRatio /2.0);
 					
-					rotation= calcNewOrientation( -((float)diffTacho[rightPort]) / _rightTurnRatio/ 2.0);
+					rotation= calcNewOrientation( ((float)diffTacho[rightPort]) / _rightTurnRatio/ 2.0);
 				}
 			}
 			prevTachoCount[leftPort] += diffTacho[leftPort];
