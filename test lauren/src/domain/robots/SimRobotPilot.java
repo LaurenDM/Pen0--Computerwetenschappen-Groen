@@ -290,7 +290,7 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public boolean isTouching() {
 		if(moveThread == null || moveThread.getMovement().equals(Movement.FORWARD)){
-			return board.detectWallAt(getPosition().getNewPosition(getOrientation(), 5));
+			return board.detectWallAt(getPosition().getNewPosition(getOrientation(), 14));
 		}
 		else{
 			return board.detectWallAt(getPosition().getNewPosition(getOrientation()+180, 5));
