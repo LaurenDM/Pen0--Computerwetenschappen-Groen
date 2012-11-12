@@ -263,7 +263,6 @@ public class BTRobotPilot implements RobotPilot  {
 	public boolean detectWhiteLine() {
 		if(readLightValue() > 50) return true;
 		else return false;
-		//TODO: moet nog gespecifieerd worden
 	}
 
 	public void makeWall() {

@@ -256,7 +256,7 @@ public class ContentPanel implements ActionListener {
 		for (ColorPolygon colorPoly:collection) {
 			drawingPanel.reDrawMyPolygon(colorPoly);
 		}
-		drawingPanel.drawWalls();
+		//drawingPanel.drawWalls();
 	} 
 	
 	/**

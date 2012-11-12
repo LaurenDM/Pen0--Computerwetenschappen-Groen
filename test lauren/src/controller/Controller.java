@@ -48,7 +48,6 @@ public class Controller {
 		simRobot = new Robot(new SimRobotPilot());
 		currentRobot = simRobot ;
 		currentRobot.setBoard(new Board());
-		//TODO: board veranderen naar het bord van de tekst file!
 	}
 	
 	public void polygonDriver(int numberOfVertices, double edgeLength) {
