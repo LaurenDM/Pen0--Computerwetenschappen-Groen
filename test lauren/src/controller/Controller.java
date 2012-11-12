@@ -179,17 +179,25 @@ public class Controller {
 	public void arcForward(boolean left){
 		currentRobot.arcForward(left);
 	};
-	public void arcBackward(boolean left){
+
+	public void arcBackward(boolean left) {
 		currentRobot.arcBackward(left);
 	};
-	
-	public void readMazeFromFile(String fileLocation){
+
+	public void readMazeFromFile(String fileLocation) {
 		MazeInterpreter MI = new MazeInterpreter(this.getRobot().getBoard());
 		MI.readFile(fileLocation);
 	}
 
 	public void findLineAndStraighten() {
-		currentRobot.findWhiteLine();
-		currentRobot.straighten();
+		Runnable straightener = new Runnable() {
+
+			@Override
+			public void run() {
+				currentRobot.findWhiteLine();
+				currentRobot.straighten();
+			}
+		};
+		(new Thread(straightener)).start();
 	}
 }

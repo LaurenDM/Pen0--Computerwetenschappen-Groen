@@ -26,14 +26,51 @@ public class Straightener extends RobotFunction {
 	 * This method assumes that the robot's light sensor is already at a white line.
 	 */
 	public void straighten(){
-		boolean rightOrLeft = true;
+		straighten(3);
+		
+	}
+	
+	private void turnUntil(boolean detect, boolean left, int wantedDetections) {
+		robot.setTurningSpeed(10);
+		int consecutiveDetections = 0;
+//		long previousTime=System.currentTimeMillis();
+//		int i=0; //TODO remove
+		robot.keepTurning(left);
+		while(consecutiveDetections < wantedDetections){
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+//			long timediff=System.currentTimeMillis()-previousTime;//TODO remove
+//			previousTime=System.currentTimeMillis(); //TODO remove
+			if(robot.detectWhiteLine()){
+//				System.out.println(i+ ": white line detected " + timediff +" "+ consecutiveDetections); //TODO Remove
+				consecutiveDetections++;
+			
+			} else {
+//				System.out.println(i+ ": white line not detected -reset " + timediff  +" "+ consecutiveDetections);
+				consecutiveDetections=0;
+			}
+			
+//			i++;
+		
+		}
+		robot.stop();
+		robot.setTurningSpeed(5);
+	}
+
+	public void straighten(int wantedDetections) {
+		boolean left = true;
 		boolean detect = true;
 		boolean wood = false;
 		try {
 			robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 		} catch (CannotMoveException e) {
 			try { robot.move(-DISTANCE_BETWEEN_SENSOR_AND_WHEELS/2); } catch (CannotMoveException e1) {}
-			turnUntil(detect, rightOrLeft);
+			turnUntil(detect, left, wantedDetections);
 			try {
 				robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 			} catch (CannotMoveException e1) {
@@ -41,36 +78,9 @@ public class Straightener extends RobotFunction {
 				System.out.println("Apparently you were wrong.");
 			}
 		}
-			turnUntil(detect, rightOrLeft);
+			turnUntil(detect, left, wantedDetections);
 			//Now the robot is aligned with the line
-		robot.turn(-90);
-		robot.setMovingSpeed(15);
-		robot.setTurningSpeed(10);
-		
-	}
-	
-	private void turnUntil(boolean detect, boolean rightOrLeft) {
-		robot.setTurningSpeed(1);
-		int consecutiveDetections = 0;
-		long previousTime=System.currentTimeMillis();
-		int i=0; //TODO remove
-		robot.keepTurning(true);
-		while(consecutiveDetections < 3){
-			long timediff=System.currentTimeMillis()-previousTime;//TODO remove
-			previousTime=System.currentTimeMillis(); //TODO remove
-			if(robot.detectWhiteLine()){
-				System.out.println(i+ ": white line detected " + timediff +" "+ consecutiveDetections); //TODO Remove
-				consecutiveDetections++;
-			
-			} else {
-				System.out.println(i+ ": white line not detected -reset " + timediff  +" "+ consecutiveDetections);
-				consecutiveDetections=0;
-			}
-			
-			i++;
-		
-		}
-		robot.stop();
-		robot.setTurningSpeed(5);
+		robot.turnRight();
+		robot.resetToDefaultSpeeds();		
 	}
 	}

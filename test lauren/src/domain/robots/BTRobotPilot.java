@@ -31,7 +31,7 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	
 	private final double defaultTravelSpeed = 15;
-	private final double defaultTurnSpeed = 70;
+	private final double defaultTurnSpeed = 45;
 	
 	private TouchSensor touchSensor;
 	private UltrasonicSensor ultrasonicSensor;
@@ -377,6 +377,16 @@ public class BTRobotPilot implements RobotPilot  {
 	@Override
 	public void interrupt() {
 		pilot.interrupt();
+	}
+
+	@Override
+	public double getDefaultMovingSpeed() {
+		return defaultTravelSpeed;
+	}
+
+	@Override
+	public double getDefaultTurningSpeed() {
+		return defaultTurnSpeed;
 	}
 
 

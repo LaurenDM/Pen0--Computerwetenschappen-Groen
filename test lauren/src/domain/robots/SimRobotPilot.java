@@ -21,7 +21,8 @@ public class SimRobotPilot implements RobotPilot {
 		private Board board;
 		
 		private int sensorAngle;
-
+		private final int defaultMovingSpeed=30;
+		private final int defaultTurningSpeed=90;
 	
 	/**
 	 * Assenstelsel wordt geinitialiseerd met oorsprong waar de robot begint
@@ -33,8 +34,8 @@ public class SimRobotPilot implements RobotPilot {
 	public SimRobotPilot(double orientation, Position position){
 		setOrientation(orientation);
 		this.position=position;
-		this.setMovingSpeed(30);
-		this.setTurningSpeed(90);
+		this.setMovingSpeed(defaultMovingSpeed);
+		this.setTurningSpeed(defaultTurningSpeed);
 		this.sensorAngle = (int) orientation;
 		board = new Board();
 	}
@@ -78,9 +79,11 @@ public class SimRobotPilot implements RobotPilot {
 		double totalAngleDif=intDoubleDif;
 		if(wantedAngleDif>0){
 			keepTurningRight();
+
 		}
 		else{
 			keepTurningLeft();
+
 		}
 		while(turning){
 			double currAngle=getOrientation();
@@ -154,14 +157,7 @@ public class SimRobotPilot implements RobotPilot {
 		}
 	}
 	
-	public void forward(boolean whiteLine) throws CannotMoveException{
-		stop();
-		try{
-			startMoveThread(Movement.FORWARD);
-		} catch(RuntimeMoveException e){
-			throw new CannotMoveException();
-		}
-	}
+
 
 
 	private void startMoveThread(Movement movement) {
@@ -306,8 +302,7 @@ public class SimRobotPilot implements RobotPilot {
 	public double readLightValue() {
 		final double HIGH = 80;
 		final double LOW = 40;
-		if(board.detectLineAt(getPosition())) return HIGH;
-		else return LOW;
+		return detectWhiteLine()?HIGH:LOW;
 	}
 	//TODO: waardes hangen af van kalibratie van echte sensor
 
@@ -398,7 +393,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void straighten() {
-		new Straightener(new Robot(this)).straighten();
+		new Straightener(new Robot(this)).straighten(220);
 		
 	}
 
@@ -409,18 +404,44 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void findWhiteLine(){
+		int wantedDetections=1;
 		setMovingSpeed(2);
 		boolean found=false;
 		try {
-			forward(true);
+			forward();
 		} catch (CannotMoveException e) {
 			turnRight();
 		}
-	}
+		int consecutiveDetections=0;
+		while(consecutiveDetections<wantedDetections){
+				if(detectWhiteLine()){
+					consecutiveDetections++;
+				}
+				else consecutiveDetections=0;
+				}
+		stop();
+		//We move 1 cm because otherwise we are standing in the beginnen and not the middle of the white line 
+		try {
+			move(1);
+		} catch (CannotMoveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
 
 	@Override
 	public void interrupt() {
 		//The simrobotPilot doesn't need this method right now.
+	}
+
+	@Override
+	public double getDefaultMovingSpeed() {
+		return defaultMovingSpeed;
+	}
+
+	@Override
+	public double getDefaultTurningSpeed() {
+		return defaultTurningSpeed;
 	}
 
 	

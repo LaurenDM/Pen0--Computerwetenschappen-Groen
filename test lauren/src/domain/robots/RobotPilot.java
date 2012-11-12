@@ -100,5 +100,10 @@ public interface RobotPilot {
 	void findWhiteLine();
 
 	public void interrupt();
+
+	public double getDefaultMovingSpeed();
+
+	public double getDefaultTurningSpeed();
+
 	
 }

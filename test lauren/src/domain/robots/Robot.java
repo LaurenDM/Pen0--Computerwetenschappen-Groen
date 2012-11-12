@@ -192,4 +192,9 @@ public class Robot {
 	public void interrupt() {
 		robotPilot.interrupt();
 	}
+	
+	public void resetToDefaultSpeeds(){
+		robotPilot.setMovingSpeed(robotPilot.getDefaultMovingSpeed());
+		robotPilot.setTurningSpeed(robotPilot.getDefaultTurningSpeed());
+	}
 }
