@@ -214,6 +214,12 @@ public class Robot {
 	public void setPose(double orientation, int x, int y) {
 		robotPilot.setPose(orientation, x, y);
 	}
+
+
+	public void startExplore() {
+		robotPilot.startExplore();
+		
+	}
 	
 //	public void findOpening(){
 //		double max = 0;

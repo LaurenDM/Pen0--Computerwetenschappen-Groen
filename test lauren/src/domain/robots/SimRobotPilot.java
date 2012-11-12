@@ -2,6 +2,7 @@ package domain.robots;
 
 import domain.Position.Position;
 import domain.maze.Board;
+import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.Straightener;
 import domain.util.TimeStamp;
 
@@ -443,9 +444,15 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void setPose(double orientation, int x, int y) {
-this.orientation=orientation;
-this.position=new Position(x,y);
+		this.orientation=orientation;
+		this.position=new Position(x,y);
+	}
 
+	@Override
+	public void startExplore() {
+		ExploreMaze maze = new ExploreMaze(this);
+		maze.start();
+		
 	}
 
 	

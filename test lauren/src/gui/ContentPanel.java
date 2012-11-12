@@ -31,12 +31,12 @@ public class ContentPanel implements ActionListener {
     private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, lineLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, 
     calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton,
-    rotateSlowLeft,rotateSlowRight;
+    rotateSlowLeft,rotateSlowRight,startButton;
     private JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
-    static int totalXDimensions = 700;
-    static int totalYDimensions = 700;
+    static int totalXDimensions = 1100;
+    static int totalYDimensions = 750;
     static int buttonXDimension = 90;
     static int buttonYDimension = 30;
     private boolean connected = false;
@@ -135,7 +135,7 @@ public class ContentPanel implements ActionListener {
         //___________________________________________________
         // Creation of a Panel to contain all the JButtons.
         buttonPanel = new JPanel();
-        fixPanelLayout(buttonPanel, 300, 500, 400, 250);
+        fixPanelLayout(buttonPanel, 300, 500, 800, 250);
         buttonPanel.addKeyListener(l);
         
         buttonLabel = new JLabel("Control the robot here");
@@ -186,6 +186,8 @@ public class ContentPanel implements ActionListener {
         sensorButton = new JButton("SHOW SENSOR DATA ON MAP");
         fixButtonLayout(buttonPanel, sensorButton, 240, 30, 30, buttonYDimension + 370);
         
+        startButton = new JButton("Start");
+        fixButtonLayout(buttonPanel, startButton, 20, 150, 0, 0);
         buttonPanel.setFocusable(true);
         //_____________________________________________________
         // Creation of a Panel to contain the debug information
@@ -195,7 +197,7 @@ public class ContentPanel implements ActionListener {
         //_________________________________________________________________________
         // Creation of a Drawing Panel to display the map and the robot's movements
         drawingPanel = new DrawingPanel(this);
-        fixPanelLayout(drawingPanel, 350, 500, 25, 50);
+        fixPanelLayout(drawingPanel, 700, 600, 25, 50);
         drawingPanel.setBackground(Color.WHITE);
         
         //________________________
@@ -236,7 +238,7 @@ public class ContentPanel implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(debugText);
         debugText.setEditable(false);
         debugPanel.add(scrollPane);
-        fixPanelLayout(debugPanel, 300, 300, 400, 50);
+        fixPanelLayout(debugPanel, 300, 300, 815, 50);
         scrollPane.setLocation(0, 0);
         scrollPane.setSize(250,100);
         writeToDebug("Program started successfully");
@@ -428,6 +430,10 @@ public class ContentPanel implements ActionListener {
 			controller.rotateAmount(-rotateSlowAmount);
 			buttonPanel.requestFocusInWindow();
         }
+		else if(e.getSource() == startButton){
+			controller.startExplore();
+			buttonPanel.requestFocusInWindow();
+		}
         
     }
 	private KeyListener createListener() {

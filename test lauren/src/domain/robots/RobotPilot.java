@@ -112,5 +112,7 @@ public interface RobotPilot {
 
 	public void setPose(double orientation, int x, int y);
 
+	public void startExplore();
+
 	
 }
