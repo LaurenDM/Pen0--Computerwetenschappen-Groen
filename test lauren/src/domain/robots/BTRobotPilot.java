@@ -184,13 +184,13 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void turnRight() {
-		pilot.rotate(-90);
+		pilot.rotate(90);
 //		canMove();
 	}
 
 	@Override
 	public void turnLeft() {
-		pilot.rotate(90);
+		pilot.rotate(-90);
 //		canMove();
 	}
 	
