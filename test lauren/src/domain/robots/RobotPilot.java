@@ -100,7 +100,7 @@ public interface RobotPilot {
 
 	public void keepTurning(boolean left);
 
-	void findWhiteLine();
+	public void findWhiteLine();
 
 	public void interrupt();
 

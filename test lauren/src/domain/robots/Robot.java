@@ -210,4 +210,18 @@ public class Robot {
 		return robotPilot.getDefaultMovingSpeed();
 	}
 	
+	public void findOpening(){
+		double max = 0;
+		double orientation = getOrientation();
+		int amount = 10;
+		for(int i = 0; i< 360/amount; i++){
+			robotPilot.turn(amount);
+			if(readUltrasonicValue() > max){
+				max = readUltrasonicValue();
+				orientation = getOrientation();
+			}
+		}
+		turn(orientation - getOrientation());
+	}
+	
 }
