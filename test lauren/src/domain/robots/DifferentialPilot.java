@@ -1,6 +1,7 @@
 package domain.robots;
 
 import java.io.IOException;
+import java.math.BigInteger;
 
 import lejos.nxt.remote.NXTCommand;
 import lejos.nxt.remote.OutputState;
@@ -23,8 +24,10 @@ public class DifferentialPilot
 private final int[] rSpeed=new int[2];
 
 private Position position= new Position(0,0);
-private int rotation=0;
-private long[] prevTachoCount={0,0};
+private double rotation=0;
+private long[] prevTachoCount={0,0,0};
+
+private MoveType previousType;
 /**
    * Allocates a DifferentialPilot object, and sets the physical parameters of the
    * NXT robot.<br>
@@ -45,7 +48,7 @@ private long[] prevTachoCount={0,0};
   {
     this(wheelDiameter,wheelDiameter, trackWidth, nxtCommand, 1, 2);
   }
-
+  
   /**
    * Allocates a DifferentialPilot object, and sets the physical parameters of the
    * NXT robot.<br>
@@ -98,6 +101,8 @@ private long[] prevTachoCount={0,0};
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
+   setMoveType(MoveType.STOP);
+   setMoveType(MoveType.STOP);
     
   }
 
@@ -105,7 +110,7 @@ private long[] prevTachoCount={0,0};
 	  return position.clone();
   }
   
-  public int getRotation(){
+  public double getRotation(){
 	  return rotation;
   }
   /*
@@ -116,7 +121,18 @@ private long[] prevTachoCount={0,0};
   {
     return leftPort;
   }
-  
+  public void interrupt(){
+		shouldStop=true;
+
+//			if(!_type.equals(MoveType.STOP)){
+//				if(poseUpdateThread!=null)
+//					poseUpdateThread.interrupt();
+//	  		while(poseUpdateRunnable==null);
+//			while(!poseUpdateRunnable.reallyStopped);
+//			}
+
+	  
+	}
 
 	public boolean isMoving() {
 		try {
@@ -149,11 +165,12 @@ private long[] prevTachoCount={0,0};
   private long getTachoCount(int port)
   {
     try {
-    	prevTachoCount[port-1]=nxtCommand.getTachoCount(port);
+    	return nxtCommand.getTachoCount(port);
 	} catch (IOException e) {
 		//TODO i3+
+		return  prevTachoCount[port];
 	}
-	return prevTachoCount[port-1];
+    
   }
 
  /**
@@ -181,8 +198,8 @@ private long[] prevTachoCount={0,0};
   public void setRotateSpeed(double rotateSpeed)
   {
     _robotRotateSpeed = (float)rotateSpeed;
-    rSpeed[0]= -(int)Math.round(rotateSpeed * _leftTurnRatio);
-    rSpeed[1]= (int)Math.round(rotateSpeed * _rightTurnRatio);
+    rSpeed[0]= (int)Math.round(rotateSpeed * _leftTurnRatio);
+    rSpeed[1]= -(int)Math.round(rotateSpeed * _rightTurnRatio);
   }
 
 
@@ -197,7 +214,7 @@ private long[] prevTachoCount={0,0};
    */
   public void forward()
   {
-   _type = MoveType.TRAVEL;
+   setMoveType( MoveType.TRAVEL);
 //    _angle = 0;
     _distance = Double.POSITIVE_INFINITY;
    
@@ -211,32 +228,71 @@ private long[] prevTachoCount={0,0};
 	 }
 
 	private void setOutputState(int[] power, int[] limit) {
+		System.out.println("from " + previousType + " to " + _type);
+		if (poseUpdateRunnable != null) {
+			poseUpdateRunnable.stop();
+			try {
+				while (!poseUpdateRunnable.reallyStopped);
+			} catch (NullPointerException e) {
+				//This means another thread set the poseUpdateRunnable to null during the whil loop
+			}
+		}
+
+		if (poseUpdateThread != null) {
+			poseUpdateThread.interrupt();
+			while(poseUpdateThread.isAlive());
+		}
+		if (!previousType.equals(MoveType.STOP)&& !_type.equals(MoveType.STOP)) {
+			try {
+				nxtCommand.setOutputState(leftPort, (byte) 0, 0, 0, 0, 0, 0);
+				nxtCommand.setOutputState(rightPort, (byte) 0, 0, 0, 0, 0, 0);
+				previousType = MoveType.STOP;
+			} catch (IOException e) {
+				// TODO i3+;
+			}
+
+		}
+		runPoseUpdater(true);
 		try {
 			Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-			nxtCommand.setOutputState(leftPort, (byte) power[0], 0, 0, 0,
-					0, limit[0]);
-			nxtCommand.setOutputState(rightPort, (byte) power[1], 0, 0,
-					0, 0, limit[1]);
-			if (poseUpdateThread != null) {
-				poseUpdateThread.interrupt();}
-			if (limit[0] == 0) {
-				poseUpdateThread = new Thread(new PoseUpdater());
-				poseUpdateThread.start();
-			}
-			else{
-				(new PoseUpdater()).run();
-			}
+			nxtCommand.setOutputState(leftPort, (byte) power[0], 0, 0, 0, 0,
+					limit[0]);
+			nxtCommand.setOutputState(rightPort, (byte) power[1], 0, 0, 0, 0,
+					limit[1]);
 			Thread.currentThread().setPriority(
 					(Thread.MAX_PRIORITY - Thread.MIN_PRIORITY) / 2);
+			if (power[0] != 0 && limit[0] == 0) {
+				poseUpdateRunnable = new PoseUpdater();
+				poseUpdateThread = new Thread(poseUpdateRunnable);
+				poseUpdateThread.start();
+			} else {
+				// power[0]==0: this make sure that the pose-updater runs only
+				// once if the robot is stopped
+
+				runPoseUpdater(false);
+			}
+			
 		} catch (IOException e) {
 			// TODO i3+
 		}
+	}
+
+	public void runPoseUpdater(boolean once) {
+		poseUpdateRunnable = (new PoseUpdater(once));
+		poseUpdateThread= new Thread(poseUpdateRunnable);
+		poseUpdateThread.start();
+		try {
+			poseUpdateThread.join();
+		} catch (InterruptedException e) {
+		
+		}
+		poseUpdateRunnable = null;
 	}
   /**
    *  Starts the NXT robot moving backward.
    */
 	public void backward() {
-		_type = MoveType.TRAVEL;
+		setMoveType( MoveType.TRAVEL);
 		_distance = Double.NEGATIVE_INFINITY;
 		_angle = 0;
 
@@ -257,14 +313,15 @@ private long[] prevTachoCount={0,0};
    */
   public void rotate(final double angle)
   {
-   _type = MoveType.ROTATE;
+   setMoveType( MoveType.ROTATE);
     _distance = 0;
     _angle = angle;
     int rotateAngleLeft = (int) (angle * _leftTurnRatio);
     int rotateAngleRight = (int) (angle * _rightTurnRatio);
     int[] lim={rotateAngleLeft,rotateAngleRight};
     setOutputState(rSpeed, lim);
-    
+//    setMoveType( MoveType.STOP);
+
   }
 
   /*
@@ -280,11 +337,16 @@ private long[] prevTachoCount={0,0};
    *  side effect: inform listeners of end of movement
    */
   public void stop()
- {
-	  _type=MoveType.STOP;
+ {	
+	  shouldStop=true;
+ setMoveType(MoveType.STOP);
 	  int[] power={0,0};
 	  int[] limit={0,0};
 		setOutputState(power, limit);
+		  shouldStop=false;
+
+		//We change the movetype at the end so that the update can update accordingly to the movement that was going on before the stop
+//setMoveType(MoveType.STOP);
 	}
 
 
@@ -300,7 +362,7 @@ private long[] prevTachoCount={0,0};
    **/
   public void travel(final double distance)
   {
-   _type = MoveType.TRAVEL;
+   setMoveType( MoveType.TRAVEL);
    // _distance = distance;
     _angle = 0;
     if (distance == Double.POSITIVE_INFINITY)
@@ -315,6 +377,8 @@ private long[] prevTachoCount={0,0};
     }    
  int[] lim= {(int) (distance * _leftDegPerDistance), (int) (distance * _rightDegPerDistance)};
  setOutputState(tMotorSpeed, lim);
+// setMoveType( MoveType.STOP);
+
 
   }
 
@@ -340,7 +404,11 @@ private long[] prevTachoCount={0,0};
 //            ((getLeftCount()  - _leftTC) / _leftTurnRatio)) / 2.0f;
 //  }
 
-  private float _turnRadius = 0;
+  private void setMoveType(MoveType type) {
+	  previousType=_type;
+	  _type=type;
+}
+private float _turnRadius = 0;
   /**
    * Left motor port
    */
@@ -364,9 +432,8 @@ private long[] prevTachoCount={0,0};
    * set by steer(turnRate)
    * used by other steer methods;
    */
-
-private float _steerRatio;
-private boolean _steering = false;
+  private float _steerRatio;
+  private boolean _steering = false;
   /**
    * Left motor degrees per unit of travel.
    */
@@ -400,23 +467,19 @@ private boolean _steering = false;
   /**
    * Motor speed degrees per second. Used by forward(),backward() and steer().
    */
-  @SuppressWarnings("unused")
-private int _motorSpeed;
+  private int _motorSpeed;
   /**
    * Distance between wheels. Used in steer() and rotate().
    */
-  @SuppressWarnings("unused")
-private final float _trackWidth;
+  private final float _trackWidth;
   /**
    * Diameter of left wheel.
    */
-  @SuppressWarnings("unused")
-private final float _leftWheelDiameter;
+  private final float _leftWheelDiameter;
   /**
    * Diameter of right wheel.
    */
-  @SuppressWarnings("unused")
-private final float _rightWheelDiameter;
+  private final float _rightWheelDiameter;
 
 
   
@@ -428,54 +491,144 @@ private final float _rightWheelDiameter;
    /**
     * Distance about to travel - used by movementStarted
     */
-   @SuppressWarnings("unused")
-private double _distance;
+   private double _distance;
    
    /**
     * Angle about to turn - used by movementStopped
     */
-   @SuppressWarnings("unused")
-private double _angle;
-  @SuppressWarnings("unused")
-private int _acceleration;
-   @SuppressWarnings("unused")
-private int  _quickAcceleration; // used for quick stop.
-  
-   Thread poseUpdateThread;
+   private double _angle;
+  private int _acceleration;
+   private int  _quickAcceleration; // used for quick stop.
+	private boolean shouldStop=false;
 
+   Thread poseUpdateThread;
+   PoseUpdater poseUpdateRunnable;
 	private class PoseUpdater implements Runnable {
+		boolean once;
+		private MoveType applicableType;
+		private MoveType otherType;
+		public boolean reallyStopped=false;
+		public PoseUpdater(){
+			this(false);
+			}
+		
+		public void stop() {
+			shouldStop=true;
+		}
+
+		public PoseUpdater(boolean once) {
+			this.once=once;
+		}
 		// previous tachoCount of left[0] and right[1] motor
 		@Override
 		public void run() {
-			while (!Thread.interrupted() && isMoving()) {
-				long[] diffTacho = new long[2];
-				for (int i = 0; i < 1; i++) {
-					
-					diffTacho[i] = - prevTachoCount[i] + getTachoCount(i+1);
-					prevTachoCount[i] += diffTacho[i];
-				}
-				if (_type.equals(MoveType.TRAVEL)) {
-					position.move(rotation,
-							((float) diffTacho[0]) /
-							_leftDegPerDistance);
-				} else if (_type.equals(MoveType.ROTATE)) {
-					rotation += (((float) diffTacho[0]) / _leftTurnRatio) * 2;
-
-				}
-
-				try {
-					Thread.sleep(300);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-				}
-			}
+			reallyStopped=false;
+			long[] diffTacho = new long[3];
+						
+			diffTacho[leftPort] =(BigInteger.valueOf(- prevTachoCount[leftPort]).add(BigInteger.valueOf(getTachoCount(leftPort)))).longValue();
+			diffTacho[rightPort] =(BigInteger.valueOf(- prevTachoCount[rightPort]).add(BigInteger.valueOf(getTachoCount(rightPort)))).longValue();
+	
 			
+			if (once){
+					applicableType=previousType;
+					otherType=_type;
+					update(diffTacho);
+
+				}
+			else {
+				applicableType=_type;
+				otherType=previousType;
+
+				while ( (diffTacho[leftPort]!=0|| diffTacho[leftPort]!=0|| isMoving())) {
+					if(Thread.interrupted()||shouldStop){
+						try {
+							nxtCommand.setOutputState(leftPort, (byte) 0, 0, 0, 0, 0, 0);
+							nxtCommand.setOutputState(rightPort, (byte) 0, 0, 0, 0, 0, 0);
+						} catch (IOException e) {
+							// TODO i3+;
+						}
+						update(diffTacho);
+						diffTacho[leftPort] =(BigInteger.valueOf(- prevTachoCount[leftPort]).add(BigInteger.valueOf(getTachoCount(leftPort)))).longValue();
+						diffTacho[rightPort] =(BigInteger.valueOf(- prevTachoCount[rightPort]).add(BigInteger.valueOf(getTachoCount(rightPort)))).longValue();
+						reallyStopped=true;
+						break;
+					}
+					
+					update(diffTacho);
+					diffTacho[leftPort] =(BigInteger.valueOf(- prevTachoCount[leftPort]).add(BigInteger.valueOf(getTachoCount(leftPort)))).longValue();
+					diffTacho[rightPort] =(BigInteger.valueOf(- prevTachoCount[rightPort]).add(BigInteger.valueOf(getTachoCount(rightPort)))).longValue();
+					try {
+						if(!_type.equals(MoveType.STOP)){
+						long sleepStart=System.currentTimeMillis();	
+						while(System.currentTimeMillis()-sleepStart<300)
+							if(!shouldStop)
+							Thread.sleep(30);
+							else 
+								throw new InterruptedException("an interrupt signal has been sent by the program");
+						}
+					} catch (InterruptedException e) {
+						
+							try {
+								nxtCommand.setOutputState(leftPort, (byte) 0, 0, 0, 0, 0, 0);
+								nxtCommand.setOutputState(rightPort, (byte) 0, 0, 0, 0, 0, 0);
+							} catch (IOException e2) {
+								// TODO i3+;
+							}
+							update(diffTacho);
+							diffTacho[leftPort] =(BigInteger.valueOf(- prevTachoCount[leftPort]).add(BigInteger.valueOf(getTachoCount(leftPort)))).longValue();
+							diffTacho[rightPort] =(BigInteger.valueOf(- prevTachoCount[rightPort]).add(BigInteger.valueOf(getTachoCount(rightPort)))).longValue();
+							reallyStopped=true;
+							break;
+					}
+					}
+				shouldStop=false;
+
+			}
+			reallyStopped=true;
 
 		}
+	
+		private void update(long[] diffTacho) {
+			if (applicableType.equals(MoveType.TRAVEL)) {
+				position.move(rotation,
+						((float) diffTacho[leftPort]) /
+						_leftDegPerDistance);
+			} else if (applicableType.equals(MoveType.ROTATE)) {
+				rotation =calcNewOrientation( ((float)diffTacho[leftPort]) / _leftTurnRatio /2.0);
+				
+				rotation=calcNewOrientation( -((float)diffTacho[rightPort]) / _rightTurnRatio/ 2.0);
+				
+			}
+			else if(applicableType.equals(MoveType.STOP)){
+				if (otherType.equals(MoveType.TRAVEL)) {
+					position.move(rotation,
+							((float) diffTacho[leftPort]) /
+							_leftDegPerDistance);
+				} else if (otherType.equals(MoveType.ROTATE)) {
+					rotation =calcNewOrientation( ((float)diffTacho[leftPort]) / _leftTurnRatio /2.0);
+					
+					rotation= calcNewOrientation( -((float)diffTacho[rightPort]) / _rightTurnRatio/ 2.0);
+				}
+			}
+			prevTachoCount[leftPort] += diffTacho[leftPort];
+			prevTachoCount[rightPort] += diffTacho[rightPort];
+
+		}					
+		private double calcNewOrientation(double turnAmount) {
+			double newOrientation = rotation+turnAmount;
+			while (newOrientation < -179) {
+				newOrientation += 360;
+			}
+			while (newOrientation > 180) {
+				newOrientation -= 360;
+			}
+			return newOrientation;
+		}
 	}
+	
 
 public void keepTurning(boolean left) {
-		_type=MoveType.ROTATE;
+		setMoveType(MoveType.ROTATE);
 		int[] limit = { 0, 0 };
 		if (left)
 			setOutputState(rSpeed, limit);
@@ -483,37 +636,5 @@ public void keepTurning(boolean left) {
 			setOppOutputState(rSpeed, limit);
 
 	}
-
-public float get_turnRadius() {
-	return _turnRadius;
-}
-
-public void set_turnRadius(float _turnRadius) {
-	this._turnRadius = _turnRadius;
-}
-
-public int getInsidePort() {
-	return insidePort;
-}
-
-public void setInsidePort(int insidePort) {
-	this.insidePort = insidePort;
-}
-
-public float get_steerRatio() {
-	return _steerRatio;
-}
-
-public void set_steerRatio(float _steerRatio) {
-	this._steerRatio = _steerRatio;
-}
-
-public boolean is_steering() {
-	return _steering;
-}
-
-public void set_steering(boolean _steering) {
-	this._steering = _steering;
-}
 
 }

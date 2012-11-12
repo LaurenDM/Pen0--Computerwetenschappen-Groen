@@ -39,9 +39,10 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	private Board board;
 	private NXTCommand nxtCommand;
-	private final float wheelDiameterLeft = 5.47F;
-	private final float wheelDiameterRight = 5.515F;
-	private final float trackWidth = 17.22F;
+	private final float wheelDiameterLeft = 5.46F;
+	private final float wheelDiameterRight = 5.505F;
+//	private final float wheelDiameterRight = 5.515F;
+	private final float trackWidth = 17.10F;
 	public BTRobotPilot(){
 
 			NXTComm nxtComm;
@@ -179,13 +180,13 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void turnRight() {
-		pilot.rotate(90);
+		pilot.rotate(-90);
 //		canMove();
 	}
 
 	@Override
 	public void turnLeft() {
-		pilot.rotate(-90);
+		pilot.rotate(90);
 //		canMove();
 	}
 	
@@ -358,6 +359,11 @@ public class BTRobotPilot implements RobotPilot  {
 		while(!found){
 			found = detectWhiteLine();
 		}
+	}
+
+	@Override
+	public void interrupt() {
+		pilot.interrupt();
 	}
 
 

@@ -1,4 +1,6 @@
 package domain.robotFunctions;
+import domain.Position.Position;
+import domain.robots.BTRobotPilot;
 import domain.robots.CannotMoveException;
 import domain.robots.Robot;
 
@@ -26,6 +28,7 @@ public class Straightener extends RobotFunction {
 	public void straighten(){
 		boolean rightOrLeft = true;
 		boolean detect = true;
+		boolean wood = false;
 		try {
 			robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 		} catch (CannotMoveException e) {
@@ -38,8 +41,8 @@ public class Straightener extends RobotFunction {
 				System.out.println("Apparently you were wrong.");
 			}
 		}
-		turnUntil(detect, rightOrLeft);
-		//Now the robot is aligned with the line
+			turnUntil(detect, rightOrLeft);
+			//Now the robot is aligned with the line
 		robot.turn(-90);
 		robot.setMovingSpeed(15);
 		robot.setTurningSpeed(10);
@@ -49,24 +52,25 @@ public class Straightener extends RobotFunction {
 	private void turnUntil(boolean detect, boolean rightOrLeft) {
 		robot.setTurningSpeed(1);
 		int consecutiveDetections = 0;
-		boolean onLine = false;
+		long previousTime=System.currentTimeMillis();
+		int i=0; //TODO remove
 		robot.keepTurning(true);
-		while(consecutiveDetections < 2){
-			//TODO does not work after testing? -Koen.
-			//Temp fix with 
-			//robot.turn(1);
+		while(consecutiveDetections < 3){
+			long timediff=System.currentTimeMillis()-previousTime;//TODO remove
+			previousTime=System.currentTimeMillis(); //TODO remove
 			if(robot.detectWhiteLine()){
-				if(onLine){
-					consecutiveDetections++;
-				} else {
-					onLine=true;
-				}
+				System.out.println(i+ ": white line detected " + timediff +" "+ consecutiveDetections); //TODO Remove
+				consecutiveDetections++;
+			
 			} else {
-				onLine=false;
+				System.out.println(i+ ": white line not detected -reset " + timediff  +" "+ consecutiveDetections);
 				consecutiveDetections=0;
 			}
+			
+			i++;
+		
 		}
 		robot.stop();
+		robot.setTurningSpeed(5);
 	}
-
-}
+	}

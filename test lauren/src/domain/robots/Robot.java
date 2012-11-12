@@ -187,4 +187,9 @@ public class Robot {
 	public void keepTurning(boolean left){
 		robotPilot.keepTurning(left);
 	}
+
+	//this method should be used for interrupting a movement that would end by itself but should end sooner than what is planned.
+	public void interrupt() {
+		robotPilot.interrupt();
+	}
 }

@@ -1,7 +1,14 @@
 package controller;
 
+import java.io.IOException;
+import java.security.Permission;
 import java.util.ArrayList;
 import java.util.List;
+
+import lejos.nxt.Motor;
+import lejos.pc.comm.NXTCommandConnector;
+
+
 
 import domain.PolygonDriver;
 import domain.maze.Board;
@@ -27,10 +34,8 @@ public class Controller {
 
 	  
 	public void connectNewBtRobot() {
-
-		if(btRobot==null){
-			btRobot = new Robot(new BTRobotPilot());
-		}	
+		if(btRobot==null)
+		btRobot = new Robot(new BTRobotPilot());
 		currentRobot=btRobot;
 
 //		currentRobot.findOrigin();
@@ -39,7 +44,6 @@ public class Controller {
 
 
 	}
-	
 	public void connectNewSimRobot() {
 		simRobot = new Robot(new SimRobotPilot());
 		currentRobot = simRobot ;
@@ -72,19 +76,20 @@ public class Controller {
 		startNewThread(new TurnLeftThread());
 	}
 	public void startNewThread(Thread newThread){
-
 		if (executingThread != null) {
 			executingThread.interrupt();
+			while(executingThread.isAlive());
 		}
+
 		executingThread = newThread;
 		if (executingThread != null)
 			executingThread.start();
 	}
 	
 	public void cancel() {
+		currentRobot.interrupt();
 		startNewThread(null);
 		currentRobot.stop();
-		
 	}
 	
 	public double getXCo(){

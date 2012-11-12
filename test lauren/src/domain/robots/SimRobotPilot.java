@@ -146,13 +146,18 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void forward() throws CannotMoveException {
-		forward(false);
+		stop();
+		try{
+		startMoveThread(Movement.FORWARD);
+		} catch(RuntimeMoveException e){
+			throw new CannotMoveException();
+		}
 	}
 	
 	public void forward(boolean whiteLine) throws CannotMoveException{
 		stop();
 		try{
-			startMoveThread(Movement.FORWARD, whiteLine);
+			startMoveThread(Movement.FORWARD);
 		} catch(RuntimeMoveException e){
 			throw new CannotMoveException();
 		}
@@ -160,12 +165,8 @@ public class SimRobotPilot implements RobotPilot {
 
 
 	private void startMoveThread(Movement movement) {
-		startMoveThread(movement, false);
-	}
-	
-	private void startMoveThread(Movement movement, boolean whiteLine){
 		stopThread(moveThread);
-		moveThread= new MoveThread(movement, this, whiteLine);
+		moveThread= new MoveThread(movement, this);
 		moveThread.start();
 	}
 	
@@ -293,10 +294,10 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public boolean isTouching() {
 		if(moveThread == null || moveThread.getMovement().equals(Movement.FORWARD)){
-			return board.detectWallAt(getPosition().getNewPosition(getOrientation(), 15));
+			return board.detectWallAt(getPosition().getNewPosition(getOrientation(), 5));
 		}
 		else{
-			return board.detectWallAt(getPosition().getNewPosition(getOrientation()+180, 3));
+			return board.detectWallAt(getPosition().getNewPosition(getOrientation()+180, 5));
 		}
 
 	}
@@ -312,10 +313,10 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public double readUltrasonicValue() {
-		//final int MAX_REACH = 50;
+		final int MAX_REACH = 50;
 		final double MAX_VALUE = 255;
 		boolean foundWall = false;
-		for(int i = 0; i<MAX_VALUE; i++){
+		for(int i = 0; i<MAX_REACH; i++){
 			Position pos = getPosition().getNewPosition(getOrientation()+ getSensorAngle(), i);
 			foundWall = board.detectWallAt(pos);
 			if(foundWall){
@@ -409,14 +410,17 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public void findWhiteLine(){
 		setMovingSpeed(2);
+		boolean found=false;
 		try {
 			forward(true);
 		} catch (CannotMoveException e) {
 			turnRight();
 		}
-		while(!moveThread.getState().equals(Thread.State.TERMINATED)){
-			// wait
-		}
+	}
+
+	@Override
+	public void interrupt() {
+		//The simrobotPilot doesn't need this method right now.
 	}
 
 	
