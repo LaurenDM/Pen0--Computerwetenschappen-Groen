@@ -1,13 +1,23 @@
 package domain.barcodes;
 
+import domain.Position.Position;
 import domain.robots.Robot;
 
 public class Barcode {
 
 	private Action action;
+	private Position pos1;
+	private Position pos2;
+	private int[] bits;
 	
+	public Barcode(int[] bits, Position pos1, Position pos2){
+		generateActions();
+		this.bits = bits;
+		this.pos1 = pos1;
+		this.pos2 = pos2;
+	}
 	
-	public Barcode(int[] bits){
+	public void generateActions(){
 		if(bits.length != 6){
 			throw new IllegalArgumentException();
 		}
@@ -51,7 +61,7 @@ public class Barcode {
 		}
 	}
 	
-	public Barcode(Action action){
+	public Barcode(Action action, Position pos){
 		this.action = action;
 	}
 	
@@ -61,6 +71,22 @@ public class Barcode {
 	
 	public void runAction(Robot robot){
 		action.run(robot);
+	}
+	
+	public int getBitAtPosition(Position pos){
+		int distance = (int) pos.getDistance(pos1);
+		return bits[distance/2 - 1];
+		}
+	
+	public boolean isBlackAt(Position pos){
+		if(getBitAtPosition(pos) == 0){
+			return true;
+		}
+		else return false;
+	}
+	
+	public boolean isWhiteAt(Position pos){
+		return !isBlackAt(pos);
 	}
 	
 }
