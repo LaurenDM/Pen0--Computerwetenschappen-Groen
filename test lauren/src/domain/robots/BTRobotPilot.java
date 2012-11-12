@@ -5,6 +5,7 @@ import domain.Position.Position;
 import domain.maze.Board;
 import domain.maze.NotAWallException;
 import domain.maze.Wall;
+import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.Straightener;
 import domain.util.TimeStamp;
 import exceptions.ConnectErrorException;
@@ -406,6 +407,11 @@ public class BTRobotPilot implements RobotPilot  {
 	@Override
 	public void setPose(double orientation, int x, int y) {
 pilot.setPose(orientation, x, y);		
+	}
+
+	@Override
+	public void startExplore() {
+		//TODO
 	}
 	
 	

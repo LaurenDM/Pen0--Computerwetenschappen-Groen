@@ -31,7 +31,7 @@ public class ContentPanel implements ActionListener {
     private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, lineLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, 
     calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton,
-    rotateSlowLeft,rotateSlowRight;
+    rotateSlowLeft,rotateSlowRight,startButton;
     private JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
@@ -186,6 +186,8 @@ public class ContentPanel implements ActionListener {
         sensorButton = new JButton("SHOW SENSOR DATA ON MAP");
         fixButtonLayout(buttonPanel, sensorButton, 240, 30, 30, buttonYDimension + 370);
         
+        startButton = new JButton("Start");
+        fixButtonLayout(buttonPanel, startButton, 20, 150, 0, 0);
         buttonPanel.setFocusable(true);
         //_____________________________________________________
         // Creation of a Panel to contain the debug information
@@ -428,6 +430,10 @@ public class ContentPanel implements ActionListener {
 			controller.rotateAmount(-rotateSlowAmount);
 			buttonPanel.requestFocusInWindow();
         }
+		else if(e.getSource() == startButton){
+			controller.startExplore();
+			buttonPanel.requestFocusInWindow();
+		}
         
     }
 	private KeyListener createListener() {

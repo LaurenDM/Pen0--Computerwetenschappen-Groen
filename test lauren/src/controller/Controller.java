@@ -218,4 +218,9 @@ public class Controller {
 		currentRobot.resetToDefaultSpeeds();
 		
 	}
+
+	public void startExplore() {
+		currentRobot.startExplore();
+		
+	}
 }
