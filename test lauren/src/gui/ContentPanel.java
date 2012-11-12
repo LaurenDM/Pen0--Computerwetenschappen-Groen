@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -28,7 +29,8 @@ public class ContentPanel implements ActionListener {
     private JPanel titlePanel, buttonPanel, debugPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
     private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, lineLabel;
-    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton;
+    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton,
+    rotateSlowLeft,rotateSlowRight;
     private JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
@@ -43,6 +45,7 @@ public class ContentPanel implements ActionListener {
     private boolean rightButtonPressed = false;
     private boolean downButtonPressed = false;
     private boolean showRawData = false;
+    private int rotateSlowAmount = 10;
     public enum Button {
         UP, LEFT, DOWN, RIGHT,NONE
     }
@@ -93,14 +96,22 @@ public class ContentPanel implements ActionListener {
     }
     
     public void setCurrentPressedButton(boolean pressed,Button button){
-    	if(button == Button.RIGHT)
+    	if(button == Button.RIGHT){
     		this.rightButtonPressed = pressed;
-    	else if(button == Button.LEFT)
+    	}
+    		
+    	else if(button == Button.LEFT){
     		this.leftButtonPressed = pressed;
-    	else if(button == Button.UP)
+    	}
+    		
+    	else if(button == Button.UP){
     		this.upButtonPressed = pressed;
-    	else if(button == Button.DOWN)
+    	}
+    		
+    	else if(button == Button.DOWN){
     		this.downButtonPressed = pressed;
+    	}
+    		
     }
     
 	public ContentPanel() {
@@ -143,6 +154,12 @@ public class ContentPanel implements ActionListener {
         
         downButton = new JButton("BACKWARD");
         fixButtonLayout(buttonPanel, downButton, 120, 30, buttonXDimension, buttonYDimension + 60);
+        
+        rotateSlowLeft = new JButton("Slow L");
+        fixButtonLayout(buttonPanel, rotateSlowLeft, 70, 30, 25, buttonYDimension + 60);
+        
+        rotateSlowRight = new JButton("Slow R");
+        fixButtonLayout(buttonPanel,rotateSlowRight, 70, 30, buttonXDimension + 115, buttonYDimension + 60);
         
         cancelButton = new JButton("STOP");
         fixButtonLayout(buttonPanel, cancelButton, 240, 30, 30, buttonYDimension + 110);
@@ -256,7 +273,7 @@ public class ContentPanel implements ActionListener {
 		for (ColorPolygon colorPoly:collection) {
 			drawingPanel.reDrawMyPolygon(colorPoly);
 		}
-		//drawingPanel.drawWalls();
+		drawingPanel.drawWalls();
 	} 
 	
 	/**
@@ -396,6 +413,12 @@ public class ContentPanel implements ActionListener {
         	showRawData = true;
         	buttonPanel.requestFocusInWindow();
         }
+        else if(e.getSource() == rotateSlowRight){
+        	controller.rotateAmount(rotateSlowAmount);
+        }
+		else if(e.getSource() == rotateSlowLeft){
+			controller.rotateAmount(-rotateSlowAmount);
+        }
         
     }
 	private KeyListener createListener() {
@@ -459,6 +482,7 @@ public class ContentPanel implements ActionListener {
 			
 			@Override
 			public void keyPressed(KeyEvent e) {
+				
 				if (getCurrentPressedButton() == Button.NONE){
 				if (e.getKeyCode() == KeyEvent.VK_RIGHT){
 					setCurrentPressedButton(true,Button.RIGHT);
@@ -487,6 +511,15 @@ public class ContentPanel implements ActionListener {
 					actionLabel.setText("The robot is going back!");
 					downButton.setSelected(true);
 					controller.moveBack();
+				}
+				else if(e.getKeyCode() == KeyEvent.VK_X){
+					controller.turnSensorLeft();
+				}
+				else if(e.getKeyCode() == KeyEvent.VK_C){
+					controller.turnSensorRight();
+				}
+				else if(e.getKeyCode() == KeyEvent.VK_D){
+					controller.turnSensorForward();
 				}
 				}
 			}
@@ -569,3 +602,4 @@ public class ContentPanel implements ActionListener {
 	}
 	
 }
+ 

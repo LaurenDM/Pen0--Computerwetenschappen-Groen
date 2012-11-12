@@ -199,4 +199,11 @@ public class Controller {
 		};
 		(new Thread(straightener)).start();
 	}
+
+
+
+	public void rotateAmount(int i) {
+		currentRobot.turn(i);
+		
+	}
 }
