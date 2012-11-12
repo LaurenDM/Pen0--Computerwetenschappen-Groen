@@ -20,12 +20,16 @@ public class ExploreMaze {
 		//TODO stopcondition needs to be determined.
 		while(true){
 			double[] distances = new double[3];
+			makeWall(distances);
 			distances = checkDistances();
 			Direction direction = getNextDirection(distances);
 			move(direction);
 		}
 	}
 	
+	private void makeWall(double[] distances) {
+		
+	}
 	private void move(Direction direction){
 		switch (direction) {
 			case LEFT:
