@@ -4,20 +4,27 @@ import java.util.List;
 import java.util.ArrayList;
 
 import domain.Position.Position;
+import domain.barcodes.Barcode;
 
 public class Board {
 	
 	private static final int MAZECONSTANT = 40;
 	
 	private List<Wall> walls;
+	private List<Barcode> barcodes;
 	
 	
 	public Board(){
 		walls = new ArrayList<Wall>();
+		barcodes = new ArrayList<Barcode>();
 		}
 	
 	public void addWall(Wall wall){
 		walls.add(wall);
+	}
+	
+	public void addBarcode(Barcode barcode){
+		barcodes.add(barcode);
 	}
 	
 	public List<Wall> getWalls(){
