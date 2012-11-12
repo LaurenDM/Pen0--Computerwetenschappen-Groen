@@ -82,6 +82,7 @@ public class Straightener extends RobotFunction {
 			//Now the robot is aligned with the line
 			if(angleCorrection!=0)
 			robot.turn(angleCorrection);
+		robot.setTurningSpeed(robot.getDefaultTurningSpeed());
 		robot.turnRight();
 		robot.resetToDefaultSpeeds();		
 	}

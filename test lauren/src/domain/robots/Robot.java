@@ -197,4 +197,13 @@ public class Robot {
 		robotPilot.setMovingSpeed(robotPilot.getDefaultMovingSpeed());
 		robotPilot.setTurningSpeed(robotPilot.getDefaultTurningSpeed());
 	}
+	
+	public double getDefaultTurningSpeed(){
+		return robotPilot.getDefaultTurningSpeed();
+	}
+	
+	public double getDefaultMovingSpeed(){
+		return robotPilot.getDefaultMovingSpeed();
+	}
+	
 }
