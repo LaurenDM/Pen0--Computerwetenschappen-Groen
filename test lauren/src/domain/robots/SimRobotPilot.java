@@ -435,6 +435,12 @@ public class SimRobotPilot implements RobotPilot {
 		return defaultTurningSpeed;
 	}
 
+	@Override
+	public void playSong(String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 	
 	

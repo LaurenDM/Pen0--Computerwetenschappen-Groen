@@ -107,6 +107,8 @@ public interface RobotPilot {
 	public double getDefaultMovingSpeed();
 
 	public double getDefaultTurningSpeed();
+	
+	public void playSong(String name);
 
 	
 }
