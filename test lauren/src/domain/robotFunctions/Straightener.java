@@ -31,7 +31,7 @@ public class Straightener extends RobotFunction {
 	}
 	
 	private void turnUntil(boolean detect, boolean left, int wantedDetections) {
-		robot.setTurningSpeed(10);
+		robot.setTurningSpeed(1);
 		int consecutiveDetections = 0;
 //		long previousTime=System.currentTimeMillis();
 //		int i=0; //TODO remove

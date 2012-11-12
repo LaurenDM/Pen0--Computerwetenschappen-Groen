@@ -29,7 +29,8 @@ public class ContentPanel implements ActionListener {
     private JPanel titlePanel, buttonPanel, debugPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
     private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, lineLabel;
-    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton,
+    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, 
+    calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton,
     rotateSlowLeft,rotateSlowRight;
     private JTextArea debugText;
     final JPanel totalGUI = new JPanel();
@@ -369,6 +370,9 @@ public class ContentPanel implements ActionListener {
         else if(e.getSource() == connectButton){
         	if(getConnected() == true ){
         		connectButton.setText("Connect to robot");
+        		drawingPanel.clear();
+        		drawingPanel.drawWhiteLines();
+        		drawingPanel.updateUI();
         		setConnected(false);
         		controller.connectNewSimRobot();
         	}
@@ -376,7 +380,10 @@ public class ContentPanel implements ActionListener {
         		try{
         		controller.connectNewBtRobot();
         		connectButton.setText("Disconnect from robot");
-        		setConnected(true);}
+        		setConnected(true);
+        		drawingPanel.clear();
+        		drawingPanel.drawWhiteLines();
+        		drawingPanel.updateUI();}
         		catch(ConnectErrorException e1){
         		}
         	}

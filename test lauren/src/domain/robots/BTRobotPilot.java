@@ -31,7 +31,7 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	
 	private final double defaultTravelSpeed = 15;
-	private final double defaultTurnSpeed = 45;
+	private final double defaultTurnSpeed = 10;
 	
 	private TouchSensor touchSensor;
 	private UltrasonicSensor ultrasonicSensor;
@@ -39,10 +39,10 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	private Board board;
 	private NXTCommand nxtCommand;
-	private final float wheelDiameterLeft = 5.46F;
-	private final float wheelDiameterRight = 5.505F;
+	private final float wheelDiameterLeft = 5.43F;
+	private final float wheelDiameterRight = 5.43F;
 //	private final float wheelDiameterRight = 5.515F;
-	private final float trackWidth = 17.10F;
+	private final float trackWidth = 16.62F;
 	private int previousLightValue;
 	private int prevUltrasonicValue;
 	private boolean prevTouchBool;
@@ -237,17 +237,17 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	public void turnSensorRight(){
 		sensorMotor.rotateTo(-90);
-		canMove();
+//		canMove();
 	}
 	
 	public void turnSensorLeft(){
 		sensorMotor.rotateTo(90);
-		canMove();
+//		canMove();
 	}
 	
 	public void turnSensorForward(){
 		sensorMotor.rotateTo(0);
-		canMove();
+//		canMove();
 	}
 	
 	public void calibrateLightHigh(){
