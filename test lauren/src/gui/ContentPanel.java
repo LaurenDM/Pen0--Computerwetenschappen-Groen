@@ -422,9 +422,11 @@ public class ContentPanel implements ActionListener {
         }
         else if(e.getSource() == rotateSlowRight){
         	controller.rotateAmount(rotateSlowAmount);
+        	buttonPanel.requestFocusInWindow();
         }
 		else if(e.getSource() == rotateSlowLeft){
 			controller.rotateAmount(-rotateSlowAmount);
+			buttonPanel.requestFocusInWindow();
         }
         
     }
