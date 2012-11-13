@@ -66,46 +66,46 @@ public class MazeInterpreter {
 		String[] commandSplit = command.split("\\.");
 		
 		if(commandSplit[0].equals("DeadEnd")){
-			createDeadEnd(XCoo, YCoo, ORIENTATION.getOrientation(commandSplit[1]));
+			createDeadEnd(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
 		}
 		else if(commandSplit[0].equals("T")){
-			createT(XCoo, YCoo, ORIENTATION.getOrientation(commandSplit[1]));
+			createT(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
 		}
 		else if(commandSplit[0].equals("Corner")){
-			createCorner(XCoo, YCoo, ORIENTATION.getOrientation(commandSplit[1]));
+			createCorner(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
 		}
 		else if(commandSplit[0].equals("Straight")){
-			createStraight(XCoo, YCoo, ORIENTATION.getOrientation(commandSplit[1]));
+			createStraight(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
 		}
 	}
 	
 	
-	public void createDeadEnd(int XCoo, int YCoo, ORIENTATION orientation){
+	public void createDeadEnd(int XCoo, int YCoo, Orientation orientation){
 		Position pos = new Position(XCoo, YCoo);
 		switch (orientation) {
         case NORTH: 
         	//   ||
-        		 makeWall(pos, ORIENTATION.NORTH);
-        		 makeWall(pos, ORIENTATION.EAST);
-        		 makeWall(pos, ORIENTATION.WEST);
+        		 makeWall(pos, Orientation.NORTH);
+        		 makeWall(pos, Orientation.EAST);
+        		 makeWall(pos, Orientation.WEST);
                  break;
 		case EAST:
 			//	=|
-				makeWall(pos, ORIENTATION.NORTH);
-				makeWall(pos, ORIENTATION.SOUTH);
-				makeWall(pos, ORIENTATION.EAST);
+				makeWall(pos, Orientation.NORTH);
+				makeWall(pos, Orientation.SOUTH);
+				makeWall(pos, Orientation.EAST);
 				break;
 		case SOUTH:
 			//	|_|
-				makeWall(pos, ORIENTATION.EAST);
-				makeWall(pos, ORIENTATION.SOUTH);
-				makeWall(pos, ORIENTATION.WEST);
+				makeWall(pos, Orientation.EAST);
+				makeWall(pos, Orientation.SOUTH);
+				makeWall(pos, Orientation.WEST);
 				break;		
 		case WEST:
 			//	|=
-				makeWall(pos, ORIENTATION.NORTH);
-				makeWall(pos, ORIENTATION.SOUTH);
-				makeWall(pos, ORIENTATION.WEST);
+				makeWall(pos, Orientation.NORTH);
+				makeWall(pos, Orientation.SOUTH);
+				makeWall(pos, Orientation.WEST);
 				break;	
 		}
 	}
@@ -114,77 +114,77 @@ public class MazeInterpreter {
 		//do nothing
 	}
 	
-	public void createCorner(int XCoo, int YCoo, ORIENTATION orientation){
+	public void createCorner(int XCoo, int YCoo, Orientation orientation){
 		Position pos = new Position(XCoo, YCoo);
 		switch (orientation) {
         case NORTH: 
         	//   |
-        		 makeWall(pos, ORIENTATION.NORTH);
-        		 makeWall(pos, ORIENTATION.WEST);
+        		 makeWall(pos, Orientation.NORTH);
+        		 makeWall(pos, Orientation.WEST);
                  break;
 		case EAST:
 			//	|
-				makeWall(pos, ORIENTATION.NORTH);
-				makeWall(pos, ORIENTATION.EAST);
+				makeWall(pos, Orientation.NORTH);
+				makeWall(pos, Orientation.EAST);
 				break;
 		case SOUTH:
 			//	_|
-				makeWall(pos, ORIENTATION.EAST);
-				makeWall(pos, ORIENTATION.SOUTH);
+				makeWall(pos, Orientation.EAST);
+				makeWall(pos, Orientation.SOUTH);
 				break;		
 		case WEST:
 			//	|_
-				makeWall(pos, ORIENTATION.SOUTH);
-				makeWall(pos, ORIENTATION.WEST);
+				makeWall(pos, Orientation.SOUTH);
+				makeWall(pos, Orientation.WEST);
 				break;	
 		}
 	}
 	
-	public void createT(int XCoo, int YCoo, ORIENTATION orientation){
+	public void createT(int XCoo, int YCoo, Orientation orientation){
 		Position pos = new Position(XCoo, YCoo);
 		switch (orientation) {
         case NORTH: 
-        		 makeWall(pos, ORIENTATION.NORTH);
+        		 makeWall(pos, Orientation.NORTH);
                  break;
 		case EAST:
-				makeWall(pos, ORIENTATION.EAST);
+				makeWall(pos, Orientation.EAST);
 				break;
 		case SOUTH:
-				makeWall(pos, ORIENTATION.SOUTH);
+				makeWall(pos, Orientation.SOUTH);
 				break;		
 		case WEST:
-				makeWall(pos, ORIENTATION.WEST);
+				makeWall(pos, Orientation.WEST);
 				break;	
 		}
 	}
 	
-	public void createStraight(int XCoo, int YCoo, ORIENTATION orientation){
+	public void createStraight(int XCoo, int YCoo, Orientation orientation){
 		Position pos = new Position(XCoo, YCoo);
 		switch (orientation) {
         case NORTH: 
         	//   | |
-        		 makeWall(pos, ORIENTATION.EAST);
-        		 makeWall(pos, ORIENTATION.WEST);
+        		 makeWall(pos, Orientation.EAST);
+        		 makeWall(pos, Orientation.WEST);
                  break;
 		case EAST:
 			//	=
-				makeWall(pos, ORIENTATION.NORTH);
-				makeWall(pos, ORIENTATION.SOUTH);
+				makeWall(pos, Orientation.NORTH);
+				makeWall(pos, Orientation.SOUTH);
 				break;
 		case SOUTH:
 			//	| |
-				makeWall(pos, ORIENTATION.EAST);
-				makeWall(pos, ORIENTATION.WEST);
+				makeWall(pos, Orientation.EAST);
+				makeWall(pos, Orientation.WEST);
 				break;		
 		case WEST:
 			//	=
-				makeWall(pos, ORIENTATION.NORTH);
-				makeWall(pos, ORIENTATION.SOUTH);
+				makeWall(pos, Orientation.NORTH);
+				makeWall(pos, Orientation.SOUTH);
 				break;	
 		}
 	}
 	
-	public void makeWall(Position pos, ORIENTATION orientation){
+	public void makeWall(Position pos, Orientation orientation){
 			// pos is positie van vakje
 			// voorbeeld pos 11 met orientation EAST is de oostzijde van vakje 0,0
 			// dit zou dan x=40 en y = 0..40
