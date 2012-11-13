@@ -1,5 +1,9 @@
 package domain.robotFunctions;
 
+import java.util.ArrayList;
+
+import domain.Position.Position;
+import domain.maze.Wall;
 import domain.robots.CannotMoveException;
 import domain.robots.Robot;
 import domain.robots.RobotPilot;
@@ -14,6 +18,7 @@ public class ExploreMaze {
 	private RobotPilot robot;
 	private final int valuedDistance = 25;
 	private final int distanceBlocks = 40;
+	private ArrayList<Wall> wallList = new ArrayList<Wall>(); 
 	
 	public ExploreMaze(RobotPilot simRobotPilot){
 		this.robot = simRobotPilot;
@@ -21,21 +26,37 @@ public class ExploreMaze {
 	public void start(){
 		//TODO stopcondition needs to be determined.
 		while(true){
-			System.out.println("test");
 			double[] distances = new double[3];
-			
-			//makeWall(distances);
 			distances = checkDistances();
-			for (int i = 0; i < distances.length; i++) {
-				System.out.println(distances[i]);
-			}
+			makeWall(distances);
 			Direction direction = getNextDirection(distances);
 			move(direction);
 		}
 	}
 	
 	private void makeWall(double[] distances) {
+		double x = robot.getPosition().getX();
+		double y = robot.getPosition().getY();
+		double orientation = robot.getOrientation();
+		if(distances[0] < valuedDistance)
+			drawWall(x,y,robot.getOrientation(),Direction.LEFT);
+		if(distances[1] < valuedDistance)
+			drawWall(x,y,robot.getOrientation(),Direction.FORWARD);
+		if(distances[0] < valuedDistance)
+			drawWall(x,y,robot.getOrientation(),Direction.RIGHT);
 		
+	}
+	private void drawWall(double x, double y, double orientation,Direction direction) {
+		//TODO
+	}
+	
+	
+	private void addWall(double x1, double y1, double x2, double y2){
+		//TODO
+	}
+	
+	public ArrayList<Wall> getWalls(){
+		return wallList;
 	}
 	private void move(Direction direction){
 		switch (direction) {
@@ -49,10 +70,12 @@ public class ExploreMaze {
 			case RIGHT:
 				robot.turnRight();
 				robotMove();
+				break;
 			case BACKWARD:
 				robot.turnRight();
 				robot.turnRight();
 				robotMove();
+				break;
 			default:
 				break;
 			}
