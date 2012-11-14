@@ -23,6 +23,10 @@ public class ExploreMaze {
 	public ExploreMaze(RobotPilot simRobotPilot){
 		this.robot = simRobotPilot;
 	}
+	
+	public RobotPilot getRobotPilot(){
+		return this.robot;
+	}
 	public void start(){
 		//TODO stopcondition needs to be determined.
 		while(true){
@@ -52,7 +56,10 @@ public class ExploreMaze {
 	
 	
 	private void addWall(double x1, double y1, double x2, double y2){
-		//TODO
+		Position pos1 = new Position(x1, y1);
+		Position pos2 = new Position(x2,y2);
+		Wall wall = new Wall(pos1, pos2);
+		getRobotPilot().addFoundWall(wall);
 	}
 	
 	public ArrayList<Wall> getWalls(){

@@ -406,7 +406,7 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void setPose(double orientation, int x, int y) {
-pilot.setPose(orientation, x, y);		
+		pilot.setPose(orientation, x, y);		
 	}
 
 	@Override
@@ -422,6 +422,12 @@ pilot.setPose(orientation, x, y);
 			return true;
 		}
 		else return false;
+	}
+
+	@Override
+	public void addFoundWall(Wall wall) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

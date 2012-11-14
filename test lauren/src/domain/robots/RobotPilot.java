@@ -2,6 +2,7 @@ package domain.robots;
 
 import domain.Position.Position;
 import domain.maze.Board;
+import domain.maze.Wall;
 import domain.util.TimeStamp;
 
 public interface RobotPilot {
@@ -113,6 +114,8 @@ public interface RobotPilot {
 	public void setPose(double orientation, int x, int y);
 
 	public void startExplore();
+	
+	public void addFoundWall(Wall wall);
 
 	public boolean detectBlackLine();
 
