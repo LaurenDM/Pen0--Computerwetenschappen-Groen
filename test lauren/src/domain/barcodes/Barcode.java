@@ -1,5 +1,8 @@
 package domain.barcodes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import domain.Position.Position;
 import domain.robots.Robot;
 
@@ -10,61 +13,34 @@ public class Barcode {
 	private Position pos1;
 	private Position pos2;
 	private int[] bits;
+	private List<Integer> legalInts = new ArrayList<Integer>();
 	
 	public Barcode(int[] bits, Position pos1, Position pos2){
+		fillLegals();
 		if(bits.length != 6){
 			throw new IllegalArgumentException();
-		}
-		try{
-			generateActions();
-		} catch(AssertionError e){
-			mirrorBits();
-			generateActions();
-			// TODO: checken!!
 		}
 		this.bits = bits;
 		this.pos1 = pos1;
 		this.pos2 = pos2;
+		int decimal = getDecimal(bits);
+		if(!legalInts.contains(decimal)){
+			mirrorBits();
+			decimal = getDecimal(this.bits);
+		}
+		action = getAction(decimal);
 	}
 	
-	public void generateActions(){
-		if(bits[0] == 0){
-			if(bits[1] == 0){
-				if(bits[2] == 0){
-					assert(bits[3] == 1 && bits[4] == 0 && bits[5] == 1);
-					action = new TurnLeftAction();
-				}
-				else{
-					if(bits[3] == 0){
-						assert(bits[4] == 0 && bits[5] == 1);
-						action = new TurnRightAction();
-					}
-					else{
-						assert(bits[4] == 1 && bits[5] == 1);
-						action = new PlayTuneAction();
-					}
-				}
-			}
-			else{
-				if(bits[2] == 0){
-					assert(bits[3] == 0 && bits[4] == 1 && bits[5] == 1);
-					action = new Wait5Action();
-				}
-				else{
-					assert(bits[3] == 0 && bits[4] == 0 && bits[5] == 1);
-					action = new DriveSlowAction();
-				}
-			}
-		}
-		else{
-			if(bits[1] == 0){
-				assert(bits[2] == 0 && bits[3] == 1 && bits[4] == 0 && bits[5] == 1);
-				action = new DriveFastAction();
-			}
-			else{
-				assert(bits[2] == 0 && bits[3] == 1 && bits[4] == 1 && bits[5] == 1);
-				action = new SetFinishAction();
-			}
+	public Action getAction(int number){
+		switch (number){
+		case 5: return new TurnLeftAction();
+		case 9: return new TurnRightAction();
+		case 15: return new PlayTuneAction();
+		case 19: return new Wait5Action();
+		case 25: return new DriveSlowAction();
+		case 37: return new DriveFastAction();
+		case 55: return new SetFinishAction();
+		default: return null;
 		}
 	}
 	
@@ -79,7 +55,9 @@ public class Barcode {
 	}
 	
 	public void runAction(Robot robot){
-		action.run(robot);
+		if(action != null){
+			action.run(robot);
+		}
 	}
 	
 	public boolean hasPosition(Position pos){
@@ -142,6 +120,53 @@ public class Barcode {
 			bits[i] = bits[5-i];
 			bits[5-i] = temp;
 		}
+	}
+	
+	private int getDecimal(int[] bits){
+		int result = 0;
+		for(int i = 0; i< 6; i++){
+			result += bits[5-i]*2^(i);
+		}
+		return result;
+	}
+	
+//	private int[] getBinary(int decimal){
+//		int[] result = new int[6];
+//		for(int i = 0; i< 6; i++){
+//			result[i] = decimal%2;
+//			decimal = decimal/2;
+//		}
+//		return result;
+//	}
+	
+	private void fillLegals(){
+		legalInts.add(1);
+		legalInts.add(2);
+		legalInts.add(3);
+		legalInts.add(4);
+		legalInts.add(5);
+		legalInts.add(6);
+		legalInts.add(7);
+		legalInts.add(9);
+		legalInts.add(10);
+		legalInts.add(11);
+		legalInts.add(13);
+		legalInts.add(14);
+		legalInts.add(15);
+		legalInts.add(17);
+		legalInts.add(19);
+		legalInts.add(21);
+		legalInts.add(23);
+		legalInts.add(25);
+		legalInts.add(27);
+		legalInts.add(29);
+		legalInts.add(31);
+		legalInts.add(35);
+		legalInts.add(37);
+		legalInts.add(39);
+		legalInts.add(43);
+		legalInts.add(47);
+		legalInts.add(55);
 	}
 	
 }

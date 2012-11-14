@@ -16,7 +16,7 @@ public class BarcodeGenerator extends RobotFunction {
 	}
 	
 // this method is called when the robot has detected a black line
-	public void generateBarcode(){
+	public void generateBarcode(boolean btrobot){
 		Position pos1 = robot.getPosition().getNewPosition(robot.getOrientation(), -1);
 		//TODO: -1 hangt af van wanneer robot zwarte lijn gedetecteerd heeft en waar hij nu staat
 		int[] bits = new int[6];
@@ -40,7 +40,7 @@ public class BarcodeGenerator extends RobotFunction {
 		}
 		Position pos2 = robot.getPosition();
 		Barcode barcode = new Barcode(bits, pos1, pos2);
-		robot.getBoard().addBarcode(barcode);
+		if(btrobot) robot.getBoard().addBarcode(barcode);
 		barcode.runAction(robot);
 	}
 }
