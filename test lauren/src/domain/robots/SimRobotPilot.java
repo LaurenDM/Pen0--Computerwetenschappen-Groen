@@ -2,6 +2,7 @@ package domain.robots;
 
 import domain.Position.Position;
 import domain.maze.Board;
+import domain.maze.Wall;
 import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.Straightener;
 import domain.util.TimeStamp;
@@ -454,11 +455,16 @@ public class SimRobotPilot implements RobotPilot {
 		maze.start();
 		
 	}
+	
+	public void addFoundWall(Wall wall){
+		board.foundNewWall(wall);
+	}
 
 	@Override
 	public boolean detectBlackLine() {
 		return getBoard().detectBlackLineAt(getPosition());
 	}
+
 
 	
 	

@@ -12,6 +12,7 @@ public class Board {
 	
 	private List<Wall> walls;
 	private List<Barcode> barcodes;
+	private List<Wall> foundWalls;
 	
 	
 	public Board(){
@@ -23,6 +24,13 @@ public class Board {
 		walls.add(wall);
 	}
 	
+	public void foundNewWall(Wall wall){
+		foundWalls.add(wall);
+	}
+	
+	public List<Wall> getFoundWalls(){
+		return foundWalls;
+	}
 	public void addBarcode(Barcode barcode){
 		barcodes.add(barcode);
 	}
