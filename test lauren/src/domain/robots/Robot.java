@@ -221,6 +221,10 @@ public class Robot {
 		
 	}
 	
+	public boolean detectBlackLine(){
+		return robotPilot.detectBlackLine();
+	}
+	
 //	public void findOpening(){
 //		double max = 0;
 //		double orientation = getOrientation();

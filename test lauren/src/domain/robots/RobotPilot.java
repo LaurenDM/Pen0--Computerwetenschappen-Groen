@@ -114,5 +114,7 @@ public interface RobotPilot {
 
 	public void startExplore();
 
+	public boolean detectBlackLine();
+
 	
 }

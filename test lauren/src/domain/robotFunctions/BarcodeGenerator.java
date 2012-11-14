@@ -5,7 +5,7 @@ import domain.barcodes.Barcode;
 import domain.robots.CannotMoveException;
 import domain.robots.Robot;
 
-public class BarcodeGenerator {
+public class BarcodeGenerator extends RobotFunction {
 
 	private Robot robot;
 	
@@ -26,11 +26,11 @@ public class BarcodeGenerator {
 			} catch (CannotMoveException e) {
 				//TODO: Wat doen we hiermee?
 			}
-			if(robot.detectWhiteLine()){
-				bits[i] = 1;
+			if(robot.detectBlackLine()){
+				bits[i] = 0;
 			}
 			else{
-				bits[i] = 0;
+				bits[i] = 1;
 			}
 		}
 		try {

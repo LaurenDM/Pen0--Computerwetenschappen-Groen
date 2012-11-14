@@ -414,6 +414,15 @@ pilot.setPose(orientation, x, y);
 		ExploreMaze maze = new ExploreMaze(this);
 		maze.start();
 	}
+
+	@Override
+	public boolean detectBlackLine() {
+		//TODO: waarden checken en kalibreren
+		if(readLightValue()<-100){
+			return true;
+		}
+		else return false;
+	}
 	
 	
 

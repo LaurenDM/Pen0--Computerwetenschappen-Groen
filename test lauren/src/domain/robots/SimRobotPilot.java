@@ -455,6 +455,11 @@ public class SimRobotPilot implements RobotPilot {
 		
 	}
 
+	@Override
+	public boolean detectBlackLine() {
+		return getBoard().detectBlackLineAt(getPosition());
+	}
+
 	
 	
 	

@@ -49,5 +49,14 @@ public class Board {
 			return true;
 		return false;
 	}
+	
+	public boolean detectBlackLineAt(Position position){
+		for(Barcode barcode : barcodes){
+			if(barcode.isBlackAt(position)){
+				return true;
+			}
+		}
+		return false;
+	}
 
 }

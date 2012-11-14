@@ -5,22 +5,29 @@ import domain.robots.Robot;
 
 public class Barcode {
 
+	private final int MAZECONSTANT = 40;
 	private Action action;
 	private Position pos1;
 	private Position pos2;
 	private int[] bits;
 	
 	public Barcode(int[] bits, Position pos1, Position pos2){
-		generateActions();
+		if(bits.length != 6){
+			throw new IllegalArgumentException();
+		}
+		try{
+			generateActions();
+		} catch(AssertionError e){
+			mirrorBits();
+			generateActions();
+			// TODO: checken!!
+		}
 		this.bits = bits;
 		this.pos1 = pos1;
 		this.pos2 = pos2;
 	}
 	
 	public void generateActions(){
-		if(bits.length != 6){
-			throw new IllegalArgumentException();
-		}
 		if(bits[0] == 0){
 			if(bits[1] == 0){
 				if(bits[2] == 0){
@@ -75,6 +82,22 @@ public class Barcode {
 		action.run(robot);
 	}
 	
+	public boolean hasPosition(Position pos){
+		if(horizontal()){
+			int lowx = (int) (Math.floor((pos1.getX())/MAZECONSTANT))*MAZECONSTANT;
+			if(pos.getX()<=lowx || pos.getX() >= lowx + MAZECONSTANT) return false;
+			else if((pos.getY() <= pos1.getY() && pos.getY() >= pos2.getY()) || 
+					pos.getY() >= pos1.getY() && pos.getY() <= pos2.getY()) return true;
+		}
+		else {
+			int lowy = (int) (Math.floor((pos1.getY())/MAZECONSTANT))*MAZECONSTANT;
+			if(pos.getY()<=lowy || pos.getY() >= lowy + MAZECONSTANT) return false;
+			else if((pos.getX() <= pos1.getX() && pos.getX() >= pos2.getX()) || 
+					pos.getX() >= pos1.getX() && pos.getX() <= pos2.getX()) return true;
+		}
+		return false;
+	}
+	
 	public int getBitAtPosition(Position pos){
 		int distance;
 		if(horizontal()){
@@ -87,21 +110,38 @@ public class Barcode {
 	}
 	
 	public boolean isBlackAt(Position pos){
+		if(!hasPosition(pos)) return false;
+		final int MARGE = 1;
 		if(getBitAtPosition(pos) == 0){
+			return true;
+		}
+		else if(pos.getDistance(pos1) < MARGE || pos.getDistance(pos2) < MARGE){
 			return true;
 		}
 		else return false;
 	}
 	
 	public boolean isWhiteAt(Position pos){
-		return !isBlackAt(pos);
+		if(!hasPosition(pos)) return false;
+		if(getBitAtPosition(pos) == 1){
+			return true;
+		}
+		else return false;
 	}
 	
 	public boolean horizontal(){
-		final int MARGE = 1;
+		final int MARGE = 1; //TODO: testen!
 		if(Math.abs(pos1.getX()-pos2.getX()) < MARGE)
 			return true;
 		else return false;
+	}
+	
+	private void mirrorBits(){
+		for(int i = 0; i<3; i++){
+			int temp = bits[i];
+			bits[i] = bits[5-i];
+			bits[5-i] = temp;
+		}
 	}
 	
 }
