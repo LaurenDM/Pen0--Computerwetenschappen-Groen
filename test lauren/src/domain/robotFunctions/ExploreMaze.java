@@ -43,15 +43,67 @@ public class ExploreMaze {
 		double y = robot.getPosition().getY();
 		double orientation = robot.getOrientation();
 		if(distances[0] < valuedDistance)
-			drawWall(x,y,robot.getOrientation(),Direction.LEFT);
+			calculateWall(x,y,robot.getOrientation(),Direction.LEFT);
 		if(distances[1] < valuedDistance)
-			drawWall(x,y,robot.getOrientation(),Direction.FORWARD);
+			calculateWall(x,y,robot.getOrientation(),Direction.FORWARD);
 		if(distances[0] < valuedDistance)
-			drawWall(x,y,robot.getOrientation(),Direction.RIGHT);
+			calculateWall(x,y,robot.getOrientation(),Direction.RIGHT);
 		
 	}
-	private void drawWall(double x, double y, double orientation,Direction direction) {
-		//TODO
+	private void calculateWall(double x, double y, double orientation,Direction direction) {
+		if(orientation > -20 && orientation < 20){
+			switch (direction) {
+			case FORWARD:
+				addWall(x+20,y-20,x+20,y+20);
+				break;
+			case LEFT:
+				addWall(x-20,y-20,x+20,y-20);
+				break;
+			case RIGHT:
+				addWall(x-20,y+20,x+20,y+20);
+				break;
+			}
+		}
+		else if(orientation > 70 && orientation < 110){
+			switch (direction) {
+			case FORWARD:
+				addWall(x-20,y-20,x+20,y-20);
+				break;
+			case LEFT:
+				addWall(x-20,y-20,x-20,y+20);
+				break;
+			case RIGHT:
+				addWall(x+20,y-20,x+20,y+20);
+				break;
+			}
+		}
+		else if(orientation > 160 && orientation < 200){
+			switch (direction) {
+			case FORWARD:
+				addWall(x-20,y-20,x-20,y+20);
+				break;
+			case LEFT:
+				addWall(x-20,y+20,x+20,y+20);
+				break;
+			case RIGHT:
+				addWall(x-20,y-20,x+20,y-20);
+				break;
+			}
+		}
+		else if(orientation > 250 && orientation < 290){
+			switch (direction) {
+			case FORWARD:
+				addWall(x-20,y+20,x+20,y+20);
+				break;
+			case LEFT:
+				addWall(x+20,y-20,x+20,y+20);
+				break;
+			case RIGHT:
+				addWall(x-20,y+20,x-20,y-20);
+				break;
+			}
+		}
+
 	}
 	
 	

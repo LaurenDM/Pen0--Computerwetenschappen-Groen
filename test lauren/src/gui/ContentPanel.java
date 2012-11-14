@@ -277,6 +277,7 @@ public class ContentPanel implements ActionListener {
 			drawingPanel.reDrawMyPolygon(colorPoly);
 		}
 		//drawingPanel.drawWalls();
+		drawingPanel.drawFoundWalls();
 	} 
 	
 	/**

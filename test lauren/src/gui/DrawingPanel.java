@@ -70,6 +70,18 @@ public class DrawingPanel extends JPanel {
 		}
 	}
 	
+	public void drawFoundWalls(){
+		List<Wall> walls = controller.getRobot().getBoard().getFoundWalls();
+		try {
+			for(Wall w: walls){
+			drawWall(w);
+			}
+		} catch (Exception e) {
+			//Gets called if no wall is currently found -> nullpoint expected.
+		}
+		
+	}
+	
 	public void drawWall(Wall wall){
 		Polygon pol = new Polygon();
 		int pos1X = (int)wall.getPos1().getX()+OFFSET;

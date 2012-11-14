@@ -18,6 +18,7 @@ public class Board {
 	public Board(){
 		walls = new ArrayList<Wall>();
 		barcodes = new ArrayList<Barcode>();
+		foundWalls = new ArrayList<Wall>();
 		}
 	
 	public void addWall(Wall wall){
