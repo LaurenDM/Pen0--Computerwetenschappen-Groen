@@ -6,8 +6,7 @@ public class TurnLeftAction extends Action {
 
 	@Override
 	public void run(Robot robot) {
-		// TODO robot.turnLeft();
-
+		robot.turn(-360); //TODO checken of dit links is
 	}
 
 }

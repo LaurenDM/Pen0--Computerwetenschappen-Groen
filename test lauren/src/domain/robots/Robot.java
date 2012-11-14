@@ -8,12 +8,16 @@ import domain.util.TimeStamp;
 public class Robot {
 	RobotPilot robotPilot;
 	RobotPolygon robotPolygon;
+	private Movement movement;
+	private Position finish;
+	
+	
 	public Robot(RobotPilot robotPilot){
 		this.robotPilot=robotPilot;
 		this.movement=Movement.STOPPED;
 		this.robotPolygon=new RobotPolygon(this);
 	}
-	private Movement movement;
+	
 	public RobotPolygon getRobotPolygon(){
 		return robotPolygon;
 	}
@@ -223,6 +227,21 @@ public class Robot {
 	
 	public boolean detectBlackLine(){
 		return robotPilot.detectBlackLine();
+	}
+	
+	public void setHighSpeed(){
+		setMovingSpeed(getDefaultMovingSpeed()*2);
+		setTurningSpeed(getDefaultTurningSpeed()*2);
+		//TODO checken of x2 snel genoeg/ te snel is
+	}
+	
+	public void setLowSpeed(){
+		setMovingSpeed(getDefaultMovingSpeed()/2);
+		setTurningSpeed(getDefaultTurningSpeed()/2);
+	}
+	
+	public void setFinish(){
+		this.finish = getPosition();
 	}
 	
 //	public void findOpening(){

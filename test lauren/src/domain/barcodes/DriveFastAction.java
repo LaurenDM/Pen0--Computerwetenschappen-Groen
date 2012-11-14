@@ -6,7 +6,7 @@ public class DriveFastAction extends Action {
 
 	@Override
 	public void run(Robot robot) {
-		// robot.setHighSpeed();
+		robot.setHighSpeed();
 	}
 
 }

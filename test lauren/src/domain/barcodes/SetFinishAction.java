@@ -6,8 +6,7 @@ public class SetFinishAction extends Action {
 
 	@Override
 	public void run(Robot robot) {
-		// TODO robot.setFinishPosition();
-
+		robot.setFinish();
 	}
 
 }
