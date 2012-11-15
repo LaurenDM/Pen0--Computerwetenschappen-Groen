@@ -25,5 +25,11 @@ public class WallNode extends MazeNode {
 	public boolean isVisited(){
 		return true;
 	}
+
+	@Override
+	public String toShortString() {
+		return "Wall";
+	}
+	
 	
 }

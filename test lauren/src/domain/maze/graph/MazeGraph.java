@@ -34,6 +34,7 @@ public class MazeGraph {
 		for(MazeNode mazeNode:nodes){
 			if(!mazeNode.isFullyExpanded()) { isComplete = false;}
 		}
+		System.out.println(isComplete);
 		return isComplete;
 	}
 	
@@ -52,19 +53,34 @@ public class MazeGraph {
 	}
 	
 	/**
-	 * Make a new TileNode at the given orientation
+	 * Make a new TileNode at the given orientation relative to the robot's current orientation.
 	 * @param orientation
 	 */
 	public void generateTileNodeAt(Orientation orientation){
-		getCurrentNode().setNodeAt(getCurrentRobotOrientation(), new TileNode(getCurrentNode(),getCurrentRobotOrientation().getBack()));
+		TileNode newNode = new TileNode(getCurrentNode(),getCurrentRobotOrientation().getBack());
+		boolean thisNodeAlreadyExists = false;
+		for(MazeNode node:nodes){
+			if(node.getClass().equals(TileNode.class) && ((TileNode) node).getX()==newNode.getX() && ((TileNode)node).getY()==newNode.getY()){
+				getCurrentNode().setNodeAt(getRelativeOrientation(getCurrentRobotOrientation(),orientation), ((TileNode)node));
+				thisNodeAlreadyExists = true;
+				System.out.println(node.toString());;
+				break;
+			}
+		}
+		if(!thisNodeAlreadyExists){
+			getCurrentNode().setNodeAt(getRelativeOrientation(getCurrentRobotOrientation(),orientation), newNode);
+			nodes.add(newNode);
+			System.out.println(nodes.size());
+		}
 	}
 	
 	/**
-	 * Make a new WallNode at the given orientation
+	 * Make a new WallNode at the given orientation relative to the robot's current orientation.
 	 * @param orientation
 	 */
 	public void generateWallNodeAt(Orientation orientation){
-		getCurrentNode().setNodeAt(getCurrentRobotOrientation(), new WallNode(getCurrentNode(),getCurrentRobotOrientation().getBack()));
+		WallNode newNode = new WallNode(getCurrentNode(),getCurrentRobotOrientation().getBack());
+		getCurrentNode().setNodeAt(getRelativeOrientation(getCurrentRobotOrientation(),orientation), newNode);
 	}
 	
 	/**
@@ -81,13 +97,7 @@ public class MazeGraph {
 	 * @return Whether the node at the given orientation with respect to the robot is fully expanded
 	 */
 	public boolean isNodeThereFullyExpanded(Orientation orientation){
-		switch(orientation){
-			case NORTH: return getCurrentNode().getNodeAt(getCurrentRobotOrientation()).isFullyExpanded();
-			case EAST: return getCurrentNode().getNodeAt(getCurrentRobotOrientation().getLeft()).isFullyExpanded();
-			case SOUTH: return getCurrentNode().getNodeAt(getCurrentRobotOrientation().getBack()).isFullyExpanded();
-			case WEST: return getCurrentNode().getNodeAt(getCurrentRobotOrientation().getRight()).isFullyExpanded();
-		}
-		return true;
+		return getCurrentNode().getNodeAt(getRelativeOrientation(getCurrentRobotOrientation(),orientation)).isFullyExpanded();
 	}
 	
 	/**
@@ -137,6 +147,16 @@ public class MazeGraph {
 
 	private void setCurrentRobotOrientation(Orientation orientation) {
 		this.currentRobotOrientation = orientation;
+	}
+	
+	private Orientation getRelativeOrientation(Orientation original, Orientation relative){
+		switch(relative){
+		case NORTH: return original;
+		case EAST: return original.getRight();
+		case SOUTH: return original.getBack();
+		case WEST: return original.getLeft();
+		default: return null;
+		}
 	}
 
 	private boolean isCurrentNode(TileNode node){

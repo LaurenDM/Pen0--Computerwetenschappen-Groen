@@ -8,6 +8,8 @@ public class TileNode extends MazeNode {
 	private HashMap<Orientation,MazeNode> connectedNodes;
 	private boolean fullyExpanded;
 	private boolean visited;
+	private int x;
+	private int y;
 	
 	public TileNode(TileNode currentNode, Orientation orientationToCurrentNode){
 		connectedNodes = new HashMap<Orientation,MazeNode>();
@@ -16,6 +18,13 @@ public class TileNode extends MazeNode {
 		}
 		visited = false;
 		setNodeAt(orientationToCurrentNode, currentNode);
+		if(currentNode==null || orientationToCurrentNode==null){
+			x=0;
+			y=0;
+		} else {
+			x=currentNode.getX()-orientationToCurrentNode.getXValue();
+			y=currentNode.getY()-orientationToCurrentNode.getYValue();
+		}
 	}
 	
 	@Override
@@ -53,7 +62,22 @@ public class TileNode extends MazeNode {
 	public boolean isVisited() {
 		return visited;
 	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
 	
+	public String toString(){
+		return "Tile("+x+","+y+","+(connectedNodes.get(Orientation.NORTH)!=null)+","+(connectedNodes.get(Orientation.EAST)!=null)+","+(connectedNodes.get(Orientation.SOUTH)!=null)+","+(connectedNodes.get(Orientation.WEST)!=null)+")";
+	}
 	
+	@Override
+	public String toShortString(){
+		return "("+x+","+y+")";
+	}
 	
 }

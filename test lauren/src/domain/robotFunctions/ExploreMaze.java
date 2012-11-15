@@ -3,7 +3,9 @@ package domain.robotFunctions;
 import java.util.ArrayList;
 
 import domain.Position.Position;
+import domain.maze.Orientation;
 import domain.maze.Wall;
+import domain.maze.graph.MazeGraph;
 import domain.robots.CannotMoveException;
 import domain.robots.Robot;
 import domain.robots.RobotPilot;
@@ -18,7 +20,8 @@ public class ExploreMaze {
 	private RobotPilot robot;
 	private final int valuedDistance = 25;
 	private final int distanceBlocks = 40;
-	private ArrayList<Wall> wallList = new ArrayList<Wall>(); 
+	private ArrayList<Wall> wallList = new ArrayList<Wall>();
+	private MazeGraph maze = new MazeGraph();
 	
 	public ExploreMaze(RobotPilot simRobotPilot){
 		this.robot = simRobotPilot;
@@ -27,9 +30,10 @@ public class ExploreMaze {
 	public RobotPilot getRobotPilot(){
 		return this.robot;
 	}
+	
 	public void start(){
 		//TODO stopcondition needs to be determined.
-		while(true){
+		while(!maze.isComplete()){
 			double[] distances = new double[3];
 			distances = checkDistances();
 			makeWall(distances);
@@ -43,15 +47,24 @@ public class ExploreMaze {
 		double y = robot.getPosition().getY();
 		double orientation = robot.getOrientation();
 		if(distances[0] < valuedDistance){
-			calculateWall(x,y,orientation,Direction.LEFT); 
+			calculateWall(x,y,orientation,Direction.LEFT);
+			maze.generateWallNodeAt(Orientation.WEST);
+		} else {
+			maze.generateTileNodeAt(Orientation.WEST);
 		}
 			
 		if(distances[1] < valuedDistance){
 			calculateWall(x,y,orientation,Direction.FORWARD);
+			maze.generateWallNodeAt(Orientation.NORTH);
+		} else {
+			maze.generateWallNodeAt(Orientation.NORTH);
 		}
 			
 		if(distances[2] < valuedDistance){
 			calculateWall(x,y,orientation,Direction.RIGHT);
+			maze.generateWallNodeAt(Orientation.EAST);
+		} else {
+			maze.generateWallNodeAt(Orientation.EAST);
 		}
 	}
 	private void calculateWall(double x, double y, double orientation,Direction direction) {
@@ -61,49 +74,49 @@ public class ExploreMaze {
 				addWall(x+20,y-20,x+20,y+20);
 				break;
 			case LEFT:
-				addWall(x-20,y-20,x+20,y-20);
+				addWall(x-20,y-20,x+20,y-20);				
 				break;
 			case RIGHT:
-				addWall(x-20,y+20,x+20,y+20);
+				addWall(x-20,y+20,x+20,y+20);				 
 				break;
 			}
 		}
 		else if(orientation > -110 && orientation < -70){
 			switch (direction) {
 			case FORWARD:
-				addWall(x-20,y-20,x+20,y-20);
+				addWall(x-20,y-20,x+20,y-20);				 
 				break;
 			case LEFT:
-				addWall(x-20,y-20,x-20,y+20);
+				addWall(x-20,y-20,x-20,y+20);			 
 				break;
 			case RIGHT:
-				addWall(x+20,y-20,x+20,y+20);
+				addWall(x+20,y-20,x+20,y+20);				 
 				break;
 			}
 		}
 		else if(orientation > 160 && orientation < 200){
 			switch (direction) {
 			case FORWARD:
-				addWall(x-20,y-20,x-20,y+20);
+				addWall(x-20,y-20,x-20,y+20);				 
 				break;
 			case LEFT:
-				addWall(x-20,y+20,x+20,y+20);
+				addWall(x-20,y+20,x+20,y+20);				 
 				break;
 			case RIGHT:
-				addWall(x-20,y-20,x+20,y-20);
+				addWall(x-20,y-20,x+20,y-20);				 
 				break;
 			}
 		}
 		else if(orientation > 70 && orientation < 110){
 			switch (direction) {
 			case FORWARD:
-				addWall(x-20,y+20,x+20,y+20);
+				addWall(x-20,y+20,x+20,y+20);				 
 				break;
 			case LEFT:
-				addWall(x+20,y-20,x+20,y+20);
+				addWall(x+20,y-20,x+20,y+20);				 
 				break;
 			case RIGHT:
-				addWall(x-20,y+20,x-20,y-20);
+				addWall(x-20,y+20,x-20,y-20);				 
 				break;
 			}
 		}
@@ -112,7 +125,7 @@ public class ExploreMaze {
 	
 	
 	private void addWall(double x1, double y1, double x2, double y2){
-		Position pos1 = new Position(x1, y1);
+		Position pos1 = new Position(x1,y1);
 		Position pos2 = new Position(x2,y2);
 		Wall wall = new Wall(pos1, pos2);
 		getRobotPilot().addFoundWall(wall);
@@ -121,10 +134,12 @@ public class ExploreMaze {
 	public ArrayList<Wall> getWalls(){
 		return wallList;
 	}
+	
 	private void move(Direction direction){
 		switch (direction) {
 			case LEFT:
 				robot.turnLeft();
+				maze.turnLeft();
 				robotMove();
 				break;
 			case FORWARD:
@@ -132,11 +147,13 @@ public class ExploreMaze {
 				break;
 			case RIGHT:
 				robot.turnRight();
+				maze.turnRight();
 				robotMove();
 				break;
 			case BACKWARD:
 				robot.turnRight();
 				robot.turnRight();
+				maze.turnBack();
 				robotMove();
 				break;
 			default:
@@ -147,6 +164,7 @@ public class ExploreMaze {
 	private void robotMove(){
 		try {
 			robot.move(distanceBlocks);
+			maze.move();
 		} catch (CannotMoveException e) {
 			//Normally never gets called.
 			e.printStackTrace();
