@@ -11,7 +11,9 @@ import javax.swing.JPanel;
 
 import controller.Controller;
 import domain.Position.Position;
+import domain.barcodes.Barcode;
 import domain.maze.MazeElement;
+import domain.maze.Orientation;
 import domain.maze.Wall;
 import domain.util.ColorPolygon;
 
@@ -31,7 +33,7 @@ public class DrawingPanel extends JPanel {
 		totalGui = contentPanel.getTotalGuiPanel();
 		previousPolygons = new HashMap<ColorPolygon, Polygon>();
 		drawWhiteLines();
-		//drawWalls();
+//		drawWalls();
 	}
 
 	public static final int IMG_WIDTH = 700;
@@ -63,18 +65,19 @@ public class DrawingPanel extends JPanel {
 		}
 	}
 	
-	public void drawWalls(){
+	public void drawSimulatedWalls(){
 		List<Wall> walls = controller.getRobot().getBoard().getWalls();
 		for(Wall w: walls){
-			drawWall(w);
+			drawWall(w, true);
 		}
+		drawSimulatedBarcodes();
 	}
 	
 	public void drawFoundWalls(){
 		List<Wall> walls = controller.getRobot().getBoard().getFoundWalls();
 		try {
 			for(Wall w: walls){
-			drawWall(w);
+			drawWall(w, false);
 			}
 		} catch (Exception e) {
 			//Gets called if no wall is currently found -> nullpoint expected.
@@ -82,7 +85,7 @@ public class DrawingPanel extends JPanel {
 		
 	}
 	
-	public void drawWall(Wall wall){
+	public void drawWall(Wall wall, boolean simulated){
 		Polygon pol = new Polygon();
 		int pos1X = (int)wall.getPos1().getX()+OFFSET;
 		int pos1Y = (int)wall.getPos1().getY()+OFFSET;
@@ -101,7 +104,116 @@ public class DrawingPanel extends JPanel {
 			pol.addPoint(pos2X-1, pos2Y);
 			pol.addPoint(pos2X+1, pos2Y);	
 		}
-		g.setColor(Color.blue);
+		if(simulated){
+			g.setColor(Color.lightGray);
+		}
+		else{
+			g.setColor(Color.black);
+		}
+		g.drawPolygon(pol);
+		g.fillPolygon(pol);
+		totalGui.repaint();
+		
+	}
+	
+	public void drawSimulatedBarcodes(){
+		List<Barcode> barcodes = controller.getRobot().getBoard().getSimulatedBarcodes();
+		for(Barcode b: barcodes){
+			drawBarcode(b, true);
+		}
+	}
+	
+	public void drawBarcode(Barcode barcode, boolean simulated){
+		Polygon pol = new Polygon();
+		Orientation orientation = barcode.getOrientation();
+		int posX = (int)barcode.getPos().getX()+OFFSET;
+		int posY = (int)barcode.getPos().getY()+OFFSET;
+		
+		if(orientation == Orientation.NORTH || orientation == Orientation.SOUTH){
+			pol.addPoint(posX-20, posY-8);
+			pol.addPoint(posX+20, posY-8);
+			pol.addPoint(posX+20, posY+8);
+			pol.addPoint(posX-20, posY+8);
+		}
+		
+		else if(orientation == Orientation.EAST || orientation == Orientation.WEST){
+			pol.addPoint(posX-8, posY-20);
+			pol.addPoint(posX+8, posY-20);
+			pol.addPoint(posX+8, posY+20);
+			pol.addPoint(posX-8, posY+20);
+		}
+		
+		if(simulated){
+			g.setColor(Color.lightGray);
+		}
+		else{
+			g.setColor(Color.black);
+		}
+		g.drawPolygon(pol);
+		g.fillPolygon(pol);
+		totalGui.repaint();
+		if(orientation == Orientation.NORTH || orientation == Orientation.SOUTH){
+			drawHorizontalWhiteLines(barcode);
+		}
+		else{
+			drawVerticalWhiteLines(barcode);
+		}
+	}
+	
+	public void drawHorizontalWhiteLines(Barcode barcode){
+		int LINEWIDTH = 2;
+		Orientation orientation = barcode.getOrientation();
+		int posXLowestLine = (int)barcode.getPos().getX()+OFFSET; 
+		int posYLowestLine = (int)barcode.getPos().getY()+OFFSET+6; //lowest line NOT including the outer black lines
+		int[] bits = barcode.getBits();
+
+		if(orientation == Orientation.NORTH){
+			for(int i=0; i<bits.length; i++){
+				if(bits[i]==1){
+					drawWhiteLine(posXLowestLine-20, posYLowestLine-LINEWIDTH*i-1, posXLowestLine+20, posYLowestLine-LINEWIDTH*(i+1));
+				}
+			}
+		}
+		else if(orientation == Orientation.SOUTH){
+			for(int i=0; i<bits.length; i++){
+				if(bits[i]==1){
+					drawWhiteLine(posXLowestLine-20, posYLowestLine-12+LINEWIDTH*(i+1)-1 , posXLowestLine+20, posYLowestLine-12+LINEWIDTH*i);
+				}
+			}
+		}
+	}
+	
+	public void drawVerticalWhiteLines(Barcode barcode){
+		int LINEWIDTH = 2;
+		Orientation orientation = barcode.getOrientation();
+		int posXLowestLine = (int)barcode.getPos().getX()+OFFSET-6; 
+		int posYLowestLine = (int)barcode.getPos().getY()+OFFSET; //lowest line NOT including the outer black lines
+		int[] bits = barcode.getBits();
+
+		if(orientation == Orientation.EAST){
+			for(int i=0; i<bits.length; i++){
+				if(bits[i]==1){
+					drawWhiteLine(posXLowestLine+LINEWIDTH*i, posYLowestLine+20, posXLowestLine+LINEWIDTH*(i+1)-1, posYLowestLine-20);
+				}
+			}
+		}
+		else if(orientation == Orientation.WEST){
+			for(int i=0; i<bits.length; i++){
+				if(bits[i]==1){
+					drawWhiteLine(posXLowestLine+12-LINEWIDTH*i, posYLowestLine+20, posXLowestLine+12-LINEWIDTH*(i+1)+1, posYLowestLine-20);
+				}
+			}
+		}
+	}
+	
+	//used for barcodes
+	public void drawWhiteLine(int pos1X, int pos1Y, int pos2X, int pos2Y){
+		Polygon pol = new Polygon();
+		pol.addPoint(pos1X, pos1Y);
+		pol.addPoint(pos2X, pos1Y);
+		pol.addPoint(pos2X, pos2Y);
+		pol.addPoint(pos1X, pos2Y);
+		g.setColor(Color.white);
 		g.drawPolygon(pol);
 		g.fillPolygon(pol);
 		totalGui.repaint();

@@ -4,32 +4,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.Position.Position;
+import domain.maze.Orientation;
 import domain.robots.Robot;
 
 public class Barcode {
 
 	private final int MAZECONSTANT = 40;
 	private Action action;
-	private Position pos1;
-	private Position pos2;
+//	private Position pos1; 
+//	private Position pos2; 
+	private Position pos; //centre of barcode ( == centre of square; ex "20,20", always multiple of 20)
+	private Orientation orientation;
 	private int[] bits;
 	private List<Integer> legalInts = new ArrayList<Integer>();
 	
-	public Barcode(int[] bits, Position pos1, Position pos2){
+	public Barcode(int[] bits, Position pos, Orientation orientation){
 		fillLegals();
 		if(bits.length != 6){
 			throw new IllegalArgumentException();
 		}
 		this.bits = bits;
-		this.pos1 = pos1;
-		this.pos2 = pos2;
+		this.pos = pos;
+		this.orientation = orientation;
 		int decimal = getDecimal(bits);
 		if(!legalInts.contains(decimal)){
 			mirrorBits();
 			decimal = getDecimal(this.bits);
 		}
 		action = getAction(decimal);
+		System.out.println("Barcode created with value "+bits[5]+bits[4]+bits[3]+bits[2]+bits[1]+bits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+orientation);
 	}
+	
+	public Barcode(int decimal, Position pos, Orientation orientation){
+		fillLegals();
+		if(!legalInts.contains(decimal)){
+			throw new IllegalArgumentException();
+		}
+		this.pos = pos;
+		this.orientation = orientation;
+		bits = getBinary(decimal);
+		action = getAction(decimal);
+		System.out.println("Barcode created with value "+bits[5]+bits[4]+bits[3]+bits[2]+bits[1]+bits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+orientation);
+
+	}
+	
 	
 	public Action getAction(int number){
 		switch (number){
@@ -44,11 +62,6 @@ public class Barcode {
 		}
 	}
 	
-	public Barcode(Action action, Position pos1, Position pos2){
-		this.action = action;
-		this.pos1 = pos1;
-		this.pos2 = pos2;
-	}
 	
 	public Action getAction(){
 		return action;
@@ -60,59 +73,140 @@ public class Barcode {
 		}
 	}
 	
-	public boolean hasPosition(Position pos){
-		if(horizontal()){
-			int lowx = (int) (Math.floor((pos1.getX())/MAZECONSTANT))*MAZECONSTANT;
-			if(pos.getX()<=lowx || pos.getX() >= lowx + MAZECONSTANT) return false;
-			else if((pos.getY() <= pos1.getY() && pos.getY() >= pos2.getY()) || 
-					pos.getY() >= pos1.getY() && pos.getY() <= pos2.getY()) return true;
-		}
-		else {
-			int lowy = (int) (Math.floor((pos1.getY())/MAZECONSTANT))*MAZECONSTANT;
-			if(pos.getY()<=lowy || pos.getY() >= lowy + MAZECONSTANT) return false;
-			else if((pos.getX() <= pos1.getX() && pos.getX() >= pos2.getX()) || 
-					pos.getX() >= pos1.getX() && pos.getX() <= pos2.getX()) return true;
-		}
-		return false;
-	}
-	
-	public int getBitAtPosition(Position pos){
-		int distance;
-		if(horizontal()){
-			 distance = (int) Math.abs(pos.getY()- pos1.getY());
+	public boolean hasPosition(Position hasP){
+		if(orientation==Orientation.NORTH || orientation==Orientation.SOUTH){
+			return false;
 		}
 		else{
-			 distance = (int) Math.abs(pos.getX() - pos1.getX());
+			return false;
 		}
-		return bits[distance/2 - 1];
 	}
 	
-	public boolean isBlackAt(Position pos){
-		if(!hasPosition(pos)) return false;
-		final int MARGE = 1;
-		if(getBitAtPosition(pos) == 0){
-			return true;
-		}
-		else if(pos.getDistance(pos1) < MARGE || pos.getDistance(pos2) < MARGE){
-			return true;
-		}
-		else return false;
+	public Orientation getOrientation(){
+		return orientation;
 	}
 	
-	public boolean isWhiteAt(Position pos){
-		if(!hasPosition(pos)) return false;
-		if(getBitAtPosition(pos) == 1){
-			return true;
-		}
-		else return false;
+	public int[] getBits(){
+		return bits;
 	}
 	
-	public boolean horizontal(){
-		final int MARGE = 1; //TODO: testen!
-		if(Math.abs(pos1.getX()-pos2.getX()) < MARGE)
-			return true;
-		else return false;
+//	public boolean hasPosition(Position pos){
+//		if(horizontal()){
+//			int lowx = (int) (Math.floor((pos1.getX())/MAZECONSTANT))*MAZECONSTANT;
+//			if(pos.getX()<=lowx || pos.getX() >= lowx + MAZECONSTANT) return false;
+//			else if((pos.getY() <= pos1.getY() && pos.getY() >= pos2.getY()) || 
+//					pos.getY() >= pos1.getY() && pos.getY() <= pos2.getY()) return true;
+//		}
+//		else {
+//			int lowy = (int) (Math.floor((pos1.getY())/MAZECONSTANT))*MAZECONSTANT;
+//			if(pos.getY()<=lowy || pos.getY() >= lowy + MAZECONSTANT) return false;
+//			else if((pos.getX() <= pos1.getX() && pos.getX() >= pos2.getX()) || 
+//					pos.getX() >= pos1.getX() && pos.getX() <= pos2.getX()) return true;
+//		}
+//		return false;
+//	}
+	
+//	public int getBitAtPosition(Position pos){
+//		int distance;
+//		if(horizontal()){
+//			 distance = (int) Math.abs(pos.getY()- pos1.getY());
+//		}
+//		else{
+//			 distance = (int) Math.abs(pos.getX() - pos1.getX());
+//		}
+//		return bits[distance/2 - 1];
+//	}
+	
+	public int getBitAtPosition(Position bitPos){
+		if(orientation==Orientation.NORTH || orientation==Orientation.SOUTH){
+			return getBitAtHorizontalPosition(bitPos);
+		}
+		else if(orientation==Orientation.WEST || orientation==Orientation.EAST){
+			return getBitAtVerticalPosition(bitPos);
+		}
+		else return 1;
 	}
+	
+	public int getBitAtHorizontalPosition(Position bitPos){	
+		//if pos not in barcode; return 1
+		if(!containsPosition(bitPos)){
+			return 1;
+		}
+		//if bitPos on outer black lines
+		if(bitPos.getY()==pos.getY()-8 || bitPos.getY()==pos.getY()-7 || bitPos.getY()==pos.getY()+6 || bitPos.getY()==pos.getY()+7){
+			return 0; 
+		}
+		// y-coordinate of lowest point of lowest outer black line
+		int bottomBlackLineBottomInt = 0;
+		if(orientation==Orientation.SOUTH || orientation==Orientation.EAST){
+		bottomBlackLineBottomInt = ((int) pos.getY()) - 8;
+		}
+		else if (orientation==Orientation.NORTH || orientation==Orientation.WEST){
+		bottomBlackLineBottomInt = ((int) pos.getY()) + 7;
+		}
+		int distance = Math.abs((int)bitPos.getY() - bottomBlackLineBottomInt);
+		int bit = bits[distance/2 -1];
+		return bit;	
+	}
+	
+	public int getBitAtVerticalPosition(Position bitPos){		
+		//if pos not in barcode; return 1
+		if(!containsPosition(bitPos)){
+			return 1;
+		}
+		//if bitPos on outer black lines
+		if(bitPos.getX()==pos.getX()-8 || bitPos.getX()==pos.getX()-7 || bitPos.getX()==pos.getX()+6 || bitPos.getX()==pos.getX()+7){
+			return 0; 
+		}
+		// y-coordinate of lowest point of lowest outer black line
+		int bottomBlackLineBottomInt = 0;
+		if(orientation==Orientation.EAST){
+		bottomBlackLineBottomInt = ((int) pos.getX()) - 8;
+		}
+		else if (orientation==Orientation.WEST){
+		bottomBlackLineBottomInt = ((int) pos.getX()) + 7;
+		}
+		int distance = Math.abs((int)bitPos.getX() - bottomBlackLineBottomInt);
+		int bit = bits[distance/2 -1];
+		return bit;	
+	}
+	
+	public boolean containsPosition(Position bitPos){
+		if(orientation==Orientation.NORTH || orientation==Orientation.SOUTH){
+			if(bitPos.getY()>pos.getY()-9 && bitPos.getY()<pos.getY()+8){
+				return true;
+			}
+			else return false;
+		}
+		else if(orientation==Orientation.WEST || orientation==Orientation.EAST){
+			if(bitPos.getX()>pos.getX()-9 && bitPos.getX()<pos.getX()+8){
+				return true;
+			}
+			else return false;
+		}
+		else return false;
+	}	
+	
+//	public boolean isBlackAt(Position pos){
+//		if(!hasPosition(pos)) return false;
+//		final int MARGE = 1;
+//		if(getBitAtPosition(pos) == 0){
+//			return true;
+//		}
+//		else if(pos.getDistance(pos1) < MARGE || pos.getDistance(pos2) < MARGE){
+//			return true;
+//		}
+//		else return false;
+//	}
+//	
+//	public boolean isWhiteAt(Position pos){
+//		if(!hasPosition(pos)) return false;
+//		if(getBitAtPosition(pos) == 1){
+//			return true;
+//		}
+//		else return false;
+//	}
+	
 	
 	private void mirrorBits(){
 		for(int i = 0; i<3; i++){
@@ -130,14 +224,20 @@ public class Barcode {
 		return result;
 	}
 	
-//	private int[] getBinary(int decimal){
-//		int[] result = new int[6];
-//		for(int i = 0; i< 6; i++){
-//			result[i] = decimal%2;
-//			decimal = decimal/2;
-//		}
-//		return result;
-//	}
+	
+	private int[] getBinary(int decimal){
+		int[] result = new int[6];
+		for(int i = 0; i< 6; i++){
+			result[i] = decimal%2;
+			decimal = decimal/2;
+		}
+		return result;
+	}
+	
+	public Position getPos(){
+		return pos;
+	}
+	
 	
 	private void fillLegals(){
 		legalInts.add(1);

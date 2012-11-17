@@ -11,13 +11,15 @@ public class Board {
 	private static final int MAZECONSTANT = 40;
 	
 	private List<Wall> walls;
-	private List<Barcode> barcodes;
 	private List<Wall> foundWalls;
+	private List<Barcode> simulatedBarcodes;
+	private List<Barcode> foundBarcodes;
 	
 	
 	public Board(){
 		walls = new ArrayList<Wall>();
-		barcodes = new ArrayList<Barcode>();
+		simulatedBarcodes = new ArrayList<Barcode>();
+		foundBarcodes = new ArrayList<Barcode>();
 		foundWalls = new ArrayList<Wall>();
 		}
 	
@@ -32,12 +34,22 @@ public class Board {
 	public List<Wall> getFoundWalls(){
 		return foundWalls;
 	}
-	public void addBarcode(Barcode barcode){
-		barcodes.add(barcode);
+	public void addFoundBarcode(Barcode barcode){
+		foundBarcodes.add(barcode);
+	}
+	public void addSimulatedBarcode(Barcode barcode){
+		simulatedBarcodes.add(barcode);
 	}
 	
 	public List<Wall> getWalls(){
 		return walls;
+	}
+	
+	public List<Barcode> getSimulatedBarcodes(){
+		return simulatedBarcodes;
+	}
+	public List<Barcode> getFoundBarcodes(){
+		return foundBarcodes;
 	}
 	
 	
@@ -60,11 +72,11 @@ public class Board {
 	}
 	
 	public boolean detectBlackLineAt(Position position){
-		for(Barcode barcode : barcodes){
-			if(barcode.isBlackAt(position)){
-				return true;
-			}
-		}
+//		for(Barcode barcode : simulatedBarcodes){
+//			if(barcode.isBlackAt(position)){
+//				return true;
+//			}
+//		}
 		return false;
 	}
 

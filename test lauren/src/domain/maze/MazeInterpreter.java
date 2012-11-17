@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.Position.Position;
+import domain.barcodes.Barcode;
 
 public class MazeInterpreter {
 	
@@ -38,6 +39,7 @@ public class MazeInterpreter {
 		  in.close();
 		    }
 	catch (Exception e){
+		e.printStackTrace();
 		  System.err.println("Error reading maze.");
 		  }
 	}
@@ -77,9 +79,16 @@ public class MazeInterpreter {
 		else if(commandSplit[0].equals("Straight")){
 			createStraight(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
 		}
+		if(commandSplit.length>2){
+			if(!commandSplit[2].equals("00")){
+				createBarcode(commandSplit[2], XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
+			}
+		}
 	}
 	
 	
+
+
 	public void createDeadEnd(int XCoo, int YCoo, Orientation orientation){
 		Position pos = new Position(XCoo, YCoo);
 		switch (orientation) {
@@ -219,6 +228,14 @@ public class MazeInterpreter {
 				board.addWall(new Wall(position1, position2));
 			}
 			}
+	}
+	
+	private void createBarcode(String string, int xCoo, int yCoo, Orientation orientation) {
+		int dec = Integer.parseInt(string);
+		int MAZECONSTANT = MazeElement.getMazeConstant();
+		xCoo = xCoo*MAZECONSTANT+(MAZECONSTANT/2);
+		yCoo = yCoo*MAZECONSTANT+(MAZECONSTANT/2);
+		board.addSimulatedBarcode(new Barcode(dec, new Position(xCoo, yCoo), orientation));
 	}
 	
 }

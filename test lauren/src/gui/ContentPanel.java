@@ -411,6 +411,7 @@ public class ContentPanel implements ActionListener {
             String fileName = fileDialog.getFile();
             String fileDirectory = fileDialog.getDirectory();
         	controller.readMazeFromFile(fileDirectory+fileName);
+        	drawingPanel.drawSimulatedWalls();
         	buttonPanel.requestFocusInWindow();
         }
         else if(e.getSource() == straightenButton){

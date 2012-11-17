@@ -39,8 +39,8 @@ public class BarcodeGenerator extends RobotFunction {
 			// niets doen?
 		}
 		Position pos2 = robot.getPosition();
-		Barcode barcode = new Barcode(bits, pos1, pos2);
-		if(btrobot) robot.getBoard().addBarcode(barcode);
-		barcode.runAction(robot);
+//		Barcode barcode = new Barcode(bits, pos1, pos2);  moet nog aangepast worden aan nieuwe manier
+//		if(btrobot) robot.getBoard().addBarcode(barcode);
+//		barcode.runAction(robot);
 	}
 }
