@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import domain.maze.Orientation;
 
 public class MazeGraph {
-	private ArrayList<MazeNode> nodes;
+	private ArrayList<TileNode> nodes;
 	private Orientation currentRobotOrientation;
 	private TileNode startNode;
 	private TileNode currentNode;
@@ -16,7 +16,7 @@ public class MazeGraph {
 	 * is because everything is handled relative to the starting orientation)
 	 */
 	public MazeGraph(){
-		nodes = new ArrayList<MazeNode>();
+		nodes = new ArrayList<TileNode>();
 		startNode = new TileNode(null,null);
 		startNode.setVisited();
 		setCurrentNode(startNode);
@@ -31,11 +31,18 @@ public class MazeGraph {
 	 */
 	public boolean isComplete(){
 		boolean isComplete = true;
-		for(MazeNode mazeNode:nodes){
-			if(!mazeNode.isFullyExpanded()) { isComplete = false;}
+		for(TileNode tileNode:nodes){
+			if(!tileNode.isFullyExpanded()) { isComplete = false;}
 		}
 		System.out.println(isComplete);
 		return isComplete;
+	}
+	
+	/**
+	 * @return Whether the starting node has been fully expanded.
+	 */
+	public boolean isStartNodeComplete(){
+		return startNode.isFullyExpanded();
 	}
 	
 	/**
@@ -57,18 +64,21 @@ public class MazeGraph {
 	 * @param orientation
 	 */
 	public void generateTileNodeAt(Orientation orientation){
-		TileNode newNode = new TileNode(getCurrentNode(),getCurrentRobotOrientation().getBack());
+		Orientation absoluteOrientation = getRelativeOrientation(getCurrentRobotOrientation(),orientation);
+		Orientation orientationToCurrent = absoluteOrientation.getBack();
+		TileNode newNode = new TileNode(getCurrentNode(),orientationToCurrent);
 		boolean thisNodeAlreadyExists = false;
-		for(MazeNode node:nodes){
-			if(node.getClass().equals(TileNode.class) && ((TileNode) node).getX()==newNode.getX() && ((TileNode)node).getY()==newNode.getY()){
-				getCurrentNode().setNodeAt(getRelativeOrientation(getCurrentRobotOrientation(),orientation), ((TileNode)node));
+		for(TileNode node:nodes){
+			if(((TileNode) node).getX()==newNode.getX() && ((TileNode)node).getY()==newNode.getY()){
+				getCurrentNode().setNodeAt(absoluteOrientation, node);
+				node.setNodeAt(orientationToCurrent, getCurrentNode());
 				thisNodeAlreadyExists = true;
-				System.out.println(node.toString());;
+				System.out.println(node.toString());
 				break;
 			}
 		}
 		if(!thisNodeAlreadyExists){
-			getCurrentNode().setNodeAt(getRelativeOrientation(getCurrentRobotOrientation(),orientation), newNode);
+			getCurrentNode().setNodeAt(absoluteOrientation, newNode);
 			nodes.add(newNode);
 			System.out.println(nodes.size());
 		}
@@ -79,8 +89,10 @@ public class MazeGraph {
 	 * @param orientation
 	 */
 	public void generateWallNodeAt(Orientation orientation){
-		WallNode newNode = new WallNode(getCurrentNode(),getCurrentRobotOrientation().getBack());
-		getCurrentNode().setNodeAt(getRelativeOrientation(getCurrentRobotOrientation(),orientation), newNode);
+		Orientation absoluteOrientation = getRelativeOrientation(getCurrentRobotOrientation(),orientation);
+		Orientation orientationToCurrent = absoluteOrientation.getBack();
+		WallNode newNode = new WallNode(getCurrentNode(),orientationToCurrent);
+		getCurrentNode().setNodeAt(absoluteOrientation, newNode);
 	}
 	
 	/**

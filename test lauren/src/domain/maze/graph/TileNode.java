@@ -33,8 +33,8 @@ public class TileNode extends MazeNode {
 			return true;
 		} else {
 			fullyExpanded=true;
-			for(MazeNode node:connectedNodes.values()){
-				if(node == null){
+			for(Orientation o:getConnectedNodes().keySet()){
+				if(o!= null && getConnectedNodes().get(o) == null){
 					fullyExpanded=false;
 				}
 			}
