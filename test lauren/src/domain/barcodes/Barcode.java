@@ -143,8 +143,15 @@ public class Barcode {
 		else if (orientation==Orientation.NORTH || orientation==Orientation.WEST){
 		bottomBlackLineBottomInt = ((int) pos.getY()) + 7;
 		}
+		System.out.println(bitPos.getY());
+		System.out.println(bottomBlackLineBottomInt);
 		int distance = Math.abs((int)bitPos.getY() - bottomBlackLineBottomInt);
-		int bit = bits[distance/2 -1];
+		int bit;
+		if(distance<2 || distance >= 14){
+			 return 0;
+		}
+		else
+			 bit = bits[distance/2-1];
 		return bit;	
 	}
 	
@@ -165,8 +172,15 @@ public class Barcode {
 		else if (orientation==Orientation.WEST){
 		bottomBlackLineBottomInt = ((int) pos.getX()) + 7;
 		}
+		System.out.println(bitPos.getX());
+		System.out.println(bottomBlackLineBottomInt);
 		int distance = Math.abs((int)bitPos.getX() - bottomBlackLineBottomInt);
-		int bit = bits[distance/2 -1];
+		int bit;
+		if(distance<2 || distance >= 14){
+			 return 0;
+		}
+		else
+			 bit = bits[distance/2-1];
 		return bit;	
 	}
 	
