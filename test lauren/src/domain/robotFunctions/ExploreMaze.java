@@ -22,6 +22,7 @@ public class ExploreMaze {
 	private final int distanceBlocks = 40;
 	private ArrayList<Wall> wallList = new ArrayList<Wall>();
 	private MazeGraph maze = new MazeGraph();
+	private boolean backWall = false;
 	
 	public ExploreMaze(RobotPilot simRobotPilot){
 		this.robot = simRobotPilot;
@@ -32,10 +33,20 @@ public class ExploreMaze {
 	}
 	
 	public void start(){
+		double[] dummy = new double[3];
+		dummy = checkDistances();
+		robot.turnLeft();
+		robot.turnLeft();
+		double backValue = robot.readUltrasonicValue();
+		if(backValue < valuedDistance){
+			maze.generateWallNodeAt(Orientation.SOUTH);
+		}else{
+			maze.generateTileNodeAt(Orientation.SOUTH);
+		}
+		robot.turnLeft();
+		robot.turnLeft();
 		//TODO stopcondition needs to be determined.
 		while(!maze.isComplete()){
-			CenterRobot center = new CenterRobot(robot);
-			center.center();
 			double[] distances = new double[3];
 			distances = checkDistances();
 			makeWall(distances);
