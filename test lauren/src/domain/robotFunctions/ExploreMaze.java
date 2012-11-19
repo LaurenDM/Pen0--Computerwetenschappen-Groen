@@ -57,14 +57,14 @@ public class ExploreMaze {
 			calculateWall(x,y,orientation,Direction.FORWARD);
 			maze.generateWallNodeAt(Orientation.NORTH);
 		} else {
-			maze.generateWallNodeAt(Orientation.NORTH);
+			maze.generateTileNodeAt(Orientation.NORTH);
 		}
 			
 		if(distances[2] < valuedDistance){
 			calculateWall(x,y,orientation,Direction.RIGHT);
 			maze.generateWallNodeAt(Orientation.EAST);
 		} else {
-			maze.generateWallNodeAt(Orientation.EAST);
+			maze.generateTileNodeAt(Orientation.EAST);
 		}
 	}
 	private void calculateWall(double x, double y, double orientation,Direction direction) {
