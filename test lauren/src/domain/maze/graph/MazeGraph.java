@@ -18,7 +18,6 @@ public class MazeGraph {
 	public MazeGraph(){
 		nodes = new ArrayList<TileNode>();
 		startNode = new TileNode(null,null);
-		startNode.setVisited();
 		setCurrentNode(startNode);
 		nodes.add(startNode);
 		setCurrentRobotOrientation(Orientation.NORTH);
@@ -53,7 +52,6 @@ public class MazeGraph {
 		MazeNode nextNode = getCurrentNode().getNodeAt(getCurrentRobotOrientation());
 		if(nextNode != null && nextNode.getClass().equals(TileNode.class)){
 			setCurrentNode((TileNode) nextNode);
-			getCurrentNode().setVisited();
 		} else {
 			throw new RuntimeException("There is no node there or it's a WallNode.");
 		}
@@ -73,14 +71,12 @@ public class MazeGraph {
 				getCurrentNode().setNodeAt(absoluteOrientation, node);
 				node.setNodeAt(orientationToCurrent, getCurrentNode());
 				thisNodeAlreadyExists = true;
-				System.out.println(node.toString());
 				break;
 			}
 		}
 		if(!thisNodeAlreadyExists){
 			getCurrentNode().setNodeAt(absoluteOrientation, newNode);
 			nodes.add(newNode);
-			System.out.println(nodes.size());
 		}
 	}
 	
@@ -159,6 +155,22 @@ public class MazeGraph {
 
 	private void setCurrentRobotOrientation(Orientation orientation) {
 		this.currentRobotOrientation = orientation;
+	}
+	
+	/**
+	 * Sets the current Node as the Finish node.
+	 */
+	public void setCurrentTileToFinish(){
+		boolean finishAlreadyExists=false;
+		for(TileNode node:nodes){
+			if(node.isFinish() && !node.equals(getCurrentNode())){
+				System.out.println("The finish node already exists! Cannot have 2 finish nodes!");
+				finishAlreadyExists=true;
+			}
+		}
+		if(!finishAlreadyExists){
+			getCurrentNode().setFinish();
+		}
 	}
 	
 	private Orientation getRelativeOrientation(Orientation original, Orientation relative){

@@ -19,11 +19,11 @@ public class WallNode extends MazeNode {
 	}
 	
 	/**
-	 * Always true. If you made it you've seen it, and in the case of a wall node that means you've been there.
+	 * Always false.
 	 */
 	@Override
-	public boolean isVisited(){
-		return true;
+	public boolean isFinish(){
+		return false;
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import domain.maze.Orientation;
 public class TileNode extends MazeNode {
 	private HashMap<Orientation,MazeNode> connectedNodes;
 	private boolean fullyExpanded;
-	private boolean visited;
+	private boolean finish;
 	private int x;
 	private int y;
 	
@@ -16,7 +16,7 @@ public class TileNode extends MazeNode {
 		for(Orientation o : Orientation.values()){
 			connectedNodes.put(o, null);
 		}
-		visited = false;
+		finish = false;
 		setNodeAt(orientationToCurrentNode, currentNode);
 		if(currentNode==null || orientationToCurrentNode==null){
 			x=0;
@@ -54,13 +54,12 @@ public class TileNode extends MazeNode {
 		return connectedNodes;
 	}
 
-	public void setVisited() {
-		visited  = true;
+	public void setFinish() {
+		finish = true;
 	}
 
-	@Override
-	public boolean isVisited() {
-		return visited;
+	public boolean isFinish() {
+		return finish;
 	}
 
 	public int getX() {
