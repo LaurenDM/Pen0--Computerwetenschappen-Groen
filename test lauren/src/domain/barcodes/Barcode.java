@@ -172,14 +172,20 @@ public class Barcode {
 	
 	public boolean containsPosition(Position bitPos){
 		if(orientation==Orientation.NORTH || orientation==Orientation.SOUTH){
+			if(bitPos.getX()>pos.getX()-20 && bitPos.getX()<pos.getX()+20){
 			if(bitPos.getY()>pos.getY()-9 && bitPos.getY()<pos.getY()+8){
 				return true;
 			}
 			else return false;
+			}
+			else return false;
 		}
 		else if(orientation==Orientation.WEST || orientation==Orientation.EAST){
+			if(bitPos.getY()>pos.getY()-20 && bitPos.getY()<pos.getY()+20){
 			if(bitPos.getX()>pos.getX()-9 && bitPos.getX()<pos.getX()+8){
 				return true;
+			}
+			else return false;
 			}
 			else return false;
 		}
@@ -187,7 +193,7 @@ public class Barcode {
 	}	
 	
 	public boolean isBlackAt(Position pos){
-		if(!hasPosition(pos)) return false;
+		if(!containsPosition(pos)) return false;
 		if(getBitAtPosition(pos) == 0){
 			return true;
 		}
@@ -195,7 +201,7 @@ public class Barcode {
 	}
 	
 	public boolean isWhiteAt(Position pos){
-		if(!hasPosition(pos)) return false;
+		if(!containsPosition(pos)) return false;
 		if(getBitAtPosition(pos) == 1){
 			return true;
 		}

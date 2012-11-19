@@ -236,6 +236,21 @@ public class MazeInterpreter {
 		xCoo = xCoo*MAZECONSTANT+(MAZECONSTANT/2);
 		yCoo = yCoo*MAZECONSTANT+(MAZECONSTANT/2);
 		board.addSimulatedBarcode(new Barcode(dec, new Position(xCoo, yCoo), orientation));
+//		testBarcode();
+	}
+	
+	private void testBarcode(){
+		for(Barcode b: board.getSimulatedBarcodes()){
+			for(int i = 0; i<200; i++){
+			boolean test1 = b.isBlackAt(new Position(20, i));
+			boolean test2 = b.isBlackAt(new Position(60, i));
+			boolean test3 = b.isBlackAt(new Position(100, i));
+			boolean test4 = b.isBlackAt(new Position(140, i));
+			boolean test5 = b.isBlackAt(new Position(180, i));
+			boolean test6 = b.isBlackAt(new Position(220, i));
+			System.out.println("Y:"+i+" "+test1+" "+test2+" "+test3+" "+test4+" "+test5+" "+test6);
+			}
+		}
 	}
 	
 }
