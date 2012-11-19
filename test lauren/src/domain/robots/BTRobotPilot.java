@@ -210,7 +210,7 @@ public class BTRobotPilot implements RobotPilot  {
 		int distance = (int) readUltrasonicValue();	
 		int testDistance = 10; 
 		if(distance < testDistance || isTouching()){
-			makeWall();
+			//makeWall();
 			return false;
 		}
 		else
@@ -272,25 +272,25 @@ public class BTRobotPilot implements RobotPilot  {
 		else return false;
 	}
 
-	public void makeWall() {
-		sensorMotor.setSpeed(2);
-		Position pos1 = getPosition().getNewPosition(getOrientation(), readUltrasonicValue());
-		if(board.detectWallAt(pos1)) return;
-		turnUltrasonicSensor(5);
-		Position pos2 = getPosition().getNewPosition(5+getOrientation(), readUltrasonicValue());
-		if(board.detectWallAt(pos2)) return;
-		turnUltrasonicSensor(-10);
-		Position pos3 = getPosition().getNewPosition(-5+getOrientation(), readUltrasonicValue());
-		if(board.detectWallAt(pos3)) return;
-		turnSensorForward();
-		try {
-			Wall wall = new Wall(pos1,pos2,pos3);
-			board.addWall(wall);
-		} catch (NotAWallException e) {
-			// no real wall was detected
-		}
-		sensorMotor.setSpeed(720);
-	}
+//	public void makeWall() {
+//		sensorMotor.setSpeed(2);
+//		Position pos1 = getPosition().getNewPosition(getOrientation(), readUltrasonicValue());
+//		if(board.detectWallAt(pos1)) return;
+//		turnUltrasonicSensor(5);
+//		Position pos2 = getPosition().getNewPosition(5+getOrientation(), readUltrasonicValue());
+//		if(board.detectWallAt(pos2)) return;
+//		turnUltrasonicSensor(-10);
+//		Position pos3 = getPosition().getNewPosition(-5+getOrientation(), readUltrasonicValue());
+//		if(board.detectWallAt(pos3)) return;
+//		turnSensorForward();
+//		try {
+//			Wall wall = new Wall(pos1,pos2,pos3);
+//			board.addWall(wall);
+//		} catch (NotAWallException e) {
+//			// no real wall was detected
+//		}
+//		sensorMotor.setSpeed(720);
+//	}
 	
 	public void findOrigin(){
 		setMovingSpeed(0.1); //TODO: testen
