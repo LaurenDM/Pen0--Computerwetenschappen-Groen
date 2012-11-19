@@ -34,6 +34,8 @@ public class ExploreMaze {
 	public void start(){
 		//TODO stopcondition needs to be determined.
 		while(!maze.isComplete()){
+			CenterRobot center = new CenterRobot(robot);
+			center.center();
 			double[] distances = new double[3];
 			distances = checkDistances();
 			makeWall(distances);
