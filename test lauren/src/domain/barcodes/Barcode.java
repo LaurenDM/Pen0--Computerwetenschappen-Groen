@@ -209,6 +209,18 @@ public class Barcode {
 			bits[i] = bits[5-i];
 			bits[5-i] = temp;
 		}
+		if(orientation==Orientation.NORTH){
+			orientation = Orientation.SOUTH;
+		}
+		else if(orientation==Orientation.SOUTH){
+			orientation = Orientation.NORTH;
+		}
+		else if(orientation==Orientation.WEST){
+			orientation = Orientation.EAST;
+		}
+		else if(orientation==Orientation.EAST){
+			orientation = Orientation.WEST;
+		}
 	}
 	
 	private int getDecimal(int[] bits){
