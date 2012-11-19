@@ -60,7 +60,7 @@ public class Board {
 		return false;
 	}
 	
-	public boolean detectLineAt(Position position){
+	public boolean detectWhiteLineAt(Position position){
 		final int MARGE = 1; // TODO: hangt af van dikte lijnen
 		double x_mod = Math.abs(position.getX()%MAZECONSTANT);
 		if(Math.min(x_mod, MAZECONSTANT-x_mod) <MARGE) 
@@ -68,12 +68,18 @@ public class Board {
 		double y_mod = Math.abs(position.getY()%MAZECONSTANT);
 		if(Math.min(y_mod,  MAZECONSTANT - y_mod)<MARGE)
 			return true;
+		for(Barcode barcode : simulatedBarcodes){
+			if(barcode.isWhiteAt(position)){
+				return true;
+			}
+		}
 		return false;
 	}
 	
 	public boolean detectBlackLineAt(Position position){
 		for(Barcode barcode : simulatedBarcodes){
 			if(barcode.isBlackAt(position)){
+				System.out.println("blackline");
 				return true;
 			}
 		}

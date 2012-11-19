@@ -302,9 +302,12 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public double readLightValue() {
-		final double HIGH = 80;
-		final double LOW = 40;
-		return detectWhiteLine()?HIGH:LOW;
+		final double WHITE = 100;
+		final double WOOD = 0;
+		final double BLACK = -100;
+		if(detectWhiteLine()) return WHITE;
+		else if(detectBlackLine()) return BLACK;
+		else return WOOD;
 	}
 	//TODO: waardes hangen af van kalibratie van echte sensor
 
@@ -360,7 +363,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public boolean detectWhiteLine() {
-		return board.detectLineAt(getPosition().getNewPosition(getOrientation(), 8));
+		return board.detectWhiteLineAt(getPosition().getNewPosition(getOrientation(), 8));
 	}
 
 	@Override
@@ -463,7 +466,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public boolean detectBlackLine() {
-		return getBoard().detectBlackLineAt(getPosition());
+		return getBoard().detectBlackLineAt(getPosition().getNewPosition(getOrientation(), 8));
 	}
 
 

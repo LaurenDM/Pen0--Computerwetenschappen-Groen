@@ -118,15 +118,15 @@ public class Barcode {
 	
 	public int getBitAtPosition(Position bitPos){
 		if(orientation==Orientation.NORTH || orientation==Orientation.SOUTH){
-			return getBitAtHorizontalPosition(bitPos);
+			return getBitAtVerticalPosition(bitPos);
 		}
 		else if(orientation==Orientation.WEST || orientation==Orientation.EAST){
-			return getBitAtVerticalPosition(bitPos);
+			return getBitAtHorizontalPosition(bitPos);
 		}
 		else return 1;
 	}
 	
-	public int getBitAtHorizontalPosition(Position bitPos){	
+	public int getBitAtVerticalPosition(Position bitPos){	
 		//if pos not in barcode; return 1
 		if(!containsPosition(bitPos)){
 			return 1;
@@ -148,7 +148,7 @@ public class Barcode {
 		return bit;	
 	}
 	
-	public int getBitAtVerticalPosition(Position bitPos){		
+	public int getBitAtHorizontalPosition(Position bitPos){		
 		//if pos not in barcode; return 1
 		if(!containsPosition(bitPos)){
 			return 1;
