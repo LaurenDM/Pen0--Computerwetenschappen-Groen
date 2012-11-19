@@ -131,10 +131,6 @@ public class Barcode {
 		if(!containsPosition(bitPos)){
 			return 1;
 		}
-		//if bitPos on outer black lines
-		if(bitPos.getY()==pos.getY()-8 || bitPos.getY()==pos.getY()-7 || bitPos.getY()==pos.getY()+6 || bitPos.getY()==pos.getY()+7){
-			return 0; 
-		}
 		// y-coordinate of lowest point of lowest outer black line
 		int bottomBlackLineBottomInt = 0;
 		if(orientation==Orientation.SOUTH || orientation==Orientation.EAST){
@@ -143,8 +139,6 @@ public class Barcode {
 		else if (orientation==Orientation.NORTH || orientation==Orientation.WEST){
 		bottomBlackLineBottomInt = ((int) pos.getY()) + 7;
 		}
-		System.out.println(bitPos.getY());
-		System.out.println(bottomBlackLineBottomInt);
 		int distance = Math.abs((int)bitPos.getY() - bottomBlackLineBottomInt);
 		int bit;
 		if(distance<2 || distance >= 14){
@@ -160,10 +154,6 @@ public class Barcode {
 		if(!containsPosition(bitPos)){
 			return 1;
 		}
-		//if bitPos on outer black lines
-		if(bitPos.getX()==pos.getX()-8 || bitPos.getX()==pos.getX()-7 || bitPos.getX()==pos.getX()+6 || bitPos.getX()==pos.getX()+7){
-			return 0; 
-		}
 		// y-coordinate of lowest point of lowest outer black line
 		int bottomBlackLineBottomInt = 0;
 		if(orientation==Orientation.EAST){
@@ -172,8 +162,6 @@ public class Barcode {
 		else if (orientation==Orientation.WEST){
 		bottomBlackLineBottomInt = ((int) pos.getX()) + 7;
 		}
-		System.out.println(bitPos.getX());
-		System.out.println(bottomBlackLineBottomInt);
 		int distance = Math.abs((int)bitPos.getX() - bottomBlackLineBottomInt);
 		int bit;
 		if(distance<2 || distance >= 14){
