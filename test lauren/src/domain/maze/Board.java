@@ -72,11 +72,11 @@ public class Board {
 	}
 	
 	public boolean detectBlackLineAt(Position position){
-//		for(Barcode barcode : simulatedBarcodes){
-//			if(barcode.isBlackAt(position)){
-//				return true;
-//			}
-//		}
+		for(Barcode barcode : simulatedBarcodes){
+			if(barcode.(position)){
+				return true;
+			}
+		}
 		return false;
 	}
 

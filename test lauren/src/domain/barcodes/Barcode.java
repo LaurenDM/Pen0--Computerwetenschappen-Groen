@@ -9,7 +9,6 @@ import domain.robots.Robot;
 
 public class Barcode {
 
-	private final int MAZECONSTANT = 40;
 	private Action action;
 //	private Position pos1; 
 //	private Position pos2; 
@@ -187,25 +186,21 @@ public class Barcode {
 		else return false;
 	}	
 	
-//	public boolean isBlackAt(Position pos){
-//		if(!hasPosition(pos)) return false;
-//		final int MARGE = 1;
-//		if(getBitAtPosition(pos) == 0){
-//			return true;
-//		}
-//		else if(pos.getDistance(pos1) < MARGE || pos.getDistance(pos2) < MARGE){
-//			return true;
-//		}
-//		else return false;
-//	}
-//	
-//	public boolean isWhiteAt(Position pos){
-//		if(!hasPosition(pos)) return false;
-//		if(getBitAtPosition(pos) == 1){
-//			return true;
-//		}
-//		else return false;
-//	}
+	public boolean isBlackAt(Position pos){
+		if(!hasPosition(pos)) return false;
+		if(getBitAtPosition(pos) == 0){
+			return true;
+		}
+		else return false;
+	}
+	
+	public boolean isWhiteAt(Position pos){
+		if(!hasPosition(pos)) return false;
+		if(getBitAtPosition(pos) == 1){
+			return true;
+		}
+		else return false;
+	}
 	
 	
 	private void mirrorBits(){
