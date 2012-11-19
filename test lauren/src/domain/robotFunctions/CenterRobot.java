@@ -13,13 +13,13 @@ public class CenterRobot {
 	
 	public void center(){
 		double[] dist = checkDistances();
-		if(dist[1] < 100)
+		if(dist[1] < 30)
 			checkForward(dist[1]);
-		if(dist[0] < 100)
+		if(dist[0] < 30)
 			checkForward(dist[1]);
 		checkLeft(dist[0]);
 		robot.turnRight();
-		if(dist[2] < 100){
+		if(dist[2] < 30){
 			robot.turnRight();
 			checkRight(dist[2]);
 		}
@@ -27,9 +27,9 @@ public class CenterRobot {
 	}
 	
 	private void checkRight(double dist){
-		double distance = (dist % 40) % 20;
+		double distance = (dist % 40);
 		try {
-			robot.move(distance);
+			robot.move(getFixedDistance(distance));
 		} catch (CannotMoveException e) {
 			// Normally never gets called.
 			e.printStackTrace();
@@ -39,9 +39,9 @@ public class CenterRobot {
 	}
 	
 	private void checkForward(double dist){
-		double distance = (dist % 40) % 20;
+		double distance = (dist % 40);
 		try {
-			robot.move(distance);
+			robot.move(getFixedDistance(distance));
 		} catch (CannotMoveException e) {
 			// Normally never gets called.
 			e.printStackTrace();
@@ -49,17 +49,31 @@ public class CenterRobot {
 	}
 	
 	private void checkLeft(double dist){
-		double distance = (dist % 40) % 20;
+		double distance = (dist % 40);
 		robot.turnLeft();
 		try {
-			robot.move(distance);
+			robot.move(getFixedDistance(distance));
 		} catch (CannotMoveException e) {
 			// Normally never gets called.
 			e.printStackTrace();
 		}
-		
-		
 	}
+	
+	private double getFixedDistance(double distance){
+		double newDistance;
+		if(distance > 17){
+			newDistance = distance - 17;
+		}
+		else{
+			newDistance = -1 * (17 - distance);
+		}
+		//Marge waarmee we kunnen werken.
+		if(newDistance < 4){
+			newDistance = 0;
+		}
+		return newDistance;
+	}
+	
 	private double[] checkDistances(){
 		double[] distances = new double[3];
 		robot.turnSensorLeft();
