@@ -31,7 +31,7 @@ public class ContentPanel implements ActionListener {
     private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, lineLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, 
     calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton,
-    rotateSlowLeft,rotateSlowRight,startButton;
+    rotateSlowLeft,rotateSlowRight,startButton, barcodeButton;
     private JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
@@ -183,8 +183,11 @@ public class ContentPanel implements ActionListener {
         straightenButton = new JButton("STRAIGHTEN AT WHITE LINE");
         fixButtonLayout(buttonPanel, straightenButton, 240, 30, 30, buttonYDimension + 340);
         
+        barcodeButton = new JButton("FIND BARCODE");
+        fixButtonLayout(buttonPanel, barcodeButton, 240, 30, 30, buttonYDimension + 370);
+        
         sensorButton = new JButton("SHOW SENSOR DATA ON MAP");
-        fixButtonLayout(buttonPanel, sensorButton, 240, 30, 30, buttonYDimension + 370);
+        fixButtonLayout(buttonPanel, sensorButton, 240, 30, 30, buttonYDimension + 400);
         
         startButton = new JButton("Start");
         fixButtonLayout(buttonPanel, startButton, 20, 150, 0, 0);
@@ -417,6 +420,11 @@ public class ContentPanel implements ActionListener {
         else if(e.getSource() == straightenButton){
         	actionLabel.setText("Finding white line and straightening");
         	controller.findLineAndStraighten();
+        	buttonPanel.requestFocusInWindow();
+        }
+        else if(e.getSource() == barcodeButton){
+        	actionLabel.setText("Finding barcode and reading it");
+        	controller.findBlackLineAndCreateBarcode();
         	buttonPanel.requestFocusInWindow();
         }
         else if(e.getSource() == sensorButton){

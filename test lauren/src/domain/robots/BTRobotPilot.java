@@ -429,6 +429,20 @@ public class BTRobotPilot implements RobotPilot  {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void findBlackLine() {
+		setMovingSpeed(2);
+		boolean found=false;
+		try {
+			forward();
+		} catch (CannotMoveException e) {
+			turnRight();
+		}
+		while(!found){
+			found = detectBlackLine();
+		}
+	}
 	
 	
 

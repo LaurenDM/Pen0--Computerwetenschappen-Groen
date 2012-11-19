@@ -14,6 +14,7 @@ import domain.PolygonDriver;
 import domain.Position.Position;
 import domain.maze.Board;
 import domain.maze.MazeInterpreter;
+import domain.robotFunctions.BarcodeGenerator;
 import domain.robots.BTRobotPilot;
 import domain.robots.CannotMoveException;
 import domain.robots.Robot;
@@ -217,6 +218,19 @@ public class Controller {
 		currentRobot.turn(i);
 		currentRobot.resetToDefaultSpeeds();
 		
+	}
+	
+	public void findBlackLineAndCreateBarcode(){
+		Runnable barcodeGen = new Runnable() {
+
+			@Override
+			public void run() {
+				currentRobot.findBlackLine();
+				BarcodeGenerator bg = new BarcodeGenerator(currentRobot);
+				bg.generateBarcode();
+			}
+		};
+		(new Thread(barcodeGen)).start();
 	}
 
 	public void startExplore() {

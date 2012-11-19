@@ -31,7 +31,7 @@ public class Barcode {
 			decimal = getDecimal(this.bits);
 		}
 		action = getAction(decimal);
-		System.out.println("Barcode created with value "+bits[5]+bits[4]+bits[3]+bits[2]+bits[1]+bits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+orientation);
+		System.out.println("Barcode created with value "+this.bits[0]+this.bits[1]+this.bits[2]+this.bits[3]+this.bits[4]+this.bits[5]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+orientation);
 	}
 	
 	public Barcode(int decimal, Position pos, Orientation orientation){
@@ -234,7 +234,7 @@ public class Barcode {
 	private int getDecimal(int[] bits){
 		int result = 0;
 		for(int i = 0; i< 6; i++){
-			result += bits[5-i]*2^(i);
+			result = (int) (result + bits[5-i]*Math.pow(2, i));
 		}
 		return result;
 	}

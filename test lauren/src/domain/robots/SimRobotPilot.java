@@ -425,7 +425,33 @@ public class SimRobotPilot implements RobotPilot {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void findBlackLine(){
+		int wantedDetections=1;
+		setMovingSpeed(2);
+		boolean found=false;
+		try {
+			forward();
+		} catch (CannotMoveException e) {
+			turnRight();
 		}
+		int consecutiveDetections=0;
+		while(consecutiveDetections<wantedDetections){
+				if(detectBlackLine()){
+					consecutiveDetections++;
+				}
+				else consecutiveDetections=0;
+				}
+		stop();
+		//We move 1 cm because otherwise we are standing in the beginnen and not the middle of the white line 
+		try {
+			move(1);
+		} catch (CannotMoveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void interrupt() {

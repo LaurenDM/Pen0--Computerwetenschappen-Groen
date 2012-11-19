@@ -18,14 +18,28 @@ public class BarcodeGenerator extends RobotFunction {
 	
 // this method is called when the robot has detected a black line
 	public void generateBarcode(){
-		robot.setMovingSpeed(0.1);
+		if(robot.getBoard().detectBarcodeAt(robot.getPosition())){
+			try {
+				robot.move(8);
+			} catch (CannotMoveException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return;
+		}
+		robot.setMovingSpeed(1);
 		robot.backward();
 		while(robot.detectBlackLine()){
 			// niets
 		}
 		robot.stop();
-		int[] bits = new int[16];
-		for(int i = 0; i<16; i++){
+		try {
+			robot.move(1);
+		} catch (CannotMoveException e1) {
+			// nietsdoene
+		}
+		int[] bits = new int[32];
+		for(int i = 0; i<32; i++){
 			try {
 				robot.move(0.5);
 			} catch (CannotMoveException e) {
@@ -39,12 +53,12 @@ public class BarcodeGenerator extends RobotFunction {
 			}
 		}
 		Position pos = robot.getPosition();
+		
 		int lowx = (int) (Math.floor((pos.getX())/MAZECONSTANT))*MAZECONSTANT;
 		int lowy = (int) (Math.floor((pos.getY())/MAZECONSTANT))*MAZECONSTANT;
-			
-		
-		Barcode barcode = new Barcode(bits, new Position(lowx+20, lowy+20), getOrientation(robot.getOrientation())); 
+		Barcode barcode = new Barcode(convertBits(bits), new Position(lowx+20, lowy+20), getOrientation(robot.getOrientation())); 
 		robot.getBoard().addFoundBarcode(barcode);
+		robot.setMovingSpeed(robot.getDefaultMovingSpeed());
 		barcode.runAction(robot);
 	}
 
@@ -56,4 +70,18 @@ public class BarcodeGenerator extends RobotFunction {
 		else if(Math.abs(angle+90) <MARGE) return Orientation.NORTH;
 		else throw new IllegalArgumentException();
 	}
+	
+	public int[] convertBits(int[] bits){
+		int[] realBits = new int[6];
+		for(int i = 1; i<7; i++){
+			int count1 =0;
+			for(int j= 0; j<4; j++){
+				if(bits[4*i+j] ==1) count1++;
+			}
+			if(count1>2) realBits[i-1] = 1;
+			else realBits[i-1] = 0;
+		}
+		return realBits;
+	}
+	
 }

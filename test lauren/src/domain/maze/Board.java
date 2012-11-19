@@ -53,14 +53,28 @@ public class Board {
 	}
 	
 	
-	public boolean detectWallAt(Position position){
+	public synchronized boolean detectWallAt(Position position){
 		for(Wall wall: walls){
 			if(wall.hasPosition(position)) return true;
 		}
 		return false;
 	}
 	
-	public boolean detectWhiteLineAt(Position position){
+	public boolean detectBarcodeAt(Position position){
+		for(Barcode barcode : foundBarcodes){
+			if(barcode.containsPosition(position)) return true;
+		}
+		return false;
+	}
+	
+	public Barcode getBarcodeAt(Position pos){
+		for(Barcode barcode : foundBarcodes){
+			if(barcode.containsPosition(pos)) return barcode;
+		}
+		return null;
+	}
+	
+	public synchronized boolean detectWhiteLineAt(Position position){
 		final int MARGE = 1; // TODO: hangt af van dikte lijnen
 		double x_mod = Math.abs(position.getX()%MAZECONSTANT);
 		if(Math.min(x_mod, MAZECONSTANT-x_mod) <MARGE) 
@@ -76,10 +90,10 @@ public class Board {
 		return false;
 	}
 	
-	public boolean detectBlackLineAt(Position position){
+	public synchronized boolean detectBlackLineAt(Position position){
 		for(Barcode barcode : simulatedBarcodes){
 			if(barcode.isBlackAt(position)){
-				System.out.println("blackline");
+				//System.out.println("blackline");
 				return true;
 			}
 		}

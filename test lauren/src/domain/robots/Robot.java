@@ -243,6 +243,12 @@ public class Robot {
 	public void setFinish(){
 		this.finish = getPosition();
 	}
+
+	public void findBlackLine() {
+		robotPilot.findBlackLine();
+	}
+	
+	
 	
 //	public void findOpening(){
 //		double max = 0;
