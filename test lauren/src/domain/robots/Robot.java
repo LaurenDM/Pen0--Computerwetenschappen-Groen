@@ -18,6 +18,11 @@ public class Robot {
 		this.robotPolygon=new RobotPolygon(this);
 	}
 	
+	public RobotPilot getRobotPilot(){
+		return this.robotPilot;
+	}
+	
+	
 	public RobotPolygon getRobotPolygon(){
 		return robotPolygon;
 	}

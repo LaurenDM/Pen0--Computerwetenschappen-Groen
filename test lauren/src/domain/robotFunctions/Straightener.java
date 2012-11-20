@@ -3,6 +3,7 @@ import domain.Position.Position;
 import domain.robots.BTRobotPilot;
 import domain.robots.CannotMoveException;
 import domain.robots.Robot;
+import domain.robots.SimRobotPilot;
 
 /**
  * A class that contains functions for straightening a robot (real or simulated).
@@ -32,6 +33,8 @@ public class Straightener extends RobotFunction {
 	
 	private void turnUntil(boolean detect, boolean left, int wantedDetections) {
 		robot.setTurningSpeed(1);
+		if(robot.getRobotPilot().getClass() == SimRobotPilot.class)
+			robot.setTurningSpeed(50);
 		int consecutiveDetections = 0;
 //		long previousTime=System.currentTimeMillis();
 //		int i=0; //TODO remove
