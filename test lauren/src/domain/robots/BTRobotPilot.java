@@ -426,7 +426,7 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void addFoundWall(Wall wall) {
-		// TODO Auto-generated method stub
+		board.foundNewWall(wall);
 		
 	}
 
@@ -443,6 +443,7 @@ public class BTRobotPilot implements RobotPilot  {
 			found = detectBlackLine();
 		}
 	}
+
 	
 	
 

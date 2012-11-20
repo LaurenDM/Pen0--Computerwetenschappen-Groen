@@ -36,35 +36,43 @@ public class Straightener extends RobotFunction {
 		if(robot.getRobotPilot().getClass() == SimRobotPilot.class)
 			robot.setTurningSpeed(50);
 		int consecutiveDetections = 0;
-//		long previousTime=System.currentTimeMillis();
-//		int i=0; //TODO remove
 		robot.keepTurning(left);
 		while(consecutiveDetections < wantedDetections){
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-//			long timediff=System.currentTimeMillis()-previousTime;//TODO remove
-//			previousTime=System.currentTimeMillis(); //TODO remove
 			if(robot.detectWhiteLine()){
-//				System.out.println(i+ ": white line detected " + timediff +" "+ consecutiveDetections); //TODO Remove
 				consecutiveDetections++;
 			
 			} else {
-//				System.out.println(i+ ": white line not detected -reset " + timediff  +" "+ consecutiveDetections);
 				consecutiveDetections=0;
 			}
-			
-//			i++;
 		
 		}
 		robot.stop();
 		robot.setTurningSpeed(5);
 	}
-
+	
+	//TODO needs to be implemented.
+	private void straightenOnLine(){
+		robot.turnSensorLeft();
+		double left = robot.readUltrasonicValue() % 40;
+		robot.turnSensorForward();
+		if(left != 17){
+			if(left < 17){
+				robot.turnRight();
+				try {
+					robot.move(17 - left);
+				} catch (CannotMoveException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	public void straighten(int angleCorrection) {
 		boolean left = true;
 		boolean detect = true;
