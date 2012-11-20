@@ -403,7 +403,7 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public void findWhiteLine(){
 		int wantedDetections=1;
-		setMovingSpeed(2);
+		//setMovingSpeed(2);
 		boolean found=false;
 		try {
 			forward();
