@@ -52,6 +52,8 @@ public class Straightener extends RobotFunction {
 			}
 		
 		}
+		//TODO needs to be looked at.
+		//straightenOnLine();
 		robot.stop();
 		robot.setTurningSpeed(5);
 	}
@@ -61,11 +63,19 @@ public class Straightener extends RobotFunction {
 		robot.turnSensorLeft();
 		double left = robot.readUltrasonicValue() % 40;
 		robot.turnSensorForward();
-		if(left != 17){
+		if(left < 15 || left > 19){
 			if(left < 17){
 				robot.turnRight();
 				try {
 					robot.move(17 - left);
+				} catch (CannotMoveException e) {
+					e.printStackTrace();
+				}
+			}
+			if(left > 19){
+				robot.turnLeft();
+				try {
+					robot.move(left - 17);
 				} catch (CannotMoveException e) {
 					e.printStackTrace();
 				}

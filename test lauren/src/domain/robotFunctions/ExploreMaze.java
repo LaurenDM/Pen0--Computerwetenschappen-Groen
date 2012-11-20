@@ -40,6 +40,9 @@ public class ExploreMaze {
 		double backValue = robot.readUltrasonicValue();
 		if(backValue < valuedDistance){
 			maze.generateWallNodeAt(Orientation.SOUTH);
+			double x = robot.getPosition().getX();
+			double y = robot.getPosition().getY();
+			calculateWall(x, y, robot.getOrientation(), Direction.FORWARD);
 		}else{
 			maze.generateTileNodeAt(Orientation.SOUTH);
 		}
