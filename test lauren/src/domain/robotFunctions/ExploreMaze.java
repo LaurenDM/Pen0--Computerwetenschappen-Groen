@@ -45,16 +45,56 @@ public class ExploreMaze {
 		}
 		robot.turnLeft();
 		robot.turnLeft();
-		//TODO stopcondition needs to be determined.
+		int count = 1;
 		while(!maze.isComplete()){
 			double[] distances = new double[3];
 			distances = checkDistances();
 			makeWall(distances);
 			Direction direction = getNextDirection(distances);
-			move(direction);
+			if(count % 3 == 0){
+				moveWithStraighten(direction);
+			}
+			else{
+				move(direction);
+			}
+				
+			count++;
+			
 		}
 	}
 	
+	private void moveWithStraighten(Direction direction) {
+		switch (direction) {
+		case LEFT:
+			robot.turnLeft();
+			maze.turnLeft();
+			break;
+		case RIGHT:
+			robot.turnRight();
+			maze.turnRight();
+			break;
+		case BACKWARD:
+			robot.turnRight();
+			robot.turnRight();
+			maze.turnBack();
+			break;
+		}
+		robot.findWhiteLine();
+		robot.straighten();
+		robotMoveStraighten();
+		
+	}
+
+	private void robotMoveStraighten() {
+		try {
+			robot.move(distanceBlocks / 2);
+			maze.move();
+		} catch (CannotMoveException e) {
+			//Normally never gets called.
+			e.printStackTrace();
+		}
+	}
+
 	private void makeWall(double[] distances) {
 		double x = robot.getPosition().getX();
 		double y = robot.getPosition().getY();
@@ -153,25 +193,20 @@ public class ExploreMaze {
 			case LEFT:
 				robot.turnLeft();
 				maze.turnLeft();
-				robotMove();
-				break;
-			case FORWARD:
-				robotMove();
 				break;
 			case RIGHT:
 				robot.turnRight();
 				maze.turnRight();
-				robotMove();
 				break;
 			case BACKWARD:
 				robot.turnRight();
 				robot.turnRight();
 				maze.turnBack();
-				robotMove();
+				
 				break;
-			default:
-				break;
+				
 			}
+		robotMove();
 	}
 	
 	private void robotMove(){
