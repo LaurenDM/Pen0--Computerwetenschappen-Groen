@@ -42,6 +42,7 @@ public class ExploreMaze {
 			maze.generateWallNodeAt(Orientation.SOUTH);
 			double x = robot.getPosition().getX();
 			double y = robot.getPosition().getY();
+			System.out.println(robot.getOrientation());
 			calculateWall(x, y, robot.getOrientation(), Direction.FORWARD);
 		}else{
 			maze.generateTileNodeAt(Orientation.SOUTH);
@@ -55,7 +56,9 @@ public class ExploreMaze {
 			makeWall(distances);
 			Direction direction = getNextDirection(distances);
 			if(count % 3 == 0){
-				moveWithStraighten(direction);
+				//TODO needs to be looked at.
+				move(direction);
+				//moveWithStraighten(direction);
 			}
 			else{
 				move(direction);
@@ -150,7 +153,7 @@ public class ExploreMaze {
 				break;
 			}
 		}
-		else if(orientation > 160 && orientation < 200){
+		else if(orientation > 160 || orientation < -160){
 			switch (direction) {
 			case FORWARD:
 				addWall(x-20,y-20,x-20,y+20);				 
@@ -205,7 +208,6 @@ public class ExploreMaze {
 				robot.turnRight();
 				robot.turnRight();
 				maze.turnBack();
-				
 				break;
 				
 			}

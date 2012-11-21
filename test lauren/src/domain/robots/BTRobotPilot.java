@@ -64,7 +64,7 @@ public class BTRobotPilot implements RobotPilot  {
 			sensorMotor = Motor.A;
 			sensorMotor.resetTachoCount();
 			pilot = new DifferentialPilot(wheelDiameterLeft, wheelDiameterRight, trackWidth, nxtCommand, 1, 2);
-
+			pilot.setPose(getOrientation(), 260, 180);
 			setMovingSpeed(defaultTravelSpeed);
 			setTurningSpeed(defaultTurnSpeed);
 			touchSensor = new TouchSensor(SensorPort.S1);

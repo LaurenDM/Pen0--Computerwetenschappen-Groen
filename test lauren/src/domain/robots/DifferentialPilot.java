@@ -657,8 +657,8 @@ public void keepTurning(boolean left) {
 	}
 
 public void setPose(double orientation, int x, int y) {
-rotation=orientation;
-position=new Position(x,y);
-}
+	rotation=orientation;
+	position=new Position(x,y);
+	}
 
 }
