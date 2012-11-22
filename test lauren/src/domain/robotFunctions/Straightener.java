@@ -71,6 +71,7 @@ public class Straightener extends RobotFunction {
 				} catch (CannotMoveException e) {
 					e.printStackTrace();
 				}
+				robot.turnLeft();
 			}
 			if(left > 19){
 				robot.turnLeft();
@@ -79,6 +80,7 @@ public class Straightener extends RobotFunction {
 				} catch (CannotMoveException e) {
 					e.printStackTrace();
 				}
+				robot.turnRight();
 			}
 		}
 	}
@@ -105,7 +107,9 @@ public class Straightener extends RobotFunction {
 			robot.turn(angleCorrection);
 			}
 		robot.resetToDefaultSpeeds();
-		robot.turnRight();		
+		robot.turnRight();	
+		//TODO added
+		straightenOnLine();
 		//robot.setPose(0,20,0);
 	}
 	}

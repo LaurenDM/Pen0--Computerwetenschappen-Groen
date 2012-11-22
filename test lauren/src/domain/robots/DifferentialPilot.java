@@ -649,7 +649,8 @@ private float _turnRadius = 0;
 public void keepTurning(boolean left) {
 		setMoveType(MoveType.ROTATE);
 		int[] limit = { 0, 0 };
-		if (left)
+		//TODO adjusted -By koen (Left) -> (!Left)
+		if (!left)
 			setOutputState(rSpeed, limit);
 		else
 			setOppOutputState(rSpeed, limit);

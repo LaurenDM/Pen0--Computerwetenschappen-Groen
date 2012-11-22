@@ -55,10 +55,8 @@ public class ExploreMaze {
 			distances = checkDistances();
 			makeWall(distances);
 			Direction direction = getNextDirection(distances);
-			if(count % 3 == 0){
-				//TODO needs to be looked at.
-				move(direction);
-				//moveWithStraighten(direction);
+			if(count % 2 == 0){
+				moveWithStraighten(direction);
 			}
 			else{
 				move(direction);
