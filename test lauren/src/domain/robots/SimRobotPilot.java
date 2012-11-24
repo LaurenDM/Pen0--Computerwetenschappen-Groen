@@ -312,7 +312,7 @@ public class SimRobotPilot implements RobotPilot {
 	//TODO: waardes hangen af van kalibratie van echte sensor
 
 	@Override
-	public double readUltrasonicValue() {
+	public synchronized double readUltrasonicValue() {
 		final double MAX_VALUE = 255;
 		boolean foundWall = false;
 		for(int i = 0; i<MAX_VALUE; i++){

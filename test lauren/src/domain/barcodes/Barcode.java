@@ -10,8 +10,6 @@ import domain.robots.Robot;
 public class Barcode {
 
 	private Action action;
-//	private Position pos1; 
-//	private Position pos2; 
 	private Position pos; //centre of barcode ( == centre of square; ex "20,20", always multiple of 20)
 	private Orientation orientation;
 	private int[] bits;
@@ -31,7 +29,7 @@ public class Barcode {
 			decimal = getDecimal(this.bits);
 		}
 		action = getAction(decimal);
-		System.out.println("Barcode created with value "+this.bits[0]+this.bits[1]+this.bits[2]+this.bits[3]+this.bits[4]+this.bits[5]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+orientation);
+		System.out.println("Barcode created with value "+this.bits[0]+this.bits[1]+this.bits[2]+this.bits[3]+this.bits[4]+this.bits[5]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
 	}
 	
 	public Barcode(int decimal, Position pos, Orientation orientation){
@@ -89,32 +87,7 @@ public class Barcode {
 		return bits;
 	}
 	
-//	public boolean hasPosition(Position pos){
-//		if(horizontal()){
-//			int lowx = (int) (Math.floor((pos1.getX())/MAZECONSTANT))*MAZECONSTANT;
-//			if(pos.getX()<=lowx || pos.getX() >= lowx + MAZECONSTANT) return false;
-//			else if((pos.getY() <= pos1.getY() && pos.getY() >= pos2.getY()) || 
-//					pos.getY() >= pos1.getY() && pos.getY() <= pos2.getY()) return true;
-//		}
-//		else {
-//			int lowy = (int) (Math.floor((pos1.getY())/MAZECONSTANT))*MAZECONSTANT;
-//			if(pos.getY()<=lowy || pos.getY() >= lowy + MAZECONSTANT) return false;
-//			else if((pos.getX() <= pos1.getX() && pos.getX() >= pos2.getX()) || 
-//					pos.getX() >= pos1.getX() && pos.getX() <= pos2.getX()) return true;
-//		}
-//		return false;
-//	}
-	
-//	public int getBitAtPosition(Position pos){
-//		int distance;
-//		if(horizontal()){
-//			 distance = (int) Math.abs(pos.getY()- pos1.getY());
-//		}
-//		else{
-//			 distance = (int) Math.abs(pos.getX() - pos1.getX());
-//		}
-//		return bits[distance/2 - 1];
-//	}
+
 	
 	public int getBitAtPosition(Position bitPos){
 		if(orientation==Orientation.NORTH || orientation==Orientation.SOUTH){

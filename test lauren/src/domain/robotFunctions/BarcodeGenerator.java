@@ -27,14 +27,15 @@ public class BarcodeGenerator extends RobotFunction {
 			}
 			return;
 		}
-		robot.setMovingSpeed(1);
+		robot.setMovingSpeed(0.5);
 		robot.backward();
 		while(robot.detectBlackLine()){
 			// niets
 		}
 		robot.stop();
+		robot.setMovingSpeed(1);
 		try {
-			robot.move(1);
+			robot.move(0.5);
 		} catch (CannotMoveException e1) {
 			// nietsdoene
 		}
@@ -64,10 +65,10 @@ public class BarcodeGenerator extends RobotFunction {
 
 	public Orientation getOrientation(double angle) {
 		final int MARGE = 10;
-		if(Math.abs(angle-0)<MARGE) return Orientation.EAST;
-		else if(Math.abs(angle-90) <MARGE) return Orientation.SOUTH;
-		else if(Math.abs(angle-180) <MARGE) return Orientation.WEST;
-		else if(Math.abs(angle+90) <MARGE) return Orientation.NORTH;
+		if(Math.abs(angle-0)<MARGE) return Orientation.WEST;
+		else if(Math.abs(angle-90) <MARGE) return Orientation.NORTH;
+		else if(Math.abs(angle-180) <MARGE) return Orientation.EAST;
+		else if(Math.abs(angle+90) <MARGE) return Orientation.SOUTH;
 		else throw new IllegalArgumentException();
 	}
 	
