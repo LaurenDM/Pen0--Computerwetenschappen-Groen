@@ -85,4 +85,33 @@ public class BarcodeGenerator extends RobotFunction {
 		return realBits;
 	}
 	
+	public int[] convertBitsErrorMargin(int[] bits){
+		double weight3 = 3;
+		double weight2 = 2;
+		double weight1 = 1;
+		double totalWeighted = 0;
+		System.out.println(bits);
+		for(int i= 0; i<32; i++){
+			System.out.println(bits[i]);
+		}
+		int[] realBits = new int[6];
+		for(int i = 0; i<6; i++){
+			double weightedResult = bits[4*i]*weight1 + bits[4*i+1]*weight2 + bits[4*i+2]*weight3;
+			totalWeighted = totalWeighted + weightedResult;
+			if(weightedResult>=3){
+				realBits[i] = 1;
+			}
+			else if (weightedResult<3){
+				realBits[i] = 0;
+			}
+		}
+		double totalValue = 0;
+		for(int j =0; j<6; j++){
+			totalValue = totalValue + (weight1 + weight2 + weight3)*realBits[j];
+		}
+		double score = totalValue/totalWeighted;
+		System.out.println("score: "+score);
+		return realBits;
+	}
+	
 }
