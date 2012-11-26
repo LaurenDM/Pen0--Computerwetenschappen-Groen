@@ -23,21 +23,21 @@ public class Board {
 		foundWalls = new ArrayList<Wall>();
 		}
 	
-	public void addWall(Wall wall){
+	public synchronized void addWall(Wall wall){
 		walls.add(wall);
 	}
 	
-	public void foundNewWall(Wall wall){
+	public synchronized void foundNewWall(Wall wall){
 		foundWalls.add(wall);
 	}
 	
 	public List<Wall> getFoundWalls(){
 		return foundWalls;
 	}
-	public void addFoundBarcode(Barcode barcode){
+	public synchronized void addFoundBarcode(Barcode barcode){
 		foundBarcodes.add(barcode);
 	}
-	public void addSimulatedBarcode(Barcode barcode){
+	public synchronized void addSimulatedBarcode(Barcode barcode){
 		simulatedBarcodes.add(barcode);
 	}
 	
