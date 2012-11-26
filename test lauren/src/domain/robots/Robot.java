@@ -117,19 +117,19 @@ public class Robot {
 		robotPilot.setTurningSpeed(speed);
 	}
 
-	public synchronized Position getPosition() {
+	public Position getPosition() {
 		return robotPilot.getPosition();
 	}
 	
-	public synchronized boolean isTouching(){
+	public boolean isTouching(){
 		return robotPilot.isTouching();
 	}
 	
-	public synchronized double readLightValue(){
+	public double readLightValue(){
 		return robotPilot.readLightValue();
 	}
 	
-	public synchronized double readUltrasonicValue(){
+	public double readUltrasonicValue(){
 		return robotPilot.readUltrasonicValue();
 	}
 	
