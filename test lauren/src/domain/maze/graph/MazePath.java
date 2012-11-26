@@ -72,5 +72,14 @@ public class MazePath implements Comparable<MazePath>, Iterable<TileNode> {
 		}
 		return returnList;
 	}
+	
+	@Override
+	public String toString(){
+		String ret = "";
+		for(TileNode node:nodeList){
+			ret+="("+node.getX()+","+node.getY()+")";
+		}
+		return ret;
+	}
 
 }

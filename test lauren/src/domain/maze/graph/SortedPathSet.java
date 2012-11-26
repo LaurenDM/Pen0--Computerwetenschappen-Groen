@@ -27,13 +27,25 @@ public class SortedPathSet implements SortedSet<MazePath>, Iterable<MazePath> {
 	}
 	
 	private void trim(){
-		for(MazePath path:sortedSet){
-			for(MazePath otherPath:sortedSet){
-				if(otherPath.contains(path.getCurrentEndTile()) && path.getCurrentLength()>=otherPath.getCurrentLength()){
-					remove(path);
+		SortedPathSet clone = this.clone();
+		Iterator<MazePath> it = this.iterator();
+		while(it.hasNext()){
+			MazePath path = it.next();
+			for(MazePath otherPath:clone){
+				if(otherPath.contains(path.getCurrentEndTile()) && path.getCurrentLength()>otherPath.getCurrentLength()){
+					it.remove();
 				}
 			}
 		}
+	}
+	
+	@Override
+	public SortedPathSet clone(){
+		MazePath dummyPath = new MazePath(new TileNode(null,null), new TileNode(null,null));
+		SortedPathSet clone = new SortedPathSet(dummyPath);
+		clone.remove(dummyPath);
+		clone.addAll(sortedSet);
+		return clone;
 	}
 	
 	@Override

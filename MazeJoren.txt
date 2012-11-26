@@ -1,0 +1,8 @@
+3 3
+
+# doolhof Koen
+Corner.N	Straight.W	Corner.E
+Straight.S.55	T.E		Corner.S
+Corner.W	T.S		DeadEnd.E
+
+

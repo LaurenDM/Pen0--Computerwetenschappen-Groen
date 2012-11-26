@@ -224,7 +224,9 @@ public class MazeGraph {
 			finishNode = startNode;
 		}
 		SortedPathSet searchSet = new SortedPathSet(new MazePath(getCurrentNode(),finishNode));
+		System.out.println(searchSet);
 		int exp = 0;
+		System.out.println("Empty: "+searchSet.isEmpty()+", reaches: "+searchSet.firstPathReachesGoal());
 		while(!searchSet.isEmpty() && !searchSet.firstPathReachesGoal()){
 			searchSet.expand();
 			System.out.println("Expansion number "+exp);
