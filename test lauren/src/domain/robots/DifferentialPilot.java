@@ -216,7 +216,7 @@ private boolean prevMovingBool;
    setMoveType( MoveType.TRAVEL);
     _angle = 0;
     _distance = Double.POSITIVE_INFINITY;
-	btComm.sendCommand(new int[]{CMD.KEEPTRAVELING,1});
+	btComm.sendCommand(new int[]{CMD.KEEPTRAVELLING,1});
 
   }
   
@@ -308,7 +308,7 @@ private boolean prevMovingBool;
 		setMoveType( MoveType.TRAVEL);
 		_distance = Double.NEGATIVE_INFINITY;
 		_angle = 0;
-		btComm.sendCommand(new int[]{CMD.KEEPTRAVELING,-1});
+		btComm.sendCommand(new int[]{CMD.KEEPTRAVELLING,-1});
 
 	}
 

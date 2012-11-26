@@ -22,7 +22,7 @@ public class BTCommPC  {
 	private DataInputStream _dis;
 	private boolean _opened;
 	private boolean _closed;
-	private int[] _reply = new int[8];
+	private int[] _reply = new int[4];
 	
 	
 	public BTCommPC(){
@@ -103,7 +103,7 @@ public class BTCommPC  {
 			System.out.println("dos is null");
 		}
 		
-		for(int k = 0; k<3; k++){
+		for(int k = 0; k<2; k++){
 			try{
 				_dos.writeInt(command[k]);
 				_dos.flush();
@@ -112,7 +112,7 @@ public class BTCommPC  {
 			}
 		}
 			
-		for(int k = 0; k<8; k++){
+		for(int k = 0; k<4; k++){
 			try{
 				_reply[k] = _dis.readInt();
 			}catch(IOException ioe){
