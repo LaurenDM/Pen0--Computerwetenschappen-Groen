@@ -2,8 +2,11 @@ package domain.maze.graph;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import domain.maze.Orientation;
+import domain.robots.CannotMoveException;
+import domain.robots.Robot;
 
 public class MazeGraph {
 	private ArrayList<TileNode> nodes;
@@ -24,6 +27,43 @@ public class MazeGraph {
 		setCurrentRobotOrientation(Orientation.NORTH);
 	}
 	
+	public void driveToFinish(Robot robot){
+		MazePath shortestPath = findShortestPathToFinish();
+		Iterator<TileNode> tileIt = shortestPath.iterator();
+		if(tileIt.hasNext()){
+			tileIt.next();
+			while(tileIt.hasNext()){
+				TileNode nextNode = tileIt.next();
+				Orientation nextOrientation = null;
+				for(Orientation o:Orientation.values()){
+					if(getCurrentNode().getNodeAt(o).equals(nextNode)){
+						nextOrientation = o;
+					}
+				}
+				turnToNextOrientation(robot, getCurrentRobotOrientation(), nextOrientation);
+				try {
+					robot.move(40);
+				} catch (CannotMoveException e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			throw new NullPointerException("Finish has not yet been found or no path can be found.");
+		}
+		
+	}
+	
+	private void turnToNextOrientation(Robot robot,	Orientation currentRobotOrientation2, Orientation nextOrientation) {
+		Orientation turnOrientation = getRelativeOrientation(currentRobotOrientation2, nextOrientation);
+		switch(turnOrientation){
+		case NORTH: ;
+		case EAST: robot.turnLeft();
+		case SOUTH: robot.turnLeft(); robot.turnLeft();
+		case WEST: robot.turnRight();
+		default: throw new NullPointerException("Couldn't turn. Please debug.");
+		}
+	}
+
 	/**
 	 * If a MazeGraph has been completed that means that all it's nodes have been fully expanded.
 	 * A fully expanded node has the maximum amount of connections for that type of node to other valid nodes.
