@@ -10,7 +10,7 @@ public class StraightenerTest {
 		System.out.println("1");
 		robot = new BTRobotPilot();
 		System.out.println("2");
-		robot.findOrigin();
+		//robot.findOrigin();
 		System.out.println("3");
 	}
 	

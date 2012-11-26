@@ -250,49 +250,29 @@ public class BTRobotPilot implements RobotPilot  {
 		if(readLightValue() > 50) return true;
 		else return false;
 	}
-
-//	public void makeWall() {
-//		sensorMotor.setSpeed(2);
-//		Position pos1 = getPosition().getNewPosition(getOrientation(), readUltrasonicValue());
-//		if(board.detectWallAt(pos1)) return;
-//		turnUltrasonicSensor(5);
-//		Position pos2 = getPosition().getNewPosition(5+getOrientation(), readUltrasonicValue());
-//		if(board.detectWallAt(pos2)) return;
-//		turnUltrasonicSensor(-10);
-//		Position pos3 = getPosition().getNewPosition(-5+getOrientation(), readUltrasonicValue());
-//		if(board.detectWallAt(pos3)) return;
-//		turnSensorForward();
-//		try {
-//			Wall wall = new Wall(pos1,pos2,pos3);
-//			board.addWall(wall);
-//		} catch (NotAWallException e) {
-//			// no real wall was detected
-//		}
-//		sensorMotor.setSpeed(720);
-//	}
 	
-	public void findOrigin(){
-		setMovingSpeed(0.1); //TODO: testen
-		Straightener s = new Straightener(new Robot(this));
-		boolean found = false;
-		while(!found){
-			pilot.forward();
-			found = detectWhiteLine();
-		}
-		pilot.stop();
-		s.straighten();
-		pilot.travel(20);
-		turnRight();
-		found= false;
-		while(!found){
-			pilot.forward();
-			found = detectWhiteLine();
-		}
-		pilot.stop();
-		turnLeft();
-		pilot.travel(20);
-		// the robot is in position (0,0)
-	}
+//	public void findOrigin(){
+//		setMovingSpeed(0.1); //TODO: testen
+//		Straightener s = new Straightener(new Robot(this));
+//		boolean found = false;
+//		while(!found){
+//			pilot.forward();
+//			found = detectWhiteLine();
+//		}
+//		pilot.stop();
+//		s.straighten();
+//		pilot.travel(20);
+//		turnRight();
+//		found= false;
+//		while(!found){
+//			pilot.forward();
+//			found = detectWhiteLine();
+//		}
+//		pilot.stop();
+//		turnLeft();
+//		pilot.travel(20);
+//		// the robot is in position (0,0)
+//	}
 	
 	public void straighten(){
 		new Straightener(new Robot(this)).straighten();
@@ -406,7 +386,6 @@ public class BTRobotPilot implements RobotPilot  {
 	@Override
 	public void addFoundWall(Wall wall) {
 		board.foundNewWall(wall);
-		
 	}
 
 	@Override

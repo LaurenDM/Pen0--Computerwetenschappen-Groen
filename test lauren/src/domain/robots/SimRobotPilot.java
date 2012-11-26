@@ -366,10 +366,6 @@ public class SimRobotPilot implements RobotPilot {
 		return board.detectWhiteLineAt(getPosition().getNewPosition(getOrientation(), 8));
 	}
 
-	@Override
-	public void findOrigin() {
-		// do nothing
-	}
 
 	@Override
 	public void arcForward(boolean left) {

@@ -173,9 +173,9 @@ public class Robot {
 		robotPilot.straighten();
 	}
 	
-	public void findOrigin(){
-		robotPilot.findOrigin();
-	}
+//	public void findOrigin(){
+//		robotPilot.findOrigin();
+//	}
 	
 	//Starts moving de robot so that it makes an arc forward.
 	public void arcForward(boolean left){
