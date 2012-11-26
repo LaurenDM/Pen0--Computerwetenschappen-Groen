@@ -23,7 +23,9 @@ public class SimRobotPilot implements RobotPilot {
 		private Board board;
 		
 		private int sensorAngle;
-		private final int defaultMovingSpeed=30;
+		//Test merge TODO remove
+		int x=1;
+		private final int defaultMovingSpeed=55;
 		private final int defaultTurningSpeed=90;
 	
 	/**
