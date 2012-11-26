@@ -78,5 +78,9 @@ public class TileNode extends MazeNode {
 	public String toShortString(){
 		return "("+x+","+y+")";
 	}
+
+	public int manhattanDistanceTo(TileNode otherTile) {
+		return Math.abs(getX()-otherTile.getX())+Math.abs(getY()-otherTile.getY());
+	}
 	
 }

@@ -1,6 +1,7 @@
 package domain.maze.graph;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import domain.maze.Orientation;
 
@@ -140,15 +141,12 @@ public class MazeGraph {
 	}
 	
 	/**
-	 * In principle this method shouldn't be necessary but it's included anyway.
+	 * Call when the robot turns 180 degrees.
 	 */
 	public void turnBack(){
 		setCurrentRobotOrientation(getCurrentRobotOrientation().getBack());
 	}
 
-	/**
-	 * Using this method shouldn't really be necessary
-	 */
 	public Orientation getCurrentRobotOrientation() {
 		return currentRobotOrientation;
 	}
@@ -173,6 +171,34 @@ public class MazeGraph {
 		}
 	}
 	
+	/**
+	 * Implements the A* shortest path algorithm for this MazeGraph to find the shortest path to the Finish node, which is marked
+	 * by the "Finish" barcode in the real maze.
+	 * @return Null if the finish hasn't been found yet.
+	 */
+	public MazePath findShortestPathToFinish(){
+		TileNode finishNode = getFinishNode();
+		if(finishNode == null){
+			return null;
+		}
+		SortedPathSet searchSet = new SortedPathSet(new MazePath(getCurrentNode(),getFinishNode()));
+		while(!searchSet.isEmpty() && !searchSet.firstPathReachesGoal()){
+			searchSet.expand();
+		}
+		if(searchSet.isEmpty()){
+			return null;
+		} else {
+			return searchSet.first();
+		}
+	}
+	
+	private TileNode getFinishNode() {
+		for(TileNode node: nodes){
+			if(node.isFinish()) return node;
+		}
+		return null;
+	}
+
 	private Orientation getRelativeOrientation(Orientation original, Orientation relative){
 		switch(relative){
 		case NORTH: return original;
