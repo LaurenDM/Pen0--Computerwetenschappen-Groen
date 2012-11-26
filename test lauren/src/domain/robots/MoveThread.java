@@ -12,6 +12,7 @@ public class MoveThread extends Thread {
 		
 		Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
 		    public void uncaughtException(Thread th, Throwable ex) {
+		    	ex.printStackTrace();
 		    }
 		};
 		Thread.setDefaultUncaughtExceptionHandler(h);

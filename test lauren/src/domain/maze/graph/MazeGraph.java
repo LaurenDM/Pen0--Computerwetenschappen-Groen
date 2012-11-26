@@ -42,10 +42,12 @@ public class MazeGraph {
 					}
 				}
 				turnToNextOrientation(robotPilot, getCurrentRobotOrientation(), nextOrientation);
+				System.out.println("turned");
 				try {
 					robotPilot.move(40);
-				} catch (CannotMoveException e) {
-					e.printStackTrace();
+					System.out.println("Move");
+				} catch (Throwable e) {
+					System.out.println("Could not move");
 				}
 			}
 		} else {
@@ -57,10 +59,22 @@ public class MazeGraph {
 	private void turnToNextOrientation(RobotPilot robotPilot, Orientation currentRobotOrientation2, Orientation nextOrientation) {
 		Orientation turnOrientation = getRelativeOrientation(currentRobotOrientation2, nextOrientation);
 		switch(turnOrientation){
-		case NORTH: ;
-		case EAST: robotPilot.turnLeft();
-		case SOUTH: robotPilot.turnLeft(); robotPilot.turnLeft();
-		case WEST: robotPilot.turnRight();
+		case NORTH: {
+			break;
+		}
+		case EAST: {
+			robotPilot.turnRight();
+			break;
+		}
+		case SOUTH: {
+			robotPilot.turnLeft(); 
+			robotPilot.turnLeft();
+			break;
+		}
+		case WEST: {
+			robotPilot.turnLeft();
+			break;
+		}
 		default: throw new NullPointerException("Couldn't turn. Please debug.");
 		}
 	}
