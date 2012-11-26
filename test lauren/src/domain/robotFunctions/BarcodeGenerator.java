@@ -57,19 +57,10 @@ public class BarcodeGenerator extends RobotFunction {
 		
 		int lowx = (int) (Math.floor((pos.getX())/MAZECONSTANT))*MAZECONSTANT;
 		int lowy = (int) (Math.floor((pos.getY())/MAZECONSTANT))*MAZECONSTANT;
-		Barcode barcode = new Barcode(convertBits(bits), new Position(lowx+20, lowy+20), getOrientation(robot.getOrientation())); 
+		Barcode barcode = new Barcode(convertBits(bits), new Position(lowx+20, lowy+20), robot.getOrientation()); 
 		robot.getBoard().addFoundBarcode(barcode);
 		robot.setMovingSpeed(robot.getDefaultMovingSpeed());
 		barcode.runAction(robot);
-	}
-
-	public Orientation getOrientation(double angle) {
-		final int MARGE = 10;
-		if(Math.abs(angle-0)<MARGE) return Orientation.WEST;
-		else if(Math.abs(angle-90) <MARGE) return Orientation.NORTH;
-		else if(Math.abs(angle-180) <MARGE) return Orientation.EAST;
-		else if(Math.abs(angle+90) <MARGE) return Orientation.SOUTH;
-		else throw new IllegalArgumentException();
 	}
 	
 	public int[] convertBits(int[] bits){

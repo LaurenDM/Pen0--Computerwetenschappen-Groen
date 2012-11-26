@@ -15,14 +15,14 @@ public class Barcode {
 	private int[] bits;
 	private List<Integer> legalInts = new ArrayList<Integer>();
 	
-	public Barcode(int[] bits, Position pos, Orientation orientation){
+	public Barcode(int[] bits, Position pos, double angle){
 		fillLegals();
 		if(bits.length != 6){
 			throw new IllegalArgumentException();
 		}
 		this.bits = bits;
 		this.pos = pos;
-		this.orientation = orientation;
+		this.orientation = getOrientation(angle);
 		int decimal = getDecimal(bits);
 		if(!legalInts.contains(decimal)){
 			mirrorBits();
@@ -34,15 +34,25 @@ public class Barcode {
 	
 	public Barcode(int decimal, Position pos, Orientation orientation){
 		fillLegals();
+		bits = getBinary(decimal);
 		if(!legalInts.contains(decimal)){
-			throw new IllegalArgumentException();
+			mirrorBits();
+			decimal = getDecimal(this.bits);
 		}
 		this.pos = pos;
 		this.orientation = orientation;
-		bits = getBinary(decimal);
 		action = getAction(decimal);
-		System.out.println("Barcode created with value "+bits[5]+bits[4]+bits[3]+bits[2]+bits[1]+bits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+orientation);
+		System.out.println("Barcode created with value "+this.bits[5]+this.bits[4]+this.bits[3]+this.bits[2]+this.bits[1]+this.bits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
 
+	}
+	
+	public Orientation getOrientation(double angle) {
+		final int MARGE = 10;
+		if(Math.abs(angle-0)<MARGE) return Orientation.WEST;
+		else if(Math.abs(angle-90) <MARGE) return Orientation.NORTH;
+		else if(Math.abs(angle-180) <MARGE) return Orientation.EAST;
+		else if(Math.abs(angle+90) <MARGE) return Orientation.SOUTH;
+		else throw new IllegalArgumentException();
 	}
 	
 	
