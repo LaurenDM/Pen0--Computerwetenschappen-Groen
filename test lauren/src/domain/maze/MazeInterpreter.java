@@ -193,7 +193,7 @@ public class MazeInterpreter {
 		}
 	}
 	
-	public void makeWall(Position pos, Orientation orientation){
+	public synchronized void makeWall(Position pos, Orientation orientation){
 			// pos is positie van vakje
 			// voorbeeld pos 11 met orientation EAST is de oostzijde van vakje 0,0
 			// dit zou dan x=40 en y = 0..40
@@ -230,7 +230,7 @@ public class MazeInterpreter {
 			}
 	}
 	
-	private void createBarcode(String string, int xCoo, int yCoo, Orientation orientation) {
+	private synchronized void createBarcode(String string, int xCoo, int yCoo, Orientation orientation) {
 		int dec = Integer.parseInt(string);
 		int MAZECONSTANT = MazeElement.getMazeConstant();
 		xCoo = xCoo*MAZECONSTANT+(MAZECONSTANT/2);
