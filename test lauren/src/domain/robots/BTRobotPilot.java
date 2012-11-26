@@ -1,82 +1,54 @@
 package domain.robots;
 import java.io.IOException;
 
+import lejos.nxt.remote.NXTCommand;
+import bluetooth.BTCommPC;
+import bluetooth.CMD;
 import domain.Position.Position;
 import domain.maze.Board;
-import domain.maze.NotAWallException;
 import domain.maze.Wall;
 import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.Straightener;
 import domain.util.TimeStamp;
 import exceptions.ConnectErrorException;
-import lejos.nxt.LightSensor;
-import lejos.nxt.Motor;
-import lejos.nxt.SensorPort;
-import lejos.nxt.TouchSensor;
-import lejos.nxt.UltrasonicSensor;
-import lejos.nxt.remote.NXTCommand;
-import lejos.pc.comm.NXTComm;
-import lejos.pc.comm.NXTCommException;
-import lejos.pc.comm.NXTCommFactory;
-import lejos.pc.comm.NXTCommandConnector;
-import lejos.pc.comm.NXTConnector;
-import lejos.pc.comm.NXTInfo;
-import lejos.robotics.RegulatedMotor;
 
 
 
 public class BTRobotPilot implements RobotPilot  {
 	
 	private DifferentialPilot pilot;
-	private RegulatedMotor sensorMotor;
+//	private RegulatedMotor sensorMotor;
 	
 	
 	private final double defaultTravelSpeed = 15;
 	private final double defaultTurnSpeed = 10;
 	
-	private TouchSensor touchSensor;
-	private UltrasonicSensor ultrasonicSensor;
-	private LightSensor lightSensor;
+//	private TouchSensor touchSensor;
+//	private UltrasonicSensor ultrasonicSensor;
+//	private LightSensor lightSensor;
 	
 	private Board board;
 	private NXTCommand nxtCommand;
 	private final float wheelDiameterLeft = 5.43F;
 	private final float wheelDiameterRight = 5.43F;
-//	private final float wheelDiameterRight = 5.515F;
 	private final float trackWidth = 16.62F;
-	private int previousLightValue;
+	private int prevLightValue;
 	private int prevUltrasonicValue;
 	private boolean prevTouchBool;
+	private int prevSensorAngle;
+	private String bluetoothAdress="00:16:53:05:40:4c";
+	private final BTCommPC btComm;
 	public BTRobotPilot(){
 
-			NXTComm nxtComm;
-			NXTConnector conn = new NXTConnector();
-			NXTInfo[] nxtInfo= conn.search("GroeneHulk", null, NXTCommFactory.BLUETOOTH);
 			try {
-				nxtComm = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
-				System.out.println("We found this NXT: "+nxtInfo[0].name);//TODO
-				nxtComm.open(nxtInfo[0]);
-				nxtCommand=new NXTCommand(nxtComm);
-				System.out.println("Bluetooth succeeded with " + nxtCommand.getFriendlyName());
-			
-			NXTCommandConnector.setNXTCommand(nxtCommand);
-
-			sensorMotor = Motor.A;
-			sensorMotor.resetTachoCount();
-			pilot = new DifferentialPilot(wheelDiameterLeft, wheelDiameterRight, trackWidth, nxtCommand, 1, 2);
+			btComm = (new BTCommPC());
+			btComm.open(null,bluetoothAdress );
+			pilot = new DifferentialPilot(wheelDiameterLeft, wheelDiameterRight, trackWidth, btComm, 1, 2);
 			pilot.setPose(getOrientation(), 260, 180);
 			setMovingSpeed(defaultTravelSpeed);
 			setTurningSpeed(defaultTurnSpeed);
-			touchSensor = new TouchSensor(SensorPort.S1);
-			ultrasonicSensor = new UltrasonicSensor(SensorPort.S2);
-			lightSensor = new LightSensor(SensorPort.S3);
-			} catch (NXTCommException e) {
-				System.out.println("unable to connect");
-				throw new ConnectErrorException();
-			}	 catch (IOException e) {
-				throw new ConnectErrorException();
-				// TODO i3+
-			} //TODO
+
+			}
 			catch(ArrayIndexOutOfBoundsException indE){
 				throw new ConnectErrorException();
 				//TODO i3+
@@ -197,15 +169,17 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	@Override
 	public int getSensorAngle(){
-		return sensorMotor.getTachoCount();
+		if(RobotChecker.interruptionAllowed())
+			updateSensorValues(false);
+		return prevSensorAngle;
 	}
 	
 	public boolean isTouching(){
 		if(RobotChecker.interruptionAllowed())
-		 prevTouchBool=touchSensor.isPressed();
+			updateSensorValues(false);
 		return prevTouchBool;
 	}
-	
+
 	public boolean canMove(){
 		int distance = (int) readUltrasonicValue();	
 		int testDistance = 10; 
@@ -220,10 +194,9 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	public double readLightValue(){
 		try{
-			if(RobotChecker.interruptionAllowed()){
-				previousLightValue=lightSensor.readValue();
-			}
-			return previousLightValue;
+			if(RobotChecker.interruptionAllowed())
+				updateSensorValues(false);
+			return prevLightValue;
 		}catch(Exception e){
 			System.out.println("could not read light value from robot ");
 			return -100;
@@ -231,39 +204,45 @@ public class BTRobotPilot implements RobotPilot  {
 		}
 	}
 	
-	public double readUltrasonicValue(){
-		if(RobotChecker.interruptionAllowed()){
-			prevUltrasonicValue= ultrasonicSensor.getDistance();}
+	public double readUltrasonicValue() {
+		if (RobotChecker.interruptionAllowed())
+			updateSensorValues(false);
 		return prevUltrasonicValue;
-		
 	}
 	
+	private void updateSensorValues(boolean forced) {
+		int[] sensorValues = btComm.sendCommand(CMD.GETSENSORVALUES);
+		prevUltrasonicValue = sensorValues[1];
+		prevLightValue = sensorValues[0];
+		prevTouchBool = sensorValues[2] > 0;
+		prevSensorAngle=sensorValues[3];
+	}
+
 	public void turnUltrasonicSensor(int angle){
-		sensorMotor.rotate(angle);
+		btComm.sendCommand(new int[]{CMD.TURNSENSOR,angle});
 	}
 	
 	public void turnSensorRight(){
-		sensorMotor.rotateTo(-90);
+		btComm.sendCommand(new int[]{CMD.TURNSENSORTO,-90});
 //		canMove();
 	}
 	
 	public void turnSensorLeft(){
-		sensorMotor.rotateTo(90);
+		btComm.sendCommand(new int[]{CMD.TURNSENSORTO,90});
 //		canMove();
 	}
 	
 	public void turnSensorForward(){
-		sensorMotor.rotateTo(0);
+		btComm.sendCommand(new int[]{CMD.TURNSENSORTO,0});
 //		canMove();
 	}
 	
 	public void calibrateLightHigh(){
-		lightSensor.calibrateHigh();
-		//TODO klopt nog niet
+		btComm.sendCommand(CMD.CALIBRATELSHIGH);
 	}
 	
 	public void calibrateLightLow(){
-		lightSensor.calibrateLow();
+		btComm.sendCommand(CMD.CALIBRATELSLOW);
 	}
 
 	@Override
