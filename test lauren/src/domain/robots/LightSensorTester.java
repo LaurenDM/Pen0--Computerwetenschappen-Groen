@@ -11,7 +11,7 @@ import lejos.pc.comm.NXTCommandConnector;
 import lejos.pc.comm.NXTConnector;
 import lejos.pc.comm.NXTInfo;
 
-
+//TODO verbeteren naar nieuwe verbinding
 public class LightSensorTester {
 	
 	private static LightSensor sensor;
@@ -36,7 +36,8 @@ public class LightSensorTester {
 		
 		NXTCommandConnector.setNXTCommand(nxtCommand);
 		sensor = new LightSensor(SensorPort.S3);
-		robot = new DifferentialPilot(5.55F, 17.22F,nxtCommand);
+//		robot = new DifferentialPilot(5.55F, 17.22F,nxtCommand); TODO Francis
+		
 		System.out.print(1);
 
 //		FileOutputStream output1 = new FileOutputStream("woodValues.txt");
