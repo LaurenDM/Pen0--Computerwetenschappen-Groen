@@ -7,6 +7,7 @@ import java.util.Iterator;
 import domain.maze.Orientation;
 import domain.robots.CannotMoveException;
 import domain.robots.Robot;
+import domain.robots.RobotPilot;
 
 public class MazeGraph {
 	private ArrayList<TileNode> nodes;
@@ -27,7 +28,7 @@ public class MazeGraph {
 		setCurrentRobotOrientation(Orientation.NORTH);
 	}
 	
-	public void driveToFinish(Robot robot){
+	public void driveToFinish(RobotPilot robotPilot){
 		MazePath shortestPath = findShortestPathToFinish();
 		Iterator<TileNode> tileIt = shortestPath.iterator();
 		if(tileIt.hasNext()){
@@ -40,9 +41,9 @@ public class MazeGraph {
 						nextOrientation = o;
 					}
 				}
-				turnToNextOrientation(robot, getCurrentRobotOrientation(), nextOrientation);
+				turnToNextOrientation(robotPilot, getCurrentRobotOrientation(), nextOrientation);
 				try {
-					robot.move(40);
+					robotPilot.move(40);
 				} catch (CannotMoveException e) {
 					e.printStackTrace();
 				}
@@ -53,13 +54,13 @@ public class MazeGraph {
 		
 	}
 	
-	private void turnToNextOrientation(Robot robot,	Orientation currentRobotOrientation2, Orientation nextOrientation) {
+	private void turnToNextOrientation(RobotPilot robotPilot, Orientation currentRobotOrientation2, Orientation nextOrientation) {
 		Orientation turnOrientation = getRelativeOrientation(currentRobotOrientation2, nextOrientation);
 		switch(turnOrientation){
 		case NORTH: ;
-		case EAST: robot.turnLeft();
-		case SOUTH: robot.turnLeft(); robot.turnLeft();
-		case WEST: robot.turnRight();
+		case EAST: robotPilot.turnLeft();
+		case SOUTH: robotPilot.turnLeft(); robotPilot.turnLeft();
+		case WEST: robotPilot.turnRight();
 		default: throw new NullPointerException("Couldn't turn. Please debug.");
 		}
 	}
@@ -219,15 +220,21 @@ public class MazeGraph {
 	public MazePath findShortestPathToFinish(){
 		TileNode finishNode = getFinishNode();
 		if(finishNode == null){
-			return null;
+			System.out.println("No finish barcode found, driving to starting node instead.");
+			finishNode = startNode;
 		}
-		SortedPathSet searchSet = new SortedPathSet(new MazePath(getCurrentNode(),getFinishNode()));
+		SortedPathSet searchSet = new SortedPathSet(new MazePath(getCurrentNode(),finishNode));
+		int exp = 0;
 		while(!searchSet.isEmpty() && !searchSet.firstPathReachesGoal()){
 			searchSet.expand();
+			System.out.println("Expansion number "+exp);
+			exp++;
 		}
 		if(searchSet.isEmpty()){
+			System.out.println("No path found...");
 			return null;
 		} else {
+			System.out.println(searchSet.first());
 			return searchSet.first();
 		}
 	}

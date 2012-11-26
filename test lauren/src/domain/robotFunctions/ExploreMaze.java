@@ -65,6 +65,7 @@ public class ExploreMaze {
 			count++;
 			
 		}
+		maze.driveToFinish(robot);
 	}
 	
 	private void moveWithStraighten(Direction direction) {
