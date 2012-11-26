@@ -50,7 +50,7 @@ public class Barcode {
 		switch (number){
 		case 5: return new TurnLeftAction();
 		case 9: return new TurnRightAction();
-		case 15: return new PlayTuneAction();
+		case 22: return new PlayTuneAction();
 		case 19: return new Wait5Action();
 		case 25: return new DriveSlowAction();
 		case 37: return new DriveFastAction();
