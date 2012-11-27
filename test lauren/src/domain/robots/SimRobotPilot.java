@@ -1,6 +1,7 @@
 package domain.robots;
 
 import domain.Position.Position;
+import domain.barcodes.Barcode;
 import domain.maze.Board;
 import domain.maze.Wall;
 import domain.robotFunctions.BarcodeGenerator;
@@ -28,6 +29,7 @@ public class SimRobotPilot implements RobotPilot {
 		
 		private final int defaultMovingSpeed=40;
 		private final int defaultTurningSpeed=90;
+		private Robot robot;
 	
 	/**
 	 * Assenstelsel wordt geinitialiseerd met oorsprong waar de robot begint
@@ -35,7 +37,14 @@ public class SimRobotPilot implements RobotPilot {
 	public SimRobotPilot(){
 		this(0, new Position(20,20));
 	}
+	@Override
+	public void setRobot(Robot robot){
+		this.robot = robot;
+	}
 	
+	private Robot getRobot(){
+		return robot;
+	}
 	public SimRobotPilot(double orientation, Position position){
 		setOrientation(orientation);
 		this.position=position;
@@ -209,8 +218,10 @@ public class SimRobotPilot implements RobotPilot {
 			double currDistance=getPosition().getDistance(pos1);
 			if(detectBlackLine() && !isScanningBarcode){
 				isScanningBarcode = true;
-				BarcodeGenerator bg = new BarcodeGenerator(this);
+				BarcodeGenerator bg = new BarcodeGenerator(getRobot());
 				bg.generateBarcode();
+				forward();
+				isScanningBarcode = false;
 			}
 			if(currDistance>=Math.abs(wantedDistance)  || !canMove()){
 				running= false;

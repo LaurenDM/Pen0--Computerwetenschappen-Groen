@@ -30,8 +30,9 @@ public class Controller {
 	
 	public Controller() {
 		simRobot = new Robot(new SimRobotPilot());
+		simRobot.getRobotPilot().setRobot(simRobot);
 		currentRobot=simRobot;
-	}
+		}
 
 
 	  

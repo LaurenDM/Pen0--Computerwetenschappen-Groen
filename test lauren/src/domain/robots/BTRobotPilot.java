@@ -402,6 +402,12 @@ public class BTRobotPilot implements RobotPilot  {
 		}
 	}
 
+	@Override
+	public void setRobot(Robot robot) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 	
 

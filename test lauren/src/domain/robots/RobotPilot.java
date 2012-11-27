@@ -7,6 +7,8 @@ import domain.util.TimeStamp;
 
 public interface RobotPilot {
 	public void UpdateUntil(TimeStamp timestamp);
+	
+	public void setRobot(Robot robot);
 		
 	public double getMovingSpeed();
 	
