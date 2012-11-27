@@ -55,7 +55,7 @@ public class ExploreMaze {
 			distances = checkDistances();
 			makeWall(distances);
 			Direction direction = getNextDirection(distances);
-			if(count % 2 == 0){
+			if(checkStraigthen(distances)){
 				moveWithStraighten(direction);
 			}
 			else{
@@ -66,6 +66,13 @@ public class ExploreMaze {
 			
 		}
 		maze.driveToFinish(robot);
+	}
+	private boolean checkStraigthen(double[] distances){
+		for (int i = 0; i < distances.length; i++) {
+			if(distances[i] < 14)
+				return true;
+		}
+		return false;
 	}
 	
 	private void moveWithStraighten(Direction direction) {
