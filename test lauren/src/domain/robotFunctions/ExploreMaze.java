@@ -49,7 +49,6 @@ public class ExploreMaze {
 		}
 		robot.turnLeft();
 		robot.turnLeft();
-		int count = 1;
 		while(!maze.isComplete()){
 			double[] distances = new double[3];
 			distances = checkDistances();
@@ -61,9 +60,6 @@ public class ExploreMaze {
 			else{
 				move(direction);
 			}
-				
-			count++;
-			
 		}
 		maze.driveToFinish(robot);
 	}
