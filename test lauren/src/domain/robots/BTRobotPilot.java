@@ -252,29 +252,6 @@ public class BTRobotPilot implements RobotPilot  {
 		else return false;
 	}
 	
-//	public void findOrigin(){
-//		setMovingSpeed(0.1); //TODO: testen
-//		Straightener s = new Straightener(new Robot(this));
-//		boolean found = false;
-//		while(!found){
-//			pilot.forward();
-//			found = detectWhiteLine();
-//		}
-//		pilot.stop();
-//		s.straighten();
-//		pilot.travel(20);
-//		turnRight();
-//		found= false;
-//		while(!found){
-//			pilot.forward();
-//			found = detectWhiteLine();
-//		}
-//		pilot.stop();
-//		turnLeft();
-//		pilot.travel(20);
-//		// the robot is in position (0,0)
-//	}
-	
 	public void straighten(){
 		new Straightener(new Robot(this)).straighten();
 	}
@@ -338,6 +315,7 @@ public class BTRobotPilot implements RobotPilot  {
 		while(!found){
 			found = detectWhiteLine();
 		}
+		stop(); //TODO: toegevoegd, test
 	}
 
 	@Override
@@ -397,6 +375,8 @@ public class BTRobotPilot implements RobotPilot  {
 		while(!found){
 			found = detectBlackLine();
 		}
+		stop();
+		setMovingSpeed(getDefaultMovingSpeed());
 	}
 
 	@Override
