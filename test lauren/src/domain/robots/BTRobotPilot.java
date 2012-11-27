@@ -39,6 +39,7 @@ public class BTRobotPilot implements RobotPilot  {
 	private int prevSensorAngle;
 	private String bluetoothAdress="00:16:53:05:40:4c";
 	private final BTCommPC btComm;
+	private Robot robot;
 	public BTRobotPilot(){
 
 			try {
@@ -336,8 +337,27 @@ public class BTRobotPilot implements RobotPilot  {
 			turnRight();
 		}
 		while(!found){
+			if(wallDetected())
+				fixWall();
 			found = detectWhiteLine();
 		}
+		stop();//TODO needs to be checked
+	}
+
+	private void fixWall() {
+		robot.turnSensorLeft();
+		double leftValue = robot.readUltrasonicValue();
+		robot.turnSensorRight();
+		double rightValue = robot.readUltrasonicValue();
+		robot.turnSensorForward();
+		if(leftValue < rightValue)
+			robot.turn(-10);
+	}
+
+	private boolean wallDetected() {
+		if(this.robot.readUltrasonicValue() < 10)
+			return false;
+		return false;
 	}
 
 	@Override
@@ -401,7 +421,7 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void setRobot(Robot robot) {
-		// TODO Auto-generated method stub
+		this.robot = robot;
 		
 	}
 
