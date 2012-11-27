@@ -384,18 +384,18 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void findBlackLine() {
-		setMovingSpeed(2);
-		boolean found=false;
-		try {
-			forward();
-		} catch (CannotMoveException e) {
-			turnRight();
-		}
-		while(!found){
-			found = detectBlackLine();
-		}
-		stop();
-		setMovingSpeed(getDefaultMovingSpeed());
+//		setMovingSpeed(2);
+//		boolean found=false;
+//		try {
+//			forward();
+//		} catch (CannotMoveException e) {
+//			turnRight();
+//		}
+//		while(!found){
+//			found = detectBlackLine();
+//		}
+//		stop();
+//		setMovingSpeed(getDefaultMovingSpeed());
 	}
 
 	@Override
