@@ -3,6 +3,7 @@ package domain.robots;
 import domain.Position.Position;
 import domain.maze.Board;
 import domain.maze.Wall;
+import domain.robotFunctions.BarcodeGenerator;
 import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.Straightener;
 import domain.util.TimeStamp;
@@ -12,6 +13,7 @@ public class SimRobotPilot implements RobotPilot {
 	private MoveThread moveThread;
 	private double orientation; // Degrees to horizontal
 	private Position position;
+	private boolean isScanningBarcode;
 
 	//The wanted rotation Speed of the robot.
 		private double rotateSpeed;
@@ -205,6 +207,11 @@ public class SimRobotPilot implements RobotPilot {
 		}
 		while(running && !Thread.interrupted()){
 			double currDistance=getPosition().getDistance(pos1);
+			if(detectBlackLine() && !isScanningBarcode){
+				isScanningBarcode = true;
+				BarcodeGenerator bg = new BarcodeGenerator(this);
+				bg.generateBarcode();
+			}
 			if(currDistance>=Math.abs(wantedDistance)  || !canMove()){
 				running= false;
 				stopThread(moveThread);

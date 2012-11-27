@@ -5,62 +5,63 @@ import domain.barcodes.Barcode;
 import domain.maze.Orientation;
 import domain.robots.CannotMoveException;
 import domain.robots.Robot;
+import domain.robots.RobotPilot;
 
 public class BarcodeGenerator extends RobotFunction {
 
-	private Robot robot;
+	private RobotPilot pilot;
 	private final int MAZECONSTANT = 40;
 	
 	
-	public BarcodeGenerator(Robot robot){
-		this.robot = robot;
+	public BarcodeGenerator(RobotPilot pilot){
+		this.pilot = pilot;
 	}
 	
 // this method is called when the robot has detected a black line
 	public void generateBarcode(){
-		if(robot.getBoard().detectBarcodeAt(robot.getPosition())){
+		if(pilot.getBoard().detectBarcodeAt(pilot.getPosition())){
 			try {
-				robot.move(8);
+				pilot.move(8);
 			} catch (CannotMoveException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return;
 		}
-		robot.setMovingSpeed(0.5);
-		robot.backward();
-		while(robot.detectBlackLine()){
+		pilot.setMovingSpeed(0.5);
+		pilot.backward();
+		while(pilot.detectBlackLine()){
 			// niets
 		}
-		robot.stop();
-		robot.setMovingSpeed(1);
+		pilot.stop();
+		pilot.setMovingSpeed(1);
 		try {
-			robot.move(0.5);
+			pilot.move(0.5);
 		} catch (CannotMoveException e1) {
 			// nietsdoene
 		}
 		int[] bits = new int[32];
 		for(int i = 0; i<32; i++){
 			try {
-				robot.move(0.5);
+				pilot.move(0.5);
 			} catch (CannotMoveException e) {
 				//TODO: Wat doen we hiermee?
 			}
-			if(robot.detectBlackLine()){
+			if(pilot.detectBlackLine()){
 				bits[i] = 0;
 			}
 			else{
 				bits[i] = 1;
 			}
 		}
-		Position pos = robot.getPosition();
+		Position pos = pilot.getPosition();
 		
 		int lowx = (int) (Math.floor((pos.getX())/MAZECONSTANT))*MAZECONSTANT;
 		int lowy = (int) (Math.floor((pos.getY())/MAZECONSTANT))*MAZECONSTANT;
-		Barcode barcode = new Barcode(convertBits(bits), new Position(lowx+20, lowy+20), robot.getOrientation()); 
-		robot.getBoard().addFoundBarcode(barcode);
-		robot.setMovingSpeed(robot.getDefaultMovingSpeed());
-		barcode.runAction(robot);
+		Barcode barcode = new Barcode(convertBits(bits), new Position(lowx+20, lowy+20), pilot.getOrientation()); 
+		pilot.getBoard().addFoundBarcode(barcode);
+		pilot.setMovingSpeed(pilot.getDefaultMovingSpeed());
+//		barcode.runAction(pilot);
 	}
 	
 	public int[] convertBits(int[] bits){
