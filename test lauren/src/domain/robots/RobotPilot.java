@@ -123,6 +123,8 @@ public interface RobotPilot {
 
 	public void findBlackLine();
 
+	public void scanBarcode();
+
 
 	
 }

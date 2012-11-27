@@ -9,4 +9,9 @@ public class DriveFastAction extends Action {
 		robot.setHighSpeed();
 	}
 
+	@Override
+	public int[] getActionNb() {
+		return new int[]{15};
+	}
+
 }
