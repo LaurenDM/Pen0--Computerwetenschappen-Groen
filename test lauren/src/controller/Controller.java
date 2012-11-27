@@ -227,8 +227,7 @@ public class Controller {
 			@Override
 			public void run() {
 				currentRobot.findBlackLine();
-//				BarcodeGenerator bg = new BarcodeGenerator(currentRobot);
-//				bg.generateBarcode();
+				currentRobot.scanBarcode();
 			}
 		};
 		(new Thread(barcodeGen)).start();

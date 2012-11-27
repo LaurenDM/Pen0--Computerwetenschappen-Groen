@@ -252,6 +252,10 @@ public class Robot {
 	public void findBlackLine() {
 		robotPilot.findBlackLine();
 	}
+
+	public void scanBarcode() {
+		robotPilot.scanBarcode();
+	}
 	
 	
 	
