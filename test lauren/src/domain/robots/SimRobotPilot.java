@@ -429,7 +429,6 @@ public class SimRobotPilot implements RobotPilot {
 	public void findWhiteLine(){
 		int wantedDetections=1;
 		//setMovingSpeed(2);
-		boolean found=false;
 		try {
 			forward();
 		} catch (CannotMoveException e) {
@@ -455,7 +454,6 @@ public class SimRobotPilot implements RobotPilot {
 	public void findBlackLine(){
 		int wantedDetections=1;
 		setMovingSpeed(2);
-		boolean found=false;
 		try {
 			forward();
 		} catch (CannotMoveException e) {
