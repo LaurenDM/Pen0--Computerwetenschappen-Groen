@@ -5,6 +5,7 @@ import lejos.nxt.remote.NXTCommand;
 import bluetooth.BTCommPC;
 import bluetooth.CMD;
 import domain.Position.Position;
+import domain.barcodes.Action;
 import domain.barcodes.Barcode;
 import domain.maze.Board;
 import domain.maze.Wall;
@@ -409,7 +410,9 @@ public class BTRobotPilot implements RobotPilot  {
 		int[] results = btComm.sendCommand(CMD.SCANBARCODE);
 		Barcode barcode = new Barcode(results[2], new Position(results[0], results[1]), results[3]);
 		getBoard().addFoundBarcode(barcode);
-		int[] command = barcode.getAction().getActionNb();
+		Action action = barcode.getAction();
+		int[] command = null;
+		if(action != null) command = action.getActionNb();
 		if(command != null) btComm.sendCommand(command);
 	}
 
