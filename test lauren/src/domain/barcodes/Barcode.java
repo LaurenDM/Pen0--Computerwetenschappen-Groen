@@ -14,6 +14,7 @@ public class Barcode {
 	private Orientation orientation;
 	private int[] bits;
 	private List<Integer> legalInts = new ArrayList<Integer>();
+	private boolean printed;
 	
 	public Barcode(int[] bits, Position pos, double angle){
 		fillLegals();
@@ -270,4 +271,15 @@ public class Barcode {
 		legalInts.add(55);
 	}
 	
+	public boolean getPrinted(){
+		return printed;
+	}
+	
+	public void setPrinted(boolean printed){
+		this.printed = printed;
+	}
+	
+	public int getDecimal(){
+		return getDecimal(this.bits);
+	}
 }
