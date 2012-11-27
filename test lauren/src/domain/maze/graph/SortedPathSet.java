@@ -11,7 +11,11 @@ public class SortedPathSet implements SortedSet<MazePath>, Iterable<MazePath> {
 	private TreeSet<MazePath> sortedSet;
 	
 	public SortedPathSet(MazePath startingPath){
-		sortedSet = new TreeSet<MazePath>();
+		sortedSet = new TreeSet<MazePath>(new Comparator<MazePath>(){
+			public int compare(MazePath path1, MazePath path2){
+				return path1.compareTo(path2)*Math.abs(path1.hashCode()-path2.hashCode());
+			}
+		});
 		sortedSet.add(startingPath);
 	}
 	
@@ -33,6 +37,7 @@ public class SortedPathSet implements SortedSet<MazePath>, Iterable<MazePath> {
 			MazePath path = it.next();
 			for(MazePath otherPath:clone){
 				if(otherPath.contains(path.getCurrentEndTile()) && path.getCurrentLength()>otherPath.getCurrentLength()){
+					System.out.println("Trimmed path "+it);
 					it.remove();
 				}
 			}
@@ -141,6 +146,15 @@ public class SortedPathSet implements SortedSet<MazePath>, Iterable<MazePath> {
 	@Override
 	public SortedSet<MazePath> tailSet(MazePath arg0) {
 		return sortedSet.tailSet(arg0);
+	}
+	
+	@Override
+	public String toString(){
+		String ret = "";
+		for(MazePath path: sortedSet){
+			ret+=path.toString()+", ";
+		}
+		return ret.substring(0, ret.length()-2);
 	}
 
 }

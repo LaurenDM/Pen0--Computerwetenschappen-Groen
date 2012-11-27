@@ -62,14 +62,17 @@ public class MazePath implements Comparable<MazePath>, Iterable<TileNode> {
 		return nodeList.iterator();
 	}
 
-	public Collection<? extends MazePath> expand() {
+	public Collection<MazePath> expand() {
+		System.out.println("Expanding: "+this);
 		ArrayList<MazePath> returnList = new ArrayList<MazePath>();
 		for(Orientation o:Orientation.values()){
 			MazeNode neighbourNode = getCurrentEndTile().getNodeAt(o);
+			System.out.println(o+" neighbour: "+neighbourNode);
 			if(neighbourNode.getClass().equals(TileNode.class) && !this.contains(neighbourNode)){
 				returnList.add(new MazePath(this,(TileNode) neighbourNode));
 			}
 		}
+		System.out.println(returnList);
 		return returnList;
 	}
 	

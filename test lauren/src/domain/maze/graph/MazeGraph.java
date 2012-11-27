@@ -26,6 +26,7 @@ public class MazeGraph {
 		setCurrentNode(startNode);
 		nodes.add(startNode);
 		setCurrentRobotOrientation(Orientation.NORTH);
+		System.out.println("");
 	}
 	
 	public void driveToFinish(RobotPilot robotPilot){
@@ -35,17 +36,19 @@ public class MazeGraph {
 			tileIt.next();
 			while(tileIt.hasNext()){
 				TileNode nextNode = tileIt.next();
+				System.out.println(nextNode);
 				Orientation nextOrientation = null;
 				for(Orientation o:Orientation.values()){
 					if(getCurrentNode().getNodeAt(o).equals(nextNode)){
 						nextOrientation = o;
 					}
 				}
+				System.out.println("Turning towards the " + nextOrientation.toString().toLowerCase());
 				turnToNextOrientation(robotPilot, getCurrentRobotOrientation(), nextOrientation);
-				System.out.println("turned");
 				try {
 					robotPilot.move(40);
-					System.out.println("Move");
+					this.move();
+					System.out.println(getCurrentNode());
 				} catch (Throwable e) {
 					System.out.println("Could not move");
 				}
@@ -53,29 +56,24 @@ public class MazeGraph {
 		} else {
 			throw new NullPointerException("Finish has not yet been found or no path can be found.");
 		}
-		
+		System.out.println("Finish (or starting point) reached!");
 	}
 	
-	private void turnToNextOrientation(RobotPilot robotPilot, Orientation currentRobotOrientation2, Orientation nextOrientation) {
-		Orientation turnOrientation = getRelativeOrientation(currentRobotOrientation2, nextOrientation);
-		switch(turnOrientation){
-		case NORTH: {
-			break;
-		}
-		case EAST: {
+	private void turnToNextOrientation(RobotPilot robotPilot, Orientation currentOrientation, Orientation nextOrientation) {
+		if(currentOrientation.equals(nextOrientation)){
+			//Don't turn
+		} else if(nextOrientation.equals(currentOrientation.getLeft())){
+			robotPilot.turnLeft();
+			this.turnLeft();
+		} else if(nextOrientation.equals(currentOrientation.getRight())){
 			robotPilot.turnRight();
-			break;
-		}
-		case SOUTH: {
-			robotPilot.turnLeft(); 
+			this.turnRight();
+		} else if(nextOrientation.equals(currentOrientation.getBack())){
 			robotPilot.turnLeft();
-			break;
-		}
-		case WEST: {
 			robotPilot.turnLeft();
-			break;
-		}
-		default: throw new NullPointerException("Couldn't turn. Please debug.");
+			this.turnBack();
+		} else {
+			throw new IllegalArgumentException("Couldn't find a direction to turn in!");
 		}
 	}
 
@@ -89,7 +87,7 @@ public class MazeGraph {
 		for(TileNode tileNode:nodes){
 			if(!tileNode.isFullyExpanded()) { isComplete = false;}
 		}
-		System.out.println(isComplete);
+		System.out.print(isComplete?"Maze completed.":"");
 		return isComplete;
 	}
 	
@@ -238,17 +236,15 @@ public class MazeGraph {
 			finishNode = startNode;
 		}
 		SortedPathSet searchSet = new SortedPathSet(new MazePath(getCurrentNode(),finishNode));
-		System.out.println(searchSet);
-		int exp = 0;
-		System.out.println("Empty: "+searchSet.isEmpty()+", reaches: "+searchSet.firstPathReachesGoal());
+		int e = 0;
 		while(!searchSet.isEmpty() && !searchSet.firstPathReachesGoal()){
 			searchSet.expand();
-			System.out.println("Expansion number "+exp);
-			exp++;
+			System.out.println("Expansion number "+e+" current queue: "+(searchSet.isEmpty()?"none":searchSet.toString()));
+			e++;
 		}
 		if(searchSet.isEmpty()){
 			System.out.println("No path found...");
-			return null;
+			return new MazePath(getCurrentNode(),finishNode);
 		} else {
 			System.out.println(searchSet.first());
 			return searchSet.first();
@@ -263,6 +259,10 @@ public class MazeGraph {
 	}
 
 	private Orientation getRelativeOrientation(Orientation original, Orientation relative){
+		if(relative == null){
+			System.out.println("Got relative orientation null!");
+			return null;
+		}
 		switch(relative){
 		case NORTH: return original;
 		case EAST: return original.getRight();
