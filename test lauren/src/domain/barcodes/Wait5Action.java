@@ -18,4 +18,9 @@ public class Wait5Action extends Action {
 		return new int[]{17};
 	}
 
+	@Override
+	public String toString() {
+		return "Wait 5";
+	}
+
 }

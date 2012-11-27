@@ -8,5 +8,7 @@ public abstract class Action {
 	
 	public abstract int[] getActionNb();
 	
+	public abstract String toString();
+	
 	
 }

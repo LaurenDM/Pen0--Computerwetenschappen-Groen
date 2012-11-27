@@ -14,6 +14,11 @@ public class SetFinishAction extends Action {
 		
 		return null;
 	}
+
+	@Override
+	public String toString() {
+		return "Set finish";
+	}
 	
 	
 

@@ -16,4 +16,9 @@ public class PlayTuneAction extends Action {
 		return new int[]{16};
 	}
 
+	@Override
+	public String toString() {
+		return "Play sound";
+	}
+
 }

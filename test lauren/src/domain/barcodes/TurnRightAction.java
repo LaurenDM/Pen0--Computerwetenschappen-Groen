@@ -14,4 +14,9 @@ public class TurnRightAction extends Action {
 		return new int[]{1, 360};
 	}
 
+	@Override
+	public String toString() {
+		return "Turn right";
+	}
+
 }

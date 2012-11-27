@@ -283,8 +283,6 @@ public class ContentPanel implements ActionListener {
 		for (ColorPolygon colorPoly:collection) {
 			drawingPanel.reDrawMyPolygon(colorPoly);
 		}
-		//drawingPanel.drawWalls();
-		
 	} 
 	
 	/**
@@ -639,6 +637,10 @@ public class ContentPanel implements ActionListener {
 			if(!b.getPrinted()){
 				b.setPrinted(true);
 				writeToDebug("Barcode with value "+Integer.toString(b.getDecimal())+" added.");
+				if(b.getAction()!=null){
+				writeToDebug("Action: "+b.getAction().toString());
+				}
+
 			}
 		}
 	}
