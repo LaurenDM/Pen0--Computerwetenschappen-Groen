@@ -356,12 +356,8 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 
 	@Override
-	public void playSong(String name) {
-		try {
-			nxtCommand.playSoundFile(name, false);
-		} catch (IOException e) {
-			System.out.println("There is no sound file with this name!");
-		}
+	public void playSong() {
+		btComm.sendCommand(CMD.PLAYTUNE);
 	}
 
 	@Override

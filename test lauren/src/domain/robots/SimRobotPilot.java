@@ -1,5 +1,11 @@
 package domain.robots;
 
+import java.io.File;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+
 import domain.Position.Position;
 import domain.barcodes.Barcode;
 import domain.maze.Board;
@@ -488,9 +494,16 @@ public class SimRobotPilot implements RobotPilot {
 	}
 
 	@Override
-	public void playSong(String name) {
-		// TODO Auto-generated method stub
-		
+	public void playSong() {
+		 try{
+		        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("tune.wav"));
+		        Clip clip = AudioSystem.getClip();
+		        clip.open(audioInputStream);
+		        clip.start();
+		    }catch(Exception ex){
+		        System.out.println("Error with playing sound.");
+		        ex.printStackTrace();
+		    }
 	}
 
 	@Override

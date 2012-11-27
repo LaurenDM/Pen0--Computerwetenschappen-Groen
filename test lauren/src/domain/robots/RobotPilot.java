@@ -111,7 +111,7 @@ public interface RobotPilot {
 
 	public double getDefaultTurningSpeed();
 	
-	public void playSong(String name);
+	public void playSong();
 
 	public void setPose(double orientation, int x, int y);
 
