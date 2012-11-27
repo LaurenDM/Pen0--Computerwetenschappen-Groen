@@ -135,6 +135,7 @@ private float _leftWheelDiameter;
   public void setTravelSpeed(final double travelSpeed)
   {
     _robotTravelSpeed = (float)travelSpeed;
+    btComm.sendCommand(new int[]{CMD.SETTRAVELSPEED, (int) travelSpeed});
   }
 
   public double getTravelSpeed()
@@ -150,6 +151,7 @@ private float _leftWheelDiameter;
   public void setRotateSpeed(double rotateSpeed)
   {
     _robotRotateSpeed = (float)rotateSpeed;
+    btComm.sendCommand(new int[]{CMD.SETTURNSPEED, (int)rotateSpeed});
   }
 
 

@@ -176,9 +176,6 @@ public class SimRobotPilot implements RobotPilot {
 			throw new CannotMoveException();
 		}
 	}
-	
-
-
 
 	private void startMoveThread(Movement movement) {
 		stopThread(moveThread);

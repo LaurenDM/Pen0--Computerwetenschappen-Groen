@@ -91,5 +91,14 @@ public interface CMD {
 	
 	public static final int WAIT5 = 17;
 	public void wait5();
+	
+	public static final int STRAIGHTEN = 18;
+	public void straighten();
+	
+	public static final int SETTRAVELSPEED = 19;
+	public void setTravelSpeed(int speed);
+	
+	public static final int SETTURNSPEED = 20;
+	public void setTurnSpeed(int speed);
 
 }
