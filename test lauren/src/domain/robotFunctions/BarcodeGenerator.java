@@ -24,7 +24,6 @@ public class BarcodeGenerator extends RobotFunction {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			return;
 		}
 		robot.setMovingSpeed(0.5);
 		robot.backward();
@@ -61,6 +60,7 @@ public class BarcodeGenerator extends RobotFunction {
 		robot.setMovingSpeed(robot.getDefaultMovingSpeed());
 		
 		barcode.runAction(robot);
+		
 	}
 	
 	public int[] convertBits(int[] bits){

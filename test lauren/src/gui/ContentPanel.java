@@ -17,6 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import controller.Controller;
+import domain.barcodes.Barcode;
 import domain.robots.CannotMoveException;
 import domain.util.ColorPolygon;
 import exceptions.ConnectErrorException;
@@ -41,7 +42,7 @@ public class ContentPanel implements ActionListener {
     static int buttonXDimension = 90;
     static int buttonYDimension = 30;
     private boolean connected = false;
-    DrawingPanel drawingPanel;
+    private DrawingPanel drawingPanel;
     private boolean upButtonPressed = false;
     private boolean leftButtonPressed = false;
     private boolean rightButtonPressed = false;
@@ -277,11 +278,11 @@ public class ContentPanel implements ActionListener {
 	
 
 	public void updateBoard(List<ColorPolygon> collection){
+		drawingPanel.drawFoundWalls();
+		drawingPanel.drawFoundBarcodes();
 		for (ColorPolygon colorPoly:collection) {
 			drawingPanel.reDrawMyPolygon(colorPoly);
 		}
-		//drawingPanel.drawWalls();
-		drawingPanel.drawFoundWalls();
 	} 
 	
 	/**
@@ -319,6 +320,7 @@ public class ContentPanel implements ActionListener {
 					contentPanel.setRobotTouchingValue(controller.isTouching());
 					contentPanel.setLineValue(controller.detectWhiteLine());
 					contentPanel.drawRawData();
+					contentPanel.updateInfoPanel();
 					//TODO
 					sleep(50);
 				}
@@ -327,6 +329,8 @@ public class ContentPanel implements ActionListener {
 			}
 		}
     }
+	
+
 	
 	public void actionPerformed(ActionEvent e) {
         if(e.getSource() == upButton){
@@ -625,6 +629,20 @@ public class ContentPanel implements ActionListener {
 	public void drawRawData(){
 		if(showRawData)
 		drawingPanel.drawRawSensorData();
+	}
+	
+	//barcodes
+	public void updateInfoPanel(){
+		for(Barcode b :controller.getRobot().getBoard().getFoundBarcodes()){
+			if(!b.getPrinted()){
+				b.setPrinted(true);
+				writeToDebug("Barcode with value "+Integer.toString(b.getDecimal())+" added.");
+				if(b.getAction()!=null){
+				writeToDebug("Action: "+b.getAction().toString());
+				}
+
+			}
+		}
 	}
 	
 }

@@ -49,23 +49,26 @@ public class ExploreMaze {
 		}
 		robot.turnLeft();
 		robot.turnLeft();
-		int count = 1;
 		while(!maze.isComplete()){
 			double[] distances = new double[3];
 			distances = checkDistances();
 			makeWall(distances);
 			Direction direction = getNextDirection(distances);
-			if(count % 2 == 0){
+			if(checkStraigthen(distances)){
 				moveWithStraighten(direction);
 			}
 			else{
 				move(direction);
 			}
-				
-			count++;
-			
 		}
 		maze.driveToFinish(robot);
+	}
+	private boolean checkStraigthen(double[] distances){
+		for (int i = 0; i < distances.length; i++) {
+			if(distances[i] < 14)
+				return true;
+		}
+		return false;
 	}
 	
 	private void moveWithStraighten(Direction direction) {

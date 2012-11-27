@@ -14,6 +14,7 @@ public class Barcode {
 	private Orientation orientation;
 	private int[] bits;
 	private List<Integer> legalInts = new ArrayList<Integer>();
+	private boolean printed;
 	
 	public Barcode(int[] bits, Position pos, double angle){
 		fillLegals();
@@ -43,10 +44,13 @@ public class Barcode {
 		this.orientation = orientation;
 		action = getAction(decimal);
 		System.out.println("Barcode created with value "+this.bits[5]+this.bits[4]+this.bits[3]+this.bits[2]+this.bits[1]+this.bits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
-
 	}
 	
-	public Orientation getOrientation(double angle) {
+	public Barcode(int decimal, Position pos, double angle){
+		this(decimal, pos, getOrientation(angle));
+	}
+	
+	public static Orientation getOrientation(double angle) {
 		final int MARGE = 10;
 		if(Math.abs(angle-0)<MARGE) return Orientation.WEST;
 		else if(Math.abs(angle-90) <MARGE) return Orientation.NORTH;
@@ -60,11 +64,11 @@ public class Barcode {
 		switch (number){
 		case 5: return new TurnLeftAction();
 		case 9: return new TurnRightAction();
-		case 22: return new PlayTuneAction();
+		case 55: return new PlayTuneAction();
 		case 19: return new Wait5Action();
 		case 25: return new DriveSlowAction();
 		case 37: return new DriveFastAction();
-		case 55: return new SetFinishAction();
+		case 15: return new SetFinishAction();
 		default: return null;
 		}
 	}
@@ -267,4 +271,15 @@ public class Barcode {
 		legalInts.add(55);
 	}
 	
+	public boolean getPrinted(){
+		return printed;
+	}
+	
+	public void setPrinted(boolean printed){
+		this.printed = printed;
+	}
+	
+	public int getDecimal(){
+		return getDecimal(this.bits);
+	}
 }

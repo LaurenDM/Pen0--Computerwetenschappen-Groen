@@ -9,4 +9,17 @@ public class SetFinishAction extends Action {
 		robot.setFinish();
 	}
 
+	@Override
+	public int[] getActionNb() {
+		
+		return null;
+	}
+
+	@Override
+	public String toString() {
+		return "Set finish";
+	}
+	
+	
+
 }

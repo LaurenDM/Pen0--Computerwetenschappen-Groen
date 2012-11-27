@@ -10,4 +10,14 @@ public class DriveSlowAction extends Action {
 
 	}
 
+	@Override
+	public int[] getActionNb() {
+		return new int[]{14};
+	}
+
+	@Override
+	public String toString() {
+		return "Drive slow";
+	}
+
 }

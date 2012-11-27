@@ -7,6 +7,8 @@ import domain.util.TimeStamp;
 
 public interface RobotPilot {
 	public void UpdateUntil(TimeStamp timestamp);
+	
+	public void setRobot(Robot robot);
 		
 	public double getMovingSpeed();
 	
@@ -109,7 +111,7 @@ public interface RobotPilot {
 
 	public double getDefaultTurningSpeed();
 	
-	public void playSong(String name);
+	public void playSong();
 
 	public void setPose(double orientation, int x, int y);
 
@@ -120,6 +122,8 @@ public interface RobotPilot {
 	public boolean detectBlackLine();
 
 	public void findBlackLine();
+
+	public void scanBarcode();
 
 
 	

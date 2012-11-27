@@ -30,8 +30,9 @@ public class Controller {
 	
 	public Controller() {
 		simRobot = new Robot(new SimRobotPilot());
+		simRobot.getRobotPilot().setRobot(simRobot);
 		currentRobot=simRobot;
-	}
+		}
 
 
 	  
@@ -226,8 +227,7 @@ public class Controller {
 			@Override
 			public void run() {
 				currentRobot.findBlackLine();
-//				BarcodeGenerator bg = new BarcodeGenerator(currentRobot);
-//				bg.generateBarcode();
+				currentRobot.scanBarcode();
 			}
 		};
 		(new Thread(barcodeGen)).start();

@@ -9,4 +9,14 @@ public class TurnLeftAction extends Action {
 		robot.turn(-360); //TODO checken of dit links is
 	}
 
+	@Override
+	public int[] getActionNb() {
+		return new int[]{1, -360};
+	}
+
+	@Override
+	public String toString() {
+		return "Turn left";
+	}
+
 }

@@ -13,4 +13,14 @@ public class Wait5Action extends Action {
 		}
 	}
 
+	@Override
+	public int[] getActionNb() {
+		return new int[]{17};
+	}
+
+	@Override
+	public String toString() {
+		return "Wait 5";
+	}
+
 }

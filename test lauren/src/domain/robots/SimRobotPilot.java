@@ -1,6 +1,13 @@
 package domain.robots;
 
+import java.io.File;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+
 import domain.Position.Position;
+import domain.barcodes.Barcode;
 import domain.maze.Board;
 import domain.maze.Wall;
 import domain.robotFunctions.BarcodeGenerator;
@@ -28,6 +35,7 @@ public class SimRobotPilot implements RobotPilot {
 		
 		private final int defaultMovingSpeed=40;
 		private final int defaultTurningSpeed=90;
+		private Robot robot;
 	
 	/**
 	 * Assenstelsel wordt geinitialiseerd met oorsprong waar de robot begint
@@ -35,7 +43,14 @@ public class SimRobotPilot implements RobotPilot {
 	public SimRobotPilot(){
 		this(0, new Position(20,20));
 	}
+	@Override
+	public void setRobot(Robot robot){
+		this.robot = robot;
+	}
 	
+	private Robot getRobot(){
+		return robot;
+	}
 	public SimRobotPilot(double orientation, Position position){
 		setOrientation(orientation);
 		this.position=position;
@@ -161,9 +176,6 @@ public class SimRobotPilot implements RobotPilot {
 			throw new CannotMoveException();
 		}
 	}
-	
-
-
 
 	private void startMoveThread(Movement movement) {
 		stopThread(moveThread);
@@ -208,9 +220,15 @@ public class SimRobotPilot implements RobotPilot {
 		while(running && !Thread.interrupted()){
 			double currDistance=getPosition().getDistance(pos1);
 			if(detectBlackLine() && !isScanningBarcode){
-				isScanningBarcode = true;
-				BarcodeGenerator bg = new BarcodeGenerator(this);
-				bg.generateBarcode();
+				Position pos = robot.getPosition().getNewPosition(robot.getOrientation(), 8);
+				if(!robot.getBoard().detectBarcodeAt(pos)){
+					isScanningBarcode = true;
+					BarcodeGenerator bg = new BarcodeGenerator(getRobot());
+					bg.generateBarcode();
+					move(-8);
+				}
+				forward();
+				isScanningBarcode = false;
 			}
 			if(currDistance>=Math.abs(wantedDistance)  || !canMove()){
 				running= false;
@@ -408,7 +426,6 @@ public class SimRobotPilot implements RobotPilot {
 	public void findWhiteLine(){
 		int wantedDetections=1;
 		//setMovingSpeed(2);
-		boolean found=false;
 		try {
 			forward();
 		} catch (CannotMoveException e) {
@@ -434,7 +451,6 @@ public class SimRobotPilot implements RobotPilot {
 	public void findBlackLine(){
 		int wantedDetections=1;
 		setMovingSpeed(2);
-		boolean found=false;
 		try {
 			forward();
 		} catch (CannotMoveException e) {
@@ -473,9 +489,16 @@ public class SimRobotPilot implements RobotPilot {
 	}
 
 	@Override
-	public void playSong(String name) {
-		// TODO Auto-generated method stub
-		
+	public void playSong() {
+		 try{
+		        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("tune.wav"));
+		        Clip clip = AudioSystem.getClip();
+		        clip.open(audioInputStream);
+		        clip.start();
+		    }catch(Exception ex){
+		        System.out.println("Error with playing sound.");
+		        ex.printStackTrace();
+		    }
 	}
 
 	@Override
@@ -497,6 +520,11 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public boolean detectBlackLine() {
 		return getBoard().detectBlackLineAt(getPosition().getNewPosition(getOrientation(), 8));
+	}
+	@Override
+	public void scanBarcode() {
+		BarcodeGenerator bg = new BarcodeGenerator(new Robot(this));
+		bg.generateBarcode();
 	}
 
 

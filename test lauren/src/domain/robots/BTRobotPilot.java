@@ -5,6 +5,8 @@ import lejos.nxt.remote.NXTCommand;
 import bluetooth.BTCommPC;
 import bluetooth.CMD;
 import domain.Position.Position;
+import domain.barcodes.Action;
+import domain.barcodes.Barcode;
 import domain.maze.Board;
 import domain.maze.Wall;
 import domain.robotFunctions.ExploreMaze;
@@ -38,6 +40,7 @@ public class BTRobotPilot implements RobotPilot  {
 	private int prevSensorAngle;
 	private String bluetoothAdress="00:16:53:05:40:4c";
 	private final BTCommPC btComm;
+	private Robot robot;
 	public BTRobotPilot(){
 
 			try {
@@ -251,29 +254,6 @@ public class BTRobotPilot implements RobotPilot  {
 		else return false;
 	}
 	
-//	public void findOrigin(){
-//		setMovingSpeed(0.1); //TODO: testen
-//		Straightener s = new Straightener(new Robot(this));
-//		boolean found = false;
-//		while(!found){
-//			pilot.forward();
-//			found = detectWhiteLine();
-//		}
-//		pilot.stop();
-//		s.straighten();
-//		pilot.travel(20);
-//		turnRight();
-//		found= false;
-//		while(!found){
-//			pilot.forward();
-//			found = detectWhiteLine();
-//		}
-//		pilot.stop();
-//		turnLeft();
-//		pilot.travel(20);
-//		// the robot is in position (0,0)
-//	}
-	
 	public void straighten(){
 		new Straightener(new Robot(this)).straighten();
 	}
@@ -335,8 +315,27 @@ public class BTRobotPilot implements RobotPilot  {
 			turnRight();
 		}
 		while(!found){
+			if(wallDetected())
+				fixWall();
 			found = detectWhiteLine();
 		}
+		stop();//TODO needs to be checked
+	}
+
+	private void fixWall() {
+		robot.turnSensorLeft();
+		double leftValue = robot.readUltrasonicValue();
+		robot.turnSensorRight();
+		double rightValue = robot.readUltrasonicValue();
+		robot.turnSensorForward();
+		if(leftValue < rightValue)
+			robot.turn(-10);
+	}
+
+	private boolean wallDetected() {
+		if(this.robot.readUltrasonicValue() < 10)
+			return false;
+		return false;
 	}
 
 	@Override
@@ -355,12 +354,8 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 
 	@Override
-	public void playSong(String name) {
-		try {
-			nxtCommand.playSoundFile(name, false);
-		} catch (IOException e) {
-			System.out.println("There is no sound file with this name!");
-		}
+	public void playSong() {
+		btComm.sendCommand(CMD.PLAYTUNE);
 	}
 
 	@Override
@@ -390,16 +385,35 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void findBlackLine() {
-		setMovingSpeed(2);
-		boolean found=false;
-		try {
-			forward();
-		} catch (CannotMoveException e) {
-			turnRight();
-		}
-		while(!found){
-			found = detectBlackLine();
-		}
+//		setMovingSpeed(2);
+//		boolean found=false;
+//		try {
+//			forward();
+//		} catch (CannotMoveException e) {
+//			turnRight();
+//		}
+//		while(!found){
+//			found = detectBlackLine();
+//		}
+//		stop();
+//		setMovingSpeed(getDefaultMovingSpeed());
+	}
+
+	@Override
+	public void setRobot(Robot robot) {
+		this.robot = robot;
+		
+	}
+
+	@Override
+	public void scanBarcode() {
+		int[] results = btComm.sendCommand(CMD.SCANBARCODE);
+		Barcode barcode = new Barcode(results[2], new Position(results[0], results[1]), results[3]);
+		getBoard().addFoundBarcode(barcode);
+		Action action = barcode.getAction();
+		int[] command = null;
+		if(action != null) command = action.getActionNb();
+		if(command != null) btComm.sendCommand(command);
 	}
 
 	
