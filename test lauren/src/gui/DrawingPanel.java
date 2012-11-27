@@ -123,6 +123,13 @@ public class DrawingPanel extends JPanel {
 		}
 	}
 	
+	public void drawFoundBarcodes(){
+		List<Barcode> barcodes = controller.getRobot().getBoard().getFoundBarcodes();
+		for(Barcode b: barcodes){
+			drawBarcode(b, false);
+		}
+	}
+	
 	public void drawBarcode(Barcode barcode, boolean simulated){
 		Polygon pol = new Polygon();
 		Orientation orientation = barcode.getOrientation();
