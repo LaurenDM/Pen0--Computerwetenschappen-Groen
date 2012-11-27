@@ -21,4 +21,9 @@ public class PlayTuneAction extends Action {
 	         try { Thread.sleep(w*10); } catch (InterruptedException e) {}
 	      }	}
 
+	@Override
+	public int[] getActionNb() {
+		return new int[]{16};
+	}
+
 }

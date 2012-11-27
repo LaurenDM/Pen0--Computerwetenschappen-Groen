@@ -9,4 +9,9 @@ public class TurnRightAction extends Action {
 		robot.turn(360);
 	}
 
+	@Override
+	public int[] getActionNb() {
+		return new int[]{1, 360};
+	}
+
 }

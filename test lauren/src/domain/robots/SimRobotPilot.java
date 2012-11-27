@@ -217,7 +217,8 @@ public class SimRobotPilot implements RobotPilot {
 		while(running && !Thread.interrupted()){
 			double currDistance=getPosition().getDistance(pos1);
 			if(detectBlackLine() && !isScanningBarcode){
-				if(!robot.getBoard().detectBarcodeAt(robot.getPosition())){
+				Position pos = robot.getPosition().getNewPosition(robot.getOrientation(), 8);
+				if(!robot.getBoard().detectBarcodeAt(pos)){
 					isScanningBarcode = true;
 					BarcodeGenerator bg = new BarcodeGenerator(getRobot());
 					bg.generateBarcode();
@@ -511,6 +512,11 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public boolean detectBlackLine() {
 		return getBoard().detectBlackLineAt(getPosition().getNewPosition(getOrientation(), 8));
+	}
+	@Override
+	public void scanBarcode() {
+		BarcodeGenerator bg = new BarcodeGenerator(new Robot(this));
+		bg.generateBarcode();
 	}
 
 

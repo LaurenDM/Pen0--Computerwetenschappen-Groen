@@ -43,10 +43,13 @@ public class Barcode {
 		this.orientation = orientation;
 		action = getAction(decimal);
 		System.out.println("Barcode created with value "+this.bits[5]+this.bits[4]+this.bits[3]+this.bits[2]+this.bits[1]+this.bits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
-
 	}
 	
-	public Orientation getOrientation(double angle) {
+	public Barcode(int decimal, Position pos, double angle){
+		this(decimal, pos, getOrientation(angle));
+	}
+	
+	public static Orientation getOrientation(double angle) {
 		final int MARGE = 10;
 		if(Math.abs(angle-0)<MARGE) return Orientation.WEST;
 		else if(Math.abs(angle-90) <MARGE) return Orientation.NORTH;
