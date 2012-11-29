@@ -1,5 +1,7 @@
 package domain.maze.graph;
 
+import gui.ContentPanel;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -56,7 +58,7 @@ public class MazeGraph {
 		} else {
 			throw new NullPointerException("Finish has not yet been found or no path can be found.");
 		}
-		System.out.println("Finish (or starting point) reached!");
+		ContentPanel.writeToDebug("Finish (or starting point) reached!");
 	}
 	
 	private void turnToNextOrientation(RobotPilot robotPilot, Orientation currentOrientation, Orientation nextOrientation) {
@@ -87,7 +89,6 @@ public class MazeGraph {
 		for(TileNode tileNode:nodes){
 			if(!tileNode.isFullyExpanded()) { isComplete = false;}
 		}
-		System.out.print(isComplete?"Maze completed. ":"");
 		return isComplete;
 	}
 	
@@ -238,12 +239,12 @@ public class MazeGraph {
 		//TODO find a way of finding a path through multiple checkpoints
 		TileNode checkpoint = checkpoints.size()!=0?checkpoints.get(0):null;
 		if(checkpoint == null){
-			System.out.println("No checkpoint found, driving straight to finish.");
+			ContentPanel.writeToDebug("No checkpoint found, driving straight to finish.");
 			checkpoint = getCurrentNode();
 		}
 		TileNode finishNode = getFinishNode();
 		if(finishNode == null){
-			System.out.println("No finish barcode found, driving to starting node instead.");
+			ContentPanel.writeToDebug("No finish barcode found, driving to starting node instead.");
 			finishNode = startNode;
 		}
 		return findShortestPathFromTo(getCurrentNode(),checkpoint).append(findShortestPathFromTo(checkpoint,finishNode));

@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingUtilities;
 
 import controller.Controller;
 import domain.barcodes.Barcode;
@@ -34,7 +35,7 @@ public class ContentPanel implements ActionListener {
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, 
     calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton,
     rotateSlowLeft,rotateSlowRight,startButton, barcodeButton;
-    private JTextArea debugText;
+    private static JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
     static int totalXDimensions = 1100;
@@ -574,8 +575,12 @@ public class ContentPanel implements ActionListener {
 	 * Write a line to the debugging text area.
 	 * @param text This line will appear at the bottom of the text area.
 	 */
-	public void writeToDebug(String text) {
-		debugText.append(text + "\n");
+	public static void writeToDebug(final String text) {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				debugText.append(text + "\n");
+			}
+		});
 	}
 
 	/**

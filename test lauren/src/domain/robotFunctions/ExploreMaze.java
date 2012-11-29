@@ -1,5 +1,7 @@
 package domain.robotFunctions;
 
+import gui.ContentPanel;
+
 import java.util.ArrayList;
 
 import domain.Position.Position;
@@ -33,6 +35,7 @@ public class ExploreMaze {
 	}
 	
 	public void start(){
+		ContentPanel.writeToDebug("Exploration started");
 		double[] dummy = new double[3];
 		dummy = checkDistances();
 		robot.turnLeft();
@@ -42,7 +45,6 @@ public class ExploreMaze {
 			maze.generateWallNodeAt(Orientation.SOUTH);
 			double x = robot.getPosition().getX();
 			double y = robot.getPosition().getY();
-			System.out.println(robot.getOrientation());
 			calculateWall(x, y, robot.getOrientation(), Direction.FORWARD);
 		}else{
 			maze.generateTileNodeAt(Orientation.SOUTH);
@@ -61,6 +63,7 @@ public class ExploreMaze {
 				move(direction);
 			}
 		}
+		ContentPanel.writeToDebug("Maze completed.");
 		maze.driveToFinish(robot);
 	}
 	private boolean checkStraigthen(double[] distances){
