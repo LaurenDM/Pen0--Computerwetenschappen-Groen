@@ -82,17 +82,17 @@ public class ExploreMaze {
 	private void moveWithStraighten(Direction direction) {
 		switch (direction) {
 		case LEFT:
-			robot.turnLeft();
 			maze.turnLeft();
+			robot.turnLeft();
 			break;
 		case RIGHT:
-			robot.turnRight();
 			maze.turnRight();
+			robot.turnRight();
 			break;
 		case BACKWARD:
-			robot.turnRight();
-			robot.turnRight();
 			maze.turnBack();
+			robot.turnRight();
+			robot.turnRight();
 			break;
 		}
 		robot.findWhiteLine();
@@ -103,8 +103,8 @@ public class ExploreMaze {
 
 	private void robotMoveStraighten() {
 		try {
-			robot.move(distanceBlocks / 2);
 			maze.move();
+			robot.move(distanceBlocks / 2);
 		} catch (CannotMoveException e) {
 			//Normally never gets called.
 			e.printStackTrace();
@@ -207,17 +207,17 @@ public class ExploreMaze {
 	private void move(Direction direction){
 		switch (direction) {
 			case LEFT:
-				robot.turnLeft();
 				maze.turnLeft();
+				robot.turnLeft();
 				break;
 			case RIGHT:
-				robot.turnRight();
 				maze.turnRight();
+				robot.turnRight();
 				break;
 			case BACKWARD:
-				robot.turnRight();
-				robot.turnRight();
 				maze.turnBack();
+				robot.turnRight();
+				robot.turnRight();
 				break;
 				
 			}
@@ -226,8 +226,8 @@ public class ExploreMaze {
 	
 	private void robotMove(){
 		try {
-			robot.move(distanceBlocks);
 			maze.move();
+			robot.move(distanceBlocks);
 		} catch (CannotMoveException e) {
 			//Normally never gets called.
 			e.printStackTrace();

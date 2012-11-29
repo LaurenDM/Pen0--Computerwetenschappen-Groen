@@ -262,7 +262,7 @@ public class MazeGraph {
 	 * @return
 	 */
 	public MazePath findShortestPathFromTo(TileNode startNode, TileNode finishNode) {
-		SortedPathSet searchSet = new SortedPathSet(new MazePath(getCurrentNode(),finishNode));
+		SortedPathSet searchSet = new SortedPathSet(new MazePath(startNode,finishNode));
 		int e = 0;
 		while(!searchSet.isEmpty() && !searchSet.firstPathReachesGoal()){
 			searchSet.expand();
