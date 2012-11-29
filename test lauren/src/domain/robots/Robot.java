@@ -247,6 +247,7 @@ public class Robot {
 	
 	public void setFinish(){
 		this.finish = getPosition();
+		robotPilot.setFinish();
 	}
 
 	public void findBlackLine() {
@@ -259,6 +260,10 @@ public class Robot {
 
 	public void playTune() {
 		robotPilot.playSong();
+	}
+
+	public void setCheckpoint() {
+		robotPilot.setCheckpoint();
 	}
 	
 	

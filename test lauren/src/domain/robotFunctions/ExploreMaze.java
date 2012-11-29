@@ -71,6 +71,14 @@ public class ExploreMaze {
 		return false;
 	}
 	
+	public void setCurrentTileToFinish(){
+		maze.setCurrentTileToFinish();
+	}
+	
+	public void setCurrentTileToCheckpoint(){
+		maze.setCurrentTileToCheckpoint();
+	}
+	
 	private void moveWithStraighten(Direction direction) {
 		switch (direction) {
 		case LEFT:

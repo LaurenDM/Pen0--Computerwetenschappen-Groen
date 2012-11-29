@@ -69,6 +69,7 @@ public class Barcode {
 		case 25: return new DriveSlowAction();
 		case 37: return new DriveFastAction();
 		case 15: return new SetFinishAction();
+		case 1: return new SetCheckPointAction();
 		default: return null;
 		}
 	}

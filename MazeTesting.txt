@@ -1,0 +1,10 @@
+6 6
+
+# doolhof Joren
+
+DeadEnd.N	DeadEnd.W	T.N		T.N		Corner.E	DeadEnd.N
+Straight.N	T.W		T.E		T.W		Corner.S	Straight.N
+Corner.W	Cross		Corner.E	Corner.W	T.N		Corner.S
+Corner.N	Corner.S	Straight.N	DeadEnd.N	Straight.S	DeadEnd.N
+Straight.N	DeadEnd.W	T.E		Straight.S	Corner.W	Corner.E
+Corner.W	Straight.E	T.S		T.S		Straight.W	Corner.S	

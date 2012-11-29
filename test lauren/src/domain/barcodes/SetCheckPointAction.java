@@ -2,11 +2,11 @@ package domain.barcodes;
 
 import domain.robots.Robot;
 
-public class SetFinishAction extends Action {
+public class SetCheckPointAction extends Action {
 
 	@Override
 	public void run(Robot robot) {
-		robot.setFinish();
+		robot.setCheckpoint();
 	}
 
 	@Override
@@ -16,9 +16,7 @@ public class SetFinishAction extends Action {
 
 	@Override
 	public String toString() {
-		return "Set finish";
+		return "Set checkpoint";
 	}
-	
-	
 
 }

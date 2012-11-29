@@ -125,6 +125,10 @@ public interface RobotPilot {
 
 	public void scanBarcode();
 
+	public void setCheckpoint();
+
+	public void setFinish();
+
 
 	
 }

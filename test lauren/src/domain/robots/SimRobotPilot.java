@@ -21,6 +21,7 @@ public class SimRobotPilot implements RobotPilot {
 	private double orientation; // Degrees to horizontal
 	private Position position;
 	private boolean isScanningBarcode;
+	private ExploreMaze maze;
 
 	//The wanted rotation Speed of the robot.
 		private double rotateSpeed;
@@ -509,7 +510,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void startExplore() {
-		ExploreMaze maze = new ExploreMaze(this);
+		maze = new ExploreMaze(this);
 		maze.start();
 	}
 	
@@ -525,6 +526,16 @@ public class SimRobotPilot implements RobotPilot {
 	public void scanBarcode() {
 		BarcodeGenerator bg = new BarcodeGenerator(new Robot(this));
 		bg.generateBarcode();
+	}
+	
+	@Override
+	public void setCheckpoint() {
+		maze.setCurrentTileToCheckpoint();
+		
+	}
+	@Override
+	public void setFinish() {
+		maze.setCurrentTileToFinish();		
 	}
 
 

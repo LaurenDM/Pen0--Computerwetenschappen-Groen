@@ -41,6 +41,8 @@ public class BTRobotPilot implements RobotPilot  {
 	private String bluetoothAdress="00:16:53:05:40:4c";
 	private final BTCommPC btComm;
 	private Robot robot;
+	private ExploreMaze maze;
+	
 	public BTRobotPilot(){
 
 			try {
@@ -365,7 +367,7 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void startExplore() {
-		ExploreMaze maze = new ExploreMaze(this);
+		maze = new ExploreMaze(this);
 		maze.start();
 	}
 
@@ -414,6 +416,16 @@ public class BTRobotPilot implements RobotPilot  {
 		int[] command = null;
 		if(action != null) command = action.getActionNb();
 		if(command != null) btComm.sendCommand(command);
+	}
+
+	@Override
+	public void setCheckpoint() {
+		maze.setCurrentTileToCheckpoint();
+	}
+
+	@Override
+	public void setFinish() {
+		maze.setCurrentTileToFinish();		
 	}
 
 	
