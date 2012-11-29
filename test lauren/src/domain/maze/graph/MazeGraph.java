@@ -87,7 +87,7 @@ public class MazeGraph {
 		for(TileNode tileNode:nodes){
 			if(!tileNode.isFullyExpanded()) { isComplete = false;}
 		}
-		System.out.print(isComplete?"Maze completed.":"");
+		System.out.print(isComplete?"Maze completed. ":"");
 		return isComplete;
 	}
 	
@@ -224,17 +224,44 @@ public class MazeGraph {
 		}
 	}
 	
+	public void setCurrentTileToCheckpoint(){
+		getCurrentNode().setCheckpoint(true);
+	}
+	
 	/**
 	 * Implements the A* shortest path algorithm for this MazeGraph to find the shortest path to the Finish node, which is marked
 	 * by the "Finish" barcode in the real maze.
 	 * @return Null if the finish hasn't been found yet.
 	 */
 	public MazePath findShortestPathToFinish(){
+		ArrayList<TileNode> checkpoints = getCheckpoints();
+		//TODO find a way of finding a path through multiple checkpoints
+		TileNode checkpoint = checkpoints.size()!=0?checkpoints.get(0):null;
+		if(checkpoint == null){
+			System.out.println("No checkpoint found, driving straight to finish.");
+			checkpoint = getCurrentNode();
+		}
 		TileNode finishNode = getFinishNode();
 		if(finishNode == null){
 			System.out.println("No finish barcode found, driving to starting node instead.");
 			finishNode = startNode;
 		}
+		return findShortestPathFromTo(getCurrentNode(),checkpoint).append(findShortestPathFromTo(checkpoint,finishNode));
+	}
+	
+	public ArrayList<TileNode> getCheckpoints(){
+		ArrayList<TileNode> checkpoints = new ArrayList<TileNode>();
+		for(TileNode node: nodes){
+			if(node.isCheckpoint()) checkpoints.add(node);
+		}
+		return checkpoints;
+	}
+
+	/**
+	 * @param finishNode
+	 * @return
+	 */
+	public MazePath findShortestPathFromTo(TileNode startNode, TileNode finishNode) {
 		SortedPathSet searchSet = new SortedPathSet(new MazePath(getCurrentNode(),finishNode));
 		int e = 0;
 		while(!searchSet.isEmpty() && !searchSet.firstPathReachesGoal()){

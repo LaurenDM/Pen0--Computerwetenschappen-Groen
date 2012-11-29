@@ -10,6 +10,7 @@ public class TileNode extends MazeNode {
 	private boolean finish;
 	private int x;
 	private int y;
+	private boolean checkpoint;
 	
 	public TileNode(TileNode currentNode, Orientation orientationToCurrentNode){
 		connectedNodes = new HashMap<Orientation,MazeNode>();
@@ -60,6 +61,14 @@ public class TileNode extends MazeNode {
 
 	public boolean isFinish() {
 		return finish;
+	}
+
+	public void setCheckpoint(boolean arg) {
+		checkpoint=arg;
+	}
+
+	public boolean isCheckpoint(){
+		return checkpoint;
 	}
 
 	public int getX() {

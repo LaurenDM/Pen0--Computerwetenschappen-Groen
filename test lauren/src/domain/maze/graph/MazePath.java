@@ -48,6 +48,10 @@ public class MazePath implements Comparable<MazePath>, Iterable<TileNode> {
 		return nodeList.get(nodeList.size()-1);
 	}
 	
+	public TileNode getStartingTile(){
+		return nodeList.get(0);
+	}
+	
 	public boolean contains(MazeNode node){
 		return node.getClass().equals(TileNode.class)?nodeList.contains(node):false;
 	}
@@ -63,16 +67,13 @@ public class MazePath implements Comparable<MazePath>, Iterable<TileNode> {
 	}
 
 	public Collection<MazePath> expand() {
-		System.out.println("Expanding: "+this);
 		ArrayList<MazePath> returnList = new ArrayList<MazePath>();
 		for(Orientation o:Orientation.values()){
 			MazeNode neighbourNode = getCurrentEndTile().getNodeAt(o);
-			System.out.println(o+" neighbour: "+neighbourNode);
 			if(neighbourNode.getClass().equals(TileNode.class) && !this.contains(neighbourNode)){
 				returnList.add(new MazePath(this,(TileNode) neighbourNode));
 			}
 		}
-		System.out.println(returnList);
 		return returnList;
 	}
 	
@@ -81,6 +82,29 @@ public class MazePath implements Comparable<MazePath>, Iterable<TileNode> {
 		String ret = "";
 		for(TileNode node:nodeList){
 			ret+="("+node.getX()+","+node.getY()+")";
+		}
+		return ret;
+	}
+
+	public MazePath append(MazePath otherPath) {
+		MazePath ret = new MazePath(this);
+		if(otherPath!=null){
+			Iterator<TileNode> otherPathIt = otherPath.iterator();
+			if(otherPath.getStartingTile().equals(this.getCurrentEndTile())){
+				otherPathIt.next();
+			}
+			if(otherPathIt.hasNext()){
+				boolean valid = false;
+				TileNode otherFirst = otherPathIt.next();
+				for(Orientation o: Orientation.values()){
+					valid |= getCurrentEndTile().getNodeAt(o).equals(otherFirst);
+				}
+				if(!valid) throw new IllegalArgumentException();
+				ret = new MazePath(ret,otherFirst);
+				while(otherPathIt.hasNext()){
+					ret = new MazePath(ret,otherPathIt.next());
+				}
+			}
 		}
 		return ret;
 	}
