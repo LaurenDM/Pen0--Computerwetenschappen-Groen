@@ -39,18 +39,18 @@ public class ExploreMaze {
 		double[] dummy = new double[3];
 		dummy = checkDistances();
 		robot.turnLeft();
-		robot.turnLeft();
+		robot.turnSensorLeft();
 		double backValue = robot.readUltrasonicValue();
 		if(backValue < valuedDistance){
 			maze.generateWallNodeAt(Orientation.SOUTH);
 			double x = robot.getPosition().getX();
 			double y = robot.getPosition().getY();
-			calculateWall(x, y, robot.getOrientation(), Direction.FORWARD);
+			calculateWall(x, y, robot.getOrientation(), Direction.LEFT);
 		}else{
 			maze.generateTileNodeAt(Orientation.SOUTH);
 		}
-		robot.turnLeft();
-		robot.turnLeft();
+		robot.turnSensorForward();
+		robot.turnRight();
 		while(!maze.isComplete()){
 			double[] distances = new double[3];
 			distances = checkDistances();
