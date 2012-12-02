@@ -64,6 +64,7 @@ public class ExploreMaze {
 			}
 		}
 		ContentPanel.writeToDebug("Maze completed.");
+		robot.setMovingSpeed(robot.getDefaultMovingSpeed()*2);
 		maze.driveToFinish(robot);
 	}
 	private boolean checkStraigthen(double[] distances){
