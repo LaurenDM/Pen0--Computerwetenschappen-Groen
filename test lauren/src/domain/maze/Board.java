@@ -77,10 +77,10 @@ public class Board {
 	public synchronized boolean detectWhiteLineAt(Position position){
 		final int MARGE = 1; // TODO: hangt af van dikte lijnen
 		double x_mod = Math.abs(position.getX()%MAZECONSTANT);
-		if(Math.min(x_mod, MAZECONSTANT-x_mod) <MARGE) 
+		if(Math.min(x_mod, MAZECONSTANT-x_mod) <MARGE && !detectWallAt(position)) 
 			return true;
 		double y_mod = Math.abs(position.getY()%MAZECONSTANT);
-		if(Math.min(y_mod,  MAZECONSTANT - y_mod)<MARGE)
+		if(Math.min(y_mod,  MAZECONSTANT - y_mod)<MARGE && !detectWallAt(position))
 			return true;
 		for(Barcode barcode : simulatedBarcodes){
 			if(barcode.isWhiteAt(position)){
