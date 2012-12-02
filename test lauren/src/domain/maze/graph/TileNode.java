@@ -6,23 +6,22 @@ import domain.maze.Orientation;
 
 public class TileNode extends MazeNode {
 	private HashMap<Orientation,MazeNode> connectedNodes;
-	private boolean fullyExpanded;
-	private boolean finish;
+	private boolean fullyExpanded = false;
+	private boolean finish = false;
 	private int x;
 	private int y;
-	private boolean checkpoint;
+	private boolean checkpoint = false;
 	
 	public TileNode(TileNode currentNode, Orientation orientationToCurrentNode){
 		connectedNodes = new HashMap<Orientation,MazeNode>();
 		for(Orientation o : Orientation.values()){
 			connectedNodes.put(o, null);
 		}
-		finish = false;
-		setNodeAt(orientationToCurrentNode, currentNode);
 		if(currentNode==null || orientationToCurrentNode==null){
 			x=0;
 			y=0;
 		} else {
+			setNodeAt(orientationToCurrentNode, currentNode);
 			x=currentNode.getX()-orientationToCurrentNode.getXValue();
 			y=currentNode.getY()-orientationToCurrentNode.getYValue();
 		}

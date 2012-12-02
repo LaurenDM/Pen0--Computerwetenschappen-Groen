@@ -70,7 +70,7 @@ public class MazePath implements Comparable<MazePath>, Iterable<TileNode> {
 		ArrayList<MazePath> returnList = new ArrayList<MazePath>();
 		for(Orientation o:Orientation.values()){
 			MazeNode neighbourNode = getCurrentEndTile().getNodeAt(o);
-			if(neighbourNode.getClass().equals(TileNode.class) && !this.contains(neighbourNode)){
+			if(neighbourNode!=null && neighbourNode.getClass().equals(TileNode.class) && !this.contains(neighbourNode)){
 				returnList.add(new MazePath(this,(TileNode) neighbourNode));
 			}
 		}
@@ -107,6 +107,20 @@ public class MazePath implements Comparable<MazePath>, Iterable<TileNode> {
 			}
 		}
 		return ret;
+	}
+	
+	@Override
+	public boolean equals(Object arg0){
+		if(arg0==null || !arg0.getClass().equals(this.getClass())){
+			return false;
+		} else {
+			Iterator<TileNode> thisIt = this.iterator();
+			Iterator<TileNode> otherIt = ((MazePath) arg0).iterator();
+			while(thisIt.hasNext() && otherIt.hasNext()){
+				if(!thisIt.next().equals(otherIt.next())) return false;
+			}
+		}
+		return this.getGoalTile().equals(((MazePath) arg0).getGoalTile());
 	}
 
 }

@@ -237,11 +237,12 @@ public class ExploreMaze {
 		}
 	}
 	private Direction getNextDirection(double[] distances){
-		if(distances[0] > valuedDistance)
+		Orientation next = maze.getNextMoveOrientation();
+		if(next == Orientation.WEST)
 			return Direction.LEFT;
-		else if(distances[1] > valuedDistance)
+		else if(next == Orientation.NORTH)
 			return Direction.FORWARD;
-		else if(distances[2] > valuedDistance)
+		else if(next == Orientation.EAST)
 			return Direction.RIGHT;
 		return Direction.BACKWARD;
 	}

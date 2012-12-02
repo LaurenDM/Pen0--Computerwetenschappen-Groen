@@ -12,10 +12,14 @@ public class SortedPathSet implements Iterable<MazePath> {
 	private ArrayList<MazePath> sortedQueue;
 	
 	public SortedPathSet(MazePath startingPath){
-		sortedQueue = new ArrayList<MazePath>();
+		this();
 		sortedQueue.add(startingPath);
 	}
 	
+	public SortedPathSet() {
+		sortedQueue = new ArrayList<MazePath>();
+	}
+
 	public void expand(){
 		MazePath expansionPath = first();
 		remove(expansionPath);
@@ -24,17 +28,19 @@ public class SortedPathSet implements Iterable<MazePath> {
 	}
 	
 	public boolean firstPathReachesGoal(){
-		return first().contains(first().getGoalTile());
+		return first()!=null?first().contains(first().getGoalTile()):true;
 	}
 	
 	private void trim(){
 		SortedPathSet clone = this.clone();
 		Iterator<MazePath> it = this.iterator();
+		Iterator<MazePath> otherIt = clone.iterator();
 		while(it.hasNext()){
 			MazePath path = it.next();
-			for(MazePath otherPath:clone){
+			while(otherIt.hasNext()){
+				MazePath otherPath = otherIt.next();
 				if(otherPath.contains(path.getCurrentEndTile()) && path.getCurrentLength()>otherPath.getCurrentLength()){
-					System.out.println("Trimmed path "+it);
+					System.out.println("Trimmed path "+path);
 					it.remove();
 				}
 			}
@@ -92,10 +98,11 @@ public class SortedPathSet implements Iterable<MazePath> {
 		return sortedQueue.iterator();
 	}
 
-	//removing externally is only possible through the iterator
-	private boolean remove(Object arg0) {
-		boolean ret = sortedQueue.remove(arg0);
-		return ret;
+	/**
+	 * Using the iterator to remove paths is preferred.
+	 */
+	public boolean remove(Object arg0) {
+		return sortedQueue.remove(arg0);
 	}
 
 	public int size() {
@@ -103,7 +110,7 @@ public class SortedPathSet implements Iterable<MazePath> {
 	}
 
 	public MazePath first() {
-		return sortedQueue.get(0);
+		return sortedQueue.size()!=0?sortedQueue.get(0):null;
 	}
 
 	public MazePath last() {
