@@ -336,7 +336,7 @@ public class BTRobotPilot implements RobotPilot  {
 
 	private boolean wallDetected() {
 		if(this.robot.readUltrasonicValue() < 10)
-			return false;
+			return true;
 		return false;
 	}
 

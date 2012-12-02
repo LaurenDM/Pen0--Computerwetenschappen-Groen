@@ -15,7 +15,6 @@ import domain.robots.SimRobotPilot;
 
 public class ExploreMaze {
 	
-	
 	private enum Direction {
 	    LEFT,FORWARD,RIGHT,BACKWARD
 	}
@@ -64,6 +63,7 @@ public class ExploreMaze {
 			}
 		}
 		ContentPanel.writeToDebug("Maze completed.");
+		robot.setMovingSpeed(robot.getDefaultMovingSpeed()*2);
 		maze.driveToFinish(robot);
 	}
 	private boolean checkStraigthen(double[] distances){
