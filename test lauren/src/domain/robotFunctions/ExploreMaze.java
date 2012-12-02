@@ -54,12 +54,14 @@ public class ExploreMaze {
 			double[] distances = new double[3];
 			distances = checkDistances();
 			makeWall(distances);
-			Direction direction = getNextDirection(distances);
-			if(checkStraigthen(distances)){
-				moveWithStraighten(direction);
-			}
-			else{
-				move(direction);
+			if(!maze.isComplete()){
+				Direction direction = getNextDirection(distances);
+				if(checkStraigthen(distances)){
+					moveWithStraighten(direction);
+				}
+				else{
+					move(direction);
+				}
 			}
 		}
 		ContentPanel.writeToDebug("Maze completed.");

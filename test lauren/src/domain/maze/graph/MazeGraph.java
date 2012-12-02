@@ -51,7 +51,6 @@ public class MazeGraph {
 				try {
 					robotPilot.move(40);
 					this.move();
-					System.out.println(getCurrentNode());
 				} catch (Throwable e) {
 					System.out.println("Could not move");
 				}
@@ -160,7 +159,8 @@ public class MazeGraph {
 				}
 			}
 		}
-		return Orientation.SOUTH;
+		MazeNode frontNode = getCurrentNode().getNodeAt(getCurrentRobotOrientation());
+		return frontNode!=null?(frontNode.getClass()!=WallNode.class?Orientation.NORTH:Orientation.SOUTH):null;
 	}
 	
 	/**
