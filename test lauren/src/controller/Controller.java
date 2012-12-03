@@ -30,9 +30,7 @@ public class Controller {
 	private Robot simRobot;
 	
 	public Controller() {
-		simRobot = new Robot(new SimRobotPilot());
-		simRobot.getRobotPilot().setRobot(simRobot);
-		currentRobot=simRobot;
+		connectNewSimRobot();
 		}
 
 
@@ -50,6 +48,7 @@ public class Controller {
 	}
 	public void connectNewSimRobot() {
 		simRobot = new Robot(new SimRobotPilot());
+		simRobot.getRobotPilot().setRobot(simRobot);
 		currentRobot = simRobot ;
 		currentRobot.setBoard(new Board());
 	}
@@ -262,5 +261,11 @@ public class Controller {
 
 	public void driveToFinish() {
 		// TODO Auto-generated method stub
+	}
+
+
+
+	public void reset() {
+		connectNewSimRobot();
 	}
 }

@@ -37,24 +37,24 @@ public class UltrasonicSensorTester {
 		robot.setRotateSpeed(3.6);
 		
 
-		System.out.println("Drive to wall from distance 50cm");
-		System.in.read();
-		for(int i = 0; i< 100; i++){
-			System.out.println(sensor.getDistance());
-			robot.travel(0.4);
-		}
+//		System.out.println("Drive to wall from distance 50cm");
+//		System.in.read();
+//		for(int i = 0; i< 100; i++){
+//			System.out.println(sensor.getDistance());
+//			robot.travel(0.4);
+//		}
 		System.out.println("Turn around between 4 walls");
 		System.in.read();
 		for(int i = 0; i< 100; i++){
 			System.out.println(sensor.getDistance());
 			robot.rotate(3.6);
 		}
-		System.out.println("Drive between two walls"); //zet robot 10 cm voor begin van muren
-		System.in.read();
-		for(int i = 0; i< 100; i++){
-			System.out.println(sensor.getDistance());
-			robot.travel(1);
-		}
+//		System.out.println("Drive between two walls"); //zet robot 10 cm voor begin van muren
+//		System.in.read();
+//		for(int i = 0; i< 100; i++){
+//			System.out.println(sensor.getDistance());
+//			robot.travel(1);
+//		}
 		
 		
 //		}catch(Exception e){

@@ -35,7 +35,7 @@ public class ContentPanel implements ActionListener {
     private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, lineLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, 
     calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton,
-    rotateSlowLeft,rotateSlowRight,startButton, barcodeButton, finishButton, resumeButton;
+    rotateSlowLeft,rotateSlowRight,startButton, barcodeButton, finishButton, resumeButton, resetButton;
     private static JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
@@ -147,6 +147,8 @@ public class ContentPanel implements ActionListener {
         
         actionLabel = new JLabel("The robot is doing nothing at this moment.");
         fixLabelLayout(buttonPanel, actionLabel, 300, 30, 0, buttonYDimension + 180);
+        
+       
 
         upButton = new JButton("FORWARD");
         fixButtonLayout(buttonPanel, upButton, 120, 30, buttonXDimension, buttonYDimension);
@@ -204,13 +206,16 @@ public class ContentPanel implements ActionListener {
         bottomButtonPanel.addKeyListener(l);
         
         startButton = new JButton("Start exploring");
-        fixButtonLayout(bottomButtonPanel, startButton, 220, 30, 0, 0);
+        fixButtonLayout(bottomButtonPanel, startButton, 150, 30, 0, 0);
         
         resumeButton = new JButton("Resume exploring");
-        fixButtonLayout(bottomButtonPanel, resumeButton, 220, 30, 240, 0);
+        fixButtonLayout(bottomButtonPanel, resumeButton, 150, 30, 170, 0);
         
         finishButton = new JButton("Drive to finish");
-        fixButtonLayout(bottomButtonPanel, finishButton, 220, 30, 480, 0);
+        fixButtonLayout(bottomButtonPanel, finishButton, 150, 30, 340, 0);
+        
+        resetButton = new JButton("Reset");
+        fixButtonLayout(bottomButtonPanel, resetButton, 150, 30, 510, 0);
         
         bottomButtonPanel.setFocusable(true);
         
@@ -477,6 +482,12 @@ public class ContentPanel implements ActionListener {
 		}
 		else if(e.getSource() == finishButton){
 			controller.driveToFinish();
+			buttonPanel.requestFocusInWindow();
+		}
+		else if(e.getSource() == resetButton){
+			controller.reset();
+			drawingPanel.reset();
+			debugText.setText("");
 			buttonPanel.requestFocusInWindow();
 		}
         
