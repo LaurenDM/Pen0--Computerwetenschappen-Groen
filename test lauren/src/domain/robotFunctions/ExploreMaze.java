@@ -15,7 +15,6 @@ import domain.robots.SimRobotPilot;
 
 public class ExploreMaze {
 	
-	
 	private enum Direction {
 	    LEFT,FORWARD,RIGHT,BACKWARD
 	}
@@ -39,31 +38,34 @@ public class ExploreMaze {
 		double[] dummy = new double[3];
 		dummy = checkDistances();
 		robot.turnLeft();
-		robot.turnLeft();
+		robot.turnSensorLeft();
 		double backValue = robot.readUltrasonicValue();
 		if(backValue < valuedDistance){
 			maze.generateWallNodeAt(Orientation.SOUTH);
 			double x = robot.getPosition().getX();
 			double y = robot.getPosition().getY();
-			calculateWall(x, y, robot.getOrientation(), Direction.FORWARD);
+			calculateWall(x, y, robot.getOrientation(), Direction.LEFT);
 		}else{
 			maze.generateTileNodeAt(Orientation.SOUTH);
 		}
-		robot.turnLeft();
-		robot.turnLeft();
+		robot.turnSensorForward();
+		robot.turnRight();
 		while(!maze.isComplete()){
 			double[] distances = new double[3];
 			distances = checkDistances();
 			makeWall(distances);
-			Direction direction = getNextDirection(distances);
-			if(checkStraigthen(distances)){
-				moveWithStraighten(direction);
-			}
-			else{
-				move(direction);
+			if(!maze.isComplete()){
+				Direction direction = getNextDirection(distances);
+				if(checkStraigthen(distances)){
+					moveWithStraighten(direction);
+				}
+				else{
+					move(direction);
+				}
 			}
 		}
 		ContentPanel.writeToDebug("Maze completed.");
+		robot.setMovingSpeed(robot.getDefaultMovingSpeed()*2);
 		maze.driveToFinish(robot);
 	}
 	private boolean checkStraigthen(double[] distances){
@@ -237,11 +239,12 @@ public class ExploreMaze {
 		}
 	}
 	private Direction getNextDirection(double[] distances){
-		if(distances[0] > valuedDistance)
+		Orientation next = maze.getNextMoveOrientation();
+		if(next == Orientation.WEST)
 			return Direction.LEFT;
-		else if(distances[1] > valuedDistance)
+		else if(next == Orientation.NORTH)
 			return Direction.FORWARD;
-		else if(distances[2] > valuedDistance)
+		else if(next == Orientation.EAST)
 			return Direction.RIGHT;
 		return Direction.BACKWARD;
 	}

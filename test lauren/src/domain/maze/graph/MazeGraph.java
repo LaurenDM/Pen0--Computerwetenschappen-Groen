@@ -3,6 +3,7 @@ package domain.maze.graph;
 import gui.ContentPanel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -50,7 +51,6 @@ public class MazeGraph {
 				try {
 					robotPilot.move(40);
 					this.move();
-					System.out.println(getCurrentNode());
 				} catch (Throwable e) {
 					System.out.println("Could not move");
 				}
@@ -112,6 +112,57 @@ public class MazeGraph {
 		}
 	}
 	
+	public Orientation getNextMoveOrientation(){
+		if(getCurrentNode().getX()==2 && getCurrentNode().getY()==2){
+			@SuppressWarnings("unused")
+			int bla = 0;
+		}
+		ArrayList<TileNode> unexpanded = new ArrayList<TileNode>();
+		for(TileNode node : nodes){
+			if(!node.isFullyExpanded()){
+				unexpanded.add(node);
+			}
+		}
+		if(unexpanded.size()!=0){
+			SortedPathSet possiblePaths = new SortedPathSet();
+			for(TileNode node : unexpanded){
+				possiblePaths.add(new MazePath(getCurrentNode(),node));
+			}
+			int shortestFound = Integer.MAX_VALUE;
+			ArrayList<MazePath> candidates = new ArrayList<MazePath>();
+			do{
+				while(!possiblePaths.firstPathReachesGoal()){
+					possiblePaths.expand();
+				}
+				while(possiblePaths.firstPathReachesGoal() && possiblePaths.size()>0){
+					candidates.add(possiblePaths.first());
+					possiblePaths.remove(possiblePaths.first());
+					int currentLength = candidates.get(candidates.size()-1).getCurrentLength();
+					shortestFound = currentLength<shortestFound?currentLength:shortestFound;
+				}
+				//In the while condition the path will only get added if it's valid but it'll always be removed from possiblePaths.
+			}while( possiblePaths.size()>0 && possiblePaths.first().getCurrentLength()<=shortestFound);
+			for(MazePath path : candidates){
+				if(path.getCurrentLength()>shortestFound){
+					possiblePaths.remove(path);
+				}
+			}
+			ArrayList<Orientation> orderedOrientations = new ArrayList<Orientation>();
+			orderedOrientations.add(Orientation.WEST);
+			orderedOrientations.add(Orientation.NORTH);
+			orderedOrientations.add(Orientation.EAST);
+			orderedOrientations.add(Orientation.SOUTH);
+			for(Orientation o : orderedOrientations){
+				for(MazePath path : candidates){
+					if(path.contains(getCurrentNode().getNodeAt(getRelativeOrientation(getCurrentRobotOrientation(),o))))
+						return o;
+				}
+			}
+		}
+		MazeNode frontNode = getCurrentNode().getNodeAt(getCurrentRobotOrientation());
+		return frontNode!=null?(frontNode.getClass()!=WallNode.class?Orientation.NORTH:Orientation.SOUTH):null;
+	}
+	
 	/**
 	 * Make a new TileNode at the given orientation relative to the robot's current orientation.
 	 * @param orientation
@@ -144,6 +195,19 @@ public class MazeGraph {
 		Orientation orientationToCurrent = absoluteOrientation.getBack();
 		WallNode newNode = new WallNode(getCurrentNode(),orientationToCurrent);
 		getCurrentNode().setNodeAt(absoluteOrientation, newNode);
+		//If this tile has a wall at a certain orientation it's neighbouring tile will have one in the opposite orientation
+		//A new tile isn't generated there because then we would generate nodes outside of the maze's edge
+//		TileNode otherSide = null;
+//		for(TileNode node : nodes){
+//			if(node.getX()==getCurrentNode().getX()+absoluteOrientation.getXValue() && node.getY()==getCurrentNode().getY()+absoluteOrientation.getYValue()){
+//				otherSide = node;
+//				break;
+//			}
+//		}
+//		if(otherSide != null){
+//			otherSide.setNodeAt(orientationToCurrent, newNode);
+//		}
+		
 	}
 	
 	/**
