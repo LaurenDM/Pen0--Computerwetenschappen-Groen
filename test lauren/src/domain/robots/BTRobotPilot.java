@@ -50,7 +50,7 @@ public class BTRobotPilot implements RobotPilot  {
 	public BTRobotPilot(){
 
 			try {
-			btComm = (new BTCommPC());
+			btComm = (new BTCommPC(this));
 			btComm.open(null,bluetoothAdress );
 			pilot = new DifferentialPilot(wheelDiameterLeft, wheelDiameterRight, trackWidth, btComm, 1, 2);
 			pilot.setPose(getOrientation(), 260, 180);
@@ -435,6 +435,15 @@ public class BTRobotPilot implements RobotPilot  {
 	@Override
 	public void setFinish() {
 		maze.setCurrentTileToFinish();		
+	}
+
+	public void makeBarcode(int[] data) {
+		Barcode barcode = new Barcode(data[2], new Position(data[0],data[1]), data[3]);
+		getBoard().addFoundBarcode(barcode);
+		Action action = barcode.getAction();
+		int[] command = null;
+		if(action != null) command = action.getActionNb();
+		if(command != null) btComm.sendCommand(command);
 	}
 
 	

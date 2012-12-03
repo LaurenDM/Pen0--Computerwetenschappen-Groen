@@ -11,6 +11,8 @@ import java.util.concurrent.SynchronousQueue;
 
 import javax.bluetooth.BluetoothStateException;
 
+import domain.robots.BTRobotPilot;
+
 import exceptions.ConnectErrorException;
 
 import lejos.pc.comm.NXTComm;
@@ -33,11 +35,14 @@ public class BTCommPC  {
 	private long lastWaitingTicketNumber=0;
 	private long firstValidTicket=1;
 	
+	private BTRobotPilot robot;
+	
 	public boolean sendingIsPossible() {
 		return !sendingIsBlocked;
 	}
 
-	public BTCommPC(){
+	public BTCommPC(BTRobotPilot robot){
+		this.robot = robot;
 	}
 	public synchronized void blockSending(){
 		sendingIsBlocked=true;
@@ -198,6 +203,14 @@ public class BTCommPC  {
 			}
 		catch(IOException e){
 			throw new BluetoothStateException(" sending the command failed because of an IO exception");
+		}
+		if(replyLength == 8){
+			int[] barcode = new int[4];
+			for(int i =0; i<4; i++){
+				barcode[i] = _reply[4+i];
+			}
+			robot.makeBarcode(barcode);
+			replyLength = 4;
 		}
 		for(int k = 0; k<replyLength; k++){
 			try{
