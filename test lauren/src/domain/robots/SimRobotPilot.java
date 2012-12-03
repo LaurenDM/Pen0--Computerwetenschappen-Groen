@@ -170,17 +170,25 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void forward() throws CannotMoveException {
+		forward(false);
+	}
+	
+	public void forward(boolean whiteLine) throws CannotMoveException {
 		stop();
 		try{
-		startMoveThread(Movement.FORWARD);
+		startMoveThread(Movement.FORWARD, whiteLine);
 		} catch(RuntimeMoveException e){
 			throw new CannotMoveException();
 		}
 	}
 
 	private void startMoveThread(Movement movement) {
+		startMoveThread(movement, false);
+	}
+	
+	private void startMoveThread(Movement movement, boolean whiteLine){
 		stopThread(moveThread);
-		moveThread= new MoveThread(movement, this);
+		moveThread= new MoveThread(movement, this,whiteLine);
 		moveThread.start();
 	}
 	
@@ -425,21 +433,15 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void findWhiteLine(){
-		int wantedDetections=1;
-		//setMovingSpeed(2);
 		try {
-			forward();
-		} catch (CannotMoveException e) {
-			turnRight();
+			forward(true);
+		} catch (CannotMoveException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		int consecutiveDetections=0;
-		while(consecutiveDetections<wantedDetections){
-				if(detectWhiteLine()){
-					consecutiveDetections++;
-				}
-				else consecutiveDetections=0;
-				}
-		stop();
+		while(moveThread.getMovement().equals(Movement.FORWARD)){
+			//niets
+		}
 		//We move 1 cm because otherwise we are standing in the beginnen and not the middle of the white line 
 		try {
 			move(1);
@@ -447,6 +449,16 @@ public class SimRobotPilot implements RobotPilot {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void fixWall() {
+		robot.turnSensorLeft();
+		double leftValue = robot.readUltrasonicValue();
+		robot.turnSensorRight();
+		double rightValue = robot.readUltrasonicValue();
+		robot.turnSensorForward();
+		if(leftValue < rightValue)
+			robot.turn(20);
 	}
 	
 	public void findBlackLine(){

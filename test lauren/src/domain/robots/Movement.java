@@ -18,22 +18,30 @@ public enum Movement {
 	}
 	
 	
-	public void execute(SimRobotPilot simRobotPilot, boolean whiteLine)  {
+	public synchronized void execute(SimRobotPilot simRobotPilot, boolean whiteLine)  {
 		double speed=simRobotPilot.getMovingSpeed();
 		double moveAmount = 0.5* speedMultiplier;
 		int sleepTime= Math.abs((int) Math.round((1000* moveAmount/speed)));
-		while(true){
-			if(!simRobotPilot.canMove()) {
+		boolean running = true;
+		while(running){
+			if(!simRobotPilot.canMove() && !whiteLine) {
 				throw new RuntimeMoveException();
+			}
+			if(whiteLine){
+				while(!simRobotPilot.canMove()){
+					simRobotPilot.fixWall();
+				}
 			}
 			//System.out.println(whiteLine + "          " + simRobotPilot.detectWhiteLine());
 			if(whiteLine && simRobotPilot.detectWhiteLine()){
+				running = false;
 				break;
 			}
 			simRobotPilot.getPosition().move(simRobotPilot.getOrientation(), moveAmount);
 			try {
 				Thread.sleep(sleepTime);
 			} catch (InterruptedException e) {
+				running = false;
 				break;
 			}
 		}
