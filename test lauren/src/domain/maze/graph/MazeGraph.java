@@ -39,14 +39,12 @@ public class MazeGraph {
 			tileIt.next();
 			while(tileIt.hasNext()){
 				TileNode nextNode = tileIt.next();
-				System.out.println(nextNode);
 				Orientation nextOrientation = null;
 				for(Orientation o:Orientation.values()){
 					if(getCurrentNode().getNodeAt(o).equals(nextNode)){
 						nextOrientation = o;
 					}
 				}
-				System.out.println("Turning towards the " + nextOrientation.toString().toLowerCase());
 				turnToNextOrientation(robotPilot, getCurrentRobotOrientation(), nextOrientation);
 				try {
 					robotPilot.move(40);
@@ -113,7 +111,7 @@ public class MazeGraph {
 	}
 	
 	public Orientation getNextMoveOrientation(){
-		if(getCurrentNode().getX()==2 && getCurrentNode().getY()==2){
+		if(getCurrentNode().getX()==4 && getCurrentNode().getY()==3){
 			@SuppressWarnings("unused")
 			int bla = 0;
 		}
@@ -142,9 +140,11 @@ public class MazeGraph {
 				}
 				//In the while condition the path will only get added if it's valid but it'll always be removed from possiblePaths.
 			}while( possiblePaths.size()>0 && possiblePaths.first().getCurrentLength()<=shortestFound);
-			for(MazePath path : candidates){
+			Iterator<MazePath> it = candidates.iterator();
+			while(it.hasNext()){
+				MazePath path = it.next();
 				if(path.getCurrentLength()>shortestFound){
-					possiblePaths.remove(path);
+					it.remove();
 				}
 			}
 			ArrayList<Orientation> orderedOrientations = new ArrayList<Orientation>();
