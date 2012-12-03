@@ -260,7 +260,7 @@ public class DrawingPanel extends JPanel {
 	public void reDrawMyPolygon(ColorPolygon colorPoly) {
 		Polygon previousPoly = previousPolygons.get(colorPoly);
 		if (previousPoly != null) {
-			g.setColor(Color.gray);
+			g.setColor(new Color(240, 240, 240));
 			fillCenteredPolygon(previousPoly);
 		}
 		Polygon polygon = colorPoly.getPolygon();
