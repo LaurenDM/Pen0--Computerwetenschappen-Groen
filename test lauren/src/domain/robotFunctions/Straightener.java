@@ -90,14 +90,26 @@ public class Straightener extends RobotFunction {
 		try {
 			robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 		} catch (CannotMoveException e) {
-			try { robot.move(-DISTANCE_BETWEEN_SENSOR_AND_WHEELS/2); } catch (CannotMoveException e1) {}
-			turnUntil(detect, getTurnDirection(), 3);
-			try {
-				robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
-			} catch (CannotMoveException e1) {
-				//I don't really know if this is possible
-				System.out.println("Apparently you were wrong.");
+			if(getTurnDirection()){
+				//links draaien
+				robot.turn(-20);
 			}
+			else { //rechts
+				robot.turn(20);
+			}
+			try { 
+				robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
+			}
+			catch (CannotMoveException e1) {
+				e.printStackTrace();
+			}
+//			turnUntil(detect, getTurnDirection(), 3);
+//			try {
+//				robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
+//			} catch (CannotMoveException e1) {
+//				//I don't really know if this is possible
+//				System.out.println("Apparently you were wrong.");
+//			}
 		}
 			turnUntil(detect, getTurnDirection(), 3);
 			//Now the robot is aligned with the line

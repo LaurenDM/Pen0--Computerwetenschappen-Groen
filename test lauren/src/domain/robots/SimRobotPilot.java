@@ -242,6 +242,7 @@ public class SimRobotPilot implements RobotPilot {
 			if(currDistance>=Math.abs(wantedDistance)  || !canMove()){
 				running= false;
 				stopThread(moveThread);
+				throw new CannotMoveException();
 			}
 		}
 	}
