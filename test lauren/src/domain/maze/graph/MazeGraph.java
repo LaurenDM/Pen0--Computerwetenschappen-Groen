@@ -376,4 +376,19 @@ public class MazeGraph {
 	private TileNode getCurrentNode(){
 		return currentNode;
 	}
+
+	public void continueExploring(int x, int y, Orientation o) {
+		if(o!=null){
+			for(TileNode node : nodes){
+				if(node.getX()==x && node.getY()==y){
+					setCurrentNode(node);
+				}
+			}
+			setCurrentRobotOrientation(o);
+			ContentPanel.writeToDebug("Starting exploration from "+"("+x+","+y+")"+" facing "+o);
+		} else {
+			ContentPanel.writeToDebug("Continuing exploration.");
+		}
+		
+	}
 }

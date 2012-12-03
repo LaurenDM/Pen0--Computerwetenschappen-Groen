@@ -129,6 +129,10 @@ public interface RobotPilot {
 
 	public void setFinish();
 
+	public void resumeExplore();
+
+	public void driveToFinish();
+
 
 	
 }

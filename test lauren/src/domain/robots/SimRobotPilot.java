@@ -551,6 +551,14 @@ public class SimRobotPilot implements RobotPilot {
 	public void setFinish() {
 		maze.setCurrentTileToFinish();		
 	}
+	@Override
+	public void resumeExplore() {
+		maze.continueExploring(0, 0, null);
+	}
+	@Override
+	public void driveToFinish() {
+		maze.driveToFinish();
+	}
 
 
 	

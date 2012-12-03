@@ -24,6 +24,7 @@ public class ExploreMaze {
 	private ArrayList<Wall> wallList = new ArrayList<Wall>();
 	private MazeGraph maze = new MazeGraph();
 	private boolean backWall = false;
+	private boolean interrupted = false;
 	
 	public ExploreMaze(RobotPilot simRobotPilot){
 		this.robot = simRobotPilot;
@@ -34,6 +35,11 @@ public class ExploreMaze {
 	}
 	
 	public void start(){
+		initialSetup();
+		continueExploring(0,0,Orientation.NORTH);
+	}
+	
+	private void initialSetup(){
 		ContentPanel.writeToDebug("Exploration started");
 		double[] dummy = new double[3];
 		dummy = checkDistances();
@@ -50,7 +56,11 @@ public class ExploreMaze {
 		}
 		robot.turnSensorForward();
 		robot.turnRight();
-		while(!maze.isComplete()){
+	}
+	
+	public void continueExploring(int x, int y, Orientation o){
+		maze.continueExploring(x,y,o);
+		while(!maze.isComplete() && interrupted==false){
 			double[] distances = new double[3];
 			distances = checkDistances();
 			makeWall(distances);
@@ -64,10 +74,13 @@ public class ExploreMaze {
 				}
 			}
 		}
-		ContentPanel.writeToDebug("Maze completed.");
-		robot.setMovingSpeed(robot.getDefaultMovingSpeed()*2);
-		maze.driveToFinish(robot);
+		if(!interrupted){
+			ContentPanel.writeToDebug("Maze completed.");
+			robot.setMovingSpeed(robot.getDefaultMovingSpeed()*2);
+			maze.driveToFinish(robot);
+		}
 	}
+	
 	private boolean checkStraigthen(double[] distances){
 		for (int i = 0; i < distances.length; i++) {
 			if(distances[i] < 14)
@@ -259,5 +272,10 @@ public class ExploreMaze {
 		distances[2] = robot.readUltrasonicValue();
 		robot.turnSensorForward();
 		return distances;
+	}
+
+	public void driveToFinish() {
+		interrupted = true;
+		maze.driveToFinish(robot);
 	}
 }

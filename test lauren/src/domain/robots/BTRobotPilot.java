@@ -446,6 +446,17 @@ public class BTRobotPilot implements RobotPilot  {
 		if(command != null) btComm.sendCommand(command);
 	}
 
+	@Override
+	public void resumeExplore() {
+		maze.continueExploring(0, 0, null);
+	}
+
+	@Override
+	public void driveToFinish() {
+		maze.driveToFinish();
+		
+	}
+
 	
 	
 

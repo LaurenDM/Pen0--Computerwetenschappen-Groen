@@ -33,7 +33,7 @@ public class Controller {
 		simRobot = new Robot(new SimRobotPilot());
 		simRobot.getRobotPilot().setRobot(simRobot);
 		currentRobot=simRobot;
-		}
+	}
 
 
 	  
@@ -255,12 +255,12 @@ public class Controller {
 
 
 	public void resumeExplore() {
-		// TODO Auto-generated method stub
+		currentRobot.resumeExplore();
 	}
 
 
 
 	public void driveToFinish() {
-		// TODO Auto-generated method stub
+		currentRobot.driveToFinish();
 	}
 }

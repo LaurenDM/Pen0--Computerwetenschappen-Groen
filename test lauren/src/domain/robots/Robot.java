@@ -265,6 +265,14 @@ public class Robot {
 	public void setCheckpoint() {
 		robotPilot.setCheckpoint();
 	}
+
+	public void resumeExplore() {
+		robotPilot.resumeExplore();
+	}
+
+	public void driveToFinish() {
+		robotPilot.driveToFinish();
+	}
 	
 	
 	
