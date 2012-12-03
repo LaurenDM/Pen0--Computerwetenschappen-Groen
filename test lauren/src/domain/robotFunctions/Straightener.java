@@ -43,14 +43,12 @@ public class Straightener extends RobotFunction {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			
 			if(robot.detectWhiteLine()){
 				consecutiveDetections++;
 			
 			} else {
 				consecutiveDetections=0;
 			}
-		
 		}
 		//TODO needs to be looked at.
 		//straightenOnLine();
@@ -93,7 +91,7 @@ public class Straightener extends RobotFunction {
 			robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 		} catch (CannotMoveException e) {
 			try { robot.move(-DISTANCE_BETWEEN_SENSOR_AND_WHEELS/2); } catch (CannotMoveException e1) {}
-			turnUntil(detect, left, 3);
+			turnUntil(detect, getTurnDirection(), 3);
 			try {
 				robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 			} catch (CannotMoveException e1) {
@@ -101,7 +99,7 @@ public class Straightener extends RobotFunction {
 				System.out.println("Apparently you were wrong.");
 			}
 		}
-			turnUntil(detect, left, 3);
+			turnUntil(detect, getTurnDirection(), 3);
 			//Now the robot is aligned with the line
 			if(angleCorrection!=0){
 			robot.turn(angleCorrection);
@@ -112,4 +110,18 @@ public class Straightener extends RobotFunction {
 		straightenOnLine();
 		//robot.setPose(0,20,0);
 	}
+	
+	// Methode geeft true indien left
+	private boolean getTurnDirection(){
+		robot.turnSensorLeft();
+		double leftValue = robot.readUltrasonicValue();
+		robot.turnSensorRight();
+		double rightValue = robot.readUltrasonicValue();
+		robot.turnSensorForward();
+		if(leftValue < rightValue)
+			return false;
+		else
+			return true;
+	}
+	
 	}

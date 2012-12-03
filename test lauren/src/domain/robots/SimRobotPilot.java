@@ -218,7 +218,7 @@ public class SimRobotPilot implements RobotPilot {
 	}
 	
 	@Override
-	public void move(double wantedDistance) throws CannotMoveException {
+	public synchronized void move(double wantedDistance) throws CannotMoveException {
 		Position pos1 = getPosition().clone();
 		boolean running = true;
 		if (wantedDistance > 0) {
@@ -433,14 +433,16 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void findWhiteLine(){
+		int wantedDetections = 1;
+		int detections = 0;
 		try {
 			forward(true);
 		} catch (CannotMoveException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		while(moveThread.getMovement().equals(Movement.FORWARD)){
-			//niets
+		while(detections<wantedDetections){
+			if(detectWhiteLine()) detections++;
 		}
 		//We move 1 cm because otherwise we are standing in the beginnen and not the middle of the white line 
 		try {
@@ -458,7 +460,7 @@ public class SimRobotPilot implements RobotPilot {
 		double rightValue = robot.readUltrasonicValue();
 		robot.turnSensorForward();
 		if(leftValue < rightValue)
-			robot.turn(20);
+			robot.turn(90);
 	}
 	
 	public void findBlackLine(){
