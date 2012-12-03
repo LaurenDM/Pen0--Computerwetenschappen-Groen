@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -29,12 +30,12 @@ public class ContentPanel implements ActionListener {
     static JFrame calibrationFrame = new JFrame("P&O - Groen - Lightsensor Calibration");
     static JFrame sensorOrientationFrame = new JFrame("P&O - Groen - Ultrasonicsensor Orientation");
     private static ControllerPoller controllerPoller;
-    private JPanel titlePanel, buttonPanel, debugPanel;
+    private JPanel titlePanel, buttonPanel, debugPanel, bottomButtonPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
     private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, lineLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, 
     calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton,
-    rotateSlowLeft,rotateSlowRight,startButton, barcodeButton;
+    rotateSlowLeft,rotateSlowRight,startButton, barcodeButton, finishButton, resumeButton;
     private static JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
@@ -193,8 +194,27 @@ public class ContentPanel implements ActionListener {
         fixButtonLayout(buttonPanel, sensorButton, 240, 30, 30, buttonYDimension + 400);
         
         startButton = new JButton("Start");
-        fixButtonLayout(buttonPanel, startButton, 20, 150, 0, 0);
+//        fixButtonLayout(buttonPanel, startButton, 20, 150, 0, 0);
         buttonPanel.setFocusable(true);
+        
+      //___________________________________________________
+        // Creation of a Panel to contain all the JButtons.
+        bottomButtonPanel = new JPanel();
+        fixPanelLayout(bottomButtonPanel, 700, 50, 25, 660);
+        bottomButtonPanel.addKeyListener(l);
+        
+        startButton = new JButton("Start exploring");
+        fixButtonLayout(bottomButtonPanel, startButton, 220, 30, 0, 0);
+        
+        resumeButton = new JButton("Resume exploring");
+        fixButtonLayout(bottomButtonPanel, resumeButton, 220, 30, 240, 0);
+        
+        finishButton = new JButton("Drive to finish");
+        fixButtonLayout(bottomButtonPanel, finishButton, 220, 30, 480, 0);
+        
+        bottomButtonPanel.setFocusable(true);
+        
+        
         //_____________________________________________________
         // Creation of a Panel to contain the debug information
         createDebugPanel();
@@ -414,6 +434,7 @@ public class ContentPanel implements ActionListener {
         	buttonPanel.requestFocusInWindow();
         }
         else if(e.getSource() == loadMazeButton){
+        	        	
         	actionLabel.setText("Maze loaded from file.");
         	FileDialog fileDialog = new FileDialog(frame, "Choose a file", FileDialog.LOAD);
             fileDialog.setVisible(true);
@@ -448,6 +469,14 @@ public class ContentPanel implements ActionListener {
         }
 		else if(e.getSource() == startButton){
 			controller.startExplore();
+			buttonPanel.requestFocusInWindow();
+		}
+		else if(e.getSource() == resumeButton){
+			controller.resumeExplore();
+			buttonPanel.requestFocusInWindow();
+		}
+		else if(e.getSource() == finishButton){
+			controller.driveToFinish();
 			buttonPanel.requestFocusInWindow();
 		}
         

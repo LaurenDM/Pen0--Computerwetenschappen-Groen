@@ -251,4 +251,16 @@ public class Controller {
 		
 		
 	}
+
+
+
+	public void resumeExplore() {
+		// TODO Auto-generated method stub
+	}
+
+
+
+	public void driveToFinish() {
+		// TODO Auto-generated method stub
+	}
 }
