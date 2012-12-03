@@ -7,11 +7,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.concurrent.SynchronousQueue;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 import javax.bluetooth.BluetoothStateException;
 
 import domain.robots.BTRobotPilot;
+import domain.util.WaitObject;
 
 import exceptions.ConnectErrorException;
 
@@ -32,11 +34,12 @@ public class BTCommPC  {
 	private int[] _reply = new int[4];
 	private boolean sendingIsBlocked;
 	//We set this to null to say that there is no buffered command.
-	private long lastWaitingTicketNumber=0;
-	private long firstValidTicket=1;
-	
+//	private long lastWaitingTicketNumber=0;
+//	private long firstValidTicket=1;
+	private Queue<WaitObject> waitObjectQueue= new PriorityQueue<WaitObject>();
+	private WaitObject toBeWokenObject=null;
 	private BTRobotPilot robot;
-	
+
 	public boolean sendingIsPossible() {
 		return !sendingIsBlocked;
 	}
@@ -119,68 +122,98 @@ public class BTCommPC  {
 	public int[] sendCommand(int[] command) {
 		//TODO kijken of we deze code nog willen, is eerder voor debug
 		//We testen even of alle tickets al gebruikt zijn.
-		if(!sendingIsBlocked&&firstValidTicket<=lastWaitingTicketNumber+1){
-			try {
-				// We wachten hier 10 milliseconden om de wachtende
-				// send-commands de tijd te geven om toch uit te voeren indien
-				// ze een ticket hebben dat aan de beurt zou komen.
-				wait(10);
-				//Nu kijken we nogeens of we nogaltijd in deze foute staat zitten.
-				if(!sendingIsBlocked&&firstValidTicket<=lastWaitingTicketNumber){
-					increaseFirstValidTicket();
-					System.out.println("Something has gone wrong, we forcibly used increaseFirstValidTicket()");
-				}
-			} catch (InterruptedException e) {
-				return null;
-			}
-			
-		}
+//		if(sendingIsPossible()&&!waitObjectQueue.isEmpty()){
+//			try {
+//				// We wachten hier 10 milliseconden om de wachtende
+//				// send-commands de tijd te geven om toch uit te voeren indien
+//				// ze een ticket hebben dat aan de beurt zou komen.
+//				Thread.sleep(10);
+//				// Nu kijken we nogeens of we nogaltijd in deze foute staat
+//				// zitten.
+//				if (sendingIsPossible() && !waitObjectQueue.isEmpty()) {
+//					takeNextWaiter();
+//					System.out
+//							.println("Something has gone wrong, we forcibly denied a send request and alarmed a waitingObject");
+//				}
+//			} catch (InterruptedException e) {
+//				return null;
+//			}
+//			
+//		}
 
-		
 		if (!sendingIsPossible()) {
-			long waitingTicketNumber = takeWaitingTicket();
+			if (command[0] == CMD.GETPOSE || command[0] == CMD.GETSENSORVALUES) {
+				return null;
+			}
+
+			WaitObject thisThreadsWaitObject = new WaitObject();
+			synchronized (waitObjectQueue) {
+				waitObjectQueue.add(thisThreadsWaitObject);
+			}
 			try {
-				while (!itIsThisThreadsTurn(waitingTicketNumber)
-					|| !sendingIsPossible()) {
+				while (!thisThreadsWaitObject.hasReallyBeenNotified()) {
 					{
-						wait();
+						synchronized (thisThreadsWaitObject) {
+							thisThreadsWaitObject.wait();
+						}
 					}
-					increaseFirstValidTicket();
 				}
+				toBeWokenObject = null;
 			} catch (InterruptedException e) {
-				//This is not a problem, because in this case the command doesn't have to be sent anymore.
-				increaseFirstValidTicket();
+				// This is not a problem, because in this case the command
+				// doesn't have to be sent anymore.
+				synchronized (waitObjectQueue) {
+					waitObjectQueue.remove(thisThreadsWaitObject);
+				}
 				return null;
 			}
 		}
-			blockSending();
-			boolean commandIsSentForReal = false;
-			while (!commandIsSentForReal&&!Thread.interrupted()) {
-				try {
-					commandIsSentForReal = false;
-					sendCommandForReal(command);
-					commandIsSentForReal = true;
-				} catch (BluetoothStateException e) {
-					// In this case the while loop will try to send the command
-					// again.
-				}
+		blockSending();
+		boolean commandIsSentForReal = false;
+		while (!commandIsSentForReal && !Thread.interrupted()) {
+			try {
+				commandIsSentForReal = false;
+				sendCommandForReal(command);
+				commandIsSentForReal = true;
+			} catch (BluetoothStateException e) {
+				// In this case the while loop will try to send the command
+				// again.
 			}
+		}
+		int[] returnReply = new int[_reply.length];
+		int i = 0;
+		for (int oneReply : _reply) {
+
+			returnReply[i] = oneReply;
+			i++;
+		}
+		if (!waitObjectQueue.isEmpty()) {
+			takeNextWaiter();
+		} else {
 			unblockSending();
-			notifyAll();
-			return _reply;
+		}
+		return returnReply;
 	}
 
-	private synchronized void increaseFirstValidTicket() {
-		firstValidTicket++;
+	private void takeNextWaiter() {
+		synchronized (waitObjectQueue) {
+			synchronized (waitObjectQueue.peek()) {
+				if (toBeWokenObject != null) {
+					System.out.println(" the toBeWokenObject in not null!");
+				}
+				toBeWokenObject = waitObjectQueue.poll();
+				toBeWokenObject.setNotifiedTrue();
+				toBeWokenObject.notifyAll();
+
+			}
+		}
 	}
 
-	private synchronized long takeWaitingTicket() {
-		lastWaitingTicketNumber++;
-		return lastWaitingTicketNumber;
-	}
 
-	private boolean itIsThisThreadsTurn(long waitingTicketNumber) {
-		return waitingTicketNumber==firstValidTicket;
+
+
+	private boolean itIsThisThreadsTurn(Object waitObject) {
+		return toBeWokenObject==waitObject;
 	}
 
 	private void sendCommandForReal(int[] command)

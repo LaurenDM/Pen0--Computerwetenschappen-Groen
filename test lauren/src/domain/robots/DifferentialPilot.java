@@ -5,6 +5,7 @@ import bluetooth.CMD;
 
 import lejos.robotics.navigation.Move.MoveType;
 import domain.Position.Position;
+import domain.util.WaitObject;
 
 /*
  /**
@@ -39,6 +40,9 @@ private float _trackWidth;
 
 
 private float _leftWheelDiameter;
+
+//This object is only used so that we can use wait and notify without locking the differentialPilotObject
+private WaitObject moveWaiter;
 /**
    * Allocates a DifferentialPilot object, and sets the physical parameters of the
    * NXT robot.<br>
@@ -92,10 +96,7 @@ private float _leftWheelDiameter;
 	//TODO Francis Zorgen dat dit iets doet
     _leftWheelDiameter = (float)leftWheelDiameter;
     _rightWheelDiameter = (float)rightWheelDiameter;
-     _trackWidth = (float)trackWidth;
-    setTravelSpeed(15); 
-    setRotateSpeed(45);
-    
+     _trackWidth = (float)trackWidth;   
   }
 
   public Position getPosition(){
@@ -116,23 +117,27 @@ private float _leftWheelDiameter;
 		updatePose(false);
 		return prevMovingBool;
 	}
+	
 	private void updatePose(boolean forced) {
-		if(forced|| lastPoseUpdateTime+100<System.currentTimeMillis()){
-		int[] poseValues = btComm.sendCommand(CMD.GETPOSE);
-		position=new Position(poseValues[0],poseValues[1]);
-		rotation=poseValues[2];
-		prevMovingBool=poseValues[3]>0;		
-		notifyAll();
-		lastPoseUpdateTime=System.currentTimeMillis();
+		if (forced || lastPoseUpdateTime + 100 < System.currentTimeMillis()) {
+			int[] poseValues = btComm.sendCommand(CMD.GETPOSE);
+			if (poseValues != null) {
+				position = new Position(poseValues[0], poseValues[1]);
+				rotation = poseValues[2];
+				prevMovingBool = poseValues[3] > 0;
+				if (!prevMovingBool) {
+					try{
+					synchronized (moveWaiter) {
+						moveWaiter.setNotifiedTrue();
+						moveWaiter.notifyAll();
+					}}catch(NullPointerException e){
+//						this is when there is no movewaiter and this is normal for endless moves.
+					}
+				}
+				lastPoseUpdateTime = System.currentTimeMillis();
+			}
 		}
 	}
-	
-	// "RunState":
-	/** Output will be idle */
-	public static final byte MOTOR_RUN_STATE_IDLE = 0x00;
-	
-
-
 
  /**
   * set travel speed in cm per second
@@ -197,6 +202,7 @@ private float _leftWheelDiameter;
    *            left (anti-clockwise), negative right.
    */
 	public void rotate(final double angle) {
+		prevMovingBool=true;
 		//TODO Francis zien wat te doen met de double value van angle
 		btComm.sendCommand(new int[]{CMD.TURN,(int)angle});
 		waitUntilMovingStops();
@@ -214,6 +220,7 @@ private float _leftWheelDiameter;
    * Stops the NXT robot.
    */
 	public void stop() {
+		
 		btComm.sendCommand(CMD.STOP);
 	}
 
@@ -239,7 +246,8 @@ private float _leftWheelDiameter;
     {
       backward();
       return;
-    }    
+    }  
+	prevMovingBool=true;
     //TODO Francis:  zien wat te doen met die double waarde van distance
 	btComm.sendCommand(new int[]{CMD.TRAVEL,(int)distance});	
 // setMoveType( MoveType.STOP);
@@ -247,19 +255,25 @@ private float _leftWheelDiameter;
   }
 
 private void waitUntilMovingStops() {
-	while(isMoving()){
+	if(moveWaiter!=null){
+		System.out.println("moveWaiter was niet null");
+	}
+	moveWaiter=new WaitObject();
+	while(!moveWaiter.hasReallyBeenNotified()&&!Thread.interrupted()){
 		try {
-			wait();
+			synchronized (moveWaiter) {
+				moveWaiter.wait();
+			}
 		} catch (InterruptedException e) {
-			//In this case the methode can just return because this means the movement has ended.
+			moveWaiter=null;
+			break;
 		}
 	}
+	moveWaiter=null;
 }
-
 
 public void keepTurning(boolean left) {
 		btComm.sendCommand(new int[]{CMD.KEEPTURNING,(left?1:-1)});	
-		
 	}
 
 public void setPose(double orientation, int x, int y) {
@@ -269,6 +283,14 @@ public void setPose(double orientation, int x, int y) {
 
 public void interrupt() {
 	stop();
+   prevMovingBool=false;
+try{
+   synchronized (moveWaiter) {
+		moveWaiter.setNotifiedTrue();
+		moveWaiter.notifyAll();
+	}}catch(NullPointerException e){
+		//This is no problem
+	}
 }
 
 }

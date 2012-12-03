@@ -3,7 +3,7 @@ package domain.robots;
 public class RobotChecker {
 
 	
-	private static boolean interruptionAllowed;
+	private static boolean interruptionAllowed=true;
 
 	public static boolean interruptionAllowed() {
 		// TODO Auto-generated method stub

@@ -22,8 +22,8 @@ public class BTRobotPilot implements RobotPilot  {
 //	private RegulatedMotor sensorMotor;
 	
 	
-	private final double defaultTravelSpeed = 15;
-	private final double defaultTurnSpeed = 10;
+	private final double defaultTravelSpeed = 20;
+	private final double defaultTurnSpeed = 200;
 	
 //	private TouchSensor touchSensor;
 //	private UltrasonicSensor ultrasonicSensor;
@@ -114,13 +114,18 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public Position getPosition() {
-		return pilot.getPosition();
+		if(RobotChecker.interruptionAllowed()){
+		return pilot.getPosition();}
+		else return new Position(0,0);
 	}
 	
 	//TODO checken of de getheading waarden tussen 0 en 180 graden teruggeeft
 	@Override
 	public double getOrientation() {
-	return pilot.getRotation();
+		if(RobotChecker.interruptionAllowed())
+			return pilot.getRotation();
+		else return 0;
+		
 	}
 
 //	public boolean isMoving(){
@@ -220,13 +225,15 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 	
 	private void updateSensorValues(boolean forced) {
-		if(lastSensorUpdateTime+100<System.currentTimeMillis()){
-		int[] sensorValues = btComm.sendCommand(CMD.GETSENSORVALUES);
-		prevUltrasonicValue = sensorValues[1];
-		prevLightValue = sensorValues[0];
-		prevTouchBool = sensorValues[2] > 0;
-		prevSensorAngle=sensorValues[3];
-		lastSensorUpdateTime=System.currentTimeMillis();
+		if (lastSensorUpdateTime + 100 < System.currentTimeMillis()) {
+			int[] sensorValues = btComm.sendCommand(CMD.GETSENSORVALUES);
+			if (sensorValues != null) {
+				prevUltrasonicValue = sensorValues[1];
+				prevLightValue = sensorValues[0];
+				prevTouchBool = sensorValues[2] > 0;
+				prevSensorAngle = sensorValues[3];
+				lastSensorUpdateTime = System.currentTimeMillis();
+			}
 		}
 	}
 
