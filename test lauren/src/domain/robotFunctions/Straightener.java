@@ -117,7 +117,11 @@ public class Straightener extends RobotFunction {
 			robot.turn(angleCorrection);
 			}
 		robot.resetToDefaultSpeeds();
-		robot.turnRight();	
+		if(getTurnDirection()){
+			robot.turnRight();
+		}
+		else
+			robot.turnLeft();
 		//TODO added
 		straightenOnLine();
 		//robot.setPose(0,20,0);
