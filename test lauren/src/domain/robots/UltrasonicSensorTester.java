@@ -32,7 +32,7 @@ public class UltrasonicSensorTester {
 //		
 //		NXTCommandConnector.setNXTCommand(nxtCommand);
 		sensor = new UltrasonicSensor(SensorPort.S2);
-		robot = new DifferentialPilot(5.55F, 17.22F,Motor.C, Motor.B);
+		robot = new DifferentialPilot(5.55F, 17.22F,Motor.B, Motor.C);
 		robot.setTravelSpeed(1);
 		robot.setRotateSpeed(3.6);
 		
