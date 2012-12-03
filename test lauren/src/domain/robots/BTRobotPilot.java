@@ -42,6 +42,10 @@ public class BTRobotPilot implements RobotPilot  {
 	private final BTCommPC btComm;
 	private Robot robot;
 	private ExploreMaze maze;
+
+
+	private long lastSensorUpdateTime;
+
 	
 	public BTRobotPilot(){
 
@@ -216,11 +220,14 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 	
 	private void updateSensorValues(boolean forced) {
+		if(lastSensorUpdateTime+100<System.currentTimeMillis()){
 		int[] sensorValues = btComm.sendCommand(CMD.GETSENSORVALUES);
 		prevUltrasonicValue = sensorValues[1];
 		prevLightValue = sensorValues[0];
 		prevTouchBool = sensorValues[2] > 0;
 		prevSensorAngle=sensorValues[3];
+		lastSensorUpdateTime=System.currentTimeMillis();
+		}
 	}
 
 	public void turnUltrasonicSensor(int angle){
@@ -407,6 +414,8 @@ public class BTRobotPilot implements RobotPilot  {
 		
 	}
 
+	// Warning: using this method makes all other bluetooth-commands be thrown
+	// away until this method returns 
 	@Override
 	public void scanBarcode() {
 		int[] results = btComm.sendCommand(CMD.SCANBARCODE);

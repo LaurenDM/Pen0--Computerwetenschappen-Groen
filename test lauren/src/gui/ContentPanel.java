@@ -323,7 +323,7 @@ public class ContentPanel implements ActionListener {
 					contentPanel.drawRawData();
 					contentPanel.updateInfoPanel();
 					//TODO
-					sleep(50);
+					sleep(100);
 				}
 			} catch(InterruptedException e){
 				//Do absolutely nothing

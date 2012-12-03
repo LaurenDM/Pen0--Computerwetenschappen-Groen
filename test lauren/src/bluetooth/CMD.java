@@ -1,5 +1,8 @@
 package bluetooth;
 
+
+import java.io.IOException;
+
 //Although these are fixed constants we don't use an enum because we need to send integer values via bluetooth.
 public interface CMD {
 	/**
@@ -32,7 +35,7 @@ public interface CMD {
 	 * Stop immediately and return pose
 	 */
 	public static final int STOP=4;
-	public int[] stop();
+	public void stop();
 	/**
 	 * just give a status-update with position and rotation and whether the robot is moving or not.
 	 */
@@ -65,7 +68,7 @@ public interface CMD {
 	 * Make the robot start turning to the left(1) or right(-1).
 	 */
 	public static final int KEEPTURNING=10;
-	public void keepTurning();
+	public void keepTurning(boolean left);
 	/**
 	 * keep going forward(1) or backward(-1)
 	 */
@@ -78,7 +81,7 @@ public interface CMD {
 	public void disconnect();
 	
 	public static final int SCANBARCODE = 13;
-	public void scanBarcode();
+	public int[] scanBarcode() throws IOException;
 	
 	public static final int DRIVESLOW = 14;
 	public void driveSlow();

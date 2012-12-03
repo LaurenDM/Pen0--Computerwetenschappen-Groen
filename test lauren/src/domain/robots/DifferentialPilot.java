@@ -17,7 +17,7 @@ public class DifferentialPilot
 	 */
 	int[] tMotorSpeed=new int[2];
 
-
+private long lastPoseUpdateTime;
 private Position position= new Position(0,0);
 private double rotation=0;
 private final BTCommPC btComm;
@@ -99,10 +99,12 @@ private float _leftWheelDiameter;
   }
 
   public Position getPosition(){
+	  updatePose(false);
 	  return position.clone();
   }
   
   public double getRotation(){
+	  updatePose(false);
 	  return rotation;
   }
   /*
@@ -115,10 +117,14 @@ private float _leftWheelDiameter;
 		return prevMovingBool;
 	}
 	private void updatePose(boolean forced) {
+		if(forced|| lastPoseUpdateTime+100<System.currentTimeMillis()){
 		int[] poseValues = btComm.sendCommand(CMD.GETPOSE);
 		position=new Position(poseValues[0],poseValues[1]);
 		rotation=poseValues[2];
-		prevMovingBool=poseValues[3]>0;
+		prevMovingBool=poseValues[3]>0;		
+		notifyAll();
+		lastPoseUpdateTime=System.currentTimeMillis();
+		}
 	}
 	
 	// "RunState":
@@ -193,8 +199,7 @@ private float _leftWheelDiameter;
 	public void rotate(final double angle) {
 		//TODO Francis zien wat te doen met de double value van angle
 		btComm.sendCommand(new int[]{CMD.TURN,(int)angle});
-		// setMoveType( MoveType.STOP);
-
+		waitUntilMovingStops();
   }
 
   /*
@@ -238,9 +243,18 @@ private float _leftWheelDiameter;
     //TODO Francis:  zien wat te doen met die double waarde van distance
 	btComm.sendCommand(new int[]{CMD.TRAVEL,(int)distance});	
 // setMoveType( MoveType.STOP);
-
-
+	waitUntilMovingStops();
   }
+
+private void waitUntilMovingStops() {
+	while(isMoving()){
+		try {
+			wait();
+		} catch (InterruptedException e) {
+			//In this case the methode can just return because this means the movement has ended.
+		}
+	}
+}
 
 
 public void keepTurning(boolean left) {
