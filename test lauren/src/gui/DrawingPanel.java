@@ -283,5 +283,13 @@ public class DrawingPanel extends JPanel {
 		}
 		g.fillPolygon(centeredPoly);
 	}
+	
+	public void reset(){
+		image = new BufferedImage(IMG_WIDTH, IMG_HEIGHT,
+				BufferedImage.TYPE_INT_ARGB);
+		g=image.getGraphics();
+		previousPolygons = new HashMap<ColorPolygon, Polygon>();
+		drawWhiteLines();
+	}
 
 }

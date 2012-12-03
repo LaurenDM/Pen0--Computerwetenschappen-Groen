@@ -33,6 +33,7 @@ public class Controller {
 		simRobot = new Robot(new SimRobotPilot());
 		simRobot.getRobotPilot().setRobot(simRobot);
 		currentRobot=simRobot;
+		connectNewSimRobot();
 	}
 
 
@@ -50,6 +51,7 @@ public class Controller {
 	}
 	public void connectNewSimRobot() {
 		simRobot = new Robot(new SimRobotPilot());
+		simRobot.getRobotPilot().setRobot(simRobot);
 		currentRobot = simRobot ;
 		currentRobot.setBoard(new Board());
 	}
@@ -252,15 +254,15 @@ public class Controller {
 		
 	}
 
-
-
 	public void resumeExplore() {
 		currentRobot.resumeExplore();
 	}
 
-
-
 	public void driveToFinish() {
 		currentRobot.driveToFinish();
+	}
+	
+	public void reset(){
+		connectNewSimRobot();
 	}
 }
