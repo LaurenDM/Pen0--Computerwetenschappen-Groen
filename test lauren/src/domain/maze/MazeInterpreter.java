@@ -127,12 +127,12 @@ public class MazeInterpreter {
 		Position pos = new Position(XCoo, YCoo);
 		switch (orientation) {
         case NORTH: 
-        	//   |
+        	//   -|
         		 makeWall(pos, Orientation.NORTH);
         		 makeWall(pos, Orientation.WEST);
                  break;
 		case EAST:
-			//	|
+			//	|-
 				makeWall(pos, Orientation.NORTH);
 				makeWall(pos, Orientation.EAST);
 				break;

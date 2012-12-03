@@ -14,6 +14,7 @@ import domain.PolygonDriver;
 import domain.Position.Position;
 import domain.maze.Board;
 import domain.maze.MazeInterpreter;
+import domain.maze.RandomMazeGenerator;
 import domain.robotFunctions.BarcodeGenerator;
 import domain.robots.BTRobotPilot;
 import domain.robots.CannotMoveException;
@@ -196,7 +197,12 @@ public class Controller {
 
 	public void readMazeFromFile(String fileLocation) {
 		MazeInterpreter MI = new MazeInterpreter(this.getRobot().getBoard());
+		if(fileLocation.equals("nullnull")){
+		RandomMazeGenerator RMG = new RandomMazeGenerator(MI);
+		}
+		else
 		MI.readFile(fileLocation);
+		
 	}
 
 	public void findLineAndStraighten() {
