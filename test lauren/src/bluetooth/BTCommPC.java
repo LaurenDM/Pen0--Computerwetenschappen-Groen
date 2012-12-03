@@ -192,8 +192,14 @@ public class BTCommPC  {
 				throw new BluetoothStateException(" sending the command failed because of an IO exception");
 			}
 		}
-			
-		for(int k = 0; k<4; k++){
+		int replyLength;	
+		try{
+			replyLength=_dis.readByte();
+			}
+		catch(IOException e){
+			throw new BluetoothStateException(" sending the command failed because of an IO exception");
+		}
+		for(int k = 0; k<replyLength; k++){
 			try{
 				_reply[k] = _dis.readInt();
 			}catch(IOException ioe){
