@@ -13,7 +13,7 @@ import domain.robots.Robot;
 import domain.robots.RobotPilot;
 import domain.robots.SimRobotPilot;
 
-public class ExploreMaze {
+public class ExploreMaze extends Thread {
 	
 	private enum Direction {
 	    LEFT,FORWARD,RIGHT,BACKWARD
@@ -58,7 +58,12 @@ public class ExploreMaze {
 		robot.turnRight();
 	}
 	
-	public void continueExploring(int x, int y, Orientation o){
+	public void resumeExplore(int x, int y, Orientation o){
+		interrupted = false;
+		continueExploring(0,0,null);
+	}
+	
+	private void continueExploring(int x, int y, Orientation o){
 		maze.continueExploring(x,y,o);
 		while(!maze.isComplete() && interrupted==false){
 			double[] distances = new double[3];
@@ -71,6 +76,7 @@ public class ExploreMaze {
 				}
 				else{
 					move(direction);
+					System.out.println("Now at "+maze.getCurrentNode().getX()+" "+maze.getCurrentNode().getY());
 				}
 			}
 		}
@@ -283,5 +289,9 @@ public class ExploreMaze {
 	public void driveToFinish() {
 		interrupted = true;
 		maze.driveToFinish(robot);
+	}
+	
+	public synchronized void stopExploring(){
+		interrupted = true;
 	}
 }

@@ -385,7 +385,7 @@ public class MazeGraph {
 		this.currentNode = currentNode;
 	}
 	
-	private TileNode getCurrentNode(){
+	public TileNode getCurrentNode(){
 		return currentNode;
 	}
 

@@ -1,5 +1,7 @@
 package domain.robots;
 
+import gui.ContentPanel;
+
 import java.io.File;
 
 import javax.sound.sampled.AudioInputStream;
@@ -90,7 +92,7 @@ public class SimRobotPilot implements RobotPilot {
 	
 	@Override
 	public void turn(double wantedAngleDif) {
-		int temp = randomInt(3);
+		double temp = randomDouble(3);
 		System.out.println(temp);
 		wantedAngleDif = wantedAngleDif + temp;
 		double previousAngle = getOrientation();
@@ -274,7 +276,7 @@ public class SimRobotPilot implements RobotPilot {
 			return canMoveBackward();
 		}
 		double distance = readUltrasonicValue();	
-		int testDistance = 15; 
+		int testDistance = 10; 
 		if(distance < testDistance || isTouching())
 			return false;
 		else
@@ -352,17 +354,20 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public double readUltrasonicValue() {
 		final double MAX_VALUE = 255;
+		double shortestDistance = MAX_VALUE;
 		boolean foundWall = false;
 		for(int i = 0; i<MAX_VALUE; i++){
-			for(int j = -30; j<30; j++){
+			for(int j = -15; j<15; j++){
 				Position pos = getPosition().getNewPosition(getOrientation()+ getSensorAngle()+j, i);
 				foundWall = board.detectWallAt(pos);
 				if(foundWall){
-					return getPosition().getDistance(pos);
+					if(getPosition().getDistance(pos)<shortestDistance){
+						shortestDistance = getPosition().getDistance(pos);
+					}
 				}
 			}
 		}
-		return MAX_VALUE;
+		return shortestDistance;
 	}
 
 	@Override
@@ -556,20 +561,27 @@ public class SimRobotPilot implements RobotPilot {
 	}
 	@Override
 	public void resumeExplore() {
-		maze.continueExploring(0, 0, null);
+		if(maze!=null){
+			maze.resumeExplore(0, 0, null);
+		} else {
+			ContentPanel.writeToDebug("You haven't started exploring yet!");
+		}
+		
 	}
 	@Override
 	public void driveToFinish() {
-		maze.driveToFinish();
+		if(maze!=null){
+			maze.stopExploring();
+			maze.driveToFinish();
+		} else {
+			ContentPanel.writeToDebug("You haven't started exploring yet!");
+		}
 	}
 
 
 	
-	private int randomInt(int max){
-		return (int) (Math.random() * max * 2 - max);
+	private double randomDouble(int max){
+		return (Math.random() * max * 2 - max);
 	}
-	
-	
-	
 
 }

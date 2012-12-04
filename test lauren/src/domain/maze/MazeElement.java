@@ -71,4 +71,27 @@ public abstract class MazeElement {
 		else return false;
 	}
 	
+	
+	public Position getCenterPosition(){
+		if(position1.getX() == position2.getX()){
+			//wall = vertical
+			if(position1.getY()>position2.getY()){
+				return new Position(position1.getX(), position2.getY()+20);
+			}
+			else if(position1.getY()<position2.getY()){
+				return new Position(position1.getX(), position1.getY()+20);
+			}
+		}
+		else if(position1.getY() == position2.getY()){
+			//wall = horizontal
+			if(position1.getX()>position2.getX()){
+				return new Position(position1.getX()-20, position2.getY());
+			}
+			else if(position1.getX()<position2.getX()){
+				return new Position(position1.getX()+20, position2.getY());
+			}
+		}
+		return null;
+	}
+	
 }

@@ -14,6 +14,7 @@ import domain.robotFunctions.Straightener;
 import domain.util.RobotChecker;
 import domain.util.TimeStamp;
 import exceptions.ConnectErrorException;
+import gui.ContentPanel;
 
 
 
@@ -23,7 +24,7 @@ public class BTRobotPilot implements RobotPilot  {
 //	private RegulatedMotor sensorMotor;
 	
 	
-	private final double defaultTravelSpeed = 20;
+	private final double defaultTravelSpeed = 10;
 	private final double defaultTurnSpeed = 200;
 	
 //	private TouchSensor touchSensor;
@@ -272,7 +273,7 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 	
 	public void straighten(){
-		new Straightener(new Robot(this)).straighten();
+		btComm.sendCommand(CMD.STRAIGHTEN);
 	}
 	
 	public int getBatteryVoltage(){
@@ -456,13 +457,21 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void resumeExplore() {
-		maze.continueExploring(0, 0, null);
+		if(maze!=null){
+			maze.resumeExplore(0, 0, null);
+		} else {
+			ContentPanel.writeToDebug("You haven't started exploring yet!");
+		}
+		
 	}
-
 	@Override
 	public void driveToFinish() {
-		maze.driveToFinish();
-		
+		if(maze!=null){
+			maze.stopExploring();
+			maze.driveToFinish();
+		} else {
+			ContentPanel.writeToDebug("You haven't started exploring yet!");
+		}
 	}
 
 	
