@@ -1,5 +1,7 @@
 package domain.robots;
 
+import gui.ContentPanel;
+
 import java.io.File;
 
 import javax.sound.sampled.AudioInputStream;
@@ -559,11 +561,20 @@ public class SimRobotPilot implements RobotPilot {
 	}
 	@Override
 	public void resumeExplore() {
-		maze.continueExploring(0, 0, null);
+		if(maze!=null){
+			maze.continueExploring(0, 0, null);
+		} else {
+			ContentPanel.writeToDebug("You haven't started exploring yet!");
+		}
+		
 	}
 	@Override
 	public void driveToFinish() {
-		maze.driveToFinish();
+		if(maze!=null){
+			maze.driveToFinish();maze.continueExploring(0, 0, null);
+		} else {
+			ContentPanel.writeToDebug("You haven't started exploring yet!");
+		}
 	}
 
 
