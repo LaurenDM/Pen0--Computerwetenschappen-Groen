@@ -133,6 +133,8 @@ public interface RobotPilot {
 
 	public void driveToFinish();
 
+	public void wait5Seconds();
+
 
 	
 }

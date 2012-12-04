@@ -1,5 +1,6 @@
 package domain.barcodes;
 
+import bluetooth.CMD;
 import domain.robots.Robot;
 
 public class DriveFastAction extends Action {
@@ -9,10 +10,10 @@ public class DriveFastAction extends Action {
 		robot.setHighSpeed();
 	}
 
-	@Override
-	public int[] getActionNb() {
-		return new int[]{15};
-	}
+//	@Override
+//	public int getActionCommandNb() {
+//		return CMD.DRIVEFAST;
+//	}
 
 	@Override
 	public String toString() {

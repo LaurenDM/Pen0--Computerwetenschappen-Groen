@@ -1,22 +1,19 @@
 package domain.barcodes;
 
+import bluetooth.CMD;
 import domain.robots.Robot;
 
 public class Wait5Action extends Action {
 
 	@Override
 	public void run(Robot robot) {
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO ?
-		}
+		robot.wait5Seconds();
 	}
 
-	@Override
-	public int[] getActionNb() {
-		return new int[]{17};
-	}
+//	@Override
+//	public int getActionCommandNb() {
+//		return CMD.WAIT5;
+//	}
 
 	@Override
 	public String toString() {

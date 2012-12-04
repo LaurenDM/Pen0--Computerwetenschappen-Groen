@@ -1,4 +1,6 @@
 package domain.robots;
+
+
 import java.io.IOException;
 
 import lejos.nxt.remote.NXTCommand;
@@ -24,7 +26,7 @@ public class BTRobotPilot implements RobotPilot  {
 //	private RegulatedMotor sensorMotor;
 	
 	
-	private final double defaultTravelSpeed = 10;
+	private final double defaultTravelSpeed = 20;
 	private final double defaultTurnSpeed = 200;
 	
 //	private TouchSensor touchSensor;
@@ -33,8 +35,7 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	private Board board;
 	private NXTCommand nxtCommand;
-	private final float wheelDiameterLeft = 5.43F;
-	private final float wheelDiameterRight = 5.43F;
+	private final float wheelDiameter = 5.43F;
 	private final float trackWidth = 16.62F;
 	private int prevLightValue;
 	private int prevUltrasonicValue;
@@ -54,7 +55,7 @@ public class BTRobotPilot implements RobotPilot  {
 			try {
 			btComm = (new BTCommPC(this));
 			btComm.open(null,bluetoothAdress );
-			pilot = new DifferentialPilot(wheelDiameterLeft, wheelDiameterRight, trackWidth, btComm, 1, 2);
+			pilot = new DifferentialPilot(wheelDiameter, trackWidth, btComm);
 			pilot.setPose(getOrientation(), 260, 180);
 			setMovingSpeed(defaultTravelSpeed);
 			setTurningSpeed(defaultTurnSpeed);
@@ -240,21 +241,21 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 
 	public void turnUltrasonicSensor(int angle){
-		btComm.sendCommand(new int[]{CMD.TURNSENSOR,angle});
+		btComm.sendCommand(CMD.TURNSENSOR,angle);
 	}
 	
 	public void turnSensorRight(){
-		btComm.sendCommand(new int[]{CMD.TURNSENSORTO,-90});
+		btComm.sendCommand(CMD.TURNSENSORTO,-90);
 //		canMove();
 	}
 	
 	public void turnSensorLeft(){
-		btComm.sendCommand(new int[]{CMD.TURNSENSORTO,90});
+		btComm.sendCommand(CMD.TURNSENSORTO,90);
 //		canMove();
 	}
 	
 	public void turnSensorForward(){
-		btComm.sendCommand(new int[]{CMD.TURNSENSORTO,0});
+		btComm.sendCommand(CMD.TURNSENSORTO,0);
 //		canMove();
 	}
 	
@@ -273,7 +274,7 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 	
 	public void straighten(){
-		btComm.sendCommand(CMD.STRAIGHTEN);
+		new Straightener(new Robot(this)).straighten();
 	}
 	
 	public int getBatteryVoltage(){
@@ -341,17 +342,17 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 
 	private void fixWall() {
-		robot.turnSensorLeft();
-		double leftValue = robot.readUltrasonicValue();
-		robot.turnSensorRight();
-		double rightValue = robot.readUltrasonicValue();
-		robot.turnSensorForward();
+		turnSensorLeft();
+		double leftValue = readUltrasonicValue();
+		turnSensorRight();
+		double rightValue = readUltrasonicValue();
+		turnSensorForward();
 		if(leftValue < rightValue)
 			robot.turn(-10);
 	}
 
 	private boolean wallDetected() {
-		if(this.robot.readUltrasonicValue() < 10)
+		if(readUltrasonicValue() < 10)
 			return false;
 		return false;
 	}
@@ -423,17 +424,12 @@ public class BTRobotPilot implements RobotPilot  {
 		
 	}
 
-	// Warning: using this method makes all other bluetooth-commands be thrown
+	// TODO: using this method makes all other bluetooth-commands be thrown
 	// away until this method returns 
 	@Override
 	public void scanBarcode() {
 		int[] results = btComm.sendCommand(CMD.SCANBARCODE);
-		Barcode barcode = new Barcode(results[2], new Position(results[0], results[1]), results[3]);
-		getBoard().addFoundBarcode(barcode);
-		Action action = barcode.getAction();
-		int[] command = null;
-		if(action != null) command = action.getActionNb();
-		if(command != null) btComm.sendCommand(command);
+		makeBarcode(results);
 	}
 
 	@Override
@@ -447,12 +443,11 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 
 	public void makeBarcode(int[] data) {
-		Barcode barcode = new Barcode(data[2], new Position(data[0],data[1]), data[3]);
+		Barcode barcode = new Barcode(data[2], new Position(data[0], data[1]),
+				data[3]);
 		getBoard().addFoundBarcode(barcode);
 		Action action = barcode.getAction();
-		int[] command = null;
-		if(action != null) command = action.getActionNb();
-		if(command != null) btComm.sendCommand(command);
+		action.run(robot);
 	}
 
 	@Override
@@ -464,6 +459,7 @@ public class BTRobotPilot implements RobotPilot  {
 		}
 		
 	}
+
 	@Override
 	public void driveToFinish() {
 		if(maze!=null){
@@ -471,7 +467,12 @@ public class BTRobotPilot implements RobotPilot  {
 			maze.driveToFinish();
 		} else {
 			ContentPanel.writeToDebug("You haven't started exploring yet!");
-		}
+		}		
+	}
+
+	@Override
+	public void wait5Seconds() {
+		btComm.sendCommand(CMD.WAIT5);
 	}
 
 	

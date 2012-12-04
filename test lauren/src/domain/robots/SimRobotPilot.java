@@ -583,5 +583,16 @@ public class SimRobotPilot implements RobotPilot {
 	private double randomDouble(int max){
 		return (Math.random() * max * 2 - max);
 	}
+	@Override
+	public void wait5Seconds() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
 
 }

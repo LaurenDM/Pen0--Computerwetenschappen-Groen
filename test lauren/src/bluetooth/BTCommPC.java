@@ -119,31 +119,33 @@ public class BTCommPC  {
 	public boolean isClosed(){
 		return _closed;
 	}
-	
-	public int[] sendCommand(int[] command) {
+	public int[]  sendCommand(int  command, double argument) {
+		return sendCommand(command,(int) (100*argument));
+	}
+	public int[] sendCommand(int  command, int argument) {
 		//TODO kijken of we deze code nog willen, is eerder voor debug
 		//We testen even of alle tickets al gebruikt zijn.
-//		if(sendingIsPossible()&&!waitObjectQueue.isEmpty()){
-//			try {
-//				// We wachten hier 10 milliseconden om de wachtende
-//				// send-commands de tijd te geven om toch uit te voeren indien
-//				// ze een ticket hebben dat aan de beurt zou komen.
-//				Thread.sleep(10);
-//				// Nu kijken we nogeens of we nogaltijd in deze foute staat
-//				// zitten.
-//				if (sendingIsPossible() && !waitObjectQueue.isEmpty()) {
-//					takeNextWaiter();
-//					System.out
-//							.println("Something has gone wrong, we forcibly denied a send request and alarmed a waitingObject");
-//				}
-//			} catch (InterruptedException e) {
-//				return null;
-//			}
-//			
-//		}
+		if(sendingIsPossible()&&!waitObjectQueue.isEmpty()){
+			try {
+				// We wachten hier 10 milliseconden om de wachtende
+				// send-commands de tijd te geven om toch uit te voeren indien
+				// ze een ticket hebben dat aan de beurt zou komen.
+				Thread.sleep(10);
+				// Nu kijken we nogeens of we nogaltijd in deze foute staat
+				// zitten.
+				if (sendingIsPossible() && !waitObjectQueue.isEmpty()) {
+					takeNextWaiter();
+					System.out
+							.println("Something has gone wrong, we forcibly denied a send request and alarmed a waitingObject");
+				}
+			} catch (InterruptedException e) {
+				return null;
+			}
+			
+		}
 
 		if (!sendingIsPossible()) {
-			if (command[0] == CMD.GETPOSE || command[0] == CMD.GETSENSORVALUES) {
+			if (command == CMD.GETPOSE || command == CMD.GETSENSORVALUES) {
 				return null;
 			}
 
@@ -174,7 +176,7 @@ public class BTCommPC  {
 		while (!commandIsSentForReal && !Thread.interrupted()) {
 			try {
 				commandIsSentForReal = false;
-				sendCommandForReal(command);
+				sendCommandForReal(command, argument);
 				commandIsSentForReal = true;
 			} catch (BluetoothStateException e) {
 				// In this case the while loop will try to send the command
@@ -211,28 +213,22 @@ public class BTCommPC  {
 	}
 
 
-
-
-	private boolean itIsThisThreadsTurn(Object waitObject) {
-		return toBeWokenObject==waitObject;
-	}
-
-	private void sendCommandForReal(int[] command)
+	private void sendCommandForReal(int command, int argument)
 			throws BluetoothStateException {
 		if(_dos == null){ 
 			System.out.println("dos is null");
 		}
-		
-		for(int k = 0; k<2; k++){
-			try{
-				_dos.writeInt(command[k]);
-				_dos.flush();
-			}catch(IOException ioe){
-				throw new BluetoothStateException(" sending the command failed because of an IO exception");
-			}
+		try {
+			_dos.writeByte(command);
+			_dos.flush();
+			_dos.writeInt(argument);
+			_dos.flush();
+		} catch (IOException ioe) {
+			throw new BluetoothStateException(
+					" sending the command failed because of an IO exception");
 		}
-		int replyLength;	
-		try{
+		int replyLength;
+		try {
 			replyLength=_dis.readByte();
 			}
 		catch(IOException e){
@@ -257,7 +253,7 @@ public class BTCommPC  {
 
 
 	public int[] sendCommand(int command) {
-		return sendCommand(new int[]{command,0});
+		return sendCommand(command,0);
 	}
 	
 }

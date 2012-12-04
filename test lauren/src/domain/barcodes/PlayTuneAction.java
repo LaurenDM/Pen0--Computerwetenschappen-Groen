@@ -1,5 +1,6 @@
 package domain.barcodes;
 
+import bluetooth.CMD;
 import lejos.nxt.Sound;
 import domain.robots.Robot;
 
@@ -11,10 +12,10 @@ public class PlayTuneAction extends Action {
 		robot.playTune();
 	}
 
-	@Override
-	public int[] getActionNb() {
-		return new int[]{16};
-	}
+//	@Override
+//	public int getActionCommandNb() {
+//		return CMD.PLAYTUNE;
+//	}
 
 	@Override
 	public String toString() {

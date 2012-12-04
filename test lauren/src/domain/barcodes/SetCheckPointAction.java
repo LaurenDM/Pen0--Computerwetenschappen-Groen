@@ -1,5 +1,6 @@
 package domain.barcodes;
 
+import bluetooth.CMD;
 import domain.robots.Robot;
 
 public class SetCheckPointAction extends Action {
@@ -9,10 +10,11 @@ public class SetCheckPointAction extends Action {
 		robot.setCheckpoint();
 	}
 
-	@Override
-	public int[] getActionNb() {
-		return null;
-	}
+//	@Override
+//	public int getActionCommandNb() {
+//		robot.setCheckpoint();
+//		return CMD.INVALID;
+//	}
 
 	@Override
 	public String toString() {

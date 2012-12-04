@@ -1,5 +1,6 @@
 package domain.barcodes;
 
+import bluetooth.CMD;
 import domain.robots.Robot;
 
 public class SetFinishAction extends Action {
@@ -9,10 +10,10 @@ public class SetFinishAction extends Action {
 		robot.setFinish();
 	}
 
-	@Override
-	public int[] getActionNb() {
-		return null;
-	}
+//	@Override
+//	public int getActionCommandNb() {
+//		return CMD.INVALID;
+//	}
 
 	@Override
 	public String toString() {

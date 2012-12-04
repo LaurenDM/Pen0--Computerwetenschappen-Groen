@@ -273,6 +273,10 @@ public class Robot {
 	public void driveToFinish() {
 		robotPilot.driveToFinish();
 	}
+
+	public void wait5Seconds() {
+		robotPilot.wait5Seconds();
+	}
 	
 	
 	
