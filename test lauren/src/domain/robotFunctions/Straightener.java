@@ -56,29 +56,27 @@ public class Straightener extends RobotFunction {
 		robot.setTurningSpeed(5);
 	}
 
-	//TODO needs to be implemented.
+	/**
+	 * Assumes that the robot is turned towards the left!
+	 * The robot also doesn't return to it's original orientation afterwards!
+	 */
 	private void straightenOnLine(){
-		robot.turnSensorLeft();
-		double left = robot.readUltrasonicValue() % 40;
 		robot.turnSensorForward();
+		double left = robot.readUltrasonicValue() % 40;
 		if(left < 15 || left > 19){
 			if(left < 17){
-				robot.turnRight();
-				try {
-					robot.move(17 - left);
-				} catch (CannotMoveException e) {
-					e.printStackTrace();
-				}
-				robot.turnLeft();
-			}
-			if(left > 19){
-				robot.turnLeft();
 				try {
 					robot.move(left - 17);
 				} catch (CannotMoveException e) {
 					e.printStackTrace();
 				}
-				robot.turnRight();
+			}
+			if(left > 19){
+				try {
+					robot.move(left - 17);
+				} catch (CannotMoveException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -120,12 +118,13 @@ public class Straightener extends RobotFunction {
 			robot.turn(angleCorrection);
 		}
 		robot.resetToDefaultSpeeds();
+		straightenOnLine();
 		if(turnDirection){
 			robot.turnRight();
 		} else {
 			robot.turnLeft();
 		}
-		straightenOnLine();
+		
 		//robot.setPose(0,20,0);
 	}
 
