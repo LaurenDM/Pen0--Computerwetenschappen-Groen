@@ -41,7 +41,7 @@ public class MazeGraph {
 				TileNode nextNode = tileIt.next();
 				Orientation nextOrientation = null;
 				for(Orientation o:Orientation.values()){
-					if(getCurrentNode().getNodeAt(o).equals(nextNode)){
+					if(getCurrentNode().getNodeAt(o)!=null && getCurrentNode().getNodeAt(o).equals(nextNode)){
 						nextOrientation = o;
 					}
 				}

@@ -97,7 +97,7 @@ public class MazePath implements Comparable<MazePath>, Iterable<TileNode> {
 				boolean valid = false;
 				TileNode otherFirst = otherPathIt.next();
 				for(Orientation o: Orientation.values()){
-					valid |= getCurrentEndTile().getNodeAt(o).equals(otherFirst);
+					valid |= getCurrentEndTile().getNodeAt(o)!=null && getCurrentEndTile().getNodeAt(o).equals(otherFirst);
 				}
 				if(!valid) throw new IllegalArgumentException();
 				ret = new MazePath(ret,otherFirst);
