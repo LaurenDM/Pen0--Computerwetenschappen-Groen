@@ -366,6 +366,7 @@ public class SimRobotPilot implements RobotPilot {
 					}
 				}
 			}
+			if(foundWall) break;
 		}
 		return shortestDistance;
 	}

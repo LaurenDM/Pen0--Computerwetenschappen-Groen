@@ -262,6 +262,7 @@ public class ExploreMaze{
 		} catch (CannotMoveException e) {
 			try {
 				robot.move(-distanceBlocks/2);
+				System.out.println("Bumped, recovering.");
 			} catch (CannotMoveException e1) {}
 			maze.recoverFromBump();
 		}
