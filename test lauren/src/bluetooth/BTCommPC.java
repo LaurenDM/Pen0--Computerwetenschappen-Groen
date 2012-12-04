@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -36,7 +37,7 @@ public class BTCommPC  {
 	//We set this to null to say that there is no buffered command.
 //	private long lastWaitingTicketNumber=0;
 //	private long firstValidTicket=1;
-	private Queue<WaitObject> waitObjectQueue= new PriorityQueue<WaitObject>();
+	private Queue<WaitObject> waitObjectQueue= new LinkedList<WaitObject>();
 	private WaitObject toBeWokenObject=null;
 	private BTRobotPilot robot;
 

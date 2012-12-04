@@ -11,6 +11,7 @@ import domain.maze.Board;
 import domain.maze.Wall;
 import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.Straightener;
+import domain.util.RobotChecker;
 import domain.util.TimeStamp;
 import exceptions.ConnectErrorException;
 
