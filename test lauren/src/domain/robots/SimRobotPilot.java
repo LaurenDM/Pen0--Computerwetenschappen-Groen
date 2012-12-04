@@ -274,7 +274,7 @@ public class SimRobotPilot implements RobotPilot {
 			return canMoveBackward();
 		}
 		double distance = readUltrasonicValue();	
-		int testDistance = 15; 
+		int testDistance = 10; 
 		if(distance < testDistance || isTouching())
 			return false;
 		else
@@ -352,17 +352,20 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public double readUltrasonicValue() {
 		final double MAX_VALUE = 255;
+		double shortestDistance = MAX_VALUE;
 		boolean foundWall = false;
 		for(int i = 0; i<MAX_VALUE; i++){
 			for(int j = -30; j<30; j++){
 				Position pos = getPosition().getNewPosition(getOrientation()+ getSensorAngle()+j, i);
 				foundWall = board.detectWallAt(pos);
 				if(foundWall){
-					return getPosition().getDistance(pos);
+					if(getPosition().getDistance(pos)<shortestDistance){
+						shortestDistance = getPosition().getDistance(pos);
+					}
 				}
 			}
 		}
-		return MAX_VALUE;
+		return shortestDistance;
 	}
 
 	@Override
