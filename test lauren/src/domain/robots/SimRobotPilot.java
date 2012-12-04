@@ -90,6 +90,9 @@ public class SimRobotPilot implements RobotPilot {
 	
 	@Override
 	public void turn(double wantedAngleDif) {
+		int temp = randomInt(2);
+		System.out.println(temp);
+		wantedAngleDif = wantedAngleDif + temp;
 		double previousAngle = getOrientation();
 		boolean turning = true;
 		//The turningMethod always turns 1 degree, that's why we first turn the non integer part of WantedAngleDIf.
@@ -562,7 +565,9 @@ public class SimRobotPilot implements RobotPilot {
 
 
 	
-	
+	private int randomInt(int max){
+		return (int) (Math.random() * max * 2 - max);
+	}
 	
 	
 	
