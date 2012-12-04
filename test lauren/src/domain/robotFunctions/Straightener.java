@@ -112,7 +112,7 @@ public class Straightener extends RobotFunction {
 		} catch (CannotMoveException e) {
 			turnDirection = getTurnDirection();
 			try {
-				robot.move(-DISTANCE_BETWEEN_SENSOR_AND_WHEELS*1.2);
+				robot.move(-((double)DISTANCE_BETWEEN_SENSOR_AND_WHEELS)*1.1);
 				//Nu staat de robot zeker terug achter de witte lijn.
 			} catch (CannotMoveException e1) {
 				//Should be impossible
@@ -136,7 +136,7 @@ public class Straightener extends RobotFunction {
 		turnUntil(detect, turnDirection, 3);
 		//Now the robot is aligned with the line
 		if(angleCorrection!=0){
-			robot.turn(angleCorrection);
+			robot.turn((turnDirection?1:-1)*angleCorrection);
 		}
 		robot.resetToDefaultSpeeds();
 		straightenOnLine();
