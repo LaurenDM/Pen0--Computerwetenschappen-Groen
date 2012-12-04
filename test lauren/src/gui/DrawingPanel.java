@@ -87,6 +87,7 @@ public class DrawingPanel extends JPanel {
 	
 	public void drawWall(Wall wall, boolean simulated){
 		Polygon pol = new Polygon();
+		Position pos = null;
 		int pos1X = (int)wall.getPos1().getX()+OFFSET;
 		int pos1Y = (int)wall.getPos1().getY()+OFFSET;
 		int pos2X = (int)wall.getPos2().getX()+OFFSET;
@@ -108,6 +109,19 @@ public class DrawingPanel extends JPanel {
 			g.setColor(Color.lightGray);
 		}
 		else{
+			boolean goodWall = false;
+			List<Wall> simWalls = controller.getRobot().getBoard().getWalls();
+			if(simWalls.size()>0){
+				for(Wall w: simWalls){
+					if(w.hasPosition(wall.getCenterPosition())){
+						goodWall = true;
+					}
+				}
+			}
+			if(!goodWall){
+				g.setColor(Color.red);
+			}
+			else
 			g.setColor(Color.black);
 		}
 		g.drawPolygon(pol);
