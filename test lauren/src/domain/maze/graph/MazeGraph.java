@@ -189,12 +189,14 @@ public class MazeGraph {
 	/**
 	 * Make a new WallNode at the given orientation relative to the robot's current orientation.
 	 * @param orientation
+	 * @return true if the wall has been added, false if it's clear that there can be no wall at that location.
 	 */
-	public void generateWallNodeAt(Orientation orientation){
+	public boolean generateWallNodeAt(Orientation orientation){
 		Orientation absoluteOrientation = getRelativeOrientation(getCurrentRobotOrientation(),orientation);
 		Orientation orientationToCurrent = absoluteOrientation.getBack();
 		WallNode newNode = new WallNode(getCurrentNode(),orientationToCurrent);
-		getCurrentNode().setNodeAt(absoluteOrientation, newNode);
+		
+		//We're not implementing this:
 		//If this tile has a wall at a certain orientation it's neighbouring tile will have one in the opposite orientation
 		//A new tile isn't generated there because then we would generate nodes outside of the maze's edge
 //		TileNode otherSide = null;
@@ -208,6 +210,16 @@ public class MazeGraph {
 //			otherSide.setNodeAt(orientationToCurrent, newNode);
 //		}
 		
+		//If a node already has a connection to a (semi-)completed node at a certain orientation we can be sure of the fact that there
+		//is no wall there so we won't add it
+		MazeNode previousNode = getCurrentNode().getNodeAt(absoluteOrientation);
+		if(previousNode!=null && previousNode.getClass().equals(TileNode.class) && (((TileNode) previousNode).isVisited() || ((TileNode)previousNode).numberOfConnections()>=2)){
+			System.out.println("Wrong measurement. There can be no wall there.");
+			return false;
+		} else {
+			getCurrentNode().setNodeAt(absoluteOrientation, newNode);
+			return true;
+		}
 	}
 	
 	/**

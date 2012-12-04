@@ -1,0 +1,13 @@
+Corner.N	Straight.E.15	Straight.E	Corner.E	Corner.E	Straight.E	Corner.E	Straight.E	Straight.E	Corner.E	Corner.N	Corner.E
+Corner.W	T.E	Cross.E	Straight.N.01	Straight.S	Corner.S	Corner.E	Straight.E	Cross.W	Cross.W	Corner.W	Corner.E
+Corner.W	Straight.N	Cross.W	T.S	T.W	T.S	T.E	Corner.W	T.S	Corner.S	Straight.W	T.E
+Corner.W	T.S	Straight.S	Cross.W	T.E	Corner.E	Corner.E	Corner.S	Corner.W	Corner.W	Straight.W	T.E
+Corner.N	Corner.S	Cross.S	Corner.N	Cross.E	T.S	Cross.W	Corner.W	Corner.N	T.N	T.S	Corner.E
+Corner.N	T.E	Straight.N	Cross.S	Cross.N	Straight.E	Straight.S	T.S	Cross.N	Corner.N	Straight.S	Straight.N
+T.W	Cross.E	T.W	Straight.E	T.E	Straight.N	Corner.W	T.E	Cross.S	Straight.N	Corner.S	T.E
+Corner.W	Cross.N	Corner.W	T.E	Cross.E	T.E	Straight.E	Cross.W	Cross.S	Cross.E	Corner.W	Corner.S
+Corner.W	Straight.W	Straight.N	Cross.E	T.N	Cross.E	Corner.N	T.W	Straight.E	Cross.E	Cross.W	Corner.E
+T.W	Corner.N	Corner.E	Cross.W	Corner.W	T.N	Straight.W	Straight.W	Corner.S	Cross.E	Straight.E	Corner.E
+Straight.N	Corner.S	T.S	Cross.N	Straight.E	T.S	Cross.E	Straight.W	Corner.S	Cross.S	Corner.W	Straight.N
+T.W	Cross.W	T.E	Corner.S	Straight.N	Cross.E	Corner.W	T.S	Straight.E	Cross.S	Corner.S	T.E
+Corner.W	Corner.S	Corner.W	Corner.W	T.S	Straight.E	T.S	Corner.W	Corner.S	Straight.E	Straight.E	Corner.S

@@ -11,6 +11,7 @@ public class TileNode extends MazeNode {
 	private int x;
 	private int y;
 	private boolean checkpoint = false;
+	private boolean visited = false;
 	
 	public TileNode(TileNode currentNode, Orientation orientationToCurrentNode){
 		connectedNodes = new HashMap<Orientation,MazeNode>();
@@ -89,6 +90,22 @@ public class TileNode extends MazeNode {
 
 	public int manhattanDistanceTo(TileNode otherTile) {
 		return Math.abs(getX()-otherTile.getX())+Math.abs(getY()-otherTile.getY());
+	}
+
+	public void setVisited(){
+		visited = true;
+	}
+	
+	public boolean isVisited() {
+		return visited ;
+	}
+
+	public int numberOfConnections() {
+		int ret = 0;
+		for(MazeNode node : connectedNodes.values()){
+			if(node!=null) ret++;
+		}
+		return ret;
 	}
 	
 }

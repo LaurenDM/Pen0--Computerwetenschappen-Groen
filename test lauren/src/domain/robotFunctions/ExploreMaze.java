@@ -134,22 +134,25 @@ public class ExploreMaze {
 		double y = robot.getPosition().getY();
 		double orientation = robot.getOrientation();
 		if(distances[0] < valuedDistance){
-			calculateWall(x,y,orientation,Direction.LEFT);
-			maze.generateWallNodeAt(Orientation.WEST);
+			if(maze.generateWallNodeAt(Orientation.WEST)){
+				calculateWall(x,y,orientation,Direction.LEFT);
+			}
 		} else {
 			maze.generateTileNodeAt(Orientation.WEST);
 		}
 			
 		if(distances[1] < valuedDistance){
-			calculateWall(x,y,orientation,Direction.FORWARD);
-			maze.generateWallNodeAt(Orientation.NORTH);
+			if(maze.generateWallNodeAt(Orientation.NORTH)){
+				calculateWall(x,y,orientation,Direction.FORWARD);
+			}
 		} else {
 			maze.generateTileNodeAt(Orientation.NORTH);
 		}
 			
 		if(distances[2] < valuedDistance){
-			calculateWall(x,y,orientation,Direction.RIGHT);
-			maze.generateWallNodeAt(Orientation.EAST);
+			if(maze.generateWallNodeAt(Orientation.EAST)){
+				calculateWall(x,y,orientation,Direction.RIGHT);
+			}			
 		} else {
 			maze.generateTileNodeAt(Orientation.EAST);
 		}
