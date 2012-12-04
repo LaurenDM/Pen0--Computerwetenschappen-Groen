@@ -90,7 +90,7 @@ public class SimRobotPilot implements RobotPilot {
 	
 	@Override
 	public void turn(double wantedAngleDif) {
-		int temp = randomInt(2);
+		int temp = randomInt(3);
 		System.out.println(temp);
 		wantedAngleDif = wantedAngleDif + temp;
 		double previousAngle = getOrientation();

@@ -13,7 +13,7 @@ public class Straightener extends RobotFunction {
 	private static final int DISTANCE_BETWEEN_SENSOR_AND_WHEELS = 8;
 	//The robot that needs to be straightened
 	private Robot robot;
-	
+
 	/**
 	 * Create a straightener for the given robot.
 	 * @param robot
@@ -21,16 +21,16 @@ public class Straightener extends RobotFunction {
 	public Straightener(Robot robot){
 		this.robot = robot;
 	}
-	
+
 	/**
 	 * Position the robot perpendicular to a straight line using the light sensor.
 	 * This method assumes that the robot's light sensor is already at a white line.
 	 */
 	public void straighten(){
 		straighten(0);
-		
+
 	}
-	
+
 	private void turnUntil(boolean detect, boolean left, int wantedDetections) {
 		robot.setTurningSpeed(1);
 		if(robot.getRobotPilot().getClass() == SimRobotPilot.class)
@@ -45,7 +45,7 @@ public class Straightener extends RobotFunction {
 			}
 			if(robot.detectWhiteLine()){
 				consecutiveDetections++;
-			
+
 			} else {
 				consecutiveDetections=0;
 			}
@@ -55,7 +55,7 @@ public class Straightener extends RobotFunction {
 		robot.stop();
 		robot.setTurningSpeed(5);
 	}
-	
+
 	//TODO needs to be implemented.
 	private void straightenOnLine(){
 		robot.turnSensorLeft();
@@ -82,51 +82,53 @@ public class Straightener extends RobotFunction {
 			}
 		}
 	}
-	
+
 	public void straighten(int angleCorrection) {
 		boolean left = true;
 		boolean detect = true;
 		boolean wood = false;
+		boolean turnDirection;
 		try {
 			robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 		} catch (CannotMoveException e) {
-			if(getTurnDirection()){
+			turnDirection = getTurnDirection();
+			try {
+				robot.move(-DISTANCE_BETWEEN_SENSOR_AND_WHEELS*1.2);
+				//Nu staat de robot zeker terug achter de witte lijn.
+			} catch (CannotMoveException e1) {
+				//Should be impossible
+			}
+			if(turnDirection){
 				//links draaien
 				robot.turn(-20);
 			}
 			else { //rechts
 				robot.turn(20);
 			}
+			robot.findWhiteLine();
 			try { 
 				robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 			}
 			catch (CannotMoveException e1) {
 				e.printStackTrace();
 			}
-//			turnUntil(detect, getTurnDirection(), 3);
-//			try {
-//				robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
-//			} catch (CannotMoveException e1) {
-//				//I don't really know if this is possible
-//				System.out.println("Apparently you were wrong.");
-//			}
 		}
-			turnUntil(detect, getTurnDirection(), 3);
-			//Now the robot is aligned with the line
-			if(angleCorrection!=0){
+		turnDirection = getTurnDirection();
+		turnUntil(detect, turnDirection, 3);
+		//Now the robot is aligned with the line
+		if(angleCorrection!=0){
 			robot.turn(angleCorrection);
-			}
-		robot.resetToDefaultSpeeds();
-		if(getTurnDirection()){
-			robot.turnRight();
 		}
-		else
+		robot.resetToDefaultSpeeds();
+		if(turnDirection){
+			robot.turnRight();
+		} else {
 			robot.turnLeft();
-		//TODO added
+		}
 		straightenOnLine();
 		//robot.setPose(0,20,0);
 	}
-	
+
 	// Methode geeft true indien left
 	private boolean getTurnDirection(){
 		robot.turnSensorLeft();
@@ -139,5 +141,5 @@ public class Straightener extends RobotFunction {
 		else
 			return true;
 	}
-	
-	}
+
+}
