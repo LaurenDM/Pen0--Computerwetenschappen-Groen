@@ -26,7 +26,7 @@ public class BTRobotPilot implements RobotPilot  {
 //	private RegulatedMotor sensorMotor;
 	
 	
-	private final double defaultTravelSpeed = 20;
+	private final double defaultTravelSpeed = 10;
 	private final double defaultTurnSpeed = 200;
 	
 //	private TouchSensor touchSensor;
@@ -35,8 +35,10 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	private Board board;
 	private NXTCommand nxtCommand;
-	private final float wheelDiameter = 5.43F;
-	private final float trackWidth = 16.62F;
+	private  final float wheelsDiameter = 5.43F;
+	//	private static final float wheelDiameterLeft = 5.43F;
+	//	private static final float wheelDiameterRight = 5.43F;
+	private  final float trackWidth = 16.43F;
 	private int prevLightValue;
 	private int prevUltrasonicValue;
 	private boolean prevTouchBool;
@@ -55,7 +57,7 @@ public class BTRobotPilot implements RobotPilot  {
 			try {
 			btComm = (new BTCommPC(this));
 			btComm.open(null,bluetoothAdress );
-			pilot = new DifferentialPilot(wheelDiameter, trackWidth, btComm);
+			pilot = new DifferentialPilot(wheelsDiameter, trackWidth, btComm);
 			pilot.setPose(getOrientation(), 260, 180);
 			setMovingSpeed(defaultTravelSpeed);
 			setTurningSpeed(defaultTurnSpeed);

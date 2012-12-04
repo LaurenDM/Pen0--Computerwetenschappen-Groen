@@ -122,7 +122,7 @@ public class BTCommPC  {
 	public int[]  sendCommand(int  command, double argument) {
 		return sendCommand(command,(int) (100*argument));
 	}
-	public int[] sendCommand(int  command, int argument) {
+	private int[] sendCommand(int  command, int argument) {
 		//TODO kijken of we deze code nog willen, is eerder voor debug
 		//We testen even of alle tickets al gebruikt zijn.
 		if(sendingIsPossible()&&!waitObjectQueue.isEmpty()){
