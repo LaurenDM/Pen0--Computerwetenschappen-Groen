@@ -91,7 +91,7 @@ public class ExploreMaze{
 	
 	private boolean checkStraigthen(double[] distances){
 		for (int i = 0; i < distances.length; i++) {
-			if(distances[i] < 14)
+			if(distances[i] < 16)
 				return true;
 		}
 		return false;
@@ -121,7 +121,6 @@ public class ExploreMaze{
 			robot.turnRight();
 			break;
 		}
-		robot.findWhiteLine();
 		robot.straighten();
 		robotMoveStraighten();
 		
