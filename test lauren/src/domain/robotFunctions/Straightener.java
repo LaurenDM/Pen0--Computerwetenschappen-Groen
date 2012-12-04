@@ -30,7 +30,27 @@ public class Straightener extends RobotFunction {
 		straighten(0);
 
 	}
-
+	
+	public void findWhiteLine(){
+		int wantedDetections = 1;
+		int detections = 0;
+		try {
+			robot.forward();
+		} catch (CannotMoveException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		while(detections<wantedDetections){
+			if(robot.detectWhiteLine()) detections++;
+		}
+		//We move 1 cm because otherwise we are standing in the beginnen and not the middle of the white line 
+		try {
+			robot.move(1);
+		} catch (CannotMoveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	private void turnUntil(boolean detect, boolean left, int wantedDetections) {
 		robot.setTurningSpeed(1);
 		if(robot.getRobotPilot().getClass() == SimRobotPilot.class)
@@ -86,6 +106,7 @@ public class Straightener extends RobotFunction {
 		boolean detect = true;
 		boolean wood = false;
 		boolean turnDirection;
+		findWhiteLine();
 		try {
 			robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 		} catch (CannotMoveException e) {
