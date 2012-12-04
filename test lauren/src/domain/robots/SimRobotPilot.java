@@ -90,7 +90,7 @@ public class SimRobotPilot implements RobotPilot {
 	
 	@Override
 	public void turn(double wantedAngleDif) {
-		int temp = randomInt(3);
+		double temp = randomDouble(3);
 		System.out.println(temp);
 		wantedAngleDif = wantedAngleDif + temp;
 		double previousAngle = getOrientation();
@@ -565,8 +565,8 @@ public class SimRobotPilot implements RobotPilot {
 
 
 	
-	private int randomInt(int max){
-		return (int) (Math.random() * max * 2 - max);
+	private double randomDouble(int max){
+		return (Math.random() * max * 2 - max);
 	}
 	
 	
