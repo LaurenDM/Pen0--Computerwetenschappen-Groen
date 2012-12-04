@@ -403,4 +403,10 @@ public class MazeGraph {
 		}
 		
 	}
+
+	public void recoverFromBump() {
+		turnBack();
+		move();
+		generateWallNodeAt(Orientation.SOUTH);
+	}
 }

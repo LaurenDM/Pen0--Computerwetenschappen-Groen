@@ -24,10 +24,12 @@ import domain.util.ColorPolygon;
 
 //Robotclass, generates/keeps track of current positioning.
 public class Controller {
+	private static boolean stopped = false;
 	private Thread executingThread;
 	private Robot currentRobot;
 	private Robot btRobot;
 	private Robot simRobot;
+	private Thread explorer;
 	
 	public Controller() {
 		simRobot = new Robot(new SimRobotPilot());
@@ -92,9 +94,12 @@ public class Controller {
 	}
 	
 	public void cancel() {
+		stopped = true;
+		while(explorer!=null && explorer.isAlive()){}
 		currentRobot.interrupt();
 		startNewThread(null);
 		currentRobot.stop();
+		stopped = false;
 	}
 	
 	public Position getPosition(){
@@ -241,27 +246,53 @@ public class Controller {
 	}
 
 	public void startExplore() {
-		Runnable straightener = new Runnable() {
+		if(explorer!=null){
+			stopped = true;
+			while(explorer.isAlive()){}
+			stopped = false;
+		}
+		Runnable explore = new Runnable() {
 
 			@Override
 			public void run() {
 				currentRobot.startExplore();
 			}
 		};
-		(new Thread(straightener)).start();
-		
-		
+		explorer = new Thread(explore);
+		explorer.start();
 	}
 
 	public void resumeExplore() {
-		currentRobot.resumeExplore();
+		stopped = true;
+		while(explorer.isAlive()){}
+		stopped = false;
+		explorer = new Thread(new Runnable() {
+			public void run(){
+				currentRobot.resumeExplore();
+			}
+		});
+		explorer.start();
 	}
 
 	public void driveToFinish() {
-		currentRobot.driveToFinish();
+		stopped = true;
+		while(explorer.isAlive()){}
+		stopped = false;
+		explorer = new Thread(new Runnable() {
+			public void run(){
+				currentRobot.driveToFinish();
+			}
+		});
+		explorer.start();
 	}
 	
 	public void reset(){
+		stopped = true;
+		while(explorer!=null && explorer.isAlive()){}
 		connectNewSimRobot();
+	}
+
+	public static boolean isStopped() {
+		return stopped ;
 	}
 }

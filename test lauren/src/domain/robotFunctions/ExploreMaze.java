@@ -4,6 +4,8 @@ import gui.ContentPanel;
 
 import java.util.ArrayList;
 
+import controller.Controller;
+
 import domain.Position.Position;
 import domain.maze.Orientation;
 import domain.maze.Wall;
@@ -13,7 +15,7 @@ import domain.robots.Robot;
 import domain.robots.RobotPilot;
 import domain.robots.SimRobotPilot;
 
-public class ExploreMaze extends Thread {
+public class ExploreMaze{
 	
 	private enum Direction {
 	    LEFT,FORWARD,RIGHT,BACKWARD
@@ -65,7 +67,7 @@ public class ExploreMaze extends Thread {
 	
 	private void continueExploring(int x, int y, Orientation o){
 		maze.continueExploring(x,y,o);
-		while(!maze.isComplete() && interrupted==false){
+		while(!maze.isComplete() && Controller.isStopped()==false){
 			double[] distances = new double[3];
 			distances = checkDistances();
 			makeWall(distances);
@@ -80,7 +82,7 @@ public class ExploreMaze extends Thread {
 				}
 			}
 		}
-		if(!interrupted){
+		if(Controller.isStopped()==false){
 			ContentPanel.writeToDebug("Maze completed.");
 			robot.setMovingSpeed(robot.getDefaultMovingSpeed()*2);
 			maze.driveToFinish(robot);
@@ -259,8 +261,10 @@ public class ExploreMaze extends Thread {
 			maze.move();
 			robot.move(distanceBlocks);
 		} catch (CannotMoveException e) {
-			//Normally never gets called.
-			e.printStackTrace();
+			try {
+				robot.move(-distanceBlocks/2);
+			} catch (CannotMoveException e1) {}
+			maze.recoverFromBump();
 		}
 	}
 	private Direction getNextDirection(double[] distances){
