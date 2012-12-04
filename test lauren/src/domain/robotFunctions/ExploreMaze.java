@@ -158,6 +158,9 @@ public class ExploreMaze {
 		}
 	}
 	private void calculateWall(double x, double y, double orientation,Direction direction) {
+		int MAZECONSTANT = 40;
+		x = (int) (Math.floor((x)/MAZECONSTANT))*MAZECONSTANT+20;
+		y = (int) (Math.floor((y)/MAZECONSTANT))*MAZECONSTANT+20;
 		if(orientation > -20 && orientation < 20){
 			switch (direction) {
 			case FORWARD:
