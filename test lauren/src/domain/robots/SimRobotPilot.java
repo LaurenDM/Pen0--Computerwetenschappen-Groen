@@ -583,8 +583,5 @@ public class SimRobotPilot implements RobotPilot {
 	private double randomDouble(int max){
 		return (Math.random() * max * 2 - max);
 	}
-	
-	
-	
 
 }
