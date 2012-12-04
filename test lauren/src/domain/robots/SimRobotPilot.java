@@ -357,7 +357,7 @@ public class SimRobotPilot implements RobotPilot {
 		double shortestDistance = MAX_VALUE;
 		boolean foundWall = false;
 		for(int i = 0; i<MAX_VALUE; i++){
-			for(int j = -30; j<30; j++){
+			for(int j = -15; j<15; j++){
 				Position pos = getPosition().getNewPosition(getOrientation()+ getSensorAngle()+j, i);
 				foundWall = board.detectWallAt(pos);
 				if(foundWall){
@@ -562,7 +562,7 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public void resumeExplore() {
 		if(maze!=null){
-			maze.continueExploring(0, 0, null);
+			maze.resumeExplore(0, 0, null);
 		} else {
 			ContentPanel.writeToDebug("You haven't started exploring yet!");
 		}
@@ -571,7 +571,8 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public void driveToFinish() {
 		if(maze!=null){
-			maze.driveToFinish();maze.continueExploring(0, 0, null);
+			maze.stopExploring();
+			maze.driveToFinish();
 		} else {
 			ContentPanel.writeToDebug("You haven't started exploring yet!");
 		}

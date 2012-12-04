@@ -13,6 +13,7 @@ import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.Straightener;
 import domain.util.TimeStamp;
 import exceptions.ConnectErrorException;
+import gui.ContentPanel;
 
 
 
@@ -455,13 +456,21 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void resumeExplore() {
-		maze.continueExploring(0, 0, null);
+		if(maze!=null){
+			maze.resumeExplore(0, 0, null);
+		} else {
+			ContentPanel.writeToDebug("You haven't started exploring yet!");
+		}
+		
 	}
-
 	@Override
 	public void driveToFinish() {
-		maze.driveToFinish();
-		
+		if(maze!=null){
+			maze.stopExploring();
+			maze.driveToFinish();
+		} else {
+			ContentPanel.writeToDebug("You haven't started exploring yet!");
+		}
 	}
 
 	
