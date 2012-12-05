@@ -151,7 +151,12 @@ public class Controller {
 	}
 	
 	public double readLightValue(){
-		return currentRobot.readLightValue();
+		double value = currentRobot.readLightValue();
+		if(value<-100){
+			currentRobot.stop();
+			currentRobot.scanBarcode();
+		}
+		return value;
 	}
 	
 	public double readUltrasonicValue(){

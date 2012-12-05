@@ -578,8 +578,7 @@ public class SimRobotPilot implements RobotPilot {
 	}
 	@Override
 	public void scanBarcode() {
-		BarcodeGenerator bg = new BarcodeGenerator(new Robot(this));
-		bg.generateBarcode();
+		//
 	}
 
 	@Override
