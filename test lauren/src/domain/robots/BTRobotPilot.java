@@ -276,7 +276,7 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 	
 	public void straighten(){
-		new Straightener(new Robot(this)).straighten();
+		btComm.sendCommand(CMD.STRAIGHTEN);
 	}
 	
 	public int getBatteryVoltage(){
