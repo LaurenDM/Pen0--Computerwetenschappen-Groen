@@ -40,8 +40,7 @@ public class SimRobotPilot implements RobotPilot {
 	private final int defaultTurningSpeed=90;
 	private Robot robot;
 	
-	private int lastLightSwitchPointValue = 0;
-	private Position lastLightSwitchPosition = new Position(20,20);
+	private double lastDistance = 0;
 
 	/**
 	 * Assenstelsel wordt geinitialiseerd met oorsprong waar de robot begint
@@ -316,7 +315,7 @@ public class SimRobotPilot implements RobotPilot {
 		public void run() {
 			double speed = simRobotPilot.getTurningSpeed();
 			double turnAmount = left ? -1 : 1;
-			int sleepTime = Math.abs((int) Math.round( (1000 * turnAmount / speed)));
+			int sleepTime = Math.abs((int) Math.round( (500 * turnAmount / speed)));
 			while (true) {
 				double newOrientation = calcNewOrientation(turnAmount);
 				setOrientation(newOrientation);
@@ -352,6 +351,7 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public double readUltrasonicValue() {
 		final double MAX_VALUE = 255;
+		double min_value = lastDistance<15?0:lastDistance-15;
 		double shortestDistance = MAX_VALUE;
 		boolean foundWall = false;
 		for(int i = 0; i<MAX_VALUE; i++){
@@ -366,6 +366,7 @@ public class SimRobotPilot implements RobotPilot {
 			}
 			if(foundWall) break;
 		}
+		lastDistance = shortestDistance;
 		return shortestDistance;
 	}
 

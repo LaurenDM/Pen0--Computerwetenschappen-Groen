@@ -91,7 +91,7 @@ public class ExploreMaze{
 	
 	private boolean checkStraigthen(double[] distances){
 		for (int i = 0; i < distances.length; i++) {
-			if(distances[i] < 16)
+			if(distances[i]!=255 &&(distances[i] < 16 || distances[i]%40 > 24))
 				return true;
 		}
 		return false;
