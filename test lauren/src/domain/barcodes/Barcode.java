@@ -54,7 +54,7 @@ public class Barcode {
 		final int MARGE = 10;
 		if(Math.abs(angle-0)<MARGE) return Orientation.WEST;
 		else if(Math.abs(angle-90) <MARGE) return Orientation.NORTH;
-		else if(Math.abs(angle-180) <MARGE) return Orientation.EAST;
+		else if(Math.abs(angle-180) <MARGE || Math.abs(angle+180)<MARGE) return Orientation.EAST;
 		else if(Math.abs(angle+90) <MARGE) return Orientation.SOUTH;
 		else throw new IllegalArgumentException();
 	}
