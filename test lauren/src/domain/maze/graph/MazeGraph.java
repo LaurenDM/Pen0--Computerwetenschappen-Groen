@@ -118,10 +118,6 @@ public class MazeGraph {
 	}
 	
 	public Orientation getNextMoveOrientation(){
-		if(getCurrentNode().getX()==4 && getCurrentNode().getY()==3){
-			@SuppressWarnings("unused")
-			int bla = 0;
-		}
 		ArrayList<TileNode> unexpanded = new ArrayList<TileNode>();
 		for(TileNode node : nodes){
 			if(!node.isFullyExpanded()){
@@ -179,12 +175,22 @@ public class MazeGraph {
 		Orientation orientationToCurrent = absoluteOrientation.getBack();
 		TileNode newNode = new TileNode(getCurrentNode(),orientationToCurrent);
 		boolean thisNodeAlreadyExists = false;
+		HashMap<Orientation,TileNode> neighbours = new HashMap<Orientation,TileNode>();
 		for(TileNode node:nodes){
 			if(((TileNode) node).getX()==newNode.getX() && ((TileNode)node).getY()==newNode.getY()){
 				getCurrentNode().setNodeAt(absoluteOrientation, node);
 				node.setNodeAt(orientationToCurrent, getCurrentNode());
 				thisNodeAlreadyExists = true;
 				break;
+			}
+			for(Orientation o: Orientation.values()){
+				if(node.getX()==newNode.getX()+o.getXValue()&&node.getY()==newNode.getY()+o.getYValue()){
+					MazeNode nodeAtOBack = node.getNodeAt(o.getBack());
+					if(nodeAtOBack!=null && nodeAtOBack.getClass().equals(WallNode.class)){
+						newNode.setNodeAt(o, new WallNode(node,o));
+
+					}
+				}
 			}
 		}
 		if(!thisNodeAlreadyExists){
@@ -206,16 +212,16 @@ public class MazeGraph {
 		//We're not implementing this:
 		//If this tile has a wall at a certain orientation it's neighbouring tile will have one in the opposite orientation
 		//A new tile isn't generated there because then we would generate nodes outside of the maze's edge
-//		TileNode otherSide = null;
-//		for(TileNode node : nodes){
-//			if(node.getX()==getCurrentNode().getX()+absoluteOrientation.getXValue() && node.getY()==getCurrentNode().getY()+absoluteOrientation.getYValue()){
-//				otherSide = node;
-//				break;
-//			}
-//		}
-//		if(otherSide != null){
-//			otherSide.setNodeAt(orientationToCurrent, newNode);
-//		}
+		TileNode otherSide = null;
+		for(TileNode node : nodes){
+			if(node.getX()==getCurrentNode().getX()+absoluteOrientation.getXValue() && node.getY()==getCurrentNode().getY()+absoluteOrientation.getYValue()){
+				otherSide = node;
+				break;
+			}
+		}
+		if(otherSide != null){
+			otherSide.setNodeAt(orientationToCurrent, newNode);
+		}
 		
 		//If a node already has a connection to a (semi-)completed node at a certain orientation we can be sure of the fact that there
 		//is no wall there so we won't add it
