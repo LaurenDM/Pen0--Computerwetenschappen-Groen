@@ -230,7 +230,17 @@ public class SimRobotPilot implements RobotPilot {
 		Position pos1 = getPosition().clone();
 		boolean running = true;
 		if (wantedDistance > 0) {
-			forward();
+			if(wantedDistance <1){
+				this.getPosition().move(getOrientation(), wantedDistance);
+				try {
+					Thread.sleep(Double.valueOf(wantedDistance/getMovingSpeed()).intValue()+1);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				running = false;
+			} else {
+				forward();
+			}
 		} else {
 			backward();
 		}
