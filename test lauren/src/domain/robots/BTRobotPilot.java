@@ -22,7 +22,7 @@ import gui.ContentPanel;
 
 public class BTRobotPilot implements RobotPilot  {
 	
-	private DifferentialPilot pilot;
+	private BluetoothDriver pilot;
 //	private RegulatedMotor sensorMotor;
 	
 	
@@ -57,7 +57,7 @@ public class BTRobotPilot implements RobotPilot  {
 			try {
 			btComm = (new BTCommPC(this));
 			btComm.open(null,bluetoothAdress );
-			pilot = new DifferentialPilot(wheelsDiameter, trackWidth, btComm);
+			pilot = new BluetoothDriver(wheelsDiameter, trackWidth, btComm);
 			pilot.setPose(getOrientation(), 260, 180);
 			setMovingSpeed(defaultTravelSpeed);
 			setTurningSpeed(defaultTurnSpeed);
