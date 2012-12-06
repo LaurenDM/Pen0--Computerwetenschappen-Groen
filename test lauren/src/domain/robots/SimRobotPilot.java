@@ -37,7 +37,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	private int sensorAngle;
 
-	private final int defaultMovingSpeed=40;
+	private final int defaultMovingSpeed=80;
 	private final int defaultTurningSpeed=90;
 	private Robot robot;
 	
