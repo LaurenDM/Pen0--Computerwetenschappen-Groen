@@ -82,21 +82,12 @@ public class Straightener extends RobotFunction {
 	 */
 	private void straightenOnLine(){
 		robot.turnSensorForward();
-		double left = robot.readUltrasonicValue() % 40;
-		if(left < 15 || left > 19){
-			if(left < 17){
-				try {
-					robot.move(left - 17);
-				} catch (CannotMoveException e) {
-					e.printStackTrace();
-				}
-			}
-			if(left > 19){
-				try {
-					robot.move(left - 17);
-				} catch (CannotMoveException e) {
-					e.printStackTrace();
-				}
+		double dist = robot.readUltrasonicValue() % 40;
+		if(dist < 18 || dist > 22){
+			try {
+				robot.move(dist-20);
+			} catch (CannotMoveException e) {
+				e.printStackTrace();
 			}
 		}
 	}

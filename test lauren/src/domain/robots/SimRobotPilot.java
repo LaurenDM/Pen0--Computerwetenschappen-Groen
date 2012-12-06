@@ -370,10 +370,6 @@ public class SimRobotPilot implements RobotPilot {
 		double shortestDistance = MAX_VALUE;
 		boolean foundWall = false;
 		for(int i = 1; i<MAX_VALUE; i++){
-			if(i==20){
-				int a =0;
-				//joepiee
-			}
 			for(int j = -15; j<15; j++){
 				Position pos = getPosition().getNewPosition(getOrientation()+ getSensorAngle()+j, i);
 				foundWall = board.detectWallAt(pos);

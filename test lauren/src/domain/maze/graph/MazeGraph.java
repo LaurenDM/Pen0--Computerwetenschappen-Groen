@@ -17,6 +17,7 @@ public class MazeGraph {
 	private Orientation currentRobotOrientation;
 	private TileNode startNode;
 	private TileNode currentNode;
+	private int tileCounter;
 	
 	/**
 	 * A new MazeGraph is initialized with a starting node that represents the robot's current position.
@@ -47,7 +48,13 @@ public class MazeGraph {
 				}
 				turnToNextOrientation(robotPilot, getCurrentRobotOrientation(), nextOrientation);
 				try {
-					robotPilot.move(40);
+					if(tileCounter%4==0){
+						robotPilot.straighten();
+						robotPilot.move(20);
+					} else {
+						robotPilot.move(40);
+					}
+					tileCounter++;
 					this.move();
 				} catch (Throwable e) {
 					System.out.println("Could not move");
