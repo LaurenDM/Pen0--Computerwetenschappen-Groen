@@ -629,6 +629,8 @@ public class SimRobotPilot implements RobotPilot {
 
 	private double randomDouble(int max){
 		Random rand = new Random();
+		double rd = rand.nextGaussian();
+		rd = rd>2.5?0:rd;
 		return (rand.nextGaussian() * max);
 	}
 	@Override
