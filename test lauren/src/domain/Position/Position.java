@@ -1,4 +1,5 @@
 package domain.Position;
+import java.awt.geom.Point2D.Float;
 import java.lang.Math;
 
 import lejos.geom.Point;
@@ -50,13 +51,19 @@ public class Position implements Cloneable {
 		return Math.sqrt(Math.pow(other.getX()-getX(),2) + Math.pow(other.getY()-getY(),2));
 	}
 	
-	public boolean equals(Position other){
-		return other.getX() == this.getX() && other.getY() == this.getY();
+	@Override
+	public boolean equals(Object other){
+		return ((Position) other).getX() == this.getX() && ((Position) other).getY() == this.getY();
 	}
 	
 	@Override
 	public String toString(){
 		return "(" + getX() + "," + getY() + ")";
+	}
+	
+	@Override
+	public int hashCode(){
+		return 35*(int)getX() + 73*(int)getY() + 184*(int)getX()*(int)getY(); 
 	}
 	
 	
