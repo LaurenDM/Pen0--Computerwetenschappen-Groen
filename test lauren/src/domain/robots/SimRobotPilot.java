@@ -3,6 +3,7 @@ package domain.robots;
 import gui.ContentPanel;
 
 import java.io.File;
+import java.util.Random;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -40,8 +41,7 @@ public class SimRobotPilot implements RobotPilot {
 	private final int defaultTurningSpeed=90;
 	private Robot robot;
 	
-	private int lastLightSwitchPointValue = 0;
-	private Position lastLightSwitchPosition = new Position(20,20);
+	private double lastDistance = 0;
 
 	/**
 	 * Assenstelsel wordt geinitialiseerd met oorsprong waar de robot begint
@@ -95,7 +95,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void turn(double wantedAngleDif) {
-		double temp = randomDouble(3);
+		double temp = randomDouble(1);
 		System.out.println(temp);
 		wantedAngleDif = wantedAngleDif + temp;
 		double previousAngle = getOrientation();
@@ -230,7 +230,17 @@ public class SimRobotPilot implements RobotPilot {
 		Position pos1 = getPosition().clone();
 		boolean running = true;
 		if (wantedDistance > 0) {
-			forward();
+			if(wantedDistance <1){
+				this.getPosition().move(getOrientation(), wantedDistance);
+				try {
+					Thread.sleep(Double.valueOf(wantedDistance/getMovingSpeed()).intValue()+1);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				running = false;
+			} else {
+				forward();
+			}
 		} else {
 			backward();
 		}
@@ -241,7 +251,11 @@ public class SimRobotPilot implements RobotPilot {
 				if(!robot.getBoard().detectBarcodeAt(pos)){
 					isScanningBarcode = true;
 					BarcodeGenerator bg = new BarcodeGenerator(getRobot());
-					bg.generateBarcode();
+					try {
+						bg.generateBarcode();
+					} catch(IllegalArgumentException e){
+						ContentPanel.writeToDebug("Could not read barcode");
+					}
 					move(-8);
 				}
 				forward();
@@ -316,7 +330,7 @@ public class SimRobotPilot implements RobotPilot {
 		public void run() {
 			double speed = simRobotPilot.getTurningSpeed();
 			double turnAmount = left ? -1 : 1;
-			int sleepTime = Math.abs((int) Math.round( (1000 * turnAmount / speed)));
+			int sleepTime = Math.abs((int) Math.round( (500 * turnAmount / speed)));
 			while (true) {
 				double newOrientation = calcNewOrientation(turnAmount);
 				setOrientation(newOrientation);
@@ -352,6 +366,7 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public double readUltrasonicValue() {
 		final double MAX_VALUE = 255;
+		double min_value = lastDistance<15?0:lastDistance-15;
 		double shortestDistance = MAX_VALUE;
 		boolean foundWall = false;
 		for(int i = 0; i<MAX_VALUE; i++){
@@ -366,6 +381,7 @@ public class SimRobotPilot implements RobotPilot {
 			}
 			if(foundWall) break;
 		}
+		lastDistance = shortestDistance;
 		return shortestDistance;
 	}
 
@@ -612,7 +628,10 @@ public class SimRobotPilot implements RobotPilot {
 
 
 	private double randomDouble(int max){
-		return (Math.random() * max * 2 - max);
+		Random rand = new Random();
+		double rd = rand.nextGaussian();
+		rd = rd>2.5?0:rd;
+		return (rand.nextGaussian() * max);
 	}
 	@Override
 	public void wait5Seconds() {

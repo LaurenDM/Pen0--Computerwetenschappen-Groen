@@ -449,7 +449,7 @@ public class BTRobotPilot implements RobotPilot  {
 				data[3]);
 		getBoard().addFoundBarcode(barcode);
 		Action action = barcode.getAction();
-		action.run(robot);
+		if(action != null) action.run(robot);
 	}
 
 	@Override

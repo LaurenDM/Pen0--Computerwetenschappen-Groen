@@ -303,12 +303,17 @@ public class ContentPanel implements ActionListener {
 	
 	
 
-	public void updateBoard(List<ColorPolygon> collection){
-		drawingPanel.drawFoundWalls();
-		drawingPanel.drawFoundBarcodes();
-		for (ColorPolygon colorPoly:collection) {
-			drawingPanel.reDrawMyPolygon(colorPoly);
-		}
+	public void updateBoard(final List<ColorPolygon> collection){
+		SwingUtilities.invokeLater(new Runnable(){
+			public void run(){
+				drawingPanel.drawFoundWalls();
+				drawingPanel.drawFoundBarcodes();
+				for (ColorPolygon colorPoly:collection) {
+					drawingPanel.reDrawMyPolygon(colorPoly);
+				}
+			}
+		});
+		
 	} 
 	
 	/**

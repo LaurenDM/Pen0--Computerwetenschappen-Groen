@@ -119,7 +119,7 @@ public class BTCommPC  {
 	public boolean isClosed(){
 		return _closed;
 	}
-	public int[]  sendCommand(int  command, double argument) {
+	public synchronized int[]  sendCommand(int  command, double argument) {
 		return sendCommand(command,(int) (100*argument));
 	}
 	private int[] sendCommand(int  command, int argument) {

@@ -1,0 +1,8 @@
+6 6
+
+DeadEnd.N	Corner.N	Straight.W.19	Straight.E.17	Straight.W.15	Corner.E
+Straight.N.1	Straight.N.21	Corner.N	Straight.W.37	Corner.E	Straight.N.14
+Straight.S.2	Straight.S.23	Straight.N.35	DeadEnd.N	Straight.N.35	Straight.S.13
+Straight.N.3	Straight.N.25	Corner.W	Corner.S	Straight.S.31	Straight.N.11
+Straight.S.4	Corner.W	Straight.E.27	Straight.W.29	Corner.S	Straight.S.10
+Corner.W	Straight.E.5	Straight.W.6	Straight.E.7	Straight.W.9	Corner.S
