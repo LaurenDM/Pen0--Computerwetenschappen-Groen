@@ -21,7 +21,7 @@ public class ExploreMaze{
 	    LEFT,FORWARD,RIGHT,BACKWARD
 	}
 	private RobotPilot robot;
-	private final int valuedDistance = 25;
+	private final int valuedDistance = 27;
 	private final int distanceBlocks = 40;
 	private ArrayList<Wall> wallList = new ArrayList<Wall>();
 	private MazeGraph maze = new MazeGraph();
@@ -72,6 +72,7 @@ public class ExploreMaze{
 			distances = checkDistances();
 			makeWall(distances);
 			if(!maze.isComplete()){
+				robot.setMovingSpeed(robot.getDefaultMovingSpeed());
 				Direction direction = getNextDirection(distances);
 				if(checkStraigthen(distances)){
 					moveWithStraighten(direction);
@@ -91,8 +92,9 @@ public class ExploreMaze{
 	
 	private boolean checkStraigthen(double[] distances){
 		for (int i = 0; i < distances.length; i++) {
-			if(distances[i]!=255 &&(distances[i] < 16 || distances[i]%40 > 24))
+			if(distances[i]!=255 &&(distances[i] < 17 || distances[i]%40 > 22)) {
 				return true;
+			}
 		}
 		return false;
 	}

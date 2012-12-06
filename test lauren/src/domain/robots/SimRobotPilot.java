@@ -37,7 +37,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	private int sensorAngle;
 
-	private final int defaultMovingSpeed=40;
+	private final int defaultMovingSpeed=80;
 	private final int defaultTurningSpeed=90;
 	private Robot robot;
 	
@@ -369,7 +369,11 @@ public class SimRobotPilot implements RobotPilot {
 		double min_value = lastDistance<15?0:lastDistance-15;
 		double shortestDistance = MAX_VALUE;
 		boolean foundWall = false;
-		for(int i = 0; i<MAX_VALUE; i++){
+		for(int i = 1; i<MAX_VALUE; i++){
+			if(i==20){
+				int a =0;
+				//joepiee
+			}
 			for(int j = -15; j<15; j++){
 				Position pos = getPosition().getNewPosition(getOrientation()+ getSensorAngle()+j, i);
 				foundWall = board.detectWallAt(pos);
@@ -477,7 +481,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void straighten() {
-		(new Straightener(new Robot(this))).straighten(-3);
+		(new Straightener(new Robot(this))).straighten(0);
 
 	}
 

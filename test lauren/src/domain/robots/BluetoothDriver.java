@@ -11,7 +11,7 @@ import domain.util.WaitObject;
  /**
  * This is our own version of differentialPilot which should work faster
  */
-public class DifferentialPilot {
+public class BluetoothDriver {
 	/**
 	 * The speed of left and right motor when robot needs to travel straight
 	 */
@@ -41,7 +41,7 @@ public class DifferentialPilot {
 	 *            Distance between center of right tire and center of left tire,
 	 *            in same units as wheelDiameter.
 	 */
-	public DifferentialPilot(double wheelDiameter, final double trackWidth,
+	public BluetoothDriver(double wheelDiameter, final double trackWidth,
 			BTCommPC btComm) {
 		this.btComm = btComm;
 

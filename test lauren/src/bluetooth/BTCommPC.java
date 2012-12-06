@@ -32,7 +32,7 @@ public class BTCommPC  {
 	private DataInputStream _dis;
 	private boolean _opened;
 	private boolean _closed;
-	private int[] _reply = new int[4];
+	private int[] _reply = new int[8];
 	private boolean sendingIsBlocked;
 	//We set this to null to say that there is no buffered command.
 //	private long lastWaitingTicketNumber=0;
@@ -127,6 +127,7 @@ public class BTCommPC  {
 		//We testen even of alle tickets al gebruikt zijn.
 		if(sendingIsPossible()&&!waitObjectQueue.isEmpty()){
 			try {
+				System.out.println("Something has gone wrong, we are going to wait a little");
 				// We wachten hier 10 milliseconden om de wachtende
 				// send-commands de tijd te geven om toch uit te voeren indien
 				// ze een ticket hebben dat aan de beurt zou komen.
@@ -171,6 +172,7 @@ public class BTCommPC  {
 				return null;
 			}
 		}
+		
 		blockSending();
 		boolean commandIsSentForReal = false;
 		while (!commandIsSentForReal && !Thread.interrupted()) {
@@ -183,6 +185,7 @@ public class BTCommPC  {
 				// again.
 			}
 		}
+		
 		int[] returnReply = new int[_reply.length];
 		int i = 0;
 		for (int oneReply : _reply) {
@@ -234,20 +237,22 @@ public class BTCommPC  {
 		catch(IOException e){
 			throw new BluetoothStateException(" sending the command failed because of an IO exception");
 		}
-		if(replyLength == 8){
-			int[] barcode = new int[4];
-			for(int i =0; i<4; i++){
-				barcode[i] = _reply[4+i];
-			}
-			robot.makeBarcode(barcode);
-			replyLength = 4;
-		}
+		
+		
 		for(int k = 0; k<replyLength; k++){
 			try{
 				_reply[k] = _dis.readInt();
 			}catch(IOException ioe){
 				throw new BluetoothStateException(" sending the command failed because of an IO exception");
 			}
+		}
+		if(replyLength == 8){
+			System.out.println("we found a bar-code");
+			int[] barcode = new int[4];
+			for(int i =0; i<4; i++){
+				barcode[i] = _reply[4+i];
+			}
+			robot.makeBarcode(barcode);
 		}
 	}
 

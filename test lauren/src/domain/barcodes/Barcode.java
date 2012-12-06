@@ -280,7 +280,10 @@ public class Barcode {
 		this.printed = printed;
 	}
 	
-	public int getDecimal(){
+	public int getPossibleDecimal(){
+		if(!legalInts.contains(getDecimal(this.bits))){
+			mirrorBits();
+		}
 		return getDecimal(this.bits);
 	}
 }

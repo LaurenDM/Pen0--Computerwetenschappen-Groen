@@ -27,7 +27,7 @@ public enum Movement {
 	public synchronized void execute(SimRobotPilot simRobotPilot, boolean whiteLine)  {
 		double speed=simRobotPilot.getMovingSpeed();
 		double moveAmount = 0.5* speedMultiplier;
-		int sleepTime= Math.abs((int) Math.round((400* moveAmount/speed)));
+		int sleepTime= Math.abs((int) Math.round((1000* moveAmount/speed)));
 		running = true;
 		while(running){
 			if(!simRobotPilot.canMove() && !whiteLine) {
