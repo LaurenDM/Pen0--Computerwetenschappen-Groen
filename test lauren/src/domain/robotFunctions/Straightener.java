@@ -51,10 +51,13 @@ public class Straightener extends RobotFunction {
 			e.printStackTrace();
 		}
 	}
+	
 	private void turnUntil(boolean detect, boolean left, int wantedDetections) {
+		double turnSpeed = robot.getTurningSpeed();
 		robot.setTurningSpeed(1);
-		if(robot.getRobotPilot().getClass() == SimRobotPilot.class)
-			robot.setTurningSpeed(50);
+		if(robot.getRobotPilot().getClass() == SimRobotPilot.class){
+			robot.setTurningSpeed(100);
+		}
 		int consecutiveDetections = 0;
 		robot.keepTurning(left);
 		while(consecutiveDetections < wantedDetections){
@@ -73,7 +76,8 @@ public class Straightener extends RobotFunction {
 		//TODO needs to be looked at.
 		//straightenOnLine();
 		robot.stop();
-		robot.setTurningSpeed(5);
+		robot.setTurningSpeed(turnSpeed);
+//		robot.setTurningSpeed(5);
 	}
 
 	/**
@@ -97,6 +101,8 @@ public class Straightener extends RobotFunction {
 		boolean detect = true;
 		boolean wood = false;
 		boolean turnDirection;
+		double turnSpeed = robot.getTurningSpeed();
+		double moveSpeed = robot.getMovingSpeedSetting();
 		findWhiteLine();
 		try {
 			robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
@@ -125,11 +131,14 @@ public class Straightener extends RobotFunction {
 		}
 		turnDirection = getTurnDirection();
 		turnUntil(detect, turnDirection, 3);
+		angleCorrection = -3;
 		//Now the robot is aligned with the line
 		if(angleCorrection!=0){
 			robot.turn((turnDirection?1:-1)*angleCorrection);
 		}
-		robot.resetToDefaultSpeeds();
+//		robot.resetToDefaultSpeeds();
+		robot.setMovingSpeed(moveSpeed);
+		robot.setTurningSpeed(turnSpeed);
 		straightenOnLine();
 		if(turnDirection){
 			robot.turnRight();

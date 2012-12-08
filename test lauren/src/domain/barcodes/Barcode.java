@@ -30,7 +30,7 @@ public class Barcode {
 			decimal = getDecimal(this.bits);
 		}
 		action = getAction(decimal);
-		System.out.println("Barcode created with value "+this.bits[0]+this.bits[1]+this.bits[2]+this.bits[3]+this.bits[4]+this.bits[5]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
+		System.out.println("Barcode created with value "+this.bits[5]+this.bits[4]+this.bits[3]+this.bits[2]+this.bits[1]+this.bits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
 	}
 	
 	public Barcode(int decimal, Position pos, Orientation orientation){
@@ -52,10 +52,10 @@ public class Barcode {
 	
 	public static Orientation getOrientation(double angle) {
 		final int MARGE = 10;
-		if(Math.abs(angle-0)<MARGE) return Orientation.WEST;
-		else if(Math.abs(angle-90) <MARGE) return Orientation.NORTH;
-		else if(Math.abs(angle-180) <MARGE || Math.abs(angle+180)<MARGE) return Orientation.EAST;
-		else if(Math.abs(angle+90) <MARGE) return Orientation.SOUTH;
+		if(Math.abs(angle-0)<MARGE) return Orientation.EAST;
+		else if(Math.abs(angle-90) <MARGE) return Orientation.SOUTH;
+		else if(Math.abs(angle-180) <MARGE || Math.abs(angle+180)<MARGE) return Orientation.WEST;
+		else if(Math.abs(angle+90) <MARGE) return Orientation.NORTH;
 		else throw new IllegalArgumentException();
 	}
 	
@@ -64,12 +64,12 @@ public class Barcode {
 		switch (number){
 		case 5: return new TurnLeftAction();
 		case 9: return new TurnRightAction();
-		case 55: return new PlayTuneAction();
+		case 13: return new SetCheckPointAction();
+		case 15: return new PlayTuneAction();
 		case 19: return new Wait5Action();
 		case 25: return new DriveSlowAction();
 		case 37: return new DriveFastAction();
-		case 15: return new SetFinishAction();
-		case 1: return new SetCheckPointAction();
+		case 55: return new SetFinishAction();
 		default: return null;
 		}
 	}
@@ -222,7 +222,7 @@ public class Barcode {
 	private int getDecimal(int[] bits){
 		int result = 0;
 		for(int i = 0; i< 6; i++){
-			result = (int) (result + bits[5-i]*Math.pow(2, i));
+			result = (int) (result + bits[i]*Math.pow(2, i));
 		}
 		return result;
 	}

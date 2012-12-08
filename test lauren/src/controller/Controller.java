@@ -7,6 +7,7 @@ import java.util.List;
 
 import lejos.nxt.Motor;
 import lejos.pc.comm.NXTCommandConnector;
+import lejos.util.PilotProps;
 
 
 
@@ -30,9 +31,11 @@ public class Controller {
 	private Robot btRobot;
 	private Robot simRobot;
 	private Thread explorer;
+	private SimRobotPilot simRobotPilot ;
 	
 	public Controller() {
-		simRobot = new Robot(new SimRobotPilot());
+		simRobotPilot = new SimRobotPilot();
+		simRobot = new Robot(simRobotPilot);
 		simRobot.getRobotPilot().setRobot(simRobot);
 		currentRobot=simRobot;
 		connectNewSimRobot();
@@ -52,7 +55,8 @@ public class Controller {
 
 	}
 	public void connectNewSimRobot() {
-		simRobot = new Robot(new SimRobotPilot());
+		simRobotPilot = new SimRobotPilot();
+		simRobot = new Robot(simRobotPilot);
 		simRobot.getRobotPilot().setRobot(simRobot);
 		currentRobot = simRobot ;
 		currentRobot.setBoard(new Board());
@@ -115,7 +119,8 @@ public class Controller {
 	}
 
 	public double getSpeed() {
-		return currentRobot.getActualMovingSpeed();
+		return currentRobot.getMovingSpeedSetting();
+//		return currentRobot.getActualMovingSpeed();
 	}
 
 	public double getAngle() {
@@ -294,5 +299,11 @@ public class Controller {
 
 	public static boolean isStopped() {
 		return stopped ;
+	}
+
+
+
+	public void disableError() {
+		simRobotPilot.disableError();
 	}
 }

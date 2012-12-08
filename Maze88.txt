@@ -1,0 +1,9 @@
+Corner.N		Corner.E	Straight.E.05	Straight.E		Corner.E		T.N				Straight.E		Corner.E
+Corner.W		T.N			Straight.W		Straight.E.25	T.S				T.N				T.W				Straight.N
+T.W				T.E			Corner.E		Cross.E			Straight.E		T.E				Cross.E			Straight.N.37
+Corner.N		T.E			T.E				Cross.S			Cross.S			Corner.W		Cross.N			Corner.S
+T.W				Straight.W	T.W				Corner.E		Cross			Corner.N		T.E				Corner.E
+Straight.N		T.W			Straight.W		Cross.N			Straight.E.19	Corner.S		Corner.N		T.E
+Straight.N.55	Corner.N	Cross.E			Cross.E			T.W				Straight.E		T.N				T.E
+Corner.W		Corner.E	Straight.S		T.E				Straight.E		Corner.N		T.N				Corner.S
+Corner.W		Corner.S	Corner.W		Straight.E		T.S				Straight.E.13	T.S		Corner.S

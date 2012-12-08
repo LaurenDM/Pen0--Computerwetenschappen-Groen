@@ -192,7 +192,7 @@ public class ContentPanel implements ActionListener {
         barcodeButton = new JButton("FIND BARCODE");
         fixButtonLayout(buttonPanel, barcodeButton, 240, 30, 30, buttonYDimension + 370);
         
-        sensorButton = new JButton("SHOW SENSOR DATA ON MAP");
+        sensorButton = new JButton("DISABLE TURNING ERROR");
         fixButtonLayout(buttonPanel, sensorButton, 240, 30, 30, buttonYDimension + 400);
         
         startButton = new JButton("Start");
@@ -465,8 +465,11 @@ public class ContentPanel implements ActionListener {
         	buttonPanel.requestFocusInWindow();
         }
         else if(e.getSource() == sensorButton){
-        	actionLabel.setText("Showing raw distance data");
-        	showRawData = true;
+//        	actionLabel.setText("Showing raw distance data");
+//        	showRawData = true;
+//        	buttonPanel.requestFocusInWindow();
+        	actionLabel.setText("Disabled error margin on turning");
+        	controller.disableError();
         	buttonPanel.requestFocusInWindow();
         }
         else if(e.getSource() == rotateSlowRight){
@@ -686,7 +689,7 @@ public class ContentPanel implements ActionListener {
 		for(Barcode b :controller.getRobot().getBoard().getFoundBarcodes()){
 			if(!b.getPrinted()){
 				b.setPrinted(true);
-				writeToDebug("Barcode with value "+b.getPossibleDecimal()+" added.");
+				writeToDebug("Barcode "+b.getBits()[0]+b.getBits()[1]+b.getBits()[2]+b.getBits()[3]+b.getBits()[4]+b.getBits()[5]+" with value "+b.getPossibleDecimal()+" added.");
 				if(b.getAction()!=null){
 				writeToDebug("Action: "+b.getAction().toString());
 				}

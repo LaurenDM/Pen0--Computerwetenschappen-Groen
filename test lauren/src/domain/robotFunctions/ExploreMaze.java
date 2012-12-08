@@ -72,7 +72,7 @@ public class ExploreMaze{
 			distances = checkDistances();
 			makeWall(distances);
 			if(!maze.isComplete()){
-				robot.setMovingSpeed(robot.getDefaultMovingSpeed());
+//				robot.setMovingSpeed(robot.getDefaultMovingSpeed());
 				Direction direction = getNextDirection(distances);
 				if(checkStraigthen(distances)){
 					moveWithStraighten(direction);
