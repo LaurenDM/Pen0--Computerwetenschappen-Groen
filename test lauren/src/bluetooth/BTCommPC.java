@@ -24,7 +24,7 @@ import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTConnector;
 import lejos.pc.comm.NXTInfo;
 
-public class BTCommPC  {
+public class BTCommPC  implements SpecialReplyCode {
 	
 	private NXTComm _nxtComm;
 	private NXTInfo _nxtInfo;
@@ -215,6 +215,9 @@ public class BTCommPC  {
 		}
 	}
 
+	public int[] sendCommand(int command) {
+		return sendCommand(command, 0);
+	}
 
 	private void sendCommandForReal(int command, int argument)
 			throws BluetoothStateException {
@@ -230,35 +233,73 @@ public class BTCommPC  {
 			throw new BluetoothStateException(
 					" sending the command failed because of an IO exception");
 		}
-		int replyLength;
+		// We first read how many replies this reply holds, this is bigger dan 1
+		// if there are special replies.
+		int numberOfReplies;
 		try {
-			replyLength=_dis.readByte();
-			}
-		catch(IOException e){
-			throw new BluetoothStateException(" sending the command failed because of an IO exception");
-		}
+			numberOfReplies = _dis.readByte();
 		
-		
-		for(int k = 0; k<replyLength; k++){
-			try{
-				_reply[k] = _dis.readInt();
-			}catch(IOException ioe){
-				throw new BluetoothStateException(" sending the command failed because of an IO exception");
-			}
+			if (numberOfReplies > 0) {
+				// Now we read the first reply, this is always the reply that
+				// should be returned by this method and is therefore put in the
+				// _reply array.
+			int firstReplyLength=_dis.readByte();
+			for (int k = 0; k <firstReplyLength; k++) {
+				 _reply[k] = _dis.readInt();
 		}
-		if(replyLength == 8){
-			System.out.println("we found a bar-code");
-			int[] barcode = new int[4];
-			for(int i =0; i<4; i++){
-				barcode[i] = _reply[4+i];
+			
+		int numberOfSpecialReplies = numberOfReplies - 1;
+		//Now we read the special replies, if there are any.
+			for (int k = 0; k < numberOfSpecialReplies; k++) {
+				switchOnSpecialReply(_dis.readByte());
 			}
-			robot.makeBarcode(barcode);
+
+		}
+		} catch (IOException e) {
+			throw new BluetoothStateException(
+					" sending the command failed because of an IO exception");
 		}
 	}
 
 
-	public int[] sendCommand(int command) {
-		return sendCommand(command,0);
+	private void switchOnSpecialReply(byte specialReplyCode) throws IOException {
+		int[] specialInfo = readSpecialInfo(specialReplyCode);
+		switch( specialReplyCode){
+		case ADDBARCODE:
+			addBarcode(specialInfo);
+			break;
+		default:
+			throw new RuntimeException(
+					"A case was not implemented or you forgot the break or return");
+		
+		}
+	}
+
+	private int[] readSpecialInfo(byte specialReplyCode) throws IOException {
+		int specialReplyLength=getSpecialReplyLength(specialReplyCode);
+		int[] specialInfo=new int[specialReplyLength];
+		for(int i=0;i<specialReplyLength;i++){
+			specialInfo[i]=_dis.readInt();
+		}
+		return specialInfo;
+	}
+
+	
+
+	@Override
+	public void addBarcode(int[] barcodeInfo) {
+		robot.makeBarcode(barcodeInfo);		
+	}
+
+	@Override
+	public int getSpecialReplyLength(byte SpecialReply) {
+		switch (SpecialReply) {
+		case ADDBARCODE:
+			return ADDBARCODELENGHT;
+		default:
+			throw new RuntimeException(
+					"A case was not implemented or you forgot the break or return");
+		}
 	}
 	
 }
