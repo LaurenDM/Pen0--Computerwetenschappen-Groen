@@ -10,6 +10,7 @@ import domain.Position.Position;
 import domain.maze.Orientation;
 import domain.maze.Wall;
 import domain.maze.graph.MazeGraph;
+import domain.maze.graph.MazePath;
 import domain.robots.CannotMoveException;
 import domain.robots.Robot;
 import domain.robots.RobotPilot;
@@ -299,5 +300,9 @@ public class ExploreMaze{
 	
 	public synchronized void stopExploring(){
 		interrupted = true;
+	}
+	
+	public MazePath getPathToFinish(){
+		return maze.getShortestPath();
 	}
 }

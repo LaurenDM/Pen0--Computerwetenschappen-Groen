@@ -3,6 +3,7 @@ package domain.robots;
 import domain.Position.Position;
 import domain.maze.Board;
 import domain.maze.Wall;
+import domain.maze.graph.MazePath;
 import domain.util.TimeStamp;
 
 public interface RobotPilot {
@@ -134,6 +135,8 @@ public interface RobotPilot {
 	public void driveToFinish();
 
 	public void wait5Seconds();
+
+	public MazePath getPathToFinish();
 
 
 	

@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -15,6 +16,8 @@ import domain.barcodes.Barcode;
 import domain.maze.MazeElement;
 import domain.maze.Orientation;
 import domain.maze.Wall;
+import domain.maze.graph.MazePath;
+import domain.maze.graph.TileNode;
 import domain.util.ColorPolygon;
 
 public class DrawingPanel extends JPanel {
@@ -263,6 +266,49 @@ public class DrawingPanel extends JPanel {
 		totalGui.repaint();
 		}
 	}
+	
+	public void drawLineToFinish(){
+		try{
+			controller.getRobot().getPathToFinish();
+			if(controller.getRobot().getPathToFinish()!=null){
+				MazePath shortestPath = controller.getRobot().getPathToFinish();
+				Iterator<TileNode> tileIt = shortestPath.iterator();
+				if(tileIt.hasNext()){
+					TileNode nextNode1 = tileIt.next();
+					while(tileIt.hasNext()){
+						TileNode nextNode2 = tileIt.next();
+						Polygon pol = new Polygon();
+						int x1 = (int) nextNode1.getY()*40 + OFFSET +20; 
+						int y1 = (int) nextNode1.getX()*40 + OFFSET +20;
+						int x2 = (int) nextNode2.getY()*40 + OFFSET +20; 
+						int y2 = (int) nextNode2.getX()*40 + OFFSET +20;
+						if(y1==y2){
+							pol.addPoint(x1, y1+1);
+							pol.addPoint(x1, y1-1);
+							pol.addPoint(x2, y2-1);
+							pol.addPoint(x2, y2+1);
+						}
+						else if(x1==x2){
+							pol.addPoint(x1+1, y1);
+							pol.addPoint(x1-1, y1);
+							pol.addPoint(x2-1, y2);
+							pol.addPoint(x2+1, y2);
+
+						}
+						g.setColor(Color.red);
+						g.drawPolygon(pol);
+						g.fillPolygon(pol);
+						totalGui.repaint();
+						nextNode1 = nextNode2;
+					}
+				}
+				}
+		}
+		catch(Exception e){
+			
+		}
+		
+	}
 
 	// This method makes the panel white agains
 	public void clear() {
@@ -305,5 +351,7 @@ public class DrawingPanel extends JPanel {
 		previousPolygons = new HashMap<ColorPolygon, Polygon>();
 		drawWhiteLines();
 	}
+	
+	
 
 }

@@ -11,6 +11,7 @@ import domain.barcodes.Action;
 import domain.barcodes.Barcode;
 import domain.maze.Board;
 import domain.maze.Wall;
+import domain.maze.graph.MazePath;
 import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.Straightener;
 import domain.util.RobotChecker;
@@ -475,6 +476,11 @@ public class BTRobotPilot implements RobotPilot  {
 	@Override
 	public void wait5Seconds() {
 		btComm.sendCommand(CMD.WAIT5);
+	}
+
+	@Override
+	public MazePath getPathToFinish() {
+		return maze.getPathToFinish();
 	}
 
 	

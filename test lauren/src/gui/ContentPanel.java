@@ -308,6 +308,7 @@ public class ContentPanel implements ActionListener {
 			public void run(){
 				drawingPanel.drawFoundWalls();
 				drawingPanel.drawFoundBarcodes();
+				drawingPanel.drawLineToFinish();
 				for (ColorPolygon colorPoly:collection) {
 					drawingPanel.reDrawMyPolygon(colorPoly);
 				}
@@ -697,6 +698,7 @@ public class ContentPanel implements ActionListener {
 			}
 		}
 	}
+	
 	
 }
 

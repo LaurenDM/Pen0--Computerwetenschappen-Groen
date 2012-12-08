@@ -13,6 +13,7 @@ import domain.Position.Position;
 import domain.barcodes.Barcode;
 import domain.maze.Board;
 import domain.maze.Wall;
+import domain.maze.graph.MazePath;
 import domain.robotFunctions.BarcodeGenerator;
 import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.Straightener;
@@ -670,6 +671,10 @@ public class SimRobotPilot implements RobotPilot {
 
 	public void disableError() {
 			turningError = false;
+	}
+	@Override
+	public MazePath getPathToFinish() {
+		return maze.getPathToFinish();
 	}
 
 

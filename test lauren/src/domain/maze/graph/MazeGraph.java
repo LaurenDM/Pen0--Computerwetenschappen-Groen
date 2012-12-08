@@ -18,6 +18,7 @@ public class MazeGraph {
 	private TileNode startNode;
 	private TileNode currentNode;
 	private int tileCounter;
+	private MazePath shortestPath;
 	
 	/**
 	 * A new MazeGraph is initialized with a starting node that represents the robot's current position.
@@ -34,12 +35,13 @@ public class MazeGraph {
 	}
 	
 	public void driveToFinish(RobotPilot robotPilot){
-		MazePath shortestPath = findShortestPathToFinish();
+		shortestPath = findShortestPathToFinish();
 		Iterator<TileNode> tileIt = shortestPath.iterator();
 		if(tileIt.hasNext()){
 			tileIt.next();
 			while(tileIt.hasNext()){
 				TileNode nextNode = tileIt.next();
+				System.out.println("NEXTNODE"+nextNode.getX()+" "+nextNode.getY());
 				Orientation nextOrientation = null;
 				for(Orientation o:Orientation.values()){
 					if(getCurrentNode().getNodeAt(o)!=null && getCurrentNode().getNodeAt(o).equals(nextNode)){
@@ -421,5 +423,9 @@ public class MazeGraph {
 		turnBack();
 		move();
 		generateWallNodeAt(Orientation.SOUTH);
+	}
+	
+	public MazePath getShortestPath(){
+		return shortestPath;
 	}
 }

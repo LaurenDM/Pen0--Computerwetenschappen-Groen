@@ -2,6 +2,7 @@ package domain.robots;
 
 import domain.Position.Position;
 import domain.maze.Board;
+import domain.maze.graph.MazePath;
 import domain.polygons.RobotPolygon;
 import domain.util.TimeStamp;
 
@@ -276,6 +277,10 @@ public class Robot {
 
 	public void wait5Seconds() {
 		robotPilot.wait5Seconds();
+	}
+	
+	public MazePath getPathToFinish(){
+		return robotPilot.getPathToFinish();
 	}
 
 	
