@@ -86,7 +86,7 @@ public class ExploreMaze{
 		}
 		if(Controller.isStopped()==false){
 			ContentPanel.writeToDebug("Maze completed.");
-			robot.setMovingSpeed(robot.getDefaultMovingSpeed()*2);
+			robot.setMovingSpeed(150);
 			maze.driveToFinish(robot);
 		}
 	}
