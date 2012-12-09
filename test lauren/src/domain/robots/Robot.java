@@ -277,6 +277,10 @@ public class Robot {
 	public void wait5Seconds() {
 		robotPilot.wait5Seconds();
 	}
+
+	public void autoCalibrateLight() {
+		robotPilot.autoCalibrateLight();
+	}
 	
 	
 	

@@ -18,7 +18,7 @@ public class CalibrationPanel implements ActionListener {
 	JFrame surroundingFrame;
 	static int totalXDimensions = 400;
 	static int totalYDimensions = 400;
-	private JButton okButton, calibrateHighButton, calibrateLowButton;
+	private JButton okButton, calibrateHighButton, calibrateLowButton, autoCalibrateButton;
 	private Controller controller;
 
 	public CalibrationPanel(JFrame surroundingFrame, Controller controller) {
@@ -52,10 +52,15 @@ public class CalibrationPanel implements ActionListener {
 		titlePanel.add(calibrateLowButton);
 		calibrateLowButton.addActionListener(this);
 
+		autoCalibrateButton = new JButton("Auto Calibrate");
+		autoCalibrateButton.setBounds(20, 140, 200, 30);
+		titlePanel.add(autoCalibrateButton);
+		autoCalibrateButton.addActionListener(this);
+		
 		variableGUI.setOpaque(true);
 
 		okButton = new JButton();
-		okButton.setBounds(20, 140, 120, 30);
+		okButton.setBounds(20, 200, 120, 30);
 		okButton.setText("OK");
 		okButton.addActionListener(this);
 		
@@ -80,6 +85,11 @@ public class CalibrationPanel implements ActionListener {
 			calibrateLowButton.setSelected(false);
 			controller.calibrateLightLow();
 		}
+		if (e.getSource() == autoCalibrateButton){
+			autoCalibrateButton.setSelected(false);
+			controller.autoCalibrateLight();
+		}
+		
 	}
 
 }

@@ -43,6 +43,7 @@ public class Controller {
 	public void connectNewBtRobot() {
 		if(btRobot==null)
 		btRobot = new Robot(new BTRobotPilot());
+		btRobot.getRobotPilot().setRobot(btRobot);
 		currentRobot=btRobot;
 
 //		currentRobot.findOrigin();
@@ -294,5 +295,11 @@ public class Controller {
 
 	public static boolean isStopped() {
 		return stopped ;
+	}
+
+
+
+	public void autoCalibrateLight() {
+		currentRobot.autoCalibrateLight();
 	}
 }

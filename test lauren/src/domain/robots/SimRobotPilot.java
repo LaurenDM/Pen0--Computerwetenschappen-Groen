@@ -641,6 +641,10 @@ public class SimRobotPilot implements RobotPilot {
 			e.printStackTrace();
 		}
 	}
+	@Override
+	public void autoCalibrateLight() {
+		//Do nothing
+	}
 
 
 

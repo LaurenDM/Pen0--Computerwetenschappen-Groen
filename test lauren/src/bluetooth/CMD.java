@@ -1,5 +1,7 @@
 package bluetooth;
 
+
+
 import java.io.IOException;
 
 //Although these are fixed constants we don't use an enum because we need to send integer values via bluetooth.
@@ -182,6 +184,10 @@ public interface CMD {
 	public static final int SETTURNSPEED = 32;
 	public void setTurnSpeed(double speed);
 	
-	
+	/**
+	 * auto Calibrate lightsensor of the robot
+	 */
+	public static final int AUTOCALIBRATELS = 33;
+	public void autoCalibrateLightSensor(int difference);
 	
 }

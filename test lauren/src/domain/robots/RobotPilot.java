@@ -135,6 +135,8 @@ public interface RobotPilot {
 
 	public void wait5Seconds();
 
+	public void autoCalibrateLight();
+
 
 	
 }

@@ -477,6 +477,11 @@ public class BTRobotPilot implements RobotPilot  {
 		btComm.sendCommand(CMD.WAIT5);
 	}
 
+	@Override
+	public void autoCalibrateLight() {
+		btComm.sendCommand(CMD.AUTOCALIBRATELS,8);
+	}
+
 	
 	
 
