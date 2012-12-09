@@ -30,7 +30,7 @@ public class RandomMazeGenerator {
 		fillAllowedOnRightRow();
 		fillOrientation();
 		startPrinter();
-		generateMaze(12, 12);  // adjust dimensions here
+		generateMaze(8, 8);  // adjust dimensions here
 		
 	}
 	

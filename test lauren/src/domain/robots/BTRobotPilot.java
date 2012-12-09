@@ -486,4 +486,9 @@ public class BTRobotPilot implements RobotPilot  {
 		return maze.getPathToFinish();
 	}
 
+	@Override
+	public void setDriveToFinishSpeed() {
+		setMovingSpeed(getDefaultMovingSpeed()*2);
+	}
+
 }

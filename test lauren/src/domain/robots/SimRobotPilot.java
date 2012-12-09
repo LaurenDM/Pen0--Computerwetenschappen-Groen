@@ -275,10 +275,11 @@ public class SimRobotPilot implements RobotPilot {
 						ContentPanel.writeToDebug("Could not read barcode, trying again");
 						setMovingSpeed(moveSpeed);
 						setTurningSpeed(turnSpeed);
-						turn(180);
+						move(-40);
+						//turn(180);
 						findWhiteLine();
 						straighten();
-						turn(180);
+						//turn(180);
 						isScanningBarcode = false;
 					}
 					
@@ -679,6 +680,10 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public MazePath getPathToFinish() {
 		return maze.getPathToFinish();
+	}
+	@Override
+	public void setDriveToFinishSpeed() {
+		setMovingSpeed(150);
 	}
 
 

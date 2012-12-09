@@ -139,6 +139,8 @@ public interface RobotPilot {
 	public void autoCalibrateLight();
 	public MazePath getPathToFinish();
 
+	public void setDriveToFinishSpeed();
+
 
 	
 }
