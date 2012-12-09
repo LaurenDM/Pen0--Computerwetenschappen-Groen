@@ -32,16 +32,21 @@ public class Straightener extends RobotFunction {
 	}
 	
 	public void findWhiteLine(){
-		int wantedDetections = 1;
-		int detections = 0;
+		boolean detected = false;
+		boolean lastDetection = false;
 		try {
 			robot.forward();
 		} catch (CannotMoveException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		while(detections<wantedDetections){
-			if(robot.detectWhiteLine()) detections++;
+		while(!detected){
+			if(robot.detectWhiteLine() && lastDetection){
+				detected = true;
+			}
+			else if(robot.detectWhiteLine()) {
+				lastDetection = true;
+			}
 		}
 		//We move 1 cm because otherwise we are standing in the beginnen and not the middle of the white line 
 		try {
