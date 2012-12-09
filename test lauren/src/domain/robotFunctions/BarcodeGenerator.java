@@ -74,6 +74,7 @@ public class BarcodeGenerator extends RobotFunction {
 			for(int j= 0; j<4; j++){
 				if(bits[4*i+j] ==1) count1++;
 			}
+			if(count1==2){ throw new IllegalArgumentException();}
 			if(count1>2) realBits[i-1] = 1;
 			else realBits[i-1] = 0;
 		}
