@@ -54,7 +54,14 @@ public class MazeGraph {
 						robotPilot.straighten();
 						robotPilot.move(20);
 					} else {
-						robotPilot.move(40);
+						double distance = robotPilot.readUltrasonicValue();
+						if(distance!=255 &&(distance< 17 || distance%40 > 22)){
+							robotPilot.straighten();
+							robotPilot.move(20);
+						}
+						else{
+							robotPilot.move(40);
+						}
 					}
 					tileCounter++;
 					this.move();
