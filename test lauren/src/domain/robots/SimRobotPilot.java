@@ -13,6 +13,7 @@ import domain.Position.Position;
 import domain.barcodes.Barcode;
 import domain.maze.Board;
 import domain.maze.Wall;
+import domain.maze.graph.MazePath;
 import domain.robotFunctions.BarcodeGenerator;
 import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.Straightener;
@@ -25,6 +26,7 @@ public class SimRobotPilot implements RobotPilot {
 	private Position position;
 	private boolean isScanningBarcode;
 	private ExploreMaze maze;
+	private boolean turningError = true;
 
 	//The wanted rotation Speed of the robot.
 	private double rotateSpeed;
@@ -37,8 +39,8 @@ public class SimRobotPilot implements RobotPilot {
 
 	private int sensorAngle;
 
-	private final int defaultMovingSpeed=80;
-	private final int defaultTurningSpeed=90;
+	private final int defaultMovingSpeed=100; //was 80
+	private final int defaultTurningSpeed=200;
 	private Robot robot;
 	
 	private double lastDistance = 0;
@@ -95,9 +97,14 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void turn(double wantedAngleDif) {
-		double temp = randomDouble(1);
-		System.out.println(temp);
-		wantedAngleDif = wantedAngleDif + temp;
+		
+		double error = 0;
+		if(turningError){
+		double errorMargin = wantedAngleDif%91/45;
+		error = randomDouble(errorMargin);
+		}
+		wantedAngleDif = wantedAngleDif + error; 
+
 		double previousAngle = getOrientation();
 		boolean turning = true;
 		//The turningMethod always turns 1 degree, that's why we first turn the non integer part of WantedAngleDIf.
@@ -233,7 +240,15 @@ public class SimRobotPilot implements RobotPilot {
 			if(wantedDistance <1){
 				this.getPosition().move(getOrientation(), wantedDistance);
 				try {
-					Thread.sleep(Double.valueOf(wantedDistance/getMovingSpeed()).intValue()+1);
+					//deze gaf altijd 1 waardoor robot over barcode vloog (de 50 was 1)
+					double offset = 50;
+					if(getMovingSpeed()>getDefaultMovingSpeed()){
+						offset = 25;
+					}
+					else if(getMovingSpeed()<getDefaultMovingSpeed()){
+						offset = 75;
+					}
+					Thread.sleep(Double.valueOf(wantedDistance/getMovingSpeed()).intValue()+50);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -244,6 +259,8 @@ public class SimRobotPilot implements RobotPilot {
 		} else {
 			backward();
 		}
+		double turnSpeed = robot.getTurningSpeed();
+		double moveSpeed = robot.getMovingSpeedSetting();
 		while(running && !Thread.interrupted()){
 			double currDistance=getPosition().getDistance(pos1);
 			if(detectBlackLine() && !isScanningBarcode){
@@ -253,10 +270,18 @@ public class SimRobotPilot implements RobotPilot {
 					BarcodeGenerator bg = new BarcodeGenerator(getRobot());
 					try {
 						bg.generateBarcode();
+						move(-8);
 					} catch(IllegalArgumentException e){
-						ContentPanel.writeToDebug("Could not read barcode");
+						ContentPanel.writeToDebug("Could not read barcode, trying again");
+						setMovingSpeed(moveSpeed);
+						setTurningSpeed(turnSpeed);
+						turn(180);
+						findWhiteLine();
+						straighten();
+						turn(180);
+						isScanningBarcode = false;
 					}
-					move(-8);
+					
 				}
 				forward();
 				isScanningBarcode = false;
@@ -359,7 +384,7 @@ public class SimRobotPilot implements RobotPilot {
 		final double WHITE = 100;
 		final double WOOD = 0;
 		final double BLACK = -200;
-		return WOOD+detectWhiteLineGradient()*WHITE+detectBlackLineGradient()*BLACK;
+		return WOOD+detectWhiteLineGradient()*WHITE+detectBlackLineGradient()*BLACK+randomDouble(10);
 	}
 	//TODO: waardes hangen af van kalibratie van echte sensor
 
@@ -627,12 +652,14 @@ public class SimRobotPilot implements RobotPilot {
 
 
 
-	private double randomDouble(int max){
+	private double randomDouble(double max){
+//		return 0;
 		Random rand = new Random();
 		double rd = rand.nextGaussian();
 		rd = rd>2.5?0:rd;
 		return (rand.nextGaussian() * max);
 	}
+	
 	@Override
 	public void wait5Seconds() {
 		try {
@@ -646,7 +673,13 @@ public class SimRobotPilot implements RobotPilot {
 		//Do nothing
 	}
 
-
+	public void disableError() {
+			turningError = false;
+	}
+	@Override
+	public MazePath getPathToFinish() {
+		return maze.getPathToFinish();
+	}
 
 
 }

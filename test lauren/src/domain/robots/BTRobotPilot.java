@@ -11,6 +11,7 @@ import domain.barcodes.Action;
 import domain.barcodes.Barcode;
 import domain.maze.Board;
 import domain.maze.Wall;
+import domain.maze.graph.MazePath;
 import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.Straightener;
 import domain.util.RobotChecker;
@@ -481,9 +482,8 @@ public class BTRobotPilot implements RobotPilot  {
 	public void autoCalibrateLight() {
 		btComm.sendCommand(CMD.AUTOCALIBRATELS,8);
 	}
-
-	
-	
-
+	public MazePath getPathToFinish() {
+		return maze.getPathToFinish();
+	}
 
 }

@@ -17,8 +17,11 @@ public class BarcodeGenerator extends RobotFunction {
 	
 // this method is called when the robot has detected a black line
 	public void generateBarcode(){
+		double turnSpeed = robot.getTurningSpeed();
+		double moveSpeed = robot.getMovingSpeedSetting();
 		if(robot.getBoard().detectBarcodeAt(robot.getPosition())){
 			try {
+				System.out.println("ROBOT MOVES 8; BARCODE FOUND");
 				robot.move(8);
 			} catch (CannotMoveException e) {
 				// TODO Auto-generated catch block
@@ -42,7 +45,7 @@ public class BarcodeGenerator extends RobotFunction {
 			try {
 				robot.move(0.5);
 			} catch (CannotMoveException e) {
-				//TODO: Wat doen we hiermee?
+
 			}
 			if(robot.detectBlackLine()){
 				bits[i] = 0;
@@ -57,8 +60,9 @@ public class BarcodeGenerator extends RobotFunction {
 		int lowy = (int) (Math.floor((pos.getY())/MAZECONSTANT))*MAZECONSTANT;
 		Barcode barcode = new Barcode(convertBits(bits), new Position(lowx+20, lowy+20), robot.getOrientation()); 
 		robot.getBoard().addFoundBarcode(barcode);
-		robot.setMovingSpeed(robot.getDefaultMovingSpeed());
-		
+//		robot.setMovingSpeed(robot.getDefaultMovingSpeed());
+		robot.setMovingSpeed(moveSpeed);
+		robot.setTurningSpeed(turnSpeed);
 		barcode.runAction(robot);
 		
 	}
@@ -81,10 +85,7 @@ public class BarcodeGenerator extends RobotFunction {
 		double weight2 = 2;
 		double weight1 = 1;
 		double totalWeighted = 0;
-		System.out.println(bits);
-		for(int i= 0; i<32; i++){
-			System.out.println(bits[i]);
-		}
+
 		int[] realBits = new int[6];
 		for(int i = 0; i<6; i++){
 			double weightedResult = bits[4*i]*weight1 + bits[4*i+1]*weight2 + bits[4*i+2]*weight3;
@@ -101,7 +102,6 @@ public class BarcodeGenerator extends RobotFunction {
 			totalValue = totalValue + (weight1 + weight2 + weight3)*realBits[j];
 		}
 		double score = totalValue/totalWeighted;
-		System.out.println("score: "+score);
 		return realBits;
 	}
 	

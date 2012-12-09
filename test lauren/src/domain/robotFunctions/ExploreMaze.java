@@ -10,6 +10,7 @@ import domain.Position.Position;
 import domain.maze.Orientation;
 import domain.maze.Wall;
 import domain.maze.graph.MazeGraph;
+import domain.maze.graph.MazePath;
 import domain.robots.CannotMoveException;
 import domain.robots.Robot;
 import domain.robots.RobotPilot;
@@ -72,7 +73,7 @@ public class ExploreMaze{
 			distances = checkDistances();
 			makeWall(distances);
 			if(!maze.isComplete()){
-				robot.setMovingSpeed(robot.getDefaultMovingSpeed());
+//				robot.setMovingSpeed(robot.getDefaultMovingSpeed());
 				Direction direction = getNextDirection(distances);
 				if(checkStraigthen(distances)){
 					moveWithStraighten(direction);
@@ -299,5 +300,9 @@ public class ExploreMaze{
 	
 	public synchronized void stopExploring(){
 		interrupted = true;
+	}
+	
+	public MazePath getPathToFinish(){
+		return maze.getShortestPath();
 	}
 }

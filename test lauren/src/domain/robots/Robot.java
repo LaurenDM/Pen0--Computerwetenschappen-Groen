@@ -2,6 +2,7 @@ package domain.robots;
 
 import domain.Position.Position;
 import domain.maze.Board;
+import domain.maze.graph.MazePath;
 import domain.polygons.RobotPolygon;
 import domain.util.TimeStamp;
 
@@ -281,6 +282,14 @@ public class Robot {
 	public void autoCalibrateLight() {
 		robotPilot.autoCalibrateLight();
 	}
+	
+	public MazePath getPathToFinish(){
+		return robotPilot.getPathToFinish();
+	}
+
+	
+
+
 	
 	
 	
