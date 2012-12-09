@@ -43,9 +43,14 @@ public class Straightener extends RobotFunction {
 		while(!detected){
 			if(robot.detectWhiteLine() && lastDetection){
 				detected = true;
+				lastDetection = true;
 			}
 			else if(robot.detectWhiteLine()) {
 				lastDetection = true;
+			}
+			else{
+				detected = false;
+				lastDetection = false;
 			}
 		}
 		//We move 1 cm because otherwise we are standing in the beginnen and not the middle of the white line 
