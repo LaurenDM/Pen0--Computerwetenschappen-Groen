@@ -24,7 +24,12 @@ public class MoveThread extends Thread {
 	
 	@Override
 	public void run(){
-		moveType.execute(simRobotPilot, whiteLine);
+		try{
+			moveType.execute(simRobotPilot, whiteLine);
+		}
+		catch(RuntimeMoveException e){
+			throw e;
+		}
 	}
 	
 	public Movement getMovement(){

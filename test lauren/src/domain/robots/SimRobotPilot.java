@@ -190,21 +190,22 @@ public class SimRobotPilot implements RobotPilot {
 
 	public void forward(boolean whiteLine) throws CannotMoveException {
 		stop();
-		try{
-			startMoveThread(Movement.FORWARD, whiteLine);
-		} catch(RuntimeMoveException e){
-			throw new CannotMoveException();
-		}
+		startMoveThread(Movement.FORWARD, whiteLine);
 	}
 
-	private void startMoveThread(Movement movement) {
+	private void startMoveThread(Movement movement) throws CannotMoveException {
 		startMoveThread(movement, false);
 	}
 
-	private void startMoveThread(Movement movement, boolean whiteLine){
+	private void startMoveThread(Movement movement, boolean whiteLine) throws CannotMoveException{
 		stopThread(moveThread);
 		moveThread= new MoveThread(movement, this,whiteLine);
-		moveThread.start();
+		try{
+			moveThread.start();
+		}
+		catch(RuntimeMoveException e){
+			throw new CannotMoveException();
+		}
 	}
 
 	private void startTurnThread(boolean left) {
@@ -216,7 +217,11 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public void backward(){
 		stop();
-		startMoveThread(Movement.BACKWARD);
+		try {
+			startMoveThread(Movement.BACKWARD);
+		} catch (CannotMoveException e) {
+			
+		}
 
 	}
 
@@ -485,18 +490,33 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void arcForward(boolean left) {
-		startMoveThread(Movement.FORWARD);
+		try {
+			startMoveThread(Movement.FORWARD);
+		} catch (CannotMoveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		startTurnThread(left);
 	}
 
 	@Override
 	public void arcBackward(boolean left) {
-		startMoveThread(Movement.BACKWARD);
+		try {
+			startMoveThread(Movement.BACKWARD);
+		} catch (CannotMoveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		startTurnThread(left);
 	}
 	@Override
 	public void steer(double angle) {
-		startMoveThread(Movement.FORWARD);
+		try {
+			startMoveThread(Movement.FORWARD);
+		} catch (CannotMoveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		turn(angle);
 
 	}

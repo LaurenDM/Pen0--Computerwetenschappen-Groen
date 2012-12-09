@@ -41,7 +41,7 @@ public class RandomMazeGenerator {
 			String sector = allowedOnTopRow.get((int) (Math.random() * allowedOnTopRow.size())); 
 			row = row + sector + "	";
 			if(sector.contains("Straight") && !hasFinish){
-			row = row.substring(0, row.length()-1) +".15	";
+			row = row.substring(0, row.length()-1) +".55	";
 			hasFinish = true;
 			}
 		}
@@ -56,7 +56,7 @@ public class RandomMazeGenerator {
 				String sector = allowedInCenter.get((int) (Math.random() * allowedInCenter.size()));
 				row = row + sector +"."+ orientation.get((int) (Math.random() * orientation.size())) + "	";
 				if(sector.contains("Straight") && !hasCheckpoint){
-					row = row.substring(0, row.length()-1) +".01	";
+					row = row.substring(0, row.length()-1) +".13	";
 					hasCheckpoint = true;
 				}
 			}
