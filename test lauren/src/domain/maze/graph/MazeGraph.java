@@ -50,7 +50,7 @@ public class MazeGraph {
 				}
 				turnToNextOrientation(robotPilot, getCurrentRobotOrientation(), nextOrientation);
 				try {
-					if(tileCounter%3==0){
+					if(tileCounter%2==0){
 						robotPilot.straighten();
 						robotPilot.move(20);
 					} else {
