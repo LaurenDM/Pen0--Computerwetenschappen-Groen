@@ -3,7 +3,6 @@ package domain.robots;
 
 import java.io.IOException;
 
-import lejos.nxt.remote.NXTCommand;
 import bluetooth.BTCommPC;
 import bluetooth.CMD;
 import domain.Position.Position;
@@ -13,7 +12,6 @@ import domain.maze.Board;
 import domain.maze.Wall;
 import domain.maze.graph.MazePath;
 import domain.robotFunctions.ExploreMaze;
-import domain.robotFunctions.Straightener;
 import domain.util.RobotChecker;
 import domain.util.TimeStamp;
 import exceptions.ConnectErrorException;
@@ -35,7 +33,6 @@ public class BTRobotPilot implements RobotPilot  {
 //	private LightSensor lightSensor;
 	
 	private Board board;
-	private NXTCommand nxtCommand;
 	private  final float wheelsDiameter = 5.43F;
 	//	private static final float wheelDiameterLeft = 5.43F;
 	//	private static final float wheelDiameterRight = 5.43F;
@@ -280,14 +277,12 @@ public class BTRobotPilot implements RobotPilot  {
 		btComm.sendCommand(CMD.STRAIGHTEN);
 	}
 	
+
 	public int getBatteryVoltage(){
-		try {
 		if(RobotChecker.interruptionAllowed())
-				return nxtCommand.getBatteryLevel();
-		else return 0; //TODO
-		} catch (IOException e) {
-			return 0;
-		}
+			return btComm.sendCommand(CMD.BATTERY)[0];
+			else return 0; //TODO
+		
 	}
 
 	@Override
