@@ -39,7 +39,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	private int sensorAngle;
 
-	private final int defaultMovingSpeed=100; //was 80
+	private final int defaultMovingSpeed=80; //was 80
 	private final int defaultTurningSpeed=200;
 	private Robot robot;
 	
@@ -100,8 +100,7 @@ public class SimRobotPilot implements RobotPilot {
 		
 		double error = 0;
 		if(turningError){
-		double errorMargin = wantedAngleDif%91/45;
-		error = randomDouble(errorMargin);
+			error = randomDouble(1);
 		}
 		wantedAngleDif = wantedAngleDif + error; 
 
@@ -677,8 +676,8 @@ public class SimRobotPilot implements RobotPilot {
 //		return 0;
 		Random rand = new Random();
 		double rd = rand.nextGaussian();
-		rd = rd>2.5?0:rd;
-		return (rand.nextGaussian() * max);
+		rd = Math.abs(rd)>2.5?0:rd;
+		return (rd * max);
 	}
 	
 	@Override
