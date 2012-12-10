@@ -141,20 +141,16 @@ public class Straightener extends RobotFunction {
 		}
 		turnDirection = getTurnDirection();
 		turnUntil(detect, turnDirection, 3);
-		angleCorrection = -3;
 		//Now the robot is aligned with the line
+		int turnAmount = 90;
 		if(angleCorrection!=0){
-			robot.turn((turnDirection?1:-1)*angleCorrection);
+			turnAmount = (90-angleCorrection)*(turnDirection?1:-1);
 		}
 //		robot.resetToDefaultSpeeds();
 		robot.setMovingSpeed(moveSpeed);
 		robot.setTurningSpeed(turnSpeed);
 		straightenOnLine();
-		if(turnDirection){
-			robot.turnRight();
-		} else {
-			robot.turnLeft();
-		}
+		robot.turn(turnAmount);
 		
 		//robot.setPose(0,20,0);
 	}

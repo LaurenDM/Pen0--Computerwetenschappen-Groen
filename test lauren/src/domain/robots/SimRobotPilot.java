@@ -522,7 +522,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void straighten() {
-		(new Straightener(new Robot(this))).straighten(0);
+		(new Straightener(new Robot(this))).straighten(3);
 
 	}
 

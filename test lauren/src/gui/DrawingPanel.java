@@ -319,7 +319,7 @@ public class DrawingPanel extends JPanel {
 						y1 = Math.abs((int) nextNode1.getX()*40 + OFFSET + zeroY);
 						x2 = Math.abs((int) nextNode2.getY()*40 + OFFSET + zeroX); 
 						y2 = Math.abs((int) nextNode2.getX()*40 + OFFSET + zeroY);
-						System.out.println("POS "+x1+" "+y1+";  "+x2+" "+y2);
+						//System.out.println("POS "+x1+" "+y1+";  "+x2+" "+y2);
 						
 						}
 //						
