@@ -121,6 +121,9 @@ public class DrawingPanel extends JPanel {
 					}
 				}
 			}
+			if(simWalls.size()<1){
+				goodWall = true;
+			}
 			if(!goodWall){
 				g.setColor(Color.red);
 			}
@@ -267,10 +270,28 @@ public class DrawingPanel extends JPanel {
 		}
 	}
 	
+	private boolean drawn;
+	private Position initPos;
+	boolean firstPos = true;
+	private int zeroX;
+	private int zeroY;
+	private double beginOrient = 9000;
+	
 	public void drawLineToFinish(){
 		try{
+			if(beginOrient == 9000)
+			beginOrient = controller.getRobot().getOrientation();
+		}
+		catch(Exception e){
+			
+		}
+				
+		try{
+			
 			controller.getRobot().getPathToFinish();
 			if(controller.getRobot().getPathToFinish()!=null){
+				initPos = controller.getRobot().getPosition();
+				drawn = true;
 				MazePath shortestPath = controller.getRobot().getPathToFinish();
 				Iterator<TileNode> tileIt = shortestPath.iterator();
 				if(tileIt.hasNext()){
@@ -278,10 +299,51 @@ public class DrawingPanel extends JPanel {
 					while(tileIt.hasNext()){
 						TileNode nextNode2 = tileIt.next();
 						Polygon pol = new Polygon();
-						int x1 = (int) nextNode1.getY()*40 + OFFSET +20; 
-						int y1 = (int) nextNode1.getX()*40 + OFFSET +20;
-						int x2 = (int) nextNode2.getY()*40 + OFFSET +20; 
-						int y2 = (int) nextNode2.getX()*40 + OFFSET +20;
+						int MAZECONSTANT = 40;
+						int robotX =(int) (Math.floor((initPos.getX())/MAZECONSTANT))*MAZECONSTANT + 20;
+						int robotY =(int) (Math.floor((initPos.getY())/MAZECONSTANT))*MAZECONSTANT + 20;
+						
+						int x1=0; int x2=0; int y1=0; int y2 = 0;
+						
+						if(beginOrient<45 && beginOrient>-45){
+						
+						if(firstPos){
+						zeroX = (robotX - (int) nextNode1.getY()*40);
+						zeroY = (robotY - (int) nextNode1.getX()*40);
+						System.out.println("ZEROPOS "+zeroX+" "+zeroY);
+						firstPos = false;
+						}
+						
+						//oost
+						x1 = Math.abs((int) nextNode1.getY()*40 + OFFSET + zeroX); 
+						y1 = Math.abs((int) nextNode1.getX()*40 + OFFSET + zeroY);
+						x2 = Math.abs((int) nextNode2.getY()*40 + OFFSET + zeroX); 
+						y2 = Math.abs((int) nextNode2.getX()*40 + OFFSET + zeroY);
+						System.out.println("POS "+x1+" "+y1+";  "+x2+" "+y2);
+						
+						}
+//						
+//						else if(beginOrient<-135 && beginOrient>135){
+//							
+//							System.out.println("lus 2");
+//							if(firstPos){
+//							System.out.println("ROBOTPOS:"+robotX+" "+robotY);
+//							zeroX = (robotX - Math.abs((int) nextNode1.getX()*40));
+//							zeroY = (robotY - Math.abs((int) nextNode1.getY()*40));
+//							System.out.println("ZEROPOS "+zeroX+" "+zeroY);
+//							firstPos = false;
+//							}
+//							
+//							//oost
+//							x1 = Math.abs((int) nextNode1.getX()*40) + OFFSET + zeroX; 
+//							y1 = Math.abs((int) nextNode1.getY()*40) + OFFSET + zeroY;
+//							x2 = Math.abs((int) nextNode2.getX()*40) + OFFSET + zeroX; 
+//							y2 = Math.abs((int) nextNode2.getY()*40) + OFFSET + zeroY;
+//							System.out.println("POS "+(x1-OFFSET)+" "+(y1-OFFSET)+";  "+(x2-OFFSET)+" "+(y2-OFFSET));
+//							
+//							}
+
+					
 						if(y1==y2){
 							pol.addPoint(x1, y1+1);
 							pol.addPoint(x1, y1-1);
@@ -350,8 +412,13 @@ public class DrawingPanel extends JPanel {
 		g=image.getGraphics();
 		previousPolygons = new HashMap<ColorPolygon, Polygon>();
 		drawWhiteLines();
+		
+		drawn = false;
+		firstPos = true;
+		beginOrient = 9000;
 	}
 	
 	
 
 }
+
