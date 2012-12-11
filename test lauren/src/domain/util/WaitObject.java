@@ -8,4 +8,12 @@ public class WaitObject {
 	public boolean hasReallyBeenNotified(){
 		return hasReallyBeenNotified;
 	}
+	public synchronized void  customWait() {
+		while(!hasReallyBeenNotified()&&!Thread.interrupted())
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				return;
+			}
+		}
 }

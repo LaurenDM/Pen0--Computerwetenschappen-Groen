@@ -62,6 +62,7 @@ public class BTRobotPilot implements RobotPilot  {
 
 			}
 			catch(ArrayIndexOutOfBoundsException indE){
+				System.out.println("we will throw ConnectErrorException because of ArrayIndexOutOfBoundsException after trying to make a BTRobotPilot");
 				throw new ConnectErrorException();
 				//TODO i3+
 			}

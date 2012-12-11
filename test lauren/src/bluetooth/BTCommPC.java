@@ -25,18 +25,18 @@ import lejos.pc.comm.NXTConnector;
 import lejos.pc.comm.NXTInfo;
 
 public class BTCommPC  implements SpecialReplyCode {
-	
+
+	private static final int MAXONEREPLYLENGTH = 10;
 	private NXTComm _nxtComm;
 	private NXTInfo _nxtInfo;
 	private DataOutputStream _dos;
 	private DataInputStream _dis;
 	private boolean _opened;
 	private boolean _closed;
-	private int[] _reply = new int[8];
 	private boolean sendingIsBlocked;
 	//We set this to null to say that there is no buffered command.
-//	private long lastWaitingTicketNumber=0;
-//	private long firstValidTicket=1;
+	//	private long lastWaitingTicketNumber=0;
+	//	private long firstValidTicket=1;
 	private Queue<WaitObject> waitObjectQueue= new LinkedList<WaitObject>();
 	private WaitObject toBeWokenObject=null;
 	private BTRobotPilot robot;
@@ -51,16 +51,16 @@ public class BTCommPC  implements SpecialReplyCode {
 	public synchronized void blockSending(){
 		sendingIsBlocked=true;
 	};
-	
+
 	public synchronized void unblockSending(){
 		sendingIsBlocked=false;
 	};
-	
+
 	public boolean open(String deviceName, String BTaddress){
-		
+
 		//nxtComm = null;
 		_opened = false;
-		
+
 		try {
 			_nxtComm = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
 			NXTConnector conn = new NXTConnector();
@@ -78,18 +78,18 @@ public class BTCommPC  implements SpecialReplyCode {
 				throw new ConnectErrorException();
 			}
 		}
-		
+
 		InputStream is = _nxtComm.getInputStream();
 		OutputStream os = _nxtComm.getOutputStream();
-		
+
 		_dos = new DataOutputStream(os);
 		_dis = new DataInputStream(is);
-		
+
 		return _opened;
 	}
-	
+
 	public boolean close(){
-		
+
 		_closed = false;
 		try {
 			_dis.close();
@@ -99,23 +99,23 @@ public class BTCommPC  implements SpecialReplyCode {
 			System.out.println("something went wrong");
 			return _closed;
 		}
-		
+
 		_closed = true;
 		return _closed;
 	}
-	
+
 	public DataOutputStream getOutputStream(){
 		return _dos;
 	}
-	
+
 	public DataInputStream getInputStream(){
 		return _dis;
 	}
-	
+
 	public boolean isOpened(){
 		return _opened;
 	}
-	
+
 	public boolean isClosed(){
 		return _closed;
 	}
@@ -123,6 +123,7 @@ public class BTCommPC  implements SpecialReplyCode {
 		return sendCommand(command,(int) (100*argument));
 	}
 	private int[] sendCommand(int  command, int argument) {
+		try{
 		//TODO kijken of we deze code nog willen, is eerder voor debug
 		//We testen even of alle tickets al gebruikt zijn.
 		if(sendingIsPossible()&&!waitObjectQueue.isEmpty()){
@@ -137,12 +138,12 @@ public class BTCommPC  implements SpecialReplyCode {
 				if (sendingIsPossible() && !waitObjectQueue.isEmpty()) {
 					takeNextWaiter();
 					System.out
-							.println("Something has gone wrong, we forcibly denied a send request and alarmed a waitingObject");
+					.println("Something has gone wrong, we forcibly denied a send request and alarmed a waitingObject");
 				}
 			} catch (InterruptedException e) {
 				return null;
 			}
-			
+
 		}
 
 		if (!sendingIsPossible()) {
@@ -172,33 +173,53 @@ public class BTCommPC  implements SpecialReplyCode {
 				return null;
 			}
 		}
-		
+
 		blockSending();
-		boolean commandIsSentForReal = false;
-		while (!commandIsSentForReal && !Thread.interrupted()) {
-			try {
-				commandIsSentForReal = false;
-				sendCommandForReal(command, argument);
-				commandIsSentForReal = true;
+		int[] reply=null;
+			
+		try {
+				reply=sendCommandForReal(command, argument);
 			} catch (BluetoothStateException e) {
-				// In this case the while loop will try to send the command
-				// again.
+				try {
+					reply=sendCommandForReal(command, argument);
+			} catch (BluetoothStateException e2) {
+				throw new BluetoothStateException();
 			}
 		}
-		
-		int[] returnReply = new int[_reply.length];
-		int i = 0;
-		for (int oneReply : _reply) {
+		int[] returnReply = new int[0];			
+		int k = 2;
+		int numberOfSpecialReplies=0;
+		if (reply != null &&reply.length>0&& reply[0] > 0) {
+			numberOfSpecialReplies= reply[0]-1;
 
-			returnReply[i] = oneReply;
-			i++;
+			// reply[1] should containt the first ReplyLenght, and only the
+			// first reply is an answer to this sendCommand call, the others are special replies
+			returnReply = new int[reply[1]];
+			for (int i = 0; i < returnReply.length; i++) {
+				returnReply[i] = reply[k++];
+			}
 		}
 		if (!waitObjectQueue.isEmpty()) {
 			takeNextWaiter();
 		} else {
 			unblockSending();
 		}
+		for(int i=0;i<numberOfSpecialReplies;i++){
+			int SpecialReplyCode=reply[k++];
+			int[] specialArgs=new int[reply[k++]];
+			for(int j=0;j<specialArgs.length; j++){
+				specialArgs[j]=reply[k++];
+			}
+			switchOnSpecialReply(SpecialReplyCode, specialArgs);
+
+		}
+	
 		return returnReply;
+		}catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("something is wrong with your code or the robot is disconnected");
+			}
+		
 	}
 
 	private void takeNextWaiter() {
@@ -219,8 +240,10 @@ public class BTCommPC  implements SpecialReplyCode {
 		return sendCommand(command, 0);
 	}
 
-	private void sendCommandForReal(int command, int argument)
+	private int[] sendCommandForReal(int command, int argument)
 			throws BluetoothStateException {
+
+
 		if(_dos == null){ 
 			System.out.println("dos is null");
 		}
@@ -230,61 +253,69 @@ public class BTCommPC  implements SpecialReplyCode {
 			_dos.writeInt(argument);
 			_dos.flush();
 		} catch (IOException ioe) {
+//			System.out.println("BTCOMMPC2 we will throw BluetoothStateException");
 			throw new BluetoothStateException(
 					" sending the command failed because of an IO exception");
 		}
 		// We first read how many replies this reply holds, this is bigger dan 1
 		// if there are special replies.
+
 		int numberOfReplies;
+		int[] reply=null;
 		try {
 			numberOfReplies = _dis.readByte();
-		
 			if (numberOfReplies > 0) {
+			reply = new int[numberOfReplies*MAXONEREPLYLENGTH];
+			reply[0]=numberOfReplies;
 				// Now we read the first reply, this is always the reply that
 				// should be returned by this method and is therefore put in the
-				// _reply array.
-			int firstReplyLength=_dis.readByte();
-			for (int k = 0; k <firstReplyLength; k++) {
-				 _reply[k] = _dis.readInt();
-		}
-			
-		int numberOfSpecialReplies = numberOfReplies - 1;
-		//Now we read the special replies, if there are any.
-			for (int k = 0; k < numberOfSpecialReplies; k++) {
-				switchOnSpecialReply(_dis.readByte());
-			}
+				// reply array.
+				int firstReplyLength = _dis.readByte();
+				reply[1]=firstReplyLength;
+				int k = 2;
+				for (int i=0; i < firstReplyLength; i++) {
+					reply[k++] = _dis.readInt();
+				}
+				
+				
+				int numberOfSpecialReplies = numberOfReplies - 1;
+				// Now we read the special replies, if there are any.
+				for (int i = 0; i < numberOfSpecialReplies; i++) {
+					byte specialReplyCode=_dis.readByte();
+					reply[k++]=specialReplyCode;
+					int specialReplyLength=getSpecialReplyLength(specialReplyCode);
+					reply[k++]=specialReplyLength;
+					for(int j=0;j<specialReplyLength;j++){
+						reply[k++]=_dis.readInt();
+					}
+				}
 
-		}
+			}
 		} catch (IOException e) {
+			System.out.println("BTCOMMPC1: we will throw BluetoothStateException");
 			throw new BluetoothStateException(
 					" sending the command failed because of an IO exception");
 		}
+		return reply;
 	}
 
+	private void switchOnSpecialReply(int specialReplyCode, int[] specialInfo){
 
-	private void switchOnSpecialReply(byte specialReplyCode) throws IOException {
-		int[] specialInfo = readSpecialInfo(specialReplyCode);
-		switch( specialReplyCode){
+		switch (specialReplyCode) {
 		case ADDBARCODE:
 			addBarcode(specialInfo);
 			break;
 		default:
 			throw new RuntimeException(
 					"A case was not implemented or you forgot the break or return");
-		
+
 		}
+
 	}
 
-	private int[] readSpecialInfo(byte specialReplyCode) throws IOException {
-		int specialReplyLength=getSpecialReplyLength(specialReplyCode);
-		int[] specialInfo=new int[specialReplyLength];
-		for(int i=0;i<specialReplyLength;i++){
-			specialInfo[i]=_dis.readInt();
-		}
-		return specialInfo;
-	}
 
-	
+
+
 
 	@Override
 	public void addBarcode(int[] barcodeInfo) {
@@ -301,5 +332,5 @@ public class BTCommPC  implements SpecialReplyCode {
 					"A case was not implemented or you forgot the break or return");
 		}
 	}
-	
+
 }

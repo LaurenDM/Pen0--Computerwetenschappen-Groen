@@ -210,19 +210,11 @@ public class BluetoothDriver {
 
 	private void waitUntilMovingStops() {
 		if (moveWaiter != null) {
-			System.out.println("moveWaiter was niet null");
+				moveWaiter.customWait();
 		}
 		moveWaiter = new WaitObject();
-		while (!moveWaiter.hasReallyBeenNotified() && !Thread.interrupted()) {
-			try {
-				synchronized (moveWaiter) {
-					moveWaiter.wait();
-				}
-			} catch (InterruptedException e) {
-				moveWaiter = null;
-				break;
-			}
-		}
+		moveWaiter.customWait();
+
 		moveWaiter = null;
 	}
 
