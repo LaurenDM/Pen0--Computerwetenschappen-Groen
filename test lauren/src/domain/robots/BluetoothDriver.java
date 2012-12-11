@@ -1,5 +1,7 @@
 package domain.robots;
 
+import java.util.Stack;
+
 import bluetooth.BTCommPC;
 import bluetooth.CMD;
 
@@ -25,11 +27,12 @@ public class BluetoothDriver {
 
 	private double _robotRotateSpeed;
 
-	private double _robotTravelSpeed;
-
+	private double _robotTravelSpeed;	
 	// This object is only used so that we can use wait and notify without
 	// locking the differentialPilotObject
-	private WaitObject moveWaiter;
+	private Stack<WaitObject> moveWaitStack= new Stack<WaitObject>();
+
+
 
 	/**
 	 * Allocates a DifferentialPilot object, and sets the physical parameters of
@@ -88,15 +91,8 @@ public class BluetoothDriver {
 				rotation = poseValues[2];
 				prevMovingBool = poseValues[3] > 0;
 				if (!prevMovingBool) {
-					try {
-						synchronized (moveWaiter) {
-							moveWaiter.setNotifiedTrue();
-							moveWaiter.notifyAll();
-						}
-					} catch (NullPointerException e) {
-						// this is when there is no movewaiter and this is
-						// normal for endless moves.
-					}
+					notifyMoveWaiters();
+				
 				}
 				lastPoseUpdateTime = System.currentTimeMillis();
 			}
@@ -161,8 +157,10 @@ public class BluetoothDriver {
 	public void rotate(final double angle) {
 		prevMovingBool = true;
 		// TODO Francis zien wat te doen met de double value van angle
-		btComm.sendCommand(CMD.TURN, angle);
-		waitUntilMovingStops();
+		WaitObject moveWaiter= new WaitObject();
+		pushMoveWaiter(moveWaiter);
+		btComm.sendCommand(CMD.TURN, angle, moveWaiter);
+//		waitUntilMovingStops();
 	}
 
 	/*
@@ -172,6 +170,10 @@ public class BluetoothDriver {
 	// protected void continueMoving()
 	// {
 	// }
+
+	private void pushMoveWaiter(WaitObject newMoveWaiter) {
+		moveWaitStack.push(newMoveWaiter);
+	}
 
 	/**
 	 * Stops the NXT robot.
@@ -203,20 +205,23 @@ public class BluetoothDriver {
 		}
 		prevMovingBool = true;
 		// TODO Francis: zien wat te doen met die double waarde van distance
-		btComm.sendCommand(CMD.TRAVEL, distance);
+		WaitObject moveWaiter= new WaitObject(); 
+		pushMoveWaiter(moveWaiter);
+		btComm.sendCommand(CMD.TRAVEL, distance, moveWaiter);
 		// setMoveType( MoveType.STOP);
-		waitUntilMovingStops();
+//		waitUntilMovingStops();
 	}
 
-	private void waitUntilMovingStops() {
-		if (moveWaiter != null) {
-				moveWaiter.customWait();
-		}
-		moveWaiter = new WaitObject();
-		moveWaiter.customWait();
-
-		moveWaiter = null;
-	}
+//	private void waitUntilMovingStops() {
+//		if (moveWaiter != null) {
+//				
+//			moveWaiter.customWait();
+//		}
+//		moveWaiter = new WaitObject();
+//		moveWaiter.customWait();
+//
+//		moveWaiter = null;
+//	}
 
 	public void keepTurning(boolean left) {
 		btComm.sendCommand(CMD.KEEPTURNING, (left ? 1 : -1));
@@ -234,13 +239,23 @@ public class BluetoothDriver {
 	public void interrupt() {
 		stop();
 		prevMovingBool = false;
-		try {
-			synchronized (moveWaiter) {
-				moveWaiter.setNotifiedTrue();
-				moveWaiter.notifyAll();
+		notifyMoveWaiters();
+	}
+
+	private void notifyMoveWaiters() {
+		if(moveWaitStack.isEmpty())
+			return; //This is for speed optimalization
+	
+		synchronized (moveWaitStack) {
+		for (int i = 0; i < moveWaitStack.size(); i++) {
+				WaitObject topElement = moveWaitStack.peek();
+				topElement.customNotifyAll();
+				// We now check whether the notify was blocked		
+				moveWaitStack.remove(topElement);
+				if (!topElement.hasReallyBeenNotified()) {
+					moveWaitStack.insertElementAt(topElement, 0);
+				}
 			}
-		} catch (NullPointerException e) {
-			// This is no problem
-		}
+		}		
 	}
 }

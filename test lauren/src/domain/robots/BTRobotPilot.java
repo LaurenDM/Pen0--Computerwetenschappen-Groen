@@ -216,6 +216,9 @@ public class BTRobotPilot implements RobotPilot  {
 				updateSensorValues(false);
 			return prevLightValue;
 		}catch(Exception e){
+			System.out.println();
+			System.out.println(e.getClass()+" "+e.getMessage());
+			e.printStackTrace();
 			System.out.println("could not read light value from robot ");
 			return -100;
 			//TODO i3+

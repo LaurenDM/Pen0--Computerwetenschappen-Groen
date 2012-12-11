@@ -7,7 +7,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -23,6 +25,7 @@ import lejos.pc.comm.NXTCommException;
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTConnector;
 import lejos.pc.comm.NXTInfo;
+import lejos.util.PilotProps;
 
 public class BTCommPC  implements SpecialReplyCode {
 
@@ -40,6 +43,7 @@ public class BTCommPC  implements SpecialReplyCode {
 	private Queue<WaitObject> waitObjectQueue= new LinkedList<WaitObject>();
 	private WaitObject toBeWokenObject=null;
 	private BTRobotPilot robot;
+	private List<WaitObject> replyWaitList= new ArrayList<WaitObject>();
 
 	public boolean sendingIsPossible() {
 		return !sendingIsBlocked;
@@ -64,13 +68,14 @@ public class BTCommPC  implements SpecialReplyCode {
 		try {
 			_nxtComm = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
 			NXTConnector conn = new NXTConnector();
-			NXTInfo[] nxtInfo= conn.search(deviceName, BTaddress, NXTCommFactory.BLUETOOTH);
-			_nxtInfo=nxtInfo[0];
+			NXTInfo[] nxtInfo = conn.search(deviceName, BTaddress,
+					NXTCommFactory.BLUETOOTH);
+			_nxtInfo = nxtInfo[0];
 		} catch (NXTCommException e) {
 			throw new ConnectErrorException();
 		}
 		try {
-			_opened = _nxtComm.open(_nxtInfo); 
+			_opened = _nxtComm.open(_nxtInfo);
 		} catch (NXTCommException e) {
 			throw new ConnectErrorException();
 		} finally {
@@ -88,7 +93,7 @@ public class BTCommPC  implements SpecialReplyCode {
 		return _opened;
 	}
 
-	public boolean close(){
+	public boolean close() {
 
 		_closed = false;
 		try {
@@ -104,122 +109,209 @@ public class BTCommPC  implements SpecialReplyCode {
 		return _closed;
 	}
 
-	public DataOutputStream getOutputStream(){
+	public DataOutputStream getOutputStream() {
 		return _dos;
 	}
 
-	public DataInputStream getInputStream(){
+	public DataInputStream getInputStream() {
 		return _dis;
 	}
 
-	public boolean isOpened(){
+	public boolean isOpened() {
 		return _opened;
 	}
 
-	public boolean isClosed(){
+	public boolean isClosed() {
 		return _closed;
 	}
-	public synchronized int[]  sendCommand(int  command, double argument) {
-		return sendCommand(command,(int) (100*argument));
+
+	public int[] sendCommand(int command) {
+		return sendCommand(command, 0, null);
 	}
-	private int[] sendCommand(int  command, int argument) {
-		try{
-		//TODO kijken of we deze code nog willen, is eerder voor debug
-		//We testen even of alle tickets al gebruikt zijn.
-		if(sendingIsPossible()&&!waitObjectQueue.isEmpty()){
-			try {
-				System.out.println("Something has gone wrong, we are going to wait a little");
-				// We wachten hier 10 milliseconden om de wachtende
-				// send-commands de tijd te geven om toch uit te voeren indien
-				// ze een ticket hebben dat aan de beurt zou komen.
-				Thread.sleep(10);
-				// Nu kijken we nogeens of we nogaltijd in deze foute staat
-				// zitten.
-				if (sendingIsPossible() && !waitObjectQueue.isEmpty()) {
-					takeNextWaiter();
+
+	public int[] sendCommand(int command, double argument) {
+		return sendCommand(command, (int) (100 * argument), null);
+	}
+
+	public int[] sendCommand(int command, double argument,
+			WaitObject replyWaiter) {
+		return sendCommand(command, (int) (100 * argument), replyWaiter);
+	}
+
+	private int[] sendCommand(int command, int argument, WaitObject replyWaiter) {
+		try {
+			// TODO kijken of we deze code nog willen, is eerder voor debug
+			// We testen even of alle tickets al gebruikt zijn.
+			if (sendingIsPossible() && !waitObjectQueue.isEmpty()) {
+				try {
 					System.out
-					.println("Something has gone wrong, we forcibly denied a send request and alarmed a waitingObject");
+							.println("Something has gone wrong, we are going to wait a little");
+					// We wachten hier 10 milliseconden om de wachtende
+					// send-commands de tijd te geven om toch uit te voeren
+					// indien
+					// ze een ticket hebben dat aan de beurt zou komen.
+					Thread.sleep(10);
+					// Nu kijken we nogeens of we nogaltijd in deze foute staat
+					// zitten.
+					if (sendingIsPossible() && !waitObjectQueue.isEmpty()) {
+						takeNextWaiter();
+						System.out
+								.println("Something has gone wrong, we forcibly denied a send request and alarmed a waitingObject");
+					}
+				} catch (InterruptedException e) {
+					return null;
 				}
-			} catch (InterruptedException e) {
-				return null;
+
 			}
 
-		}
+			if (!sendingIsPossible()) {
+				if (command == CMD.GETPOSE || command == CMD.GETSENSORVALUES) {
+					return null;
+				}
 
-		if (!sendingIsPossible()) {
-			if (command == CMD.GETPOSE || command == CMD.GETSENSORVALUES) {
-				return null;
-			}
-
-			WaitObject thisThreadsWaitObject = new WaitObject();
-			synchronized (waitObjectQueue) {
-				waitObjectQueue.add(thisThreadsWaitObject);
-			}
-			try {
-				while (!thisThreadsWaitObject.hasReallyBeenNotified()) {
-					{
-						synchronized (thisThreadsWaitObject) {
-							thisThreadsWaitObject.wait();
+				WaitObject thisThreadsWaitObject = new WaitObject();
+				synchronized (waitObjectQueue) {
+					waitObjectQueue.add(thisThreadsWaitObject);
+				}
+				try {
+					while (!thisThreadsWaitObject.hasReallyBeenNotified()) {
+						{
+							synchronized (thisThreadsWaitObject) {
+								thisThreadsWaitObject.wait();
+							}
 						}
 					}
+					toBeWokenObject = null;
+				} catch (InterruptedException e) {
+					// This is not a problem, because in this case the command
+					// doesn't have to be sent anymore.
+					synchronized (waitObjectQueue) {
+						waitObjectQueue.remove(thisThreadsWaitObject);
+					}
+					return null;
 				}
-				toBeWokenObject = null;
-			} catch (InterruptedException e) {
-				// This is not a problem, because in this case the command
-				// doesn't have to be sent anymore.
-				synchronized (waitObjectQueue) {
-					waitObjectQueue.remove(thisThreadsWaitObject);
-				}
-				return null;
 			}
-		}
 
-		blockSending();
-		int[] reply=null;
-			
-		try {
-				reply=sendCommandForReal(command, argument);
+			blockSending();
+			int[] reply = null;
+			// We try to send the command two times, if this would fail then
+			// bluetooth connection is failing
+			try {
+				reply = sendCommandForReal(command, argument);
 			} catch (BluetoothStateException e) {
 				try {
-					reply=sendCommandForReal(command, argument);
-			} catch (BluetoothStateException e2) {
-				throw new BluetoothStateException();
+					reply = sendCommandForReal(command, argument);
+				} catch (BluetoothStateException e2) {
+					throw new BluetoothStateException();
+				}
 			}
-		}
-		int[] returnReply = new int[0];			
-		int k = 2;
-		int numberOfSpecialReplies=0;
-		if (reply != null &&reply.length>0&& reply[0] > 0) {
-			numberOfSpecialReplies= reply[0]-1;
+			int[] returnReply = new int[0];
+			int k = 2;
+			int numberOfSpecialReplies = 0;
+			if (reply != null && reply.length > 0 && reply[0] > 0) {
+				numberOfSpecialReplies = reply[0] - 1;
 
-			// reply[1] should containt the first ReplyLenght, and only the
-			// first reply is an answer to this sendCommand call, the others are special replies
-			returnReply = new int[reply[1]];
-			for (int i = 0; i < returnReply.length; i++) {
-				returnReply[i] = reply[k++];
+				// reply[1] should containt the first ReplyLenght, and only the
+				// first reply is an answer to this sendCommand call, the others
+				// are special replies
+				returnReply = new int[reply[1]];
+				for (int i = 0; i < returnReply.length; i++) {
+					returnReply[i] = reply[k++];
+				}
 			}
-		}
-		if (!waitObjectQueue.isEmpty()) {
-			takeNextWaiter();
-		} else {
-			unblockSending();
-		}
-		for(int i=0;i<numberOfSpecialReplies;i++){
-			int SpecialReplyCode=reply[k++];
-			int[] specialArgs=new int[reply[k++]];
-			for(int j=0;j<specialArgs.length; j++){
-				specialArgs[j]=reply[k++];
+			Thread isMoveUpdater = null;
+			cleanReplyWaitList();
+			List<WaitObject> blockedWaiters = null;
+			if (numberOfSpecialReplies > 0) {
+				isMoveUpdater=new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						while(!Thread.interrupted()){
+							try {
+								Thread.sleep(100);
+							} catch (InterruptedException e) {
+								break;
+							}
+							//TODO isMoving aanmaken in robot
+							robot.getOrientation();
+						}
+					}
+				});
+				isMoveUpdater.start();
+				blockedWaiters = blockReplyWaiters();
 			}
-			switchOnSpecialReply(SpecialReplyCode, specialArgs);
+			if (!waitObjectQueue.isEmpty()) {
+				takeNextWaiter();
+			} else {
+				unblockSending();
+			}
+			for (int i = 0; i < numberOfSpecialReplies; i++) {
+				int SpecialReplyCode = reply[k++];
+				int[] specialArgs = new int[reply[k++]];
+				for (int j = 0; j < specialArgs.length; j++) {
+					specialArgs[j] = reply[k++];
+				}
+				switchOnSpecialReply(SpecialReplyCode, specialArgs);
 
-		}
-	
-		return returnReply;
-		}catch (Exception e) {
+			}
+			if (numberOfSpecialReplies > 0) {
+				unBlockReplyWaiters(blockedWaiters);
+			}
+
+			if (replyWaiter != null) {
+				replyWaitList.add(replyWaiter);
+				replyWaiter.customWait();
+			}
+			if(isMoveUpdater!=null){
+			isMoveUpdater.interrupt();}
+			return returnReply;
+			
+		} catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException("something is wrong with your code or the robot is disconnected");
+			System.out.println(e.getClass()+" "+e.getMessage());
+			System.out.println();
+			throw new RuntimeException(
+					"something is wrong with your code or the robot is disconnected");
+		}
+
+	}
+
+	private void cleanReplyWaitList() {
+		if(replyWaitList.isEmpty())
+			return;
+		synchronized (replyWaitList) {
+		for(int i=0;i<replyWaitList.size();i++){
+			if (replyWaitList.get(i).hasReallyBeenNotified()) {
+				replyWaitList.remove(i);
 			}
-		
+		}
+	}
+	}
+
+	private void unBlockReplyWaiters(List<WaitObject> blockedList) {
+		if (blockedList == null || blockedList.isEmpty()) {
+			return;
+		}
+		synchronized (replyWaitList) {
+			for (WaitObject blockedWaiter : blockedList) {
+				blockedWaiter.unBlockNotify();
+				replyWaitList.remove(blockedWaiter);
+			}
+		}
+
+	}
+
+	private List<WaitObject> blockReplyWaiters() {
+		List<WaitObject> blockedList = new ArrayList<WaitObject>();
+		synchronized (replyWaitList) {
+			for (int i=0;i< replyWaitList.size(); i++) {
+				WaitObject waitObject= replyWaitList.get(i);
+				waitObject.blockNotify();
+				blockedList.add(waitObject);				
+			}
+		}
+		return blockedList;
 	}
 
 	private void takeNextWaiter() {
@@ -234,10 +326,6 @@ public class BTCommPC  implements SpecialReplyCode {
 
 			}
 		}
-	}
-
-	public int[] sendCommand(int command) {
-		return sendCommand(command, 0);
 	}
 
 	private int[] sendCommandForReal(int command, int argument)
