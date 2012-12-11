@@ -487,7 +487,7 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void setDriveToFinishSpeed() {
-		setMovingSpeed(getDefaultMovingSpeed()*2);
+		btComm.sendCommand(CMD.DRIVEFAST);
 	}
 
 }
