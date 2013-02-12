@@ -10,6 +10,7 @@ import java.awt.event.KeyListener;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -18,6 +19,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+
+import org.jfree.ui.Align;
 
 import controller.Controller;
 import domain.barcodes.Barcode;
@@ -73,23 +76,24 @@ public class ContentPanel implements ActionListener {
     	object.setLayout(null);
     	object.setLocation(xco, yco);
     	object.setSize(xsize, ysize);
-    	object.setHorizontalAlignment(0);
+    	object.setHorizontalAlignment(JLabel.LEFT);
         object.setForeground(Color.black);
     	//totalGUI.add(object);
     	source.add(object);
     }
-    
-    public void fixButtonLayout(JPanel source, JButton jButton, int xsize, int ysize, int xco, int yco){
-
-    	   Font curFont = jButton.getFont();
-
-    	jButton.setFont(new Font(curFont.getFontName(), curFont.getStyle(), 10));
+    public void fixButtonLayout(JPanel source, JButton jButton, int xsize, int ysize, int xco, int yco, int fontSize){
+    	Font curFont = jButton.getFont();
+    	jButton.setFont(new Font(curFont.getFontName(), curFont.getStyle(), fontSize));
     	jButton.setHorizontalAlignment(0);
     	jButton.setLayout(null);
     	jButton.setLocation(xco, yco);
     	jButton.setSize(xsize, ysize);
     	jButton.addActionListener(this);
     	source.add(jButton);
+    }
+
+    public void fixButtonLayout(JPanel source, JButton jButton, int xsize, int ysize, int xco, int yco){
+    	fixButtonLayout(source, jButton, xsize, ysize, xco,  yco, 9);
     }
     
     public Button getCurrentPressedButton(){
@@ -147,8 +151,6 @@ public class ContentPanel implements ActionListener {
         fixPanelLayout(buttonPanel, 300, 500, 800, 250);
         buttonPanel.addKeyListener(l);
         
-        buttonLabel = new JLabel("Control the robot here");
-        fixLabelLayout(buttonPanel, buttonLabel, 300, 20, 0, 0);
         
         actionLabel = new JLabel("The robot is doing nothing at this moment.");
         fixLabelLayout(buttonPanel, actionLabel, 300, 30, 0, buttonYDimension + 180);
@@ -274,35 +276,43 @@ public class ContentPanel implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(debugText);
         debugText.setEditable(false);
         debugPanel.add(scrollPane);
-        fixPanelLayout(debugPanel, 300, 300, 815, 50);
+        fixPanelLayout(debugPanel, 365, 300, 750, 50);
         scrollPane.setLocation(0, 0);
-        scrollPane.setSize(250,100);
+        scrollPane.setSize(315,100);
         writeToDebug("Program started successfully");
         //Infolabels
         xLabel = new JLabel("X: 0");
         xLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, xLabel, 125, 20, 0, 100);
+        
         yLabel = new JLabel("Y: 0");
         yLabel.setHorizontalTextPosition(JLabel.LEFT);
-        fixLabelLayout(debugPanel, yLabel, 125, 20, 125, 100);
+        fixLabelLayout(debugPanel, yLabel, 125, 20, 100, 100);
+        
+        touchingLabel = new JLabel("Touch: FALSE");
+        touchingLabel.setHorizontalTextPosition(JLabel.LEFT);
+        fixLabelLayout(debugPanel, touchingLabel, 125, 20, 200, 100);
+        
         speedLabel = new JLabel("Speed: 0");
         speedLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, speedLabel, 125, 20, 0, 120);
+        
         angleLabel = new JLabel("Angle: 0");
         angleLabel.setHorizontalTextPosition(JLabel.LEFT);
-        fixLabelLayout(debugPanel, angleLabel, 125, 20, 125, 120);
-		lightLabel = new JLabel("Lightsensor: 0");
-	    lightLabel.setHorizontalTextPosition(JLabel.LEFT);
-	    fixLabelLayout(debugPanel, lightLabel, 125, 20, 0, 140);
-        distanceLabel = new JLabel("Distance: 0");
-        distanceLabel.setHorizontalTextPosition(JLabel.LEFT);
-        fixLabelLayout(debugPanel, distanceLabel, 125, 20, 125, 140);
-        touchingLabel = new JLabel("Touching: FALSE");
-        touchingLabel.setHorizontalTextPosition(JLabel.LEFT);
-        fixLabelLayout(debugPanel, touchingLabel, 125, 20, 0, 160);
+        fixLabelLayout(debugPanel, angleLabel, 125, 20, 100, 120);
+		
+//        lightLabel = new JLabel("Lightsensor: 0");
+//	    lightLabel.setHorizontalTextPosition(JLabel.LEFT);
+//	    fixLabelLayout(debugPanel, lightLabel, 125, 20, 0, 140);
+//        
+//	    distanceLabel = new JLabel("Distance: 0");
+//        distanceLabel.setHorizontalTextPosition(JLabel.LEFT);
+//        fixLabelLayout(debugPanel, distanceLabel, 125, 20, 125, 140);
+//        TODO Francis: vervangen door grafiek
+        
         lineLabel = new JLabel("Line: FALSE");
         lineLabel.setHorizontalTextPosition(JLabel.LEFT);
-        fixLabelLayout(debugPanel, lineLabel, 125, 20, 0, 180);
+        fixLabelLayout(debugPanel, lineLabel, 125, 20, 200, 120);
 
 	}
 	
@@ -666,11 +676,11 @@ public class ContentPanel implements ActionListener {
     }
     
     public void setRobotLightValue(double value){
-    	lightLabel.setText("Lightsensor: " + Double.valueOf(value).intValue());
+//    	lightLabel.setText("Lightsensor: " + Double.valueOf(value).intValue()); TODO Francis
     }
     
     public void setRobotDistanceValue(double value){
-    	distanceLabel.setText("Distance: " + Double.valueOf(value).intValue());
+//    	distanceLabel.setText("Distance: " + Double.valueOf(value).intValue()); TODO Francis
     }
     
     public void setRobotTouchingValue(boolean value){
