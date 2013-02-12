@@ -2,6 +2,7 @@ package gui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FileDialog;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -78,13 +79,17 @@ public class ContentPanel implements ActionListener {
     	source.add(object);
     }
     
-    public void fixButtonLayout(JPanel source, JButton object, int xsize, int ysize, int xco, int yco){
-    	object.setHorizontalAlignment(0);
-    	object.setLayout(null);
-    	object.setLocation(xco, yco);
-    	object.setSize(xsize, ysize);
-    	object.addActionListener(this);
-    	source.add(object);
+    public void fixButtonLayout(JPanel source, JButton jButton, int xsize, int ysize, int xco, int yco){
+
+    	   Font curFont = jButton.getFont();
+
+    	jButton.setFont(new Font(curFont.getFontName(), curFont.getStyle(), 10));
+    	jButton.setHorizontalAlignment(0);
+    	jButton.setLayout(null);
+    	jButton.setLocation(xco, yco);
+    	jButton.setSize(xsize, ysize);
+    	jButton.addActionListener(this);
+    	source.add(jButton);
     }
     
     public Button getCurrentPressedButton(){
@@ -171,7 +176,7 @@ public class ContentPanel implements ActionListener {
         cancelButton = new JButton("STOP");
         fixButtonLayout(buttonPanel, cancelButton, 240, 30, 30, buttonYDimension + 110);
         
-        variableButton = new JButton("EDIT POLYGON VARIABLES");
+        variableButton = new JButton("POLYGON");
         fixButtonLayout(buttonPanel, variableButton, 240, 30, 30, buttonYDimension + 140);
         
         connectButton = new JButton("CONNECT TO ROBOT");
@@ -180,13 +185,13 @@ public class ContentPanel implements ActionListener {
         calibrateButton = new JButton("CALIBRATE LIGHTSENSOR");
         fixButtonLayout(buttonPanel, calibrateButton, 240, 30, 30, buttonYDimension + 250);
         
-        sensorOrientationButton = new JButton("SET SENSOR ORIENTATION");
+        sensorOrientationButton = new JButton("SENSOR ANGLE");
         fixButtonLayout(buttonPanel, sensorOrientationButton, 240, 30, 30, buttonYDimension + 280);
         
-        loadMazeButton = new JButton("LOAD MAZE FROM FILE");
+        loadMazeButton = new JButton("LOAD MAZE");
         fixButtonLayout(buttonPanel, loadMazeButton, 240, 30, 30, buttonYDimension + 310);
         
-        straightenButton = new JButton("STRAIGHTEN AT WHITE LINE");
+        straightenButton = new JButton("STRAIGHTEN");
         fixButtonLayout(buttonPanel, straightenButton, 240, 30, 30, buttonYDimension + 340);
         
         barcodeButton = new JButton("FIND BARCODE");
