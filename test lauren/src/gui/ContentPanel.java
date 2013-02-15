@@ -49,6 +49,9 @@ public class ContentPanel implements ActionListener {
     final static int allButtonHeight = 20;
     final static int wideButtonWidth=150;
 	final static int rightPanelWidth=365;
+	final static int yPaddingTop=50;
+	final static int debugPanelHeight=100+2*20; //100 for the scrollpane an 2*20 for 2 textlines
+	final static int sensorGraphsPanelHeight=350;
 
     private boolean connected = false;
     private DrawingPanel drawingPanel;
@@ -64,6 +67,7 @@ public class ContentPanel implements ActionListener {
 	
     
     Controller controller;
+
     public void setFocusButtons(){
     	buttonPanel.requestFocusInWindow();
     }
@@ -140,10 +144,10 @@ public class ContentPanel implements ActionListener {
         //___________________________________________________________
         // Creation of a Panel to contain the title labels
         titlePanel = new JPanel();
-        fixPanelLayout(titlePanel, totalXDimensions, 30, 0, 0);
+        fixPanelLayout(titlePanel, totalXDimensions, allButtonHeight, 0, 0);
         //Set the titleLabel
         titleLabel = new JLabel("P&O - Team Groen");
-        fixLabelLayout(titlePanel, titleLabel, totalXDimensions, 30, 0, 0);
+        fixLabelLayout(titlePanel, titleLabel, totalXDimensions, allButtonHeight, 0, 0);
         
         //Definition of the KeyListener
         KeyListener l = createListener();
@@ -151,12 +155,12 @@ public class ContentPanel implements ActionListener {
         //___________________________________________________
         // Creation of a Panel to contain all the JButtons.
         buttonPanel = new JPanel();
-        fixPanelLayout(buttonPanel, 300, 500, 800, 250);
+		fixPanelLayout(buttonPanel, 300,8*allButtonHeight, 750, yPaddingTop+debugPanelHeight+sensorGraphsPanelHeight);
         buttonPanel.addKeyListener(l);
         
         
         actionLabel = new JLabel("The robot is doing nothing at this moment.");
-        fixLabelLayout(buttonPanel, actionLabel, 300, allButtonHeight, 0, allButtonHeight + 180);
+        fixLabelLayout(buttonPanel, actionLabel, 300, allButtonHeight, 0, 7*allButtonHeight);
         
        
 
@@ -179,31 +183,31 @@ public class ContentPanel implements ActionListener {
         fixButtonLayout(buttonPanel,rotateSlowRight, moveButtonWidth, allButtonHeight, 2*moveButtonWidth, allButtonHeight);
         
         cancelButton = new JButton("STOP");
-		fixButtonLayout(buttonPanel, cancelButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 110);
+		fixButtonLayout(buttonPanel, cancelButton, wideButtonWidth, allButtonHeight, 0, 2*allButtonHeight );
         
         variableButton = new JButton("POLYGON");
-        fixButtonLayout(buttonPanel, variableButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 140);
+        fixButtonLayout(buttonPanel, variableButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 2*allButtonHeight);
         
         connectButton = new JButton("CONNECT TO ROBOT");
-        fixButtonLayout(buttonPanel, connectButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 220);
+        fixButtonLayout(buttonPanel, connectButton, wideButtonWidth, allButtonHeight, 0, 3*allButtonHeight );
         
         calibrateButton = new JButton("CALIBRATE LIGHTSENSOR");
-        fixButtonLayout(buttonPanel, calibrateButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 250);
+        fixButtonLayout(buttonPanel, calibrateButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 3*allButtonHeight);
         
         sensorOrientationButton = new JButton("SENSOR ANGLE");
-        fixButtonLayout(buttonPanel, sensorOrientationButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 280);
+        fixButtonLayout(buttonPanel, sensorOrientationButton, wideButtonWidth, allButtonHeight, 0, 4*allButtonHeight);
         
         loadMazeButton = new JButton("LOAD MAZE");
-        fixButtonLayout(buttonPanel, loadMazeButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 310);
+        fixButtonLayout(buttonPanel, loadMazeButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 4*allButtonHeight);
         
         straightenButton = new JButton("STRAIGHTEN");
-        fixButtonLayout(buttonPanel, straightenButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 340);
+        fixButtonLayout(buttonPanel, straightenButton, wideButtonWidth, allButtonHeight, 0, 5*allButtonHeight);
         
         barcodeButton = new JButton("FIND BARCODE");
-        fixButtonLayout(buttonPanel, barcodeButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 370);
+        fixButtonLayout(buttonPanel, barcodeButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 5*allButtonHeight);
         
         sensorButton = new JButton("DISABLE TURN ERROR");
-        fixButtonLayout(buttonPanel, sensorButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 400);
+        fixButtonLayout(buttonPanel, sensorButton, wideButtonWidth, allButtonHeight, 0, 6*allButtonHeight);
         
         startButton = new JButton("Start");
 //        fixButtonLayout(buttonPanel, startButton, 20, 150, 0, 0);
@@ -216,16 +220,16 @@ public class ContentPanel implements ActionListener {
         bottomButtonPanel.addKeyListener(l);
         
         startButton = new JButton("Start exploring");
-        fixButtonLayout(bottomButtonPanel, startButton, 150, 30, 0, 0);
+        fixButtonLayout(bottomButtonPanel, startButton, 150, allButtonHeight, 0, 0);
         
         resumeButton = new JButton("Resume exploring");
-        fixButtonLayout(bottomButtonPanel, resumeButton, 150, 30, 170, 0);
+        fixButtonLayout(bottomButtonPanel, resumeButton, 150, allButtonHeight, 170, 0);
         
         finishButton = new JButton("Drive to finish");
-        fixButtonLayout(bottomButtonPanel, finishButton, 150, 30, 340, 0);
+        fixButtonLayout(bottomButtonPanel, finishButton, 150, allButtonHeight, 340, 0);
         
         resetButton = new JButton("Reset");
-        fixButtonLayout(bottomButtonPanel, resetButton, 150, 30, 510, 0);
+        fixButtonLayout(bottomButtonPanel, resetButton, 150, allButtonHeight, 510, 0);
         
         bottomButtonPanel.setFocusable(true);
         
@@ -238,7 +242,7 @@ public class ContentPanel implements ActionListener {
         //_________________________________________________________________________
         // Creation of a Drawing Panel to display the map and the robot's movements
         drawingPanel = new DrawingPanel(this);
-        fixPanelLayout(drawingPanel, 700, 600, 25, 50);
+        fixPanelLayout(drawingPanel, 700, 600, 25, yPaddingTop);
         drawingPanel.setBackground(Color.WHITE);
         
         //________________________
@@ -279,7 +283,7 @@ public class ContentPanel implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(debugText);
         debugText.setEditable(false);
         debugPanel.add(scrollPane);
-        fixPanelLayout(debugPanel, rightPanelWidth, 300, 750, 50);
+        fixPanelLayout(debugPanel, rightPanelWidth, debugPanelHeight , 750, yPaddingTop);
         scrollPane.setLocation(0, 0);
         scrollPane.setSize(315,100);
         writeToDebug("Program started successfully");
