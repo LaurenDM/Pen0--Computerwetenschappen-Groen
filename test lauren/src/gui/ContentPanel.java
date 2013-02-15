@@ -43,10 +43,13 @@ public class ContentPanel implements ActionListener {
     private static JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
-    static int totalXDimensions = 1100;
-    static int totalYDimensions = 750;
-    static int buttonXDimension = 90;
-    static int buttonYDimension = 30;
+    final static int totalXDimensions = 1100;
+//    final static int totalYDimensions = 750; TODO verwijderen indien niet gebruikt na i4
+    final static int moveButtonWidth = 100;
+    final static int allButtonHeight = 20;
+    final static int wideButtonWidth=150;
+	final static int rightPanelWidth=365;
+
     private boolean connected = false;
     private DrawingPanel drawingPanel;
     private boolean upButtonPressed = false;
@@ -153,54 +156,54 @@ public class ContentPanel implements ActionListener {
         
         
         actionLabel = new JLabel("The robot is doing nothing at this moment.");
-        fixLabelLayout(buttonPanel, actionLabel, 300, 30, 0, buttonYDimension + 180);
+        fixLabelLayout(buttonPanel, actionLabel, 300, allButtonHeight, 0, allButtonHeight + 180);
         
        
 
         upButton = new JButton("FORWARD");
-        fixButtonLayout(buttonPanel, upButton, 120, 30, buttonXDimension, buttonYDimension);
+        fixButtonLayout(buttonPanel, upButton, moveButtonWidth, allButtonHeight, moveButtonWidth, 0);
 
         rightButton = new JButton("RIGHT");
-        fixButtonLayout(buttonPanel, rightButton, 120, 30, 155, buttonYDimension + 30);
+        fixButtonLayout(buttonPanel, rightButton, moveButtonWidth, allButtonHeight, 2*moveButtonWidth, 0);
 
         leftButton = new JButton("LEFT");
-        fixButtonLayout(buttonPanel, leftButton, 120, 30, 25, buttonYDimension + 30);
+        fixButtonLayout(buttonPanel, leftButton, moveButtonWidth, allButtonHeight, 0, 0);
         
         downButton = new JButton("BACKWARD");
-        fixButtonLayout(buttonPanel, downButton, 120, 30, buttonXDimension, buttonYDimension + 60);
+        fixButtonLayout(buttonPanel, downButton, moveButtonWidth , allButtonHeight, moveButtonWidth, allButtonHeight);
         
         rotateSlowLeft = new JButton("Slow L");
-        fixButtonLayout(buttonPanel, rotateSlowLeft, 70, 30, 25, buttonYDimension + 60);
+        fixButtonLayout(buttonPanel, rotateSlowLeft, moveButtonWidth, allButtonHeight, 0, allButtonHeight);
         
         rotateSlowRight = new JButton("Slow R");
-        fixButtonLayout(buttonPanel,rotateSlowRight, 70, 30, buttonXDimension + 115, buttonYDimension + 60);
+        fixButtonLayout(buttonPanel,rotateSlowRight, moveButtonWidth, allButtonHeight, 2*moveButtonWidth, allButtonHeight);
         
         cancelButton = new JButton("STOP");
-        fixButtonLayout(buttonPanel, cancelButton, 240, 30, 30, buttonYDimension + 110);
+		fixButtonLayout(buttonPanel, cancelButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 110);
         
         variableButton = new JButton("POLYGON");
-        fixButtonLayout(buttonPanel, variableButton, 240, 30, 30, buttonYDimension + 140);
+        fixButtonLayout(buttonPanel, variableButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 140);
         
         connectButton = new JButton("CONNECT TO ROBOT");
-        fixButtonLayout(buttonPanel, connectButton, 240, 30, 30, buttonYDimension + 220);
+        fixButtonLayout(buttonPanel, connectButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 220);
         
         calibrateButton = new JButton("CALIBRATE LIGHTSENSOR");
-        fixButtonLayout(buttonPanel, calibrateButton, 240, 30, 30, buttonYDimension + 250);
+        fixButtonLayout(buttonPanel, calibrateButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 250);
         
         sensorOrientationButton = new JButton("SENSOR ANGLE");
-        fixButtonLayout(buttonPanel, sensorOrientationButton, 240, 30, 30, buttonYDimension + 280);
+        fixButtonLayout(buttonPanel, sensorOrientationButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 280);
         
         loadMazeButton = new JButton("LOAD MAZE");
-        fixButtonLayout(buttonPanel, loadMazeButton, 240, 30, 30, buttonYDimension + 310);
+        fixButtonLayout(buttonPanel, loadMazeButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 310);
         
         straightenButton = new JButton("STRAIGHTEN");
-        fixButtonLayout(buttonPanel, straightenButton, 240, 30, 30, buttonYDimension + 340);
+        fixButtonLayout(buttonPanel, straightenButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 340);
         
         barcodeButton = new JButton("FIND BARCODE");
-        fixButtonLayout(buttonPanel, barcodeButton, 240, 30, 30, buttonYDimension + 370);
+        fixButtonLayout(buttonPanel, barcodeButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 370);
         
-        sensorButton = new JButton("DISABLE TURNING ERROR");
-        fixButtonLayout(buttonPanel, sensorButton, 240, 30, 30, buttonYDimension + 400);
+        sensorButton = new JButton("DISABLE TURN ERROR");
+        fixButtonLayout(buttonPanel, sensorButton, wideButtonWidth, allButtonHeight, 30, allButtonHeight + 400);
         
         startButton = new JButton("Start");
 //        fixButtonLayout(buttonPanel, startButton, 20, 150, 0, 0);
@@ -276,7 +279,7 @@ public class ContentPanel implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(debugText);
         debugText.setEditable(false);
         debugPanel.add(scrollPane);
-        fixPanelLayout(debugPanel, 365, 300, 750, 50);
+        fixPanelLayout(debugPanel, rightPanelWidth, 300, 750, 50);
         scrollPane.setLocation(0, 0);
         scrollPane.setSize(315,100);
         writeToDebug("Program started successfully");
