@@ -51,7 +51,7 @@ public class ContentPanel implements ActionListener {
     final static int wideButtonWidth=150;
 	final static int rightPanelWidth=365;
 	final static int yPaddingTop=50;
-	final static int debugPanelHeight=100+2*20; //100 for the scrollpane an 2*20 for 2 textlines
+	final static int debugPanelHeight=100+3*20; //100 for the scrollpane an 2*20 for 2 textlines
 	final static int sensorGraphsPanelHeight=350;
 
     private boolean connected = false;
@@ -309,13 +309,13 @@ public class ContentPanel implements ActionListener {
         angleLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, angleLabel, 125, 20, 100, 120);
 		
-//        lightLabel = new JLabel("Lightsensor: 0");
-//	    lightLabel.setHorizontalTextPosition(JLabel.LEFT);
-//	    fixLabelLayout(debugPanel, lightLabel, 125, 20, 0, 140);
-//        
-//	    distanceLabel = new JLabel("Distance: 0");
-//        distanceLabel.setHorizontalTextPosition(JLabel.LEFT);
-//        fixLabelLayout(debugPanel, distanceLabel, 125, 20, 125, 140);
+        lightLabel = new JLabel("Lightsensor: 0");
+	    lightLabel.setHorizontalTextPosition(JLabel.LEFT);
+	    fixLabelLayout(debugPanel, lightLabel, 125, 20, 0, 140);
+        
+	    distanceLabel = new JLabel("Distance: 0");
+        distanceLabel.setHorizontalTextPosition(JLabel.LEFT);
+        fixLabelLayout(debugPanel, distanceLabel, 125, 20, 125, 140);
 //        TODO Francis: vervangen door grafiek
         
         lineLabel = new JLabel("Line: FALSE");
@@ -699,11 +699,11 @@ public class ContentPanel implements ActionListener {
     }
     
     public void setRobotLightValue(double value){
-//    	lightLabel.setText("Lightsensor: " + Double.valueOf(value).intValue()); TODO Francis
+    	lightLabel.setText("Lightsensor: " + Double.valueOf(value).intValue()); //TODO Francis
     }
     
     public void setRobotDistanceValue(double value){
-//    	distanceLabel.setText("Distance: " + Double.valueOf(value).intValue()); TODO Francis
+    	distanceLabel.setText("Distance: " + Double.valueOf(value).intValue()); //TODO Francis
     }
     
     public void setRobotTouchingValue(boolean value){
