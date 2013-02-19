@@ -108,6 +108,10 @@ public class ExploreMaze{
 		maze.setCurrentTileToCheckpoint();
 	}
 	
+	public void setNextTileToDeadEnd(){
+		maze.setNextTileToDeadEnd();
+	}
+	
 	private void moveWithStraighten(Direction direction) {
 		switch (direction) {
 		case LEFT:
