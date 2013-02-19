@@ -397,7 +397,7 @@ public class ContentPanel implements ActionListener {
     }
 	
 	public void ballAlert(){
-		actionLabel.setText("Robot picked up ball");
+		debugText.setText("Robot picked up ball");
 	}
 	
 

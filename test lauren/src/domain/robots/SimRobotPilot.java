@@ -707,6 +707,7 @@ public class SimRobotPilot implements RobotPilot {
 	}
 	@Override
 	public void fetchBall() {
+		maze.setNextTileToDeadEnd();
 		try {
 			move(40);
 		} catch (CannotMoveException e) {
@@ -714,6 +715,12 @@ public class SimRobotPilot implements RobotPilot {
 			e.printStackTrace();
 		}
 		board.removeBall(getPosition());
+		try {
+			move(-40);
+		} catch (CannotMoveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
