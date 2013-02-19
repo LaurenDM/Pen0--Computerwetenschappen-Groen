@@ -190,4 +190,7 @@ public interface CMD {
 	public static final int AUTOCALIBRATELS = 33;
 	public void autoCalibrateLightSensor(int difference);
 	
+	public static final int FETCHBALL = 34;
+	public void fetchBall();
+	
 }
