@@ -714,13 +714,6 @@ public class SimRobotPilot implements RobotPilot {
 			e.printStackTrace();
 		}
 		board.removeBall(getPosition());
-		turn(180);
-		try {
-			move(40);
-		} catch (CannotMoveException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	@Override
