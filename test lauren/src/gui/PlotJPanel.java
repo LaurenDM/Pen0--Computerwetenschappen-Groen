@@ -1,6 +1,7 @@
 package gui;
 import java.awt.BorderLayout;
 import java.awt.Button;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Frame;
 import java.awt.Panel;
@@ -13,6 +14,7 @@ import java.util.Properties;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import jcckit.GraphicsPlotCanvas;
 import jcckit.data.DataCurve;
@@ -32,26 +34,34 @@ public class PlotJPanel extends JPanel {
 	  private DataPlot _dataPlot;
 	private Properties _props;
 	private GraphicsPlotCanvas _plotCanvas;
-	private final int 	_noValues,
-						_minY,
-						_maxY;
-	public PlotJPanel(int noValues, int minY, int maxY){
+	private final int 		_noValues;
+	private final double	_minY,
+							_maxY;
+	DataCurve _curve;
+	
+	public PlotJPanel(int noValues, double minY, double maxY){
 		this._noValues=noValues;
 		_data=new int[noValues];
 		_minY=minY;
 		_maxY=maxY;
-		
-	}
-	  public void init() {
-	     _plotCanvas = createPlotCanvas();
-
+	    _plotCanvas = createPlotCanvas();
 	    _dataPlot = new DataPlot();
 	    _dataPlot.addElement(new DataCurve(""));
 	    _plotCanvas.connect(_dataPlot);
 	    this.setLayout(new BorderLayout());
 	    this.add(_plotCanvas.getGraphicsCanvas(), BorderLayout.CENTER);
-	    this.add(createControlPanel(), BorderLayout.SOUTH);
-	  }
+		_curve = new DataCurve("");
+	    for (int i = 0; i < _data.length; i++) {
+	      _curve.addElement(new DataPoint(i, _data[i]));
+	    }
+	    _dataPlot.replaceElementAt(0,_curve);	
+	    if(Math.random()>0.5)
+	    	this.setBackground(Color.RED);
+	    else 
+	    	this.setBackground(Color.BLUE);
+	    
+	}
+	 
 	 
 	  private GraphicsPlotCanvas createPlotCanvas() {
 	   _props = new Properties();
@@ -90,89 +100,63 @@ public class PlotJPanel extends JPanel {
 	    
 	    return newPlotCanvas;
 	  }
-	  
-	  private JPanel createControlPanel() {
-	    JPanel controlPanel = new JPanel();
-	    JButton startButton = new JButton("animate");
-	    startButton.addActionListener(new ActionListener() {
-	                public void actionPerformed(ActionEvent e) {
-	                  new Thread() {
-	                          public void run() {
-	                            animate();
-	                          }
-	                        }.start();
-	                }
-	              });
-	    controlPanel.add(startButton);
-	    
-	    return controlPanel;
-	  }
-	  
-	  private void animate() {
-//		    setXDomain(-10, 10);
 
-		  DataCurve curve = new DataCurve("");
-	    for (int i = 0; i < _data.length; i++) {
-	      curve.addElement(new DataPoint(i, _data[i]));
-	    }
-	    _dataPlot.replaceElementAt(0, curve);
-	    curve.removeElementAt(0);
-	  
-	//
+//	  
+//	  private void animate() {
+//		 _curve = new DataCurve("");
 //	    for (int i = 0; i < _data.length; i++) {
-//	      curve.replaceElementAt(i, new DataPoint(i,_data[i]));
-//	      try {
-//	        Thread.sleep(10);
-//	      } catch (InterruptedException e) {}
-//	    double x = i;
-//	      double y = 0;
-//	      double tester=-0.5;
-//	      while (y < _data[i]) {
-//	    	  tester+=0.1;
-////	    	  setCoordinateSystem(tester, 6.5+tester);
-//	    	try {
-//	          Thread.sleep(50);
-//	        } catch (InterruptedException e) {}
-//	        y = Math.min(_data[i], y + 0.1);
-//	        curve.replaceElementAt(i, new DataPoint(x, y));
-//	      }
-	    }
-//	    setXDomain(3, 5);
-	//  }
+//	      _curve.addElement(new DataPoint(i, _data[i]));
+//	    }
+//	    _dataPlot.replaceElementAt(0, _curve);
+//	    _curve.removeElementAt(0);
+//	  }
+//This method is not needed in this implementation
+//	private void setXDomain(double xMin, double xMax) {
+//		Properties gProps = new Properties();
+//		gProps.put("xAxis/minimum", Double.toString(xMin));
+//		gProps.put("xAxis/maximum", Double.toString(xMax));
+//		// gProps.put("yAxis/axisLabel", "Lightvalue");
+//		gProps.put("yAxis/maximum", "100");
+//		gProps.put("yAxis/ticLabelFormat", "%d%%");
+//
+//		ConfigParameters gConfig = new ConfigParameters(
+//				new PropertiesBasedConfigData(gProps));
+//		CartesianCoordinateSystem cs = new CartesianCoordinateSystem(gConfig);
+//		_plotCanvas.getPlot().setCoordinateSystem(cs);
+//	}
 
-	  private void setXDomain(double xMin,  double xMax)
-	{
-		  
-		  Properties gProps = new Properties();
-		  gProps.put("xAxis/minimum", Double.toString(xMin));
-		  gProps.put("xAxis/maximum", Double.toString(xMax));
-//		  gProps.put("yAxis/axisLabel", "Lightvalue");
-		  gProps.put("yAxis/maximum", "100");
-		  gProps.put("yAxis/ticLabelFormat", "%d%%");
-
-		   ConfigParameters gConfig
-		       = new ConfigParameters(new PropertiesBasedConfigData(gProps));
-		   CartesianCoordinateSystem cs = new CartesianCoordinateSystem(gConfig);
-		   _plotCanvas.getPlot().setCoordinateSystem(cs);
-	}
 	  
-	  public static void main(String[] args) {
-	    JFrame frame = new JFrame("Animated Chart");
-	    frame.addWindowListener(new WindowAdapter() {
-	              public void windowClosing(WindowEvent event) {
-	                System.exit(0);
-	              } 
-	            });
-//	    PlotJPanel animatedChart = new PlotJPanel();
-//	    animatedChart.init();
-//	    frame.add(animatedChart); TODO Francis
-	    frame.setSize(600, 500);
-	    frame.show();
-	  }
+//	  public static void main(String[] args) {
+//	    JFrame frame = new JFrame("Animated Chart");
+//	    frame.addWindowListener(new WindowAdapter() {
+//	              public void windowClosing(WindowEvent event) {
+//	                System.exit(0);
+//	              } 
+//	            });
+////	    PlotJPanel animatedChart = new PlotJPanel();
+////	    animatedChart.init();
+////	    frame.add(animatedChart); TODO Francis, de dingen uit maion gebruiken in gui
+//	    frame.setSize(600, 500);
+//	    frame.show();
+//	  }
 	  
 	  
 	public void addValue(int value) {
-		// TODO Auto-generated method stub
+		double overwrittenValue=0;
+		//First move al the values on the plot
+		for(int i=0;i<_noValues-1;i++){
+			overwrittenValue=_data[i];
+			_data[i]=_data[i+1];
+		}
+		//now add the new value
+		_data[_noValues-1]=value;
 		
+		for(int i=0;i<_noValues;i++){
+	        _curve.replaceElementAt(i, 
+	        		new DataPoint(i, 
+	        				_data[i])
+	        );
+		}
+
 	}
 }

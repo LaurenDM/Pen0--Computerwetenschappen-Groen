@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Color;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -14,6 +15,21 @@ public class SensorGraphsPanel extends JPanel{
 	//The current number of plots in this panel.
 	private int numberOfPlots=0;
 	private List<PlotJPanel> plotList= new ArrayList<PlotJPanel>();
+	
+	
+	public SensorGraphsPanel(){
+    	this.setSize(300, 350);
+		addPlot(1, 0.5, 0, 0, 100, -200, 200);
+		addPlot(1, 0.5, 0, 0.5, 100, -200, 200);
+
+		//TESTING
+//		for(int i=0;i<1000;i++){
+//		plotList.get(0).addValue(100);
+//		}
+		//TESTING
+
+	}
+	
 	public void addValue(int plotNumber,int value){
 		plotList.get(plotNumber).addValue(value);
 	} 
@@ -31,7 +47,7 @@ public class SensorGraphsPanel extends JPanel{
 	 * @param maxY=the maximal Y value that will be shown
 	 * @return the index number of the plot
 	 */
-	private int addPlot(double xPortion, double yPortion, double specialXCo, double specialYCo, int noValues, int minY, int maxY){
+	private PlotJPanel addPlot(double xPortion, double yPortion, double specialXCo, double specialYCo, int noValues, int minY, int maxY){
 		int plotIndex=numberOfPlots++;
 		PlotJPanel newPlotJPanel=new PlotJPanel(noValues, minY, maxY);
 		int 	completePanelXsize=this.getWidth(), 
@@ -42,7 +58,8 @@ public class SensorGraphsPanel extends JPanel{
 			yco=(int) (completePanelYsize*specialYCo);
 		fixPanelLayout(newPlotJPanel, xsize, ysize, xco, yco);
 		plotList.add(newPlotJPanel);
-		return plotIndex;
+		return newPlotJPanel;
+		
 	}
     public void fixPanelLayout(JPanel jPanel, int xsize, int ysize, int xco, int yco){
     	jPanel.setLayout(null);

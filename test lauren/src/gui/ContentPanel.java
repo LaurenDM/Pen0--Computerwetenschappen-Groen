@@ -48,7 +48,7 @@ public class ContentPanel implements ActionListener {
     final static int moveButtonWidth = 100;
     final static int allButtonHeight = 20;
     final static int wideButtonWidth=150;
-	final static int rightPanelWidth=365;
+	final static int rightPanelWidth=300;
 	final static int yPaddingTop=50;
 	final static int debugPanelHeight=100+2*20; //100 for the scrollpane an 2*20 for 2 textlines
 	final static int sensorGraphsPanelHeight=350;
@@ -67,6 +67,7 @@ public class ContentPanel implements ActionListener {
 	
     
     Controller controller;
+	private SensorGraphsPanel graphPanel;
 
     public void setFocusButtons(){
     	buttonPanel.requestFocusInWindow();
@@ -155,7 +156,7 @@ public class ContentPanel implements ActionListener {
         //___________________________________________________
         // Creation of a Panel to contain all the JButtons.
         buttonPanel = new JPanel();
-		fixPanelLayout(buttonPanel, 300,8*allButtonHeight, 750, yPaddingTop+debugPanelHeight+sensorGraphsPanelHeight);
+		fixPanelLayout(buttonPanel, rightPanelWidth,8*allButtonHeight, 750, yPaddingTop+debugPanelHeight+sensorGraphsPanelHeight);
         buttonPanel.addKeyListener(l);
         
         
@@ -285,7 +286,7 @@ public class ContentPanel implements ActionListener {
         debugPanel.add(scrollPane);
         fixPanelLayout(debugPanel, rightPanelWidth, debugPanelHeight , 750, yPaddingTop);
         scrollPane.setLocation(0, 0);
-        scrollPane.setSize(315,100);
+        scrollPane.setSize(rightPanelWidth,100);
         writeToDebug("Program started successfully");
         //Infolabels
         xLabel = new JLabel("X: 0");
@@ -320,6 +321,9 @@ public class ContentPanel implements ActionListener {
         lineLabel = new JLabel("Line: FALSE");
         lineLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, lineLabel, 125, 20, 200, 120);
+        
+        graphPanel=new SensorGraphsPanel();
+		fixPanelLayout(graphPanel, rightPanelWidth,sensorGraphsPanelHeight, 750, yPaddingTop+debugPanelHeight);
 
 	}
 	
