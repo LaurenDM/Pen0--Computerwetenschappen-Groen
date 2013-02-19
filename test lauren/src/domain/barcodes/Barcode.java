@@ -59,18 +59,14 @@ public class Barcode {
 		else throw new IllegalArgumentException();
 	}
 	
-	private int ballBarcode = 0;
+	private static int BALLBARCODE = 0;
 	
-	public void setBallBarcode(int ballBarcode) {
-		this.ballBarcode = ballBarcode;
+	public static void setBallBarcode(int ballBarcode) {
+		BALLBARCODE = ballBarcode;
 	}
 	
-	public int getBallBarcode(){
-		return this.ballBarcode;
-	}
-	
-	public Action getAction(int number){
-		if(ballBarcode == number)
+	public static Action getAction(int number){
+		if(BALLBARCODE == number)
 			return new FetchBallAction();
 		else{
 			switch (number){

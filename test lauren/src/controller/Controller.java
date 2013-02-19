@@ -20,6 +20,7 @@ import lejos.util.PilotProps;
 
 import domain.PolygonDriver;
 import domain.Position.Position;
+import domain.barcodes.Barcode;
 import domain.maze.Board;
 import domain.maze.MazeInterpreter;
 import domain.maze.RandomMazeGenerator;
@@ -385,5 +386,9 @@ public class Controller {
 				return getRobotFromIdentifier(string);
 			}
 		}
+	}
+	
+	public void setBallBarcode(int barcode){
+		Barcode.setBallBarcode(barcode);
 	}
 }
