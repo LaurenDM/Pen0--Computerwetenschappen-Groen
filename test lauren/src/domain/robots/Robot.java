@@ -11,12 +11,14 @@ public class Robot {
 	RobotPolygon robotPolygon;
 	private Movement movement;
 	private Position finish;
+	private int number; //0-3
 	
 	
-	public Robot(RobotPilot robotPilot){
+	public Robot(RobotPilot robotPilot, int number){
 		this.robotPilot=robotPilot;
 		this.movement=Movement.STOPPED;
 		this.robotPolygon=new RobotPolygon(this);
+		this.number = number;
 	}
 	
 	public RobotPilot getRobotPilot(){
@@ -285,6 +287,10 @@ public class Robot {
 	
 	public MazePath getPathToFinish(){
 		return robotPilot.getPathToFinish();
+	}
+	
+	public int getNumber(){
+		return number;
 	}
 
 	

@@ -36,6 +36,11 @@ public abstract class MazeElement {
 		//System.out.println("New Wall added using 2nd method from " + this.position1 + " to " + this.position2);
 	}
 	
+	//used for ball
+	public MazeElement(Position pos){
+		this.position1 = pos;
+	}
+	
 	public static int getMazeConstant(){
 		return MAZECONSTANT;
 	}

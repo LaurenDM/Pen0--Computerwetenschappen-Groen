@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import controller.Controller;
 import domain.Position.Position;
 import domain.barcodes.Barcode;
+import domain.maze.Ball;
 import domain.maze.MazeElement;
 import domain.maze.Orientation;
 import domain.maze.Wall;
@@ -319,7 +320,7 @@ public class DrawingPanel extends JPanel {
 						y1 = Math.abs((int) nextNode1.getX()*40 + OFFSET + zeroY);
 						x2 = Math.abs((int) nextNode2.getY()*40 + OFFSET + zeroX); 
 						y2 = Math.abs((int) nextNode2.getX()*40 + OFFSET + zeroY);
-						//System.out.println("POS "+x1+" "+y1+";  "+x2+" "+y2);
+						System.out.println("POS "+x1+" "+y1+";  "+x2+" "+y2);
 						
 						}
 //						
@@ -371,6 +372,21 @@ public class DrawingPanel extends JPanel {
 		}
 		
 	}
+	
+	
+	public void drawBalls(){
+		List<Ball> balls = controller.getRobot().getBoard().getBalls();
+		for(Ball b: balls){
+			drawBall(b);
+		}
+	}
+	
+	public void drawBall(Ball ball){
+		g.setColor(Color.red);
+		g.fillOval((int)ball.getPos1().getX()-5+OFFSET, (int)ball.getPos1().getY()-5+OFFSET, 10, 10);
+	}
+	
+	
 
 	// This method makes the panel white agains
 	public void clear() {
@@ -379,7 +395,7 @@ public class DrawingPanel extends JPanel {
 		totalGui.repaint();
 	}
 
-	public void reDrawMyPolygon(ColorPolygon colorPoly) {
+	public void reDrawMyPolygon(ColorPolygon colorPoly, Color color) {
 		Polygon previousPoly = previousPolygons.get(colorPoly);
 		if (previousPoly != null) {
 			g.setColor(new Color(240, 240, 240));
@@ -387,7 +403,7 @@ public class DrawingPanel extends JPanel {
 		}
 		Polygon polygon = colorPoly.getPolygon();
 		previousPolygons.put(colorPoly, polygon);
-		g.setColor(colorPoly.getColor());
+		g.setColor(color);
 		fillCenteredPolygon(polygon);
 		totalGui.repaint();
 		
@@ -400,8 +416,6 @@ public class DrawingPanel extends JPanel {
 		for(int i=0;i<npoints; i++){
 			centeredPoly.xpoints[i]=originalPoly.xpoints[i]+OFFSET;
 			centeredPoly.ypoints[i]=originalPoly.ypoints[i]+OFFSET;
-//			centeredPoly.xpoints[i]=originalPoly.xpoints[i]+IMG_WIDTH/2;
-//			centeredPoly.ypoints[i]=originalPoly.ypoints[i]+IMG_HEIGHT/2;
 		}
 		g.fillPolygon(centeredPoly);
 	}

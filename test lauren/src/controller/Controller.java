@@ -3,7 +3,14 @@ package controller;
 import java.io.IOException;
 import java.security.Permission;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import rabbitMQ.EventPusher;
+import rabbitMQ.SubscribeMonitor;
 
 import lejos.nxt.Motor;
 import lejos.pc.comm.NXTCommandConnector;
@@ -30,38 +37,67 @@ public class Controller {
 	private Robot currentRobot;
 	private Robot btRobot;
 	private Robot simRobot;
+	private HashMap<Integer, Robot> otherRobots;
 	private Thread explorer;
-	private SimRobotPilot simRobotPilot ;
+	private final EventPusher ep;
+//	private SimRobotPilot simRobotPilot ;
 	
 	public Controller() {
-		simRobotPilot = new SimRobotPilot();
-		simRobot = new Robot(simRobotPilot);
+		otherRobots = new HashMap<Integer, Robot>();
+		SimRobotPilot simRobotPilot = new SimRobotPilot();
+		simRobot = new Robot(simRobotPilot, 0);
 		simRobot.getRobotPilot().setRobot(simRobot);
 		currentRobot=simRobot;
-		connectNewSimRobot();
+		connectNewSimRobot(0, new Position(20,20), 0);
+		
+		ep = new EventPusher();
+		Thread epThread = new Thread(){
+		    public void run(){
+				ep.run(currentRobot);	//method to adjust current robot in ep needed
+		    }
+		  };
+		epThread.start();
+	
+    	final SubscribeMonitor sm = new SubscribeMonitor(this);	
+   		Thread smThread = new Thread(){
+		    public void run(){
+		    	sm.run();
+		    }
+		  };
+		smThread.start();
+		
 	}
 
 
 	  
 	public void connectNewBtRobot() {
 		if(btRobot==null)
-		btRobot = new Robot(new BTRobotPilot());
+		btRobot = new Robot(new BTRobotPilot(), 0);
 		btRobot.getRobotPilot().setRobot(btRobot);
 		currentRobot=btRobot;
-
-//		currentRobot.findOrigin();
-
 		currentRobot.setBoard(new Board());
 
 
 	}
-	public void connectNewSimRobot() {
-		simRobotPilot = new SimRobotPilot();
-		simRobot = new Robot(simRobotPilot);
+	
+	//This is used to set the robot controlled by this GUI
+	public void connectNewSimRobot(double orientation, Position position, int number) {
+		SimRobotPilot simRobotPilot = new SimRobotPilot(orientation, position);
+		simRobot = new Robot(simRobotPilot, number);
 		simRobot.getRobotPilot().setRobot(simRobot);
 		currentRobot = simRobot ;
 		currentRobot.setBoard(new Board());
 	}
+	
+	//This is used to set the robot controlled by this GUI
+	public void connectExternalSimRobot(double orientation, Position position, int number) {
+		SimRobotPilot simRobotPilot = new SimRobotPilot(orientation, position);
+		Robot otherSimRobot = new Robot(simRobotPilot, number);
+		otherSimRobot.getRobotPilot().setRobot(otherSimRobot);
+		otherSimRobot.setBoard(new Board()); //miss aanpassen, nog te bespreken. (elke robot individueel bord?)
+		otherRobots.put(number, otherSimRobot);
+		}
+	
 	
 	public void polygonDriver(int numberOfVertices, double edgeLength) {
 		PolygonDriver driver = new PolygonDriver(currentRobot);
@@ -131,6 +167,15 @@ public class Controller {
 	public List<ColorPolygon> getColorPolygons(){
 		List<ColorPolygon> colPolyList=new ArrayList<ColorPolygon>();
 		colPolyList.add(currentRobot.getRobotPolygon());
+		Iterator<Entry<Integer, Robot>> it = otherRobots.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry<Integer, Robot> pairs = (Map.Entry<Integer, Robot>)it.next();
+	        colPolyList.add(pairs.getValue().getRobotPolygon());
+//	        it.remove(); // avoids a ConcurrentModificationException
+	    }
+//		for(Robot robot: otherRobots){
+//		colPolyList.add(robot.getRobotPolygon());
+//		}
 		return colPolyList;
 	}
 	
@@ -295,7 +340,7 @@ public class Controller {
 	public void reset(){
 		stopped = true;
 		while(explorer!=null && explorer.isAlive()){}
-		connectNewSimRobot();
+		connectNewSimRobot(0, new Position(20,20), 0);
 	}
 
 	public static boolean isStopped() {
@@ -308,6 +353,37 @@ public class Controller {
 		currentRobot.autoCalibrateLight();}
 	
 	public void disableError() {
-		simRobotPilot.disableError();
+		otherRobots.get(1).setPose(3, 100, 100);
+//		simRobotPilot.disableError();
+	}
+	
+	//set the simRobot of this gui to the first robot
+	public void setFirstRobot(){
+		connectNewSimRobot(0, new Position(20,20), 0);
+	}
+	
+	//set the simRobot of this gui to the first robot
+	public void setSecondRobot(){
+		connectNewSimRobot(0, new Position(100,20), 1);
+	}
+
+
+	public Robot getRobotFromIdentifier(String string) {
+		int identifier = Integer.parseInt(string);
+//		System.out.println("IDENTIFIER"+identifier);
+//		System.out.println("currIDEN:"+ep.getRobotRandomIdentifier());
+		if(identifier==ep.getRobotRandomIdentifier()){
+			//message komt van deze robot
+			return null;
+		}
+		else{
+			if(otherRobots.containsKey(identifier)){
+				return otherRobots.get(identifier);
+			}
+			else{
+				connectExternalSimRobot(2, new Position(220, 20), identifier);
+				return getRobotFromIdentifier(string);
+			}
+		}
 	}
 }

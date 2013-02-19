@@ -341,7 +341,7 @@ public class TestGUI {
 	        	if(getConnected() == true ){
 	        		connectButton.setText("Connect to robot");
 	        		setConnected(false);
-	        		testController.getRobotController().connectNewSimRobot();
+//	        		testController.getRobotController().connectNewSimRobot();
 	        	}
 	        	else{
 	        		connectButton.setText("Disconnect from robot");

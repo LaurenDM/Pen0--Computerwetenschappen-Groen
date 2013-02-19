@@ -14,6 +14,7 @@ public class Board {
 	
 	private HashMap<Position, Wall> walls;
 	private List<Wall> foundWalls;
+	private List<Ball> balls;
 	private List<Barcode> simulatedBarcodes;
 	private List<Barcode> foundBarcodes;
 	
@@ -23,10 +24,15 @@ public class Board {
 		simulatedBarcodes = new ArrayList<Barcode>();
 		foundBarcodes = new ArrayList<Barcode>();
 		foundWalls = new ArrayList<Wall>();
+		balls = new ArrayList<Ball>();
 		}
 	
 	public synchronized void addWall(Wall wall){
 		walls.put(wall.getCenterPosition(),wall);
+	}
+	
+	public synchronized void addBall(Ball ball){
+		balls.add(ball);
 	}
 	
 	public synchronized void foundNewWall(Wall wall){
@@ -52,6 +58,10 @@ public class Board {
 	}
 	public List<Barcode> getFoundBarcodes(){
 		return foundBarcodes;
+	}
+	
+	public List<Ball> getBalls(){
+		return balls;
 	}
 	
 	
