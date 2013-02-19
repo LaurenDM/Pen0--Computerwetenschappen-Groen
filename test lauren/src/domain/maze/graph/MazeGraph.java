@@ -181,14 +181,19 @@ public class MazeGraph {
 	 */
 	public void generateTileNodeAt(Orientation orientation){
 		Orientation absoluteOrientation = getRelativeOrientation(getCurrentRobotOrientation(),orientation);
+		generateTileNodeAt(getCurrentNode(), absoluteOrientation);
+	}
+	
+	private void generateTileNodeAt(TileNode tile, Orientation orientation){
+		Orientation absoluteOrientation = orientation;
 		Orientation orientationToCurrent = absoluteOrientation.getBack();
-		TileNode newNode = new TileNode(getCurrentNode(),orientationToCurrent);
+		TileNode newNode = new TileNode(tile,orientationToCurrent);
 		boolean thisNodeAlreadyExists = false;
 		HashMap<Orientation,TileNode> neighbours = new HashMap<Orientation,TileNode>();
 		for(TileNode node:nodes){
 			if(((TileNode) node).getX()==newNode.getX() && ((TileNode)node).getY()==newNode.getY()){
-				getCurrentNode().setNodeAt(absoluteOrientation, node);
-				node.setNodeAt(orientationToCurrent, getCurrentNode());
+				tile.setNodeAt(absoluteOrientation, node);
+				node.setNodeAt(orientationToCurrent, tile);
 				thisNodeAlreadyExists = true;
 				break;
 			}
@@ -203,7 +208,7 @@ public class MazeGraph {
 			}
 		}
 		if(!thisNodeAlreadyExists){
-			getCurrentNode().setNodeAt(absoluteOrientation, newNode);
+			tile.setNodeAt(absoluteOrientation, newNode);
 			nodes.add(newNode);
 		}
 	}
@@ -215,15 +220,19 @@ public class MazeGraph {
 	 */
 	public boolean generateWallNodeAt(Orientation orientation){
 		Orientation absoluteOrientation = getRelativeOrientation(getCurrentRobotOrientation(),orientation);
+		return generateWallNodeAt(getCurrentNode(),absoluteOrientation);
+	}
+	
+	private boolean generateWallNodeAt(TileNode tile, Orientation orientation){
+		Orientation absoluteOrientation = orientation;
 		Orientation orientationToCurrent = absoluteOrientation.getBack();
-		WallNode newNode = new WallNode(getCurrentNode(),orientationToCurrent);
+		WallNode newNode = new WallNode(tile,orientationToCurrent);
 		
-		//We're not implementing this:
 		//If this tile has a wall at a certain orientation it's neighbouring tile will have one in the opposite orientation
 		//A new tile isn't generated there because then we would generate nodes outside of the maze's edge
 		TileNode otherSide = null;
 		for(TileNode node : nodes){
-			if(node.getX()==getCurrentNode().getX()+absoluteOrientation.getXValue() && node.getY()==getCurrentNode().getY()+absoluteOrientation.getYValue()){
+			if(node.getX()==tile.getX()+absoluteOrientation.getXValue() && node.getY()==tile.getY()+absoluteOrientation.getYValue()){
 				otherSide = node;
 				break;
 			}
@@ -434,5 +443,17 @@ public class MazeGraph {
 	
 	public MazePath getShortestPath(){
 		return shortestPath;
+	}
+
+	public void setNextTileToDeadEnd() {
+		generateTileNodeAt(getCurrentRobotOrientation());
+		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())!=null && getCurrentNode().getNodeAt(getCurrentRobotOrientation()).getClass().equals(TileNode.class)){
+			generateWallNodeAt((TileNode)getCurrentNode().getNodeAt(getCurrentRobotOrientation()), getRelativeOrientation(getCurrentRobotOrientation(),Orientation.WEST));
+			generateWallNodeAt((TileNode)getCurrentNode().getNodeAt(getCurrentRobotOrientation()), getRelativeOrientation(getCurrentRobotOrientation(),Orientation.NORTH));
+			generateWallNodeAt((TileNode)getCurrentNode().getNodeAt(getCurrentRobotOrientation()), getRelativeOrientation(getCurrentRobotOrientation(),Orientation.EAST));
+		} else {
+			ContentPanel.writeToDebug("Couldn't create a dead end at the position in front of the robot.");
+		}
+		
 	}
 }

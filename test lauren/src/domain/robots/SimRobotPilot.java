@@ -718,6 +718,7 @@ public class SimRobotPilot implements RobotPilot {
 	
 	@Override
 	public void doNothing() {
+		maze.setNextTileToDeadEnd();
 		turn(180);
 	}
 
