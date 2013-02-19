@@ -28,7 +28,6 @@ public class SimRobotPilot implements RobotPilot {
 	private ExploreMaze maze;
 	private boolean turningError = true;
 	
-	private boolean ballInPossesion = false;
 
 	//The wanted rotation Speed of the robot.
 	private double rotateSpeed;
@@ -708,7 +707,6 @@ public class SimRobotPilot implements RobotPilot {
 	}
 	@Override
 	public void fetchBall() {
-		ballInPossesion = true;
 		turn(180);
 	}
 	

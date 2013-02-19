@@ -13,6 +13,8 @@ public class Robot {
 	private Position finish;
 	private int number; //0-3
 	
+	private boolean hasBall = false;
+	
 	
 	public Robot(RobotPilot robotPilot, int number){
 		this.robotPilot=robotPilot;
@@ -294,11 +296,16 @@ public class Robot {
 	}
 	
 	public void fetchBall(){
+		hasBall = true;
 		robotPilot.fetchBall();
 	}
 	
 	public void doNothing(){
 		robotPilot.doNothing();
+	}
+	
+	public boolean hasBall(){
+		return hasBall;
 	}
 
 	

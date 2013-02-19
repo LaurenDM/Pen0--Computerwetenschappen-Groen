@@ -59,7 +59,7 @@ public class Barcode {
 		else throw new IllegalArgumentException();
 	}
 	
-	private static int BALLBARCODE = 0;
+	private static int BALLBARCODE = 15;
 	
 	public static void setBallBarcode(int ballBarcode) {
 		BALLBARCODE = ballBarcode;

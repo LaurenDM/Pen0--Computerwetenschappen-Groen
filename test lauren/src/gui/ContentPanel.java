@@ -382,6 +382,9 @@ public class ContentPanel implements ActionListener {
 					contentPanel.setRobotDistanceValue(controller.readUltrasonicValue());
 					contentPanel.setRobotTouchingValue(controller.isTouching());
 					contentPanel.setLineValue(controller.detectWhiteLine());
+					if(controller.ballInPossesion()){
+						contentPanel.ballAlert();
+					}
 					contentPanel.drawRawData();
 					contentPanel.updateInfoPanel();
 					//TODO
@@ -392,6 +395,10 @@ public class ContentPanel implements ActionListener {
 			}
 		}
     }
+	
+	public void ballAlert(){
+		actionLabel.setText("Robot picked up ball");
+	}
 	
 
 	

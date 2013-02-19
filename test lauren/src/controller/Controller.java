@@ -40,7 +40,7 @@ public class Controller {
 	private Robot simRobot;
 	private HashMap<Integer, Robot> otherRobots;
 	private Thread explorer;
-	private final EventPusher ep;
+//	private final EventPusher ep;
 //	private SimRobotPilot simRobotPilot ;
 	
 	public Controller() {
@@ -50,22 +50,22 @@ public class Controller {
 		simRobot.getRobotPilot().setRobot(simRobot);
 		currentRobot=simRobot;
 		connectNewSimRobot(0, new Position(20,20), 0);
-		
-		ep = new EventPusher();
-		Thread epThread = new Thread(){
-		    public void run(){
-				ep.run(currentRobot);	//method to adjust current robot in ep needed
-		    }
-		  };
-		epThread.start();
-	
-    	final SubscribeMonitor sm = new SubscribeMonitor(this);	
-   		Thread smThread = new Thread(){
-		    public void run(){
-		    	sm.run();
-		    }
-		  };
-		smThread.start();
+//		
+//		ep = new EventPusher();
+//		Thread epThread = new Thread(){
+//		    public void run(){
+//				ep.run(currentRobot);	//method to adjust current robot in ep needed
+//		    }
+//		  };
+//		epThread.start();
+//	
+//    	final SubscribeMonitor sm = new SubscribeMonitor(this);	
+//   		Thread smThread = new Thread(){
+//		    public void run(){
+//		    	sm.run();
+//		    }
+//		  };
+//		smThread.start();
 		
 	}
 
@@ -373,11 +373,11 @@ public class Controller {
 		int identifier = Integer.parseInt(string);
 //		System.out.println("IDENTIFIER"+identifier);
 //		System.out.println("currIDEN:"+ep.getRobotRandomIdentifier());
-		if(identifier==ep.getRobotRandomIdentifier()){
-			//message komt van deze robot
-			return null;
-		}
-		else{
+//		if(identifier==ep.getRobotRandomIdentifier()){
+//			//message komt van deze robot
+//			return null;
+//		}
+//		else{
 			if(otherRobots.containsKey(identifier)){
 				return otherRobots.get(identifier);
 			}
@@ -386,9 +386,15 @@ public class Controller {
 				return getRobotFromIdentifier(string);
 			}
 		}
-	}
+//	}
 	
 	public void setBallBarcode(int barcode){
 		Barcode.setBallBarcode(barcode);
+	}
+
+
+
+	public boolean ballInPossesion() {
+		return currentRobot.hasBall();
 	}
 }
