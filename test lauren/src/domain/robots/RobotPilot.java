@@ -141,6 +141,10 @@ public interface RobotPilot {
 
 	public void setDriveToFinishSpeed();
 
+	public void fetchBall();
+	
+	public void doNothing();
+
 
 	
 }

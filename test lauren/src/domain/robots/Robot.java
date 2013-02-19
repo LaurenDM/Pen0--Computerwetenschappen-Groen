@@ -292,6 +292,14 @@ public class Robot {
 	public int getNumber(){
 		return number;
 	}
+	
+	public void fetchBall(){
+		robotPilot.fetchBall();
+	}
+	
+	public void doNothing(){
+		robotPilot.doNothing();
+	}
 
 	
 

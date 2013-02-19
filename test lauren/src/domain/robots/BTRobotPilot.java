@@ -490,4 +490,14 @@ public class BTRobotPilot implements RobotPilot  {
 		btComm.sendCommand(CMD.DRIVEFAST);
 	}
 
+	@Override
+	public void fetchBall() {
+		btComm.sendCommand(CMD.FETCHBALL);
+	}
+
+	@Override
+	public void doNothing() {
+		btComm.sendCommand(CMD.DONOTHING);
+	}
+
 }

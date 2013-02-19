@@ -27,6 +27,8 @@ public class SimRobotPilot implements RobotPilot {
 	private boolean isScanningBarcode;
 	private ExploreMaze maze;
 	private boolean turningError = true;
+	
+	private boolean ballInPossesion = false;
 
 	//The wanted rotation Speed of the robot.
 	private double rotateSpeed;
@@ -703,6 +705,16 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public void setDriveToFinishSpeed() {
 		setMovingSpeed(150);
+	}
+	@Override
+	public void fetchBall() {
+		ballInPossesion = true;
+		turn(180);
+	}
+	
+	@Override
+	public void doNothing() {
+		turn(180);
 	}
 
 
