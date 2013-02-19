@@ -59,18 +59,31 @@ public class Barcode {
 		else throw new IllegalArgumentException();
 	}
 	
+	private int ballBarcode = 0;
+	
+	public void setBallBarcode(int ballBarcode) {
+		this.ballBarcode = ballBarcode;
+	}
+	
+	public int getBallBarcode(){
+		return this.ballBarcode;
+	}
 	
 	public Action getAction(int number){
-		switch (number){
-		case 5: return new TurnLeftAction();
-		case 9: return new TurnRightAction();
-		case 13: return new SetCheckPointAction();
-		case 15: return new PlayTuneAction();
-		case 19: return new Wait5Action();
-		case 25: return new DriveSlowAction();
-		case 37: return new DriveFastAction();
-		case 55: return new SetFinishAction();
-		default: return null;
+		if(ballBarcode == number)
+			return new FetchBallAction();
+		else{
+			switch (number){
+			case 5: return new TurnLeftAction();
+			case 9: return new TurnRightAction();
+			case 13: return new SetCheckPointAction();
+			case 15: return new PlayTuneAction();
+			case 19: return new Wait5Action();
+			case 25: return new DriveSlowAction();
+			case 37: return new DriveFastAction();
+			case 55: return new SetFinishAction();
+			default: return null;
+			}
 		}
 	}
 	
