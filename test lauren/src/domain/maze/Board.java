@@ -35,6 +35,18 @@ public class Board {
 		balls.add(ball);
 	}
 	
+	public void removeBall(Position position) {
+		Ball ball2remove = null;
+		for(Ball ball : balls){
+			if(ball.getPos1().getDistance(position)<10){
+				ball2remove = ball;
+			}
+		}
+		if(ball2remove !=null) {
+			balls.remove(ball2remove);
+		}
+	}
+	
 	public synchronized void foundNewWall(Wall wall){
 		foundWalls.add(wall);
 	}
@@ -145,5 +157,7 @@ public class Board {
 		}
 		return false;
 	}
+
+	
 
 }
