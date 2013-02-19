@@ -80,13 +80,23 @@ public class MazeInterpreter {
 			createStraight(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
 		}
 		if(commandSplit.length>2){
-			if(!commandSplit[2].equals("00")){
+			if(commandSplit[2].equals("B")){
+				System.out.println("Ball");
+				createBall(XCoo, YCoo);
+			}
+			else if(!commandSplit[2].equals("00")){
 				createBarcode(commandSplit[2], XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
 			}
 		}
 	}
 	
-	
+	public void createBall(int XCoo, int YCoo){
+		int MAZECONSTANT = MazeElement.getMazeConstant();
+		int xBall = XCoo*MAZECONSTANT+MAZECONSTANT/2;
+		int yBall = YCoo*MAZECONSTANT+MAZECONSTANT/2;
+		Ball ball = new Ball(new Position(xBall, yBall));
+		board.addBall(ball);
+	}
 
 
 	public void createDeadEnd(int XCoo, int YCoo, Orientation orientation){

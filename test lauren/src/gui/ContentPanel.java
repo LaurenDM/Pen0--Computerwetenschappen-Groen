@@ -19,6 +19,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 import controller.Controller;
+import domain.Position.Position;
 import domain.barcodes.Barcode;
 import domain.robots.CannotMoveException;
 import domain.util.ColorPolygon;
@@ -309,9 +310,17 @@ public class ContentPanel implements ActionListener {
 				drawingPanel.drawFoundWalls();
 				drawingPanel.drawFoundBarcodes();
 				drawingPanel.drawLineToFinish();
-				for (ColorPolygon colorPoly:collection) {
-					drawingPanel.reDrawMyPolygon(colorPoly);
+				drawingPanel.drawBalls();
+				for(int i=0; i<collection.size(); i++){
+					if(i==0){drawingPanel.reDrawMyPolygon(collection.get(i), Color.BLACK);}
+					if(i==1){drawingPanel.reDrawMyPolygon(collection.get(i), Color.BLUE);}
+					if(i==2){drawingPanel.reDrawMyPolygon(collection.get(i), Color.RED);}
+					if(i==3){drawingPanel.reDrawMyPolygon(collection.get(i), Color.GREEN);}
+					if(i>3){drawingPanel.reDrawMyPolygon(collection.get(i), Color.ORANGE);}
 				}
+//				for (ColorPolygon colorPoly:collection) {
+//					drawingPanel.reDrawMyPolygon(colorPoly);
+//				}
 			}
 		});
 		
@@ -417,7 +426,7 @@ public class ContentPanel implements ActionListener {
         		drawingPanel.drawWhiteLines();
         		drawingPanel.updateUI();
         		setConnected(false);
-        		controller.connectNewSimRobot();
+        		controller.connectNewSimRobot(0, new Position(20,20), 0);
         	}
         	else{
         		try{

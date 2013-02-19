@@ -522,7 +522,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void straighten() {
-		(new Straightener(new Robot(this))).straighten(3);
+		(new Straightener(new Robot(this, 0))).straighten(0);
 
 	}
 
@@ -638,7 +638,7 @@ public class SimRobotPilot implements RobotPilot {
 	}
 	@Override
 	public void scanBarcode() {
-		BarcodeGenerator bg = new BarcodeGenerator(new Robot(this));
+		BarcodeGenerator bg = new BarcodeGenerator(new Robot(this, 0));
 		bg.generateBarcode();
 	}
 
