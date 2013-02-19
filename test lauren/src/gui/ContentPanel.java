@@ -323,7 +323,8 @@ public class ContentPanel implements ActionListener {
         fixLabelLayout(debugPanel, lineLabel, 125, 20, 200, 120);
         
         graphPanel=new SensorGraphsPanel();
-		fixPanelLayout(graphPanel, rightPanelWidth,sensorGraphsPanelHeight, 750, yPaddingTop+debugPanelHeight);
+        graphPanel.fixPanelLayout(rightPanelWidth,sensorGraphsPanelHeight, 750, yPaddingTop+debugPanelHeight);
+        totalGUI.add(graphPanel);
 
 	}
 	
@@ -687,11 +688,11 @@ public class ContentPanel implements ActionListener {
     }
     
     public void setRobotLightValue(double value){
-//    	lightLabel.setText("Lightsensor: " + Double.valueOf(value).intValue()); TODO Francis
+    	graphPanel.addValue(SensorGraphsPanel.LIGHTPLOT, value);
     }
     
     public void setRobotDistanceValue(double value){
-//    	distanceLabel.setText("Distance: " + Double.valueOf(value).intValue()); TODO Francis
+    	graphPanel.addValue(SensorGraphsPanel.DISTANCEPLOT, value);
     }
     
     public void setRobotTouchingValue(boolean value){

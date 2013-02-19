@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.Canvas;
 import java.awt.Color;
 import java.util.List;
 import java.util.ArrayList;
@@ -20,17 +21,10 @@ public class SensorGraphsPanel extends JPanel{
 	public SensorGraphsPanel(){
     	this.setSize(300, 350);
 		addPlot(1, 0.5, 0, 0, 100, -200, 200);
-		addPlot(1, 0.5, 0, 0.5, 100, -200, 200);
-
-		//TESTING
-//		for(int i=0;i<1000;i++){
-//		plotList.get(0).addValue(100);
-//		}
-		//TESTING
-
+		addPlot(1, 0.5, 0, 0.5, 100, 0, 257); 
 	}
 	
-	public void addValue(int plotNumber,int value){
+	public void addValue(int plotNumber,double value){
 		plotList.get(plotNumber).addValue(value);
 	} 
 	
@@ -56,15 +50,16 @@ public class SensorGraphsPanel extends JPanel{
 			ysize=(int) (completePanelYsize*yPortion),
 			xco=(int) (completePanelXsize*specialXCo),
 			yco=(int) (completePanelYsize*specialYCo);
-		fixPanelLayout(newPlotJPanel, xsize, ysize, xco, yco);
+		newPlotJPanel.fixPanelLayout(xsize, ysize, xco, yco);
+		this.add(newPlotJPanel);
 		plotList.add(newPlotJPanel);
 		return newPlotJPanel;
 		
 	}
-    public void fixPanelLayout(JPanel jPanel, int xsize, int ysize, int xco, int yco){
-    	jPanel.setLayout(null);
-    	jPanel.setLocation(xco, yco);
-    	jPanel.setSize(xsize, ysize);
-    	this.add(jPanel);
+    public void fixPanelLayout(int xsize, int ysize, int xco, int yco){
+    	this.setLayout(null);
+    	this.setLocation(xco, yco);
+    	this.setSize(xsize, ysize);
     }
+
 }
