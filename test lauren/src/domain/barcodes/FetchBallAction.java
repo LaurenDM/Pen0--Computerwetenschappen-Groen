@@ -5,7 +5,7 @@ import domain.robots.Robot;
 public class FetchBallAction extends Action {
 	//TODO
 	public void run(Robot robot) {
-		//robot.fetchBall(); 
+		robot.fetchBall(); 
 	}
 
 //	@Override

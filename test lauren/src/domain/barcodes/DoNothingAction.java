@@ -4,7 +4,7 @@ import domain.robots.Robot;
 
 public class DoNothingAction extends Action{
 	public void run(Robot robot) {
-		//robot.doNothing();
+		robot.doNothing();
 	}
 
 //	@Override
