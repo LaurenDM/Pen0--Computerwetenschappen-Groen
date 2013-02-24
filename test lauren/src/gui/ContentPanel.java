@@ -34,13 +34,14 @@ public class ContentPanel implements ActionListener {
     static JFrame variableFrame = new JFrame("P&O - Groen - Variables");
     static JFrame calibrationFrame = new JFrame("P&O - Groen - Lightsensor Calibration");
     static JFrame sensorOrientationFrame = new JFrame("P&O - Groen - Ultrasonicsensor Orientation");
+    static JFrame barcodeFrame = new JFrame("P&O - Groen - Set the barcode values");
     private static ControllerPoller controllerPoller;
     private JPanel titlePanel, buttonPanel, debugPanel, bottomButtonPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
     private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, lineLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, 
     calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton,
-    rotateSlowLeft,rotateSlowRight,startButton, barcodeButton, finishButton, resumeButton, resetButton;
+    rotateSlowLeft,rotateSlowRight,startButton, barcodeButton, finishButton, resumeButton, resetButton,setBarcodeButton;
     private static JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
@@ -207,6 +208,9 @@ public class ContentPanel implements ActionListener {
         barcodeButton = new JButton("FIND BARCODE");
         fixButtonLayout(buttonPanel, barcodeButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 5*allButtonHeight);
         
+        setBarcodeButton = new JButton("SET BARCODE VALUES");
+        fixButtonLayout(buttonPanel, setBarcodeButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 6*allButtonHeight);
+        
         sensorButton = new JButton("DISABLE TURN ERROR");
         fixButtonLayout(buttonPanel, sensorButton, wideButtonWidth, allButtonHeight, 0, 6*allButtonHeight);
         
@@ -264,6 +268,12 @@ public class ContentPanel implements ActionListener {
         sensorOrientationFrame.setContentPane(sensorOrientationPanel.getContentPanel());
         sensorOrientationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         sensorOrientationFrame.setSize(400,400);
+        
+        //Creating barcodePanel
+        BallBarcodePanel ballBarcodePanel = new BallBarcodePanel(barcodeFrame, controller);
+        barcodeFrame.setContentPane(ballBarcodePanel.getContentPanel());
+        barcodeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        barcodeFrame.setSize(400,210);
         
         
     	
@@ -474,6 +484,12 @@ public class ContentPanel implements ActionListener {
         	calibrationFrame.setVisible(true);
         	actionLabel.setText("The lightsensor is being calibrated.");
         	calibrateButton.setSelected(false);
+        	buttonPanel.requestFocusInWindow();
+        }
+        else if(e.getSource() == setBarcodeButton){
+        	barcodeFrame.setVisible(true);
+        	actionLabel.setText("The barcode numbers are being added");
+        	setBarcodeButton.setSelected(false);
         	buttonPanel.requestFocusInWindow();
         }
         else if(e.getSource() == sensorOrientationButton){

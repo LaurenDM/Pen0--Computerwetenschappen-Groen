@@ -397,4 +397,11 @@ public class Controller {
 	public boolean ballInPossesion() {
 		return currentRobot.hasBall();
 	}
+
+
+
+	public void setFalseBallBarcodes(int[] falseBallBarcodes) {
+		// TODO Auto-generated method stub
+		
+	}
 }
