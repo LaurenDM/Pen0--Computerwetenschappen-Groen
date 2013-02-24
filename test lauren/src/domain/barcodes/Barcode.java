@@ -60,9 +60,14 @@ public class Barcode {
 	}
 	
 	private static int BALLBARCODE = 15;
+	private static int[] FALSEBARCODES;
 	
 	public static void setBallBarcode(int ballBarcode) {
 		BALLBARCODE = ballBarcode;
+	}
+	
+	public static void setFalseBallBarcodes(int[] barcodes){
+		FALSEBARCODES = barcodes;
 	}
 	
 	public static Action getAction(int number){

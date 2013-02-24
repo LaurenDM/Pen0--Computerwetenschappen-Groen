@@ -401,7 +401,6 @@ public class Controller {
 
 
 	public void setFalseBallBarcodes(int[] falseBallBarcodes) {
-		// TODO Auto-generated method stub
-		
+		Barcode.setFalseBallBarcodes(falseBallBarcodes);
 	}
 }
