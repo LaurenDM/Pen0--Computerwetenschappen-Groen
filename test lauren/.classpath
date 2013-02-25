@@ -9,5 +9,7 @@
 			<attribute name="javadoc_location" value="file:/home/s0215207/Documents/PenO/jcckit/docs/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/Users/laurendemeyer/Documents/Unif/Peno/commons-io-1.2.jar"/>
+	<classpathentry kind="lib" path="/Users/laurendemeyer/Documents/Unif/Peno/rabbitmq-client.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
