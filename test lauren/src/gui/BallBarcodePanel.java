@@ -48,6 +48,7 @@ public class BallBarcodePanel implements ActionListener{
 		correctBarcodeLabel.setBounds(20, 20, 200, 30);
 		titlePanel.add(correctBarcodeLabel);
 		correctBarcodeField = new JTextField(16);
+		correctBarcodeField.setText("0");
 		correctBarcodeField.setBounds(20, 50, 70, 30);
 		titlePanel.add(correctBarcodeField);
 		
@@ -55,14 +56,17 @@ public class BallBarcodePanel implements ActionListener{
 		falseBarcodeLabel.setBounds(20, 80, 200, 30);
 		titlePanel.add(falseBarcodeLabel);
 		falseBarcodeField1 = new JTextField(16);
+		falseBarcodeField1.setText("1");
 		falseBarcodeField1.setBounds(20, 110, 50, 30);
 		titlePanel.add(falseBarcodeField1);
 		
 		falseBarcodeField2 = new JTextField(16);
+		falseBarcodeField2.setText("2");
 		falseBarcodeField2.setBounds(80, 110, 50, 30);
 		titlePanel.add(falseBarcodeField2);
 		
 		falseBarcodeField3 = new JTextField(16);
+		falseBarcodeField3.setText("3");
 		falseBarcodeField3.setBounds(140, 110, 50, 30);
 		titlePanel.add(falseBarcodeField3);
 		
