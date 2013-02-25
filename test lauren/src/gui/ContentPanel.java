@@ -381,6 +381,7 @@ public class ContentPanel implements ActionListener {
 		 * Infinite loop that runs while the thread is active.
 		 */
 		public void run(){
+			int count = 0;
 			try{
 				while(true){
 					contentPanel.updateBoard(controller.getColorPolygons());
@@ -392,7 +393,8 @@ public class ContentPanel implements ActionListener {
 					contentPanel.setRobotDistanceValue(controller.readUltrasonicValue());
 					contentPanel.setRobotTouchingValue(controller.isTouching());
 					contentPanel.setLineValue(controller.detectWhiteLine());
-					if(controller.ballInPossesion()){
+					if(controller.ballInPossesion() && count < 1){
+						count++;
 						contentPanel.ballAlert();
 					}
 					contentPanel.drawRawData();
