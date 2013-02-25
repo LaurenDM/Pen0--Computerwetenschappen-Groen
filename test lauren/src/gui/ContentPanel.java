@@ -410,6 +410,7 @@ public class ContentPanel implements ActionListener {
 	
 	public void ballAlert(){
 		debugText.append("Robot picked up ball" + "\n");
+		drawingPanel.removeBall(controller.getBall());
 	}
 	
 

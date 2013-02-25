@@ -386,6 +386,10 @@ public class DrawingPanel extends JPanel {
 		g.fillOval((int)ball.getPos1().getX()-5+OFFSET, (int)ball.getPos1().getY()-5+OFFSET, 10, 10);
 	}
 	
+	public void removeBall(Ball ball){
+		g.setColor(Color.white);
+		g.fillOval((int)ball.getPos1().getX()-5+OFFSET, (int)ball.getPos1().getY()-5+OFFSET, 10, 10);
+	}
 	
 
 	// This method makes the panel white agains

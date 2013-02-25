@@ -8,6 +8,7 @@ import bluetooth.CMD;
 import domain.Position.Position;
 import domain.barcodes.Action;
 import domain.barcodes.Barcode;
+import domain.maze.Ball;
 import domain.maze.Board;
 import domain.maze.Wall;
 import domain.maze.graph.MazePath;
@@ -499,7 +500,11 @@ public class BTRobotPilot implements RobotPilot  {
 	public void doNothing() {
 		btComm.sendCommand(CMD.DONOTHING);
 	}
-
+	
+	public Ball getBall(){
+		return null;
+		//TODO: lelijk, maar voorlopige opl
+	}
 	
 
 }

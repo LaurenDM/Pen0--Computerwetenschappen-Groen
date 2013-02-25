@@ -1,6 +1,7 @@
 package domain.robots;
 
 import domain.Position.Position;
+import domain.maze.Ball;
 import domain.maze.Board;
 import domain.maze.Wall;
 import domain.maze.graph.MazePath;
@@ -144,6 +145,8 @@ public interface RobotPilot {
 	public void fetchBall();
 	
 	public void doNothing();
+
+	public Ball getBall();
 
 
 

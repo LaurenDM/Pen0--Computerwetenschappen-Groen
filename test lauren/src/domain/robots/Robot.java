@@ -1,6 +1,7 @@
 package domain.robots;
 
 import domain.Position.Position;
+import domain.maze.Ball;
 import domain.maze.Board;
 import domain.maze.graph.MazePath;
 import domain.polygons.RobotPolygon;
@@ -305,7 +306,12 @@ public class Robot {
 	}
 	
 	public boolean hasBall(){
-		return hasBall;
+		return (robotPilot.getBall() != null);
+		// TODO: voorlopig zal dit voor btrobot altijd false geven
+	}
+	
+	public Ball getBall(){
+		return robotPilot.getBall();
 	}
 
 	

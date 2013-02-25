@@ -35,7 +35,7 @@ public class Board {
 		balls.add(ball);
 	}
 	
-	public void removeBall(Position position) {
+	public Ball removeBall(Position position) {
 		Ball ball2remove = null;
 		for(Ball ball : balls){
 			if(ball.getPos1().getDistance(position)<10){
@@ -45,6 +45,7 @@ public class Board {
 		if(ball2remove !=null) {
 			balls.remove(ball2remove);
 		}
+		return ball2remove;
 	}
 	
 	public synchronized void foundNewWall(Wall wall){

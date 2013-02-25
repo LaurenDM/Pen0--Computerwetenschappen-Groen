@@ -21,6 +21,7 @@ import lejos.util.PilotProps;
 import domain.PolygonDriver;
 import domain.Position.Position;
 import domain.barcodes.Barcode;
+import domain.maze.Ball;
 import domain.maze.Board;
 import domain.maze.MazeInterpreter;
 import domain.maze.RandomMazeGenerator;
@@ -398,6 +399,9 @@ public class Controller {
 		return currentRobot.hasBall();
 	}
 
+	public Ball getBall(){
+		return getRobot().getBall();
+	}
 
 
 	public void setFalseBallBarcodes(int[] falseBallBarcodes) {

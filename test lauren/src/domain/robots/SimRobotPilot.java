@@ -11,6 +11,7 @@ import javax.sound.sampled.Clip;
 
 import domain.Position.Position;
 import domain.barcodes.Barcode;
+import domain.maze.Ball;
 import domain.maze.Board;
 import domain.maze.Wall;
 import domain.maze.graph.MazePath;
@@ -27,6 +28,8 @@ public class SimRobotPilot implements RobotPilot {
 	private boolean isScanningBarcode;
 	private ExploreMaze maze;
 	private boolean turningError = true;
+	
+	private Ball ball;
 	
 
 	//The wanted rotation Speed of the robot.
@@ -714,7 +717,7 @@ public class SimRobotPilot implements RobotPilot {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		board.removeBall(getPosition());
+		this.ball = board.removeBall(getPosition());
 		try {
 			move(-40);
 		} catch (CannotMoveException e) {
@@ -726,6 +729,10 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public void doNothing() {
 		maze.setNextTileToDeadEnd();
+	}
+	
+	public Ball getBall(){
+		return this.ball;
 	}
 
 
