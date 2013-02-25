@@ -24,6 +24,7 @@ public class ExploreMaze{
 	private RobotPilot robot;
 	private final int valuedDistance = 27;
 	private final int distanceBlocks = 40;
+	private final int MAZECONSTANT = 40;
 	private ArrayList<Wall> wallList = new ArrayList<Wall>();
 	private MazeGraph maze = new MazeGraph();
 	private boolean backWall = false;
@@ -100,16 +101,36 @@ public class ExploreMaze{
 		return false;
 	}
 	
+	/**
+	 * Set the current tile to the finish tile.
+	 * A robot will drive to the finish after it had finished exploring the maze.
+	 */
 	public void setCurrentTileToFinish(){
 		maze.setCurrentTileToFinish();
 	}
 	
+	/**
+	 * Makes the current tile a checkpoint tile.
+	 * A robot will drive past the checkpoint(s) on its way to the finish.
+	 */
 	public void setCurrentTileToCheckpoint(){
 		maze.setCurrentTileToCheckpoint();
 	}
 	
+	/**
+	 * Sets the tile in front of the robot to a dead end, meaning that walls are added around it left, forward and right.
+	 * These walls are added in the graph and in the GUI.
+	 */
 	public void setNextTileToDeadEnd(){
 		maze.setNextTileToDeadEnd();
+		double orientation = robot.getOrientation();
+		double deadEndX = robot.getPosition().getX()+Math.cos(orientation/180*Math.PI)*MAZECONSTANT;
+		double deadEndY = robot.getPosition().getY()+Math.sin(orientation/180*Math.PI)*MAZECONSTANT;
+		System.out.println("Current: ("+robot.getPosition().getX()+","+robot.getPosition().getY()+"), ori: "+orientation);
+		System.out.println("Dead End: ("+deadEndX+","+deadEndY+")");
+		calculateWall(deadEndX, deadEndY, orientation, Direction.LEFT);
+		calculateWall(deadEndX, deadEndY, orientation, Direction.FORWARD);
+		calculateWall(deadEndX, deadEndY, orientation, Direction.RIGHT);
 	}
 	
 	private void moveWithStraighten(Direction direction) {
@@ -172,7 +193,6 @@ public class ExploreMaze{
 		}
 	}
 	private void calculateWall(double x, double y, double orientation,Direction direction) {
-		int MAZECONSTANT = 40;
 		x = (int) (Math.floor((x)/MAZECONSTANT))*MAZECONSTANT+20;
 		y = (int) (Math.floor((y)/MAZECONSTANT))*MAZECONSTANT+20;
 		if(orientation > -20 && orientation < 20){
