@@ -446,6 +446,7 @@ public class MazeGraph {
 	}
 
 	public void setNextTileToDeadEnd() {
+		//TODO does not work.
 		generateTileNodeAt(getCurrentRobotOrientation());
 		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())!=null && getCurrentNode().getNodeAt(getCurrentRobotOrientation()).getClass().equals(TileNode.class)){
 			generateWallNodeAt((TileNode)getCurrentNode().getNodeAt(getCurrentRobotOrientation()), getRelativeOrientation(getCurrentRobotOrientation(),Orientation.WEST));

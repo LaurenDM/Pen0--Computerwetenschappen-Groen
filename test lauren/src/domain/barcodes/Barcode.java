@@ -60,7 +60,7 @@ public class Barcode {
 	}
 	
 	private static int BALLBARCODE = 15;
-	private static int[] FALSEBARCODES;
+	private static int[] FALSEBARCODES = new int[] {0};
 	
 	public static void setBallBarcode(int ballBarcode) {
 		BALLBARCODE = ballBarcode;
@@ -70,9 +70,19 @@ public class Barcode {
 		FALSEBARCODES = barcodes;
 	}
 	
+	private static boolean isFalseBarcode(int number){
+		for (int falseBarcodeNbr : FALSEBARCODES) {
+			if(falseBarcodeNbr == number)
+				return true;
+		}
+		return false;
+	}
+	
 	public static Action getAction(int number){
 		if(BALLBARCODE == number)
 			return new FetchBallAction();
+		if(isFalseBarcode(number))
+			return new DoNothingAction();
 		else{
 			switch (number){
 			case 5: return new TurnLeftAction();
