@@ -34,6 +34,10 @@ public class MazeGraph {
 		System.out.println("");
 	}
 	
+	/**
+	 * Calculates the shortest path to the finish and makes the given RobotPilot drive there.
+	 * @param robotPilot
+	 */
 	public void driveToFinish(RobotPilot robotPilot){
 		shortestPath = findShortestPathToFinish();
 		Iterator<TileNode> tileIt = shortestPath.iterator();
@@ -126,6 +130,16 @@ public class MazeGraph {
 		}
 	}
 	
+	/**
+	 * Returns the orientation to move in to continue exploring. 
+	 * This is accomplished by calculating the shortest path to the next unexplored node and 
+	 * finding out in which direction the robot needs to turn in order to get there.
+	 * If multiple paths of equal length exist the path will be chosen that makes it turn, in order of priority:
+	 * Left, Not, Right, Back
+	 * If a path can not be found, it returns the orientation to the front/back of the current orientation,
+	 * depending on whether there's a wall in front of the robot.
+	 * @return
+	 */
 	public Orientation getNextMoveOrientation(){
 		ArrayList<TileNode> unexpanded = new ArrayList<TileNode>();
 		for(TileNode node : nodes){
@@ -223,6 +237,11 @@ public class MazeGraph {
 		return generateWallNodeAt(getCurrentNode(),absoluteOrientation);
 	}
 	
+	/**
+	 * Make a new WallNode at the given orientation connected to the given TileNode.
+	 * @param orientation
+	 * @return true if the wall has been added, false if it's clear that there can be no wall at that location.
+	 */
 	private boolean generateWallNodeAt(TileNode tile, Orientation orientation){
 		Orientation absoluteOrientation = orientation;
 		Orientation orientationToCurrent = absoluteOrientation.getBack();
@@ -262,6 +281,7 @@ public class MazeGraph {
 	}
 	
 	/**
+	 * Use isNodeInFrontFullyExpanded() when applicable.
 	 * Orientation is relative to the robot's current orientation, not the grid.
 	 * @param orientation
 	 * @return Whether the node at the given orientation with respect to the robot is fully expanded
@@ -271,7 +291,8 @@ public class MazeGraph {
 	}
 	
 	/**
-	 * Orientation is relative to the grid!
+	 * Use isNodeInFrontFullyExpanded() when applicable.
+	 * Orientation is relative to the grid! (So to the robot's orientation when it started exploring (NORTH))
 	 * @param orientation
 	 * @return Whether the node at the given orientation with respect to the robot's current position is fully expanded
 	 */
@@ -280,6 +301,7 @@ public class MazeGraph {
 	}
 	
 	/**
+	 * Returns if the node in front of the robot is fully expanded.
 	 * A conceptually easier way of dealing with the isFullyExpanded methods than the isNodeThereFully...
 	 * @return Whether the node in front of the robot is fully expanded
 	 */
@@ -308,16 +330,21 @@ public class MazeGraph {
 		setCurrentRobotOrientation(getCurrentRobotOrientation().getBack());
 	}
 
+	/**
+	 * Returns the robot's current orientation relative to it's starting orientation (NORTH)
+	 * @return
+	 */
 	public Orientation getCurrentRobotOrientation() {
 		return currentRobotOrientation;
 	}
 
+	
 	private void setCurrentRobotOrientation(Orientation orientation) {
 		this.currentRobotOrientation = orientation;
 	}
 	
 	/**
-	 * Sets the current Node as the Finish node.
+	 * Sets the current TileNode as the Finish node.
 	 */
 	public void setCurrentTileToFinish(){
 		boolean finishAlreadyExists=false;
@@ -332,6 +359,9 @@ public class MazeGraph {
 		}
 	}
 	
+	/**
+	 * Sets the current TileNode as a Checkpoint node.
+	 */
 	public void setCurrentTileToCheckpoint(){
 		getCurrentNode().setCheckpoint(true);
 	}
@@ -366,6 +396,7 @@ public class MazeGraph {
 	}
 
 	/**
+	 * Returns the MazePath representation of the shortest path from startNode to finishNode.
 	 * @param finishNode
 	 * @return
 	 */
@@ -416,10 +447,20 @@ public class MazeGraph {
 		this.currentNode = currentNode;
 	}
 	
+	/**
+	 * Returns the TileNode the robot's currently on.
+	 * @return
+	 */
 	public TileNode getCurrentNode(){
 		return currentNode;
 	}
 
+	/**
+	 * Assume the current coordinates are the given x and y and that the robot is in Orientation o.
+	 * @param x
+	 * @param y
+	 * @param o
+	 */
 	public void continueExploring(int x, int y, Orientation o) {
 		if(o!=null){
 			for(TileNode node : nodes){
@@ -435,16 +476,28 @@ public class MazeGraph {
 		
 	}
 
+	/**
+	 * Turn back, move a tile and make a wallNode where the robot bumped.
+	 */
 	public void recoverFromBump() {
 		turnBack();
 		move();
 		generateWallNodeAt(Orientation.SOUTH);
 	}
 	
+	/**
+	 * Return the latest calculated path to the finish.
+	 * @return
+	 */
 	public MazePath getShortestPath(){
 		return shortestPath;
 	}
 
+	/**
+	 * Sets the tile in front of the robot to a dead end, meaning that walls are added in the North, West and East orientations.
+	 * As with the generateWallNodeAt method, if we know that there can't be any walls there they will not be added.
+	 * A robot will never explore a known dead end.
+	 */
 	public void setNextTileToDeadEnd() {
 		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())==null){
 			generateTileNodeAt(Orientation.NORTH); //This is a relative orientation.
