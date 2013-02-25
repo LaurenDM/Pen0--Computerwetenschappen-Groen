@@ -243,12 +243,12 @@ public class MazeGraph {
 		
 		//If a node already has a connection to a (semi-)completed node at a certain orientation we can be sure of the fact that there
 		//is no wall there so we won't add it
-		MazeNode previousNode = getCurrentNode().getNodeAt(absoluteOrientation);
+		MazeNode previousNode = tile.getNodeAt(absoluteOrientation);
 		if(previousNode!=null && previousNode.getClass().equals(TileNode.class) && (((TileNode) previousNode).isVisited() || ((TileNode)previousNode).numberOfConnections()>=2)){
 			System.out.println("Wrong measurement. There can be no wall there.");
 			return false;
 		} else {
-			getCurrentNode().setNodeAt(absoluteOrientation, newNode);
+			tile.setNodeAt(absoluteOrientation, newNode);
 			return true;
 		}
 	}
@@ -446,12 +446,14 @@ public class MazeGraph {
 	}
 
 	public void setNextTileToDeadEnd() {
-		//TODO does not work.
-		generateTileNodeAt(getCurrentRobotOrientation());
+		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())==null){
+			generateTileNodeAt(Orientation.NORTH); //This is a relative orientation.
+		}
 		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())!=null && getCurrentNode().getNodeAt(getCurrentRobotOrientation()).getClass().equals(TileNode.class)){
-			generateWallNodeAt((TileNode)getCurrentNode().getNodeAt(getCurrentRobotOrientation()), getRelativeOrientation(getCurrentRobotOrientation(),Orientation.WEST));
-			generateWallNodeAt((TileNode)getCurrentNode().getNodeAt(getCurrentRobotOrientation()), getRelativeOrientation(getCurrentRobotOrientation(),Orientation.NORTH));
-			generateWallNodeAt((TileNode)getCurrentNode().getNodeAt(getCurrentRobotOrientation()), getRelativeOrientation(getCurrentRobotOrientation(),Orientation.EAST));
+			TileNode deadEndNode = (TileNode)getCurrentNode().getNodeAt(getCurrentRobotOrientation());
+			generateWallNodeAt(deadEndNode, getRelativeOrientation(getCurrentRobotOrientation(),Orientation.WEST));
+			generateWallNodeAt(deadEndNode, getRelativeOrientation(getCurrentRobotOrientation(),Orientation.NORTH));
+			generateWallNodeAt(deadEndNode, getRelativeOrientation(getCurrentRobotOrientation(),Orientation.EAST));
 		} else {
 			ContentPanel.writeToDebug("Couldn't create a dead end at the position in front of the robot.");
 		}
