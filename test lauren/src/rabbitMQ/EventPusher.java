@@ -93,7 +93,7 @@ public class EventPusher {
 		System.out.println("Press ENTER to exit");
 		
 		// schedule a task every 100ms
-		this.timer.schedule(task, 0, 100);
+		this.timer.schedule(task, 0, 2000);
 	}
 	
 	public int getRobotRandomIdentifier(){
@@ -106,6 +106,7 @@ public class EventPusher {
 		@Override
 		public void run() {
 			if (racing) {
+				checkBallInPossesion();
 				String message = robot.getPosition().getX()+"_"+robot.getPosition().getY()+"_"+(int)robot.getOrientation();
 				sendMessage(message);
 							
@@ -158,6 +159,17 @@ public class EventPusher {
 	public void foundBall(){
 		sendMessage("Ball found"); 
 	}
+	
+	
+	private boolean ballInPossession=false;
+	
+	public void checkBallInPossesion(){
+		if(robot.hasBall() && !ballInPossession){
+			ballInPossession=true;
+			foundBall();
+		}
+	}
+
 	
 	/**
 	 * Sets up a consumer to listen for launch events. If launch messages are

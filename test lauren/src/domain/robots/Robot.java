@@ -13,6 +13,7 @@ public class Robot {
 	private Movement movement;
 	private Position finish;
 	private int number; //0-3
+	private boolean foundBall;
 	
 	
 	
@@ -306,6 +307,15 @@ public class Robot {
 	public boolean hasBall(){
 		return (robotPilot.getBall() != null);
 	}
+	
+	public void setFoundBall(){
+		foundBall = true;
+	}
+	
+	public boolean getFoundBall(){
+		return foundBall;
+	}
+		
 	
 	public Ball getBall(){
 		return robotPilot.getBall();

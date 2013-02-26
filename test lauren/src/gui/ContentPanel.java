@@ -8,7 +8,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.swing.GroupLayout.Alignment;
@@ -26,7 +31,9 @@ import org.jfree.ui.Align;
 import controller.Controller;
 import domain.Position.Position;
 import domain.barcodes.Barcode;
+import domain.maze.Ball;
 import domain.robots.CannotMoveException;
+import domain.robots.Robot;
 import domain.util.ColorPolygon;
 import exceptions.ConnectErrorException;
 
@@ -64,6 +71,7 @@ public class ContentPanel implements ActionListener {
     private boolean downButtonPressed = false;
     private boolean showRawData = false;
     private int rotateSlowAmount = 10;
+    private ArrayList<Integer> printedBalls;
     public enum Button {
         UP, LEFT, DOWN, RIGHT,NONE
     }
@@ -286,6 +294,7 @@ public class ContentPanel implements ActionListener {
         
         frame.requestFocusInWindow(); 
 
+		printedBalls = new ArrayList<Integer>();
 
                 
 	}
@@ -399,6 +408,7 @@ public class ContentPanel implements ActionListener {
 					contentPanel.setRobotDistanceValue(controller.readUltrasonicValue());
 					contentPanel.setRobotTouchingValue(controller.isTouching());
 					contentPanel.setLineValue(controller.detectWhiteLine());
+					contentPanel.updateBalls();
 					if(controller.ballInPossesion() && count < 1){
 						count++;
 						contentPanel.ballAlert();
@@ -747,6 +757,24 @@ public class ContentPanel implements ActionListener {
 		if(showRawData)
 		drawingPanel.drawRawSensorData();
 	}
+	
+	public void updateBalls(){
+//		System.out.println("updateBalls");
+		HashMap<Integer, Robot> otherRobots = controller.getOtherRobots();
+	    Iterator<Entry<Integer, Robot>> it = otherRobots.entrySet().iterator();
+		    while (it.hasNext()) {
+		        Map.Entry<Integer, Robot> pairs = (Entry<Integer, Robot>)it.next();
+//		        System.out.println(pairs.getKey() + " = " + pairs.getValue());
+		        Integer identifier = pairs.getKey();
+		        Robot robot = pairs.getValue();
+		        if(!printedBalls.contains(identifier) && robot.getFoundBall()){
+		        	printedBalls.add(identifier);
+		        	writeToDebug("Robot "+identifier+" has found its ball");
+		        	System.out.println("FOUND BALL------------------------");
+		        }
+		    }
+		}
+	
 	
 	//barcodes
 	public void updateInfoPanel(){
