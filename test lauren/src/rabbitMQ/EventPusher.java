@@ -155,6 +155,10 @@ public class EventPusher {
 		this.racing = false;
 	}
 	
+	public void foundBall(){
+		sendMessage("Ball found");
+	}
+	
 	/**
 	 * Sets up a consumer to listen for launch events. If launch messages are
 	 * received the race is started or stopped.
