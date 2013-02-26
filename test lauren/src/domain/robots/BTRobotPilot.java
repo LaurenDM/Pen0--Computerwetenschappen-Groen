@@ -46,6 +46,8 @@ public class BTRobotPilot implements RobotPilot  {
 	private final BTCommPC btComm;
 	private Robot robot;
 	private ExploreMaze maze;
+	
+	private Ball ball;
 
 
 	private long lastSensorUpdateTime;
@@ -494,6 +496,7 @@ public class BTRobotPilot implements RobotPilot  {
 	@Override
 	public void fetchBall() {
 		btComm.sendCommand(CMD.FETCHBALL);
+		this.ball = new Ball();
 	}
 
 	@Override
@@ -502,8 +505,7 @@ public class BTRobotPilot implements RobotPilot  {
 	}
 	
 	public Ball getBall(){
-		return null;
-		//TODO: lelijk, maar voorlopige opl
+		return this.ball;
 	}
 	
 

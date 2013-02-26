@@ -14,7 +14,6 @@ public class Robot {
 	private Position finish;
 	private int number; //0-3
 	
-	private boolean hasBall = false;
 	
 	
 	public Robot(RobotPilot robotPilot, int number){
@@ -297,7 +296,6 @@ public class Robot {
 	}
 	
 	public void fetchBall(){
-		hasBall = true;
 		robotPilot.fetchBall();
 	}
 	
@@ -307,7 +305,6 @@ public class Robot {
 	
 	public boolean hasBall(){
 		return (robotPilot.getBall() != null);
-		// TODO: voorlopig zal dit voor btrobot altijd false geven
 	}
 	
 	public Ball getBall(){
