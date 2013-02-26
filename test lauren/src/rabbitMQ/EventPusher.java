@@ -86,7 +86,7 @@ public class EventPusher {
 		this.conn = MQ.createConnection();
 		this.channel = MQ.createChannel(this.conn);
 		
-		this.routingKey = "race.robot_" + robotRandomIdentifier;
+		this.routingKey = "race.groen.robot_" + robotRandomIdentifier;
 
 		System.out.println(String.format("Sending events with routing key '%s' to exchange %s",
 				this.teamName, this.routingKey, Config.EXCHANGE_NAME));

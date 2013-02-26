@@ -1,6 +1,7 @@
 package rabbitMQ;
 
 import java.io.IOException;
+import java.net.ConnectException;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -17,21 +18,36 @@ public class MQ {
 	 */
 	public static Connection createConnection() throws IOException {
 		
+		try{
 		ConnectionParameters params = new ConnectionParameters();
 		params.setRequestedHeartbeat(0);
 		ConnectionFactory factory = new ConnectionFactory(params);
-		Connection conn = factory.newConnection("localhost");
-		
-//		ConnectionParameters params = new ConnectionParameters();
-//		params.setUsername(Config.USER_NAME);
-//		params.setPassword(Config.PASSWORD);
-//		params.setVirtualHost(Config.VIRTUAL_HOST);
-//		params.setRequestedHeartbeat(0);
-//		ConnectionFactory factory = new ConnectionFactory(params);
-//
-//		Connection conn = factory.newConnection(Config.HOST_NAME, Config.PORT);
-
+		Connection conn = factory.newConnection("localhost", 8888);
 		return conn;
+		}
+		catch(ConnectException e){
+			System.out.println("Failed to connect through ssh, trying direct connection (campusnet)");
+			return createCampusConnection();
+		}
+		
+	}
+	
+	public static Connection createCampusConnection() throws IOException{
+		try{
+			ConnectionParameters params = new ConnectionParameters();
+			params.setUsername(Config.USER_NAME);
+			params.setPassword(Config.PASSWORD);
+			params.setVirtualHost(Config.VIRTUAL_HOST);
+			params.setRequestedHeartbeat(0);
+			ConnectionFactory factory = new ConnectionFactory(params);
+
+			Connection conn = factory.newConnection(Config.HOST_NAME, Config.PORT);
+			return conn;
+			}
+			catch(ConnectException e){
+				System.out.println("Failed to connect through campusnet (Are you connected to campusnet?)");
+			}
+		return null;
 	}
 
 	/**
