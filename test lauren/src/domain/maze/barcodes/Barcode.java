@@ -109,16 +109,7 @@ public class Barcode extends MazeElement{
 			action.run(robot);
 		}
 	}
-	
-	@Override
-	public boolean hasPosition(Position hasP){
-		if(orientation==Orientation.NORTH || orientation==Orientation.SOUTH){
-			return false;
-		}
-		else{
-			return false;
-		}
-	}
+
 	
 	public Orientation getOrientation(){
 		return orientation;
@@ -316,5 +307,10 @@ public class Barcode extends MazeElement{
 	@Override
 	public Position getCenterPosition() {
 		return getPos();
+	}
+
+	@Override
+	public boolean hasPosition(Position position) {
+		return containsPosition(position);
 	}
 }
