@@ -1,23 +1,25 @@
-package domain.barcodes;
+package domain.maze.barcodes;
 
 import bluetooth.CMD;
 import domain.robots.Robot;
 
-public class Wait5Action extends Action {
+public class SetFinishAction extends Action {
 
 	@Override
 	public void run(Robot robot) {
-		robot.wait5Seconds();
+		robot.setFinish();
 	}
 
 //	@Override
 //	public int getActionCommandNb() {
-//		return CMD.WAIT5;
+//		return CMD.INVALID;
 //	}
 
 	@Override
 	public String toString() {
-		return "Wait 5";
+		return "Set finish";
 	}
+	
+	
 
 }

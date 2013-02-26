@@ -10,10 +10,10 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 import domain.Position.Position;
-import domain.barcodes.Barcode;
 import domain.maze.Ball;
 import domain.maze.Board;
 import domain.maze.Wall;
+import domain.maze.barcodes.Barcode;
 import domain.maze.graph.MazePath;
 import domain.robotFunctions.BarcodeGenerator;
 import domain.robotFunctions.ExploreMaze;

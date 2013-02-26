@@ -1,13 +1,14 @@
-package domain.barcodes;
+package domain.maze.barcodes;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import domain.Position.Position;
+import domain.maze.MazeElement;
 import domain.maze.Orientation;
 import domain.robots.Robot;
 
-public class Barcode {
+public class Barcode extends MazeElement{
 
 	private Action action;
 	private Position pos; //centre of barcode ( == centre of square; ex "20,20", always multiple of 20)
@@ -109,6 +110,7 @@ public class Barcode {
 		}
 	}
 	
+	@Override
 	public boolean hasPosition(Position hasP){
 		if(orientation==Orientation.NORTH || orientation==Orientation.SOUTH){
 			return false;
@@ -309,5 +311,10 @@ public class Barcode {
 			mirrorBits();
 		}
 		return getDecimal(this.bits);
+	}
+
+	@Override
+	public Position getCenterPosition() {
+		return getPos();
 	}
 }

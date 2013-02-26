@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.Position.Position;
-import domain.barcodes.Barcode;
+import domain.maze.barcodes.Barcode;
 
 public class MazeInterpreter {
 	

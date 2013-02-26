@@ -1,7 +1,7 @@
 package domain.robotFunctions;
 
 import domain.Position.Position;
-import domain.barcodes.Barcode;
+import domain.maze.barcodes.Barcode;
 import domain.robots.CannotMoveException;
 import domain.robots.Robot;
 

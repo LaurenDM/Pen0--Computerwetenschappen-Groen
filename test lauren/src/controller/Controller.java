@@ -20,11 +20,11 @@ import lejos.util.PilotProps;
 
 import domain.PolygonDriver;
 import domain.Position.Position;
-import domain.barcodes.Barcode;
 import domain.maze.Ball;
 import domain.maze.Board;
 import domain.maze.MazeInterpreter;
 import domain.maze.RandomMazeGenerator;
+import domain.maze.barcodes.Barcode;
 import domain.robotFunctions.BarcodeGenerator;
 import domain.robots.BTRobotPilot;
 import domain.robots.CannotMoveException;

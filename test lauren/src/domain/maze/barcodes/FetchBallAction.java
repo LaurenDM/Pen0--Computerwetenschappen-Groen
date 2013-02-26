@@ -1,10 +1,11 @@
-package domain.barcodes;
+package domain.maze.barcodes;
 
 import domain.robots.Robot;
 
-public class DoNothingAction extends Action{
+public class FetchBallAction extends Action {
+	//TODO
 	public void run(Robot robot) {
-		robot.doNothing();
+		robot.fetchBall(); 
 	}
 
 //	@Override
@@ -19,6 +20,6 @@ public class DoNothingAction extends Action{
 	
 	@Override
 	public String toString() {
-		return "Do nothing, ball did not belong to us";
+		return "Fetch ball";
 	}
 }

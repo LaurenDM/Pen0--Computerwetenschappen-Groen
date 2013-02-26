@@ -1,4 +1,4 @@
-package domain.barcodes;
+package domain.maze.barcodes;
 
 import bluetooth.CMD;
 import domain.robots.Robot;

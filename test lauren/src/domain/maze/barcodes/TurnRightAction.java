@@ -1,11 +1,13 @@
-package domain.barcodes;
+package domain.maze.barcodes;
 
+import bluetooth.CMD;
 import domain.robots.Robot;
 
-public class FetchBallAction extends Action {
-	//TODO
+public class TurnRightAction extends Action {
+
+	@Override
 	public void run(Robot robot) {
-		robot.fetchBall(); 
+		robot.turn(360);
 	}
 
 //	@Override
@@ -15,11 +17,14 @@ public class FetchBallAction extends Action {
 //	
 //	@Override
 //	public int getActionCommandArg(){
-//		return -360;
+//		return 360;
+//		
 //	}
+	
 	
 	@Override
 	public String toString() {
-		return "Fetch ball";
+		return "Turn right";
 	}
+
 }

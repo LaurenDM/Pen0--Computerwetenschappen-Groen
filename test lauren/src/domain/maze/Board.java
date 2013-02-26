@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 
 import domain.Position.Position;
-import domain.barcodes.Barcode;
+import domain.maze.barcodes.Barcode;
 
 public class Board {
 	

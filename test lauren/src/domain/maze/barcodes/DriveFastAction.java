@@ -1,24 +1,23 @@
-package domain.barcodes;
+package domain.maze.barcodes;
 
 import bluetooth.CMD;
 import domain.robots.Robot;
 
-public class SetCheckPointAction extends Action {
+public class DriveFastAction extends Action {
 
 	@Override
 	public void run(Robot robot) {
-		robot.setCheckpoint();
+		robot.setHighSpeed();
 	}
 
 //	@Override
 //	public int getActionCommandNb() {
-//		robot.setCheckpoint();
-//		return CMD.INVALID;
+//		return CMD.DRIVEFAST;
 //	}
 
 	@Override
 	public String toString() {
-		return "Set checkpoint";
+		return "Drive fast";
 	}
 
 }

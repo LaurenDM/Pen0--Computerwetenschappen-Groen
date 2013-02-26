@@ -24,7 +24,7 @@ import org.jfree.ui.Align;
 
 import controller.Controller;
 import domain.Position.Position;
-import domain.barcodes.Barcode;
+import domain.maze.barcodes.Barcode;
 import domain.robots.CannotMoveException;
 import domain.util.ColorPolygon;
 import exceptions.ConnectErrorException;

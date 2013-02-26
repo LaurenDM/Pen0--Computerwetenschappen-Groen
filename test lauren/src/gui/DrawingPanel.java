@@ -12,11 +12,11 @@ import javax.swing.JPanel;
 
 import controller.Controller;
 import domain.Position.Position;
-import domain.barcodes.Barcode;
 import domain.maze.Ball;
 import domain.maze.MazeElement;
 import domain.maze.Orientation;
 import domain.maze.Wall;
+import domain.maze.barcodes.Barcode;
 import domain.maze.graph.MazePath;
 import domain.maze.graph.TileNode;
 import domain.util.ColorPolygon;

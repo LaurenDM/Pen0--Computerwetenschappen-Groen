@@ -1,25 +1,25 @@
-package domain.barcodes;
+package domain.maze.barcodes;
 
 import bluetooth.CMD;
+import lejos.nxt.Sound;
 import domain.robots.Robot;
 
-public class SetFinishAction extends Action {
-
+public class PlayTuneAction extends Action {
+	
+	
 	@Override
 	public void run(Robot robot) {
-		robot.setFinish();
+		robot.playTune();
 	}
 
 //	@Override
 //	public int getActionCommandNb() {
-//		return CMD.INVALID;
+//		return CMD.PLAYTUNE;
 //	}
 
 	@Override
 	public String toString() {
-		return "Set finish";
+		return "Play sound";
 	}
-	
-	
 
 }
