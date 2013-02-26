@@ -1,4 +1,5 @@
 package gui;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FileDialog;
@@ -50,9 +51,9 @@ public class ContentPanel implements ActionListener {
     final static int moveButtonWidth = 100;
     final static int allButtonHeight = 20;
     final static int wideButtonWidth=150;
-	final static int rightPanelWidth=365;
+	final static int rightPanelWidth=300;
 	final static int yPaddingTop=50;
-	final static int debugPanelHeight=100+3*20; //100 for the scrollpane an 2*20 for 2 textlines
+	final static int debugPanelHeight=100+2*20; //100 for the scrollpane an 2*20 for 2 textlines
 	final static int sensorGraphsPanelHeight=350;
 
     private boolean connected = false;
@@ -69,6 +70,7 @@ public class ContentPanel implements ActionListener {
 	
     
     Controller controller;
+	private SensorGraphsPanel graphPanel;
 
     public void setFocusButtons(){
     	buttonPanel.requestFocusInWindow();
@@ -157,7 +159,7 @@ public class ContentPanel implements ActionListener {
         //___________________________________________________
         // Creation of a Panel to contain all the JButtons.
         buttonPanel = new JPanel();
-		fixPanelLayout(buttonPanel, 300,8*allButtonHeight, 750, yPaddingTop+debugPanelHeight+sensorGraphsPanelHeight);
+		fixPanelLayout(buttonPanel, rightPanelWidth,8*allButtonHeight, 750, yPaddingTop+debugPanelHeight+sensorGraphsPanelHeight);
         buttonPanel.addKeyListener(l);
         
         
@@ -296,7 +298,7 @@ public class ContentPanel implements ActionListener {
         debugPanel.add(scrollPane);
         fixPanelLayout(debugPanel, rightPanelWidth, debugPanelHeight , 750, yPaddingTop);
         scrollPane.setLocation(0, 0);
-        scrollPane.setSize(315,100);
+        scrollPane.setSize(rightPanelWidth,100);
         writeToDebug("Program started successfully");
         //Infolabels
         xLabel = new JLabel("X: 0");
@@ -319,18 +321,22 @@ public class ContentPanel implements ActionListener {
         angleLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, angleLabel, 125, 20, 100, 120);
 		
-        lightLabel = new JLabel("Lightsensor: 0");
-	    lightLabel.setHorizontalTextPosition(JLabel.LEFT);
-	    fixLabelLayout(debugPanel, lightLabel, 125, 20, 0, 140);
-        
-	    distanceLabel = new JLabel("Distance: 0");
-        distanceLabel.setHorizontalTextPosition(JLabel.LEFT);
-        fixLabelLayout(debugPanel, distanceLabel, 125, 20, 125, 140);
-//        TODO Francis: vervangen door grafiek
+//        lightLabel = new JLabel("Lightsensor: 0");
+//	    lightLabel.setHorizontalTextPosition(JLabel.LEFT);
+//	    fixLabelLayout(debugPanel, lightLabel, 125, 20, 0, 140);
+//        
+//	    distanceLabel = new JLabel("Distance: 0");
+//        distanceLabel.setHorizontalTextPosition(JLabel.LEFT);
+//        fixLabelLayout(debugPanel, distanceLabel, 125, 20, 125, 140);
+//        Dit is vervangen door grafiek
         
         lineLabel = new JLabel("Line: FALSE");
         lineLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, lineLabel, 125, 20, 200, 120);
+        
+        graphPanel=new SensorGraphsPanel();
+        graphPanel.fixPanelLayout(rightPanelWidth,sensorGraphsPanelHeight, 750, yPaddingTop+debugPanelHeight);
+        totalGUI.add(graphPanel);
 
 	}
 	
@@ -718,11 +724,11 @@ public class ContentPanel implements ActionListener {
     }
     
     public void setRobotLightValue(double value){
-    	lightLabel.setText("Lightsensor: " + Double.valueOf(value).intValue()); //TODO Francis
+    	graphPanel.addValue(SensorGraphsPanel.LIGHTPLOT, value);
     }
     
     public void setRobotDistanceValue(double value){
-    	distanceLabel.setText("Distance: " + Double.valueOf(value).intValue()); //TODO Francis
+    	graphPanel.addValue(SensorGraphsPanel.DISTANCEPLOT, value);
     }
     
     public void setRobotTouchingValue(boolean value){
