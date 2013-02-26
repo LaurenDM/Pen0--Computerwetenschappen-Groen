@@ -28,7 +28,11 @@ import domain.barcodes.Barcode;
 import domain.robots.CannotMoveException;
 import domain.util.ColorPolygon;
 import exceptions.ConnectErrorException;
-
+/**
+ * 
+ * @author PenO Groen
+ *
+ */
 public class ContentPanel implements ActionListener {
 	static JFrame frame = new JFrame("P&O - Groen");
     static JFrame variableFrame = new JFrame("P&O - Groen - Variables");
