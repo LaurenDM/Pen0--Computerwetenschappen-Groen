@@ -13,6 +13,7 @@ public class Robot {
 	private Movement movement;
 	private Position finish;
 	private int number; //0-3
+	private int teamNumber; //0-1
 	private boolean foundBall;
 	
 	
@@ -319,6 +320,22 @@ public class Robot {
 	
 	public Ball getBall(){
 		return robotPilot.getBall();
+	}
+
+	/**
+	 * This is always 0 or 1.
+	 * @return the teamNumber
+	 */
+	public int getTeamNumber() {
+		return teamNumber;
+	}
+
+	/**
+	 * @throws IllegalArgumentException if teamNumber!=0&&teamNumber!=1
+	 * @param teamNumber the teamNumber to set
+	 */
+	public void setTeamNumber(int teamNumber) {
+		this.teamNumber = teamNumber;
 	}
 
 	

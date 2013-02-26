@@ -80,22 +80,27 @@ public class Barcode extends MazeElement{
 	}
 	
 	public static Action getAction(int number){
-		if(BALLBARCODE == number)
-			return new FetchBallAction();
+		if((number<8) && (BALLBARCODE == number%4)){
+			if(number%4==number){
+				return new FetchBallAction(0);
+			} else {
+				return new FetchBallAction(1);
+			}
+		}
 		if(isFalseBarcode(number))
 			return new DoNothingAction();
 		else{
-			switch (number){
-			case 5: return new TurnLeftAction();
-			case 9: return new TurnRightAction();
-			case 13: return new SetCheckPointAction();
-			case 15: return new PlayTuneAction();
-			case 19: return new Wait5Action();
-			case 25: return new DriveSlowAction();
-			case 37: return new DriveFastAction();
-			case 55: return new SetFinishAction();
-			default: return null;
-			}
+//			switch (number){
+//			case 5: return new TurnLeftAction();
+//			case 9: return new TurnRightAction();
+//			case 13: return new SetCheckPointAction();
+//			case 15: return new PlayTuneAction();
+//			case 19: return new Wait5Action();
+//			case 25: return new DriveSlowAction();
+//			case 37: return new DriveFastAction();
+//			case 55: return new SetFinishAction();
+//			default: return null;
+			return null;
 		}
 	}
 	
