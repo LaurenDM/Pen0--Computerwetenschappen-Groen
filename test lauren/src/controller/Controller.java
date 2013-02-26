@@ -402,6 +402,14 @@ public class Controller {
 	public Ball getBall(){
 		return getRobot().getBall();
 	}
+	
+	public void ballFoundByOtherRobot(Robot robot){
+		robot.setFoundBall();
+	}
+	
+	public HashMap<Integer, Robot> getOtherRobots(){
+		return otherRobots;
+	}
 
 
 	public void setFalseBallBarcodes(int[] falseBallBarcodes) {

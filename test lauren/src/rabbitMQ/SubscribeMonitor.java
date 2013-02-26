@@ -22,7 +22,7 @@ import domain.robots.Robot;
 public class SubscribeMonitor {
 	public static final String MONITOR_KEY = "race.groen.*";
 	public Controller controller;
-	private MessageParser mp;
+	private MessageParser mp; 
 	
 	public SubscribeMonitor(Controller controller) {
 		this.controller = controller;

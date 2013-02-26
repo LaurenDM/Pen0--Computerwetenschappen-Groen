@@ -17,11 +17,12 @@ public class MQ {
 	 * @throws IOException
 	 */
 	public static Connection createConnection() throws IOException {
-		
+
 		try{
 		ConnectionParameters params = new ConnectionParameters();
 		params.setRequestedHeartbeat(0);
 		ConnectionFactory factory = new ConnectionFactory(params);
+		System.out.println("Trying to connect...");
 		Connection conn = factory.newConnection("localhost", 8888);
 		return conn;
 		}
