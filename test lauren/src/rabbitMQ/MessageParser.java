@@ -15,7 +15,7 @@ public class MessageParser {
 //			System.out.println(routingKey);
 			if(!body.contains("start")){
 			Robot robot_temp = controller.getRobotFromIdentifier(routingKey.split("_")[1]);
-			if(robot_temp!=null){
+			if(robot_temp!=null){ 
 				if(body.startsWith("Ball")){
 					System.out.println("Ball found");
 				}

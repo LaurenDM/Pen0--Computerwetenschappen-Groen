@@ -156,7 +156,7 @@ public class EventPusher {
 	}
 	
 	public void foundBall(){
-		sendMessage("Ball found");
+		sendMessage("Ball found"); 
 	}
 	
 	/**
