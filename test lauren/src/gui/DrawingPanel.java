@@ -383,12 +383,12 @@ public class DrawingPanel extends JPanel {
 	
 	public void drawBall(Ball ball){
 		g.setColor(Color.red);
-		g.fillOval((int)ball.getPos1().getX()-5+OFFSET, (int)ball.getPos1().getY()-5+OFFSET, 10, 10);
+		g.fillOval((int)ball.getPosition().getX()-5+OFFSET, (int)ball.getPosition().getY()-5+OFFSET, 10, 10);
 	}
 	
 	public void removeBall(Ball ball){
 		g.setColor(Color.white);
-		g.fillOval((int)ball.getPos1().getX()-5+OFFSET, (int)ball.getPos1().getY()-5+OFFSET, 10, 10);
+		g.fillOval((int)ball.getPosition().getX()-5+OFFSET, (int)ball.getPosition().getY()-5+OFFSET, 10, 10);
 	}
 	
 

@@ -38,7 +38,7 @@ public class Board {
 	public Ball removeBall(Position position) {
 		Ball ball2remove = null;
 		for(Ball ball : balls){
-			if(ball.getPos1().getDistance(position)<10){
+			if(ball.getPosition().getDistance(position)<10){
 				ball2remove = ball;
 			}
 		}
