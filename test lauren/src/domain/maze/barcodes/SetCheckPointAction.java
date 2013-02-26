@@ -3,7 +3,7 @@ package domain.maze.barcodes;
 import bluetooth.CMD;
 import domain.robots.Robot;
 
-public class SetCheckPointAction extends Action {
+public class SetCheckPointAction implements Action {
 
 	@Override
 	public void run(Robot robot) {

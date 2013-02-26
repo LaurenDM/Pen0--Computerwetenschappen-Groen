@@ -2,7 +2,7 @@ package domain.maze.barcodes;
 
 import domain.robots.Robot;
 
-public class DoNothingAction extends Action{
+public class DoNothingAction implements Action{
 	public void run(Robot robot) {
 		robot.doNothing();
 	}
