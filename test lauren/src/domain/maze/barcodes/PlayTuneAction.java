@@ -4,7 +4,7 @@ import bluetooth.CMD;
 import lejos.nxt.Sound;
 import domain.robots.Robot;
 
-public class PlayTuneAction extends Action {
+public class PlayTuneAction implements Action {
 	
 	
 	@Override

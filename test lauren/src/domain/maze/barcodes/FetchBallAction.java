@@ -2,7 +2,7 @@ package domain.maze.barcodes;
 
 import domain.robots.Robot;
 
-public class FetchBallAction extends Action {
+public class FetchBallAction implements Action {
 	//TODO
 	public void run(Robot robot) {
 		robot.fetchBall(); 

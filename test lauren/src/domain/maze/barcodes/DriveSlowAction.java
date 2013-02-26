@@ -3,7 +3,7 @@ package domain.maze.barcodes;
 import bluetooth.CMD;
 import domain.robots.Robot;
 
-public class DriveSlowAction extends Action {
+public class DriveSlowAction implements Action {
 
 	@Override
 	public void run(Robot robot) {

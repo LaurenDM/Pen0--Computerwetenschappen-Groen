@@ -12,7 +12,7 @@ import domain.robots.Robot;
 
 
 
-public abstract class Action {
+public interface Action {
 
 	
 	public abstract void run(Robot robot);
