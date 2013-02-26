@@ -501,7 +501,7 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void doNothing() {
-		btComm.sendCommand(CMD.DONOTHING);
+		
 	}
 	
 	public Ball getBall(){

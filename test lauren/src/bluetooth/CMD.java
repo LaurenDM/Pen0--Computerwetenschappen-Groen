@@ -193,7 +193,4 @@ public interface CMD {
 	public static final int FETCHBALL = 34;
 	public void fetchBall();
 	
-	public static final int DONOTHING = 35;
-	public void doNothing();
-	
 }
