@@ -280,10 +280,7 @@ public class Controller {
 
 
 	public void rotateAmount(int i) {
-		currentRobot.setTurningSpeed(2);
-		currentRobot.turn(i);
-		currentRobot.resetToDefaultSpeeds();
-		
+		currentRobot.turn(i);		
 	}
 	
 	public void findBlackLineAndCreateBarcode(){

@@ -49,7 +49,7 @@ public class ContentPanel implements ActionListener {
     private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, lineLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, 
     calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton,
-    rotateSlowLeft,rotateSlowRight,startButton, barcodeButton, finishButton, resumeButton, resetButton,setBarcodeButton;
+    rotateLittleLeft,rotateLittleRight,startButton, barcodeButton, finishButton, resumeButton, resetButton,setBarcodeButton;
     private static JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
@@ -70,7 +70,7 @@ public class ContentPanel implements ActionListener {
     private boolean rightButtonPressed = false;
     private boolean downButtonPressed = false;
     private boolean showRawData = false;
-    private int rotateSlowAmount = 10;
+    private int rotateLittleAmount = 10;
     private ArrayList<Integer> printedBalls;
     public enum Button {
         UP, LEFT, DOWN, RIGHT,NONE
@@ -188,11 +188,11 @@ public class ContentPanel implements ActionListener {
         downButton = new JButton("BACKWARD");
         fixButtonLayout(buttonPanel, downButton, moveButtonWidth , allButtonHeight, moveButtonWidth, allButtonHeight);
         
-        rotateSlowLeft = new JButton("Slow L");
-        fixButtonLayout(buttonPanel, rotateSlowLeft, moveButtonWidth, allButtonHeight, 0, allButtonHeight);
+        rotateLittleLeft = new JButton("10 L");
+        fixButtonLayout(buttonPanel, rotateLittleLeft, moveButtonWidth, allButtonHeight, 0, allButtonHeight);
         
-        rotateSlowRight = new JButton("Slow R");
-        fixButtonLayout(buttonPanel,rotateSlowRight, moveButtonWidth, allButtonHeight, 2*moveButtonWidth, allButtonHeight);
+        rotateLittleRight = new JButton("10 R");
+        fixButtonLayout(buttonPanel,rotateLittleRight, moveButtonWidth, allButtonHeight, 2*moveButtonWidth, allButtonHeight);
         
         cancelButton = new JButton("STOP");
 		fixButtonLayout(buttonPanel, cancelButton, wideButtonWidth, allButtonHeight, 0, 2*allButtonHeight );
@@ -546,12 +546,12 @@ public class ContentPanel implements ActionListener {
         	controller.disableError();
         	buttonPanel.requestFocusInWindow();
         }
-        else if(e.getSource() == rotateSlowRight){
-        	controller.rotateAmount(rotateSlowAmount);
+        else if(e.getSource() == rotateLittleRight){
+        	controller.rotateAmount(rotateLittleAmount);
         	buttonPanel.requestFocusInWindow();
         }
-		else if(e.getSource() == rotateSlowLeft){
-			controller.rotateAmount(-rotateSlowAmount);
+		else if(e.getSource() == rotateLittleLeft){
+			controller.rotateAmount(-rotateLittleAmount);
 			buttonPanel.requestFocusInWindow();
         }
 		else if(e.getSource() == startButton){
