@@ -6,7 +6,7 @@ import java.util.List;
 import domain.Position.Position;
 import domain.maze.MazeElement;
 import domain.maze.Orientation;
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 
 public class Barcode extends MazeElement{
 
@@ -104,7 +104,7 @@ public class Barcode extends MazeElement{
 		return action;
 	}
 	
-	public void runAction(Robot robot){
+	public void runAction(RobotPilot robot){
 		if(action != null){
 			action.run(robot);
 		}

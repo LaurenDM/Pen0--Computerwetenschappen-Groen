@@ -4,12 +4,9 @@ import gui.ContentPanel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 
 import domain.maze.Orientation;
-import domain.robots.CannotMoveException;
-import domain.robots.Robot;
 import domain.robots.RobotPilot;
 
 public class MazeGraph {

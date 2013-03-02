@@ -4,14 +4,15 @@ import java.awt.Color;
 import java.awt.Polygon;
 
 import domain.Position.Position;
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 import domain.util.ColorPolygon;
 
 public class RobotPolygon implements ColorPolygon {
 	Polygon polygonRobot;	
-	private final Robot robot;
+	private final RobotPilot robot;
 	private Color robotColor=Color.black;
-	public RobotPolygon(Robot robot){
+	
+	public RobotPolygon(RobotPilot robot){
 		this.robot=robot;
 	}
 	public Position getCenter(){

@@ -21,7 +21,7 @@ import domain.robotFunctions.Straightener;
 import domain.util.TimeStamp;
 
 
-public class SimRobotPilot implements RobotPilot {
+public class SimRobotPilot extends RobotPilot {
 	private MoveThread moveThread;
 	private double orientation; // Degrees to horizontal
 	private Position position;
@@ -29,7 +29,6 @@ public class SimRobotPilot implements RobotPilot {
 	private ExploreMaze maze;
 	private boolean turningError = true;
 	
-	private Ball ball;
 	
 
 	//The wanted rotation Speed of the robot.
@@ -39,37 +38,40 @@ public class SimRobotPilot implements RobotPilot {
 	private double travelSpeed;
 	private TurnThread turnThread;
 
-	private Board board;
-
 	private int sensorAngle;
 
 	private final int defaultMovingSpeed=80; //was 80
 	private final int defaultTurningSpeed=200;
-	private Robot robot;
 	
 	private double lastDistance = 0;
 
 	/**
 	 * Assenstelsel wordt geinitialiseerd met oorsprong waar de robot begint
 	 */
+	public SimRobotPilot(int number){
+		this(0, new Position(20,20),number);
+	}
+	
 	public SimRobotPilot(){
-		this(0, new Position(20,20));
+		this(0);
 	}
-	@Override
-	public void setRobot(Robot robot){
-		this.robot = robot;
+	
+	public ExploreMaze getMaze(){
+		return this.maze;
 	}
-
-	private Robot getRobot(){
-		return robot;
-	}
-	public SimRobotPilot(double orientation, Position position){
+	
+	public SimRobotPilot(double orientation, Position position, int number){
+		super(number);
 		setOrientation(orientation);
 		this.position=position;
 		this.setMovingSpeed(defaultMovingSpeed);
 		this.setTurningSpeed(defaultTurningSpeed);
 		this.sensorAngle = 0;
-		board = new Board();
+		setBoard(new Board());
+	}
+	
+	public SimRobotPilot(double orientation, Position position){
+		this(orientation, position, 0);
 	}
 
 	private void setOrientation(double orientation) {
@@ -81,14 +83,6 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public Position getPosition(){
 		return position;
-	}
-
-	public void setBoard(Board board){
-		this.board = board;
-	}
-
-	public Board getBoard(){
-		return board;
 	}
 
 	public int getSensorAngle(){
@@ -188,6 +182,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void forward() throws CannotMoveException {
+		setMovement(Movement.FORWARD);
 		forward(false);
 	}
 
@@ -219,6 +214,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void backward(){
+		setMovement(Movement.BACKWARD);
 		stop();
 		try {
 			startMoveThread(Movement.BACKWARD);
@@ -230,6 +226,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void stop() {
+		setMovement(Movement.STOPPED);
 		stopThread(moveThread);
 		stopThread(turnThread);
 	}
@@ -242,6 +239,10 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public synchronized void move(double wantedDistance) throws CannotMoveException {
+		if (wantedDistance > 0)
+			setMovement(Movement.FORWARD);
+		else if (wantedDistance < 0)
+			setMovement(Movement.BACKWARD);
 		Position pos1 = getPosition().clone();
 		boolean running = true;
 		if (wantedDistance > 0) {
@@ -267,15 +268,15 @@ public class SimRobotPilot implements RobotPilot {
 		} else {
 			backward();
 		}
-		double turnSpeed = robot.getTurningSpeed();
-		double moveSpeed = robot.getMovingSpeedSetting();
+		double turnSpeed = getTurningSpeed();
+		double moveSpeed = getMovingSpeed();
 		while(running && !Thread.interrupted()){
 			double currDistance=getPosition().getDistance(pos1);
 			if(detectBlackLine() && !isScanningBarcode){
-				Position pos = robot.getPosition().getNewPosition(robot.getOrientation(), 8);
-				if(!robot.getBoard().detectBarcodeAt(pos)){
+				Position pos = getPosition().getNewPosition(getOrientation(), 8);
+				if(!getBoard().detectBarcodeAt(pos)){
 					isScanningBarcode = true;
-					BarcodeGenerator bg = new BarcodeGenerator(getRobot());
+					BarcodeGenerator bg = new BarcodeGenerator(this);
 					try {
 						bg.generateBarcode();
 						move(-8);
@@ -300,6 +301,7 @@ public class SimRobotPilot implements RobotPilot {
 				stopThread(moveThread);
 			}
 		}
+		setMovement(Movement.STOPPED);
 	}
 
 	@Override
@@ -380,10 +382,10 @@ public class SimRobotPilot implements RobotPilot {
 	@Override
 	public boolean isTouching() {
 		if(moveThread == null || moveThread.getMovement().equals(Movement.FORWARD)){
-			return board.detectWallAt(getPosition().getNewPosition(getOrientation(), 14));
+			return getBoard().detectWallAt(getPosition().getNewPosition(getOrientation(), 14));
 		}
 		else{
-			return board.detectWallAt(getPosition().getNewPosition(getOrientation()+180, 5));
+			return getBoard().detectWallAt(getPosition().getNewPosition(getOrientation()+180, 5));
 		}
 
 	}
@@ -406,7 +408,7 @@ public class SimRobotPilot implements RobotPilot {
 		for(int i = 1; i<MAX_VALUE; i++){
 			for(int j = -15; j<15; j++){
 				Position pos = getPosition().getNewPosition(getOrientation()+ getSensorAngle()+j, i);
-				foundWall = board.detectWallAt(pos);
+				foundWall = getBoard().detectWallAt(pos);
 				if(foundWall){
 					if(getPosition().getDistance(pos)<shortestDistance){
 						shortestDistance = getPosition().getDistance(pos);
@@ -455,19 +457,19 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public boolean detectWhiteLine() {
-		return board.detectWhiteLineAt(getPosition().getNewPosition(getOrientation(), 8));
+		return getBoard().detectWhiteLineAt(getPosition().getNewPosition(getOrientation(), 8));
 	}
 	
 	public double detectWhiteLineGradient() {
 		Position checkPosition = getPosition().getNewPosition(getOrientation(), 8);
 		double aggregate = 0;
-		boolean center = board.detectWhiteLineAt(checkPosition);
+		boolean center = getBoard().detectWhiteLineAt(checkPosition);
 		for(domain.maze.Orientation o: domain.maze.Orientation.values()){
-			boolean out = board.detectWhiteLineAt(new Position(checkPosition.getX()+o.getXValue()*0.5,checkPosition.getY()+o.getYValue()*0.5));
+			boolean out = getBoard().detectWhiteLineAt(new Position(checkPosition.getX()+o.getXValue()*0.5,checkPosition.getY()+o.getYValue()*0.5));
 			if(center==out){
 				aggregate+=(center?0.25:0);
 			} else {
-				boolean outCenter = board.detectWhiteLineAt(new Position(checkPosition.getX()+o.getXValue()*0.25,checkPosition.getY()+o.getYValue()*0.25));
+				boolean outCenter = getBoard().detectWhiteLineAt(new Position(checkPosition.getX()+o.getXValue()*0.25,checkPosition.getY()+o.getYValue()*0.25));
 				aggregate+=0.25*((center?0.5:0)+(outCenter?0.25:0)+(out?0.25:0));
 			}
 		}
@@ -477,13 +479,13 @@ public class SimRobotPilot implements RobotPilot {
 	public double detectBlackLineGradient() {
 		Position checkPosition = getPosition().getNewPosition(getOrientation(), 8);
 		double aggregate = 0;
-		boolean center = board.detectBlackLineAt(checkPosition);
+		boolean center = getBoard().detectBlackLineAt(checkPosition);
 		for(domain.maze.Orientation o: domain.maze.Orientation.values()){
-			boolean out = board.detectBlackLineAt(new Position(checkPosition.getX()+o.getXValue()*0.5,checkPosition.getY()+o.getYValue()*0.5));
+			boolean out = getBoard().detectBlackLineAt(new Position(checkPosition.getX()+o.getXValue()*0.5,checkPosition.getY()+o.getYValue()*0.5));
 			if(center==out){
 				aggregate+=(center?0.25:0);
 			} else {
-				boolean outCenter = board.detectBlackLineAt(new Position(checkPosition.getX()+o.getXValue()*0.25,checkPosition.getY()+o.getYValue()*0.25));
+				boolean outCenter = getBoard().detectBlackLineAt(new Position(checkPosition.getX()+o.getXValue()*0.25,checkPosition.getY()+o.getYValue()*0.25));
 				aggregate+=0.25*((center?0.5:0)+(outCenter?0.25:0)+(out?0.25:0));
 			}
 		}
@@ -526,7 +528,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void straighten() {
-		(new Straightener(new Robot(this, 0))).straighten(0);
+		(new Straightener(this)).straighten(0);
 
 	}
 
@@ -558,13 +560,13 @@ public class SimRobotPilot implements RobotPilot {
 	}
 
 	public void fixWall() {
-		robot.turnSensorLeft();
-		double leftValue = robot.readUltrasonicValue();
-		robot.turnSensorRight();
-		double rightValue = robot.readUltrasonicValue();
-		robot.turnSensorForward();
+		turnSensorLeft();
+		double leftValue = readUltrasonicValue();
+		turnSensorRight();
+		double rightValue = readUltrasonicValue();
+		turnSensorForward();
 		if(leftValue < rightValue)
-			robot.turn(90);
+			turn(90);
 	}
 
 	public void findBlackLine(){
@@ -633,7 +635,7 @@ public class SimRobotPilot implements RobotPilot {
 	}
 
 	public void addFoundWall(Wall wall){
-		board.foundNewWall(wall);
+		getBoard().foundNewWall(wall);
 	}
 
 	@Override
@@ -642,7 +644,7 @@ public class SimRobotPilot implements RobotPilot {
 	}
 	@Override
 	public void scanBarcode() {
-		BarcodeGenerator bg = new BarcodeGenerator(new Robot(this, 0));
+		BarcodeGenerator bg = new BarcodeGenerator(this);
 		bg.generateBarcode();
 	}
 
@@ -717,7 +719,7 @@ public class SimRobotPilot implements RobotPilot {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.ball = board.removeBall(getPosition());
+		setBall(getBoard().removeBall(getPosition()));
 		try {
 			move(-40);
 		} catch (CannotMoveException e) {
@@ -731,9 +733,7 @@ public class SimRobotPilot implements RobotPilot {
 		maze.setNextTileToDeadEnd();
 	}
 	
-	public Ball getBall(){
-		return this.ball;
-	}
+	
 
 
 }

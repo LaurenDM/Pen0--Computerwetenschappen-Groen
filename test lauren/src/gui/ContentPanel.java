@@ -33,7 +33,7 @@ import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
 import domain.maze.Ball;
 import domain.robots.CannotMoveException;
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 import domain.util.ColorPolygon;
 import exceptions.ConnectErrorException;
 
@@ -760,14 +760,14 @@ public class ContentPanel implements ActionListener {
 	
 	public void updateBalls(){
 //		System.out.println("updateBalls");
-		HashMap<Integer, Robot> otherRobots = controller.getOtherRobots();
-	    Iterator<Entry<Integer, Robot>> it = otherRobots.entrySet().iterator();
+		HashMap<Integer, RobotPilot> otherRobots = controller.getOtherRobots();
+	    Iterator<Entry<Integer, RobotPilot>> it = otherRobots.entrySet().iterator();
 		    while (it.hasNext()) {
-		        Map.Entry<Integer, Robot> pairs = (Entry<Integer, Robot>)it.next();
+		        Map.Entry<Integer, RobotPilot> pairs = (Entry<Integer, RobotPilot>)it.next();
 //		        System.out.println(pairs.getKey() + " = " + pairs.getValue());
 		        Integer identifier = pairs.getKey();
-		        Robot robot = pairs.getValue();
-		        if(!printedBalls.contains(identifier) && robot.getFoundBall()){
+		        RobotPilot robot = pairs.getValue();
+		        if(!printedBalls.contains(identifier) && robot.hasBall()){
 		        	printedBalls.add(identifier);
 		        	writeToDebug("Robot "+identifier+" has found its ball");
 		        	System.out.println("FOUND BALL------------------------");

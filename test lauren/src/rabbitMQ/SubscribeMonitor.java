@@ -11,7 +11,6 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
 import controller.Controller;
-import domain.robots.Robot;
 
 /**
  * A program that monitors "race.groen.*" messages
