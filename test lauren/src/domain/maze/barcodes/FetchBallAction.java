@@ -1,10 +1,10 @@
 package domain.maze.barcodes;
 
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 
 public class FetchBallAction implements Action {
 	//TODO
-	public void run(Robot robot) {
+	public void run(RobotPilot robot) {
 		robot.fetchBall(); 
 	}
 

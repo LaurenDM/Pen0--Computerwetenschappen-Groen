@@ -1,7 +1,7 @@
 package rabbitMQ;
 
 import controller.Controller;
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 
 public class MessageParser {
 	
@@ -14,11 +14,12 @@ public class MessageParser {
 		public void parse(String routingKey, String body) {
 //			System.out.println(routingKey);
 			if(!body.contains("start")){
-			Robot robot_temp = controller.getRobotFromIdentifier(routingKey.split("_")[1]);
+				int identifier = Integer.parseInt(routingKey.split("_")[1]);
+			RobotPilot robot_temp = controller.getRobotFromIdentifier(identifier);
 			if(robot_temp!=null){ 
 				if(body.contains("Ball")){
 //					controller
-					robot_temp.setFoundBall();
+					robot_temp.setFoundBall(identifier);
 					System.out.println("Ball found--------------------------");
 				}
 				else{

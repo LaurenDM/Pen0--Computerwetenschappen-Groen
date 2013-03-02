@@ -9,18 +9,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import domain.robots.CannotMoveException;
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 
 /**
  * @author Joren
  *
  */
 public class TestDriver {	
-	private static Robot robot;
+	private static RobotPilot robot;
 	private static TestController testController;
 	private static boolean testRunning;
 	
-	public TestDriver(Robot robot,TestController testController){
+	public TestDriver(RobotPilot robot,TestController testController){
 		if(testRunning){
 			throw(new IllegalArgumentException("A test is already running"));
 		} else {

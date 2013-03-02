@@ -12,9 +12,7 @@ import domain.maze.Wall;
 import domain.maze.graph.MazeGraph;
 import domain.maze.graph.MazePath;
 import domain.robots.CannotMoveException;
-import domain.robots.Robot;
 import domain.robots.RobotPilot;
-import domain.robots.SimRobotPilot;
 
 public class ExploreMaze{
 	

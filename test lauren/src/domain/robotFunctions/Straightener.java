@@ -2,7 +2,7 @@ package domain.robotFunctions;
 import domain.Position.Position;
 import domain.robots.BTRobotPilot;
 import domain.robots.CannotMoveException;
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 import domain.robots.SimRobotPilot;
 
 /**
@@ -12,13 +12,13 @@ import domain.robots.SimRobotPilot;
 public class Straightener extends RobotFunction {
 	private static final int DISTANCE_BETWEEN_SENSOR_AND_WHEELS = 8;
 	//The robot that needs to be straightened
-	private Robot robot;
+	private RobotPilot robot;
 
 	/**
 	 * Create a straightener for the given robot.
 	 * @param robot
 	 */
-	public Straightener(Robot robot){
+	public Straightener(RobotPilot robot){
 		this.robot = robot;
 	}
 
@@ -65,7 +65,7 @@ public class Straightener extends RobotFunction {
 	private void turnUntil(boolean detect, boolean left, int wantedDetections) {
 		double turnSpeed = robot.getTurningSpeed();
 		robot.setTurningSpeed(1);
-		if(robot.getRobotPilot().getClass() == SimRobotPilot.class){
+		if(robot.getClass() == SimRobotPilot.class){
 			robot.setTurningSpeed(100);
 		}
 		int consecutiveDetections = 0;
@@ -112,7 +112,7 @@ public class Straightener extends RobotFunction {
 		boolean wood = false;
 		boolean turnDirection;
 		double turnSpeed = robot.getTurningSpeed();
-		double moveSpeed = robot.getMovingSpeedSetting();
+		double moveSpeed = robot.getMovingSpeed();
 		findWhiteLine();
 		try {
 			robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
