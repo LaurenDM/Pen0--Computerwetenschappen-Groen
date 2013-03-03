@@ -345,7 +345,7 @@ public class Controller {
 		currentRobot.autoCalibrateLight();}
 	
 	public void disableError() {
-		otherRobots.get(1).setPose(3, 100, 100);
+		otherRobots.get(1).setPose(3, 100, 100); //TODO uitleggen waarom aan francis
 //		simRobotPilot.disableError();
 	}
 	
