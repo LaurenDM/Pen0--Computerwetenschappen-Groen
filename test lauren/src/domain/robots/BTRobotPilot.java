@@ -496,6 +496,7 @@ public class BTRobotPilot extends RobotPilot  {
 	public void fetchBall() {
 		btComm.sendCommand(CMD.FETCHBALL);
 		setBall(new Ball());
+		maze.setNextTileToDeadEnd();
 	}
 
 	@Override
