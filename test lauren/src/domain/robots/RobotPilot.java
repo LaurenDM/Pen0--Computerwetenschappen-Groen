@@ -4,6 +4,7 @@ import domain.Position.Position;
 import domain.maze.Ball;
 import domain.maze.Board;
 import domain.maze.Wall;
+import domain.maze.barcodes.Barcode;
 import domain.maze.graph.MazePath;
 import domain.polygons.RobotPolygon;
 import domain.robotFunctions.ExploreMaze;
@@ -219,6 +220,10 @@ public abstract class RobotPilot {
 
 	public void setFoundBall(int number) {
 		setBall(new Ball(number));
+	}
+	
+	public int getTeamNumber(){
+		return Barcode.getTeamNumber();
 	}
 
 

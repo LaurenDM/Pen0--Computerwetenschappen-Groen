@@ -60,24 +60,30 @@ public class Barcode extends MazeElement{
 		else throw new IllegalArgumentException();
 	}
 	
-	private static int[] BALLBARCODES = new int[] {0};
-	private static int[] FALSEBARCODES = new int[] {0};
+	private static int[] BALLBARCODES = new int[]{0,4,1,5,2,6,3,7};
+//	private static int[] FALSEBARCODES = new int[] {0};
+	private static int BALLNUMBER = 0;
+	private static int TEAMNB = 0;
 	
-	public static void setBallBarcodes(int[] ballBarcodes) {
-		BALLBARCODES = ballBarcodes;
+	public static int getTeamNumber(){
+		return TEAMNB;
 	}
 	
-	public static void setFalseBallBarcodes(int[] barcodes){
-		FALSEBARCODES = barcodes;
+	public static void setBallNumber(int ballNumber) {
+		BALLNUMBER = ballNumber;
 	}
 	
-	private static boolean isFalseBarcode(int number){
-		for (int falseBarcodeNbr : FALSEBARCODES) {
-			if(falseBarcodeNbr == number)
-				return true;
-		}
-		return false;
-	}
+//	public static void setFalseBallBarcodes(int[] barcodes){
+//		FALSEBARCODES = barcodes;
+//	}
+//	
+//	private static boolean isFalseBarcode(int number){
+//		for (int falseBarcodeNbr : FALSEBARCODES) {
+//			if(falseBarcodeNbr == number)
+//				return true;
+//		}
+//		return false;
+//	}
 	
 	private static boolean isBallBarcode(int number){
 		for (int ballBarcodeNbr : BALLBARCODES) {
@@ -88,9 +94,11 @@ public class Barcode extends MazeElement{
 	}
 	
 	public static Action getAction(int number){
-		if(isBallBarcode(number))
+		if(isBallBarcode(number) && number % 4 == BALLNUMBER){
+			TEAMNB = number / 4;
 			return new FetchBallAction();
-		if(isFalseBarcode(number))
+		}
+		else if(isBallBarcode(number) && number % 4 != BALLNUMBER)
 			return new DoNothingAction();
 		else{
 			switch (number){
@@ -126,6 +134,7 @@ public class Barcode extends MazeElement{
 	public int[] getBits(){
 		return bits;
 	}
+
 	
 
 	

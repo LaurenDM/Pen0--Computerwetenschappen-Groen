@@ -378,8 +378,8 @@ public class Controller {
 		}
 	}
 	
-	public void setBallBarcodes(int[] barcodes){
-		Barcode.setBallBarcodes(barcodes);
+	public void setBallNumber(int barcodeNb){
+		Barcode.setBallNumber(barcodeNb);
 	}
 
 
@@ -399,9 +399,13 @@ public class Controller {
 	public HashMap<Integer, RobotPilot> getOtherRobots(){
 		return otherRobots;
 	}
-
-
-	public void setFalseBallBarcodes(int[] falseBallBarcodes) {
-		Barcode.setFalseBallBarcodes(falseBallBarcodes);
+	
+	public int getTeamNumber(){
+		return currentRobot.getTeamNumber();
 	}
+
+
+//	public void setFalseBallBarcodes(int[] falseBallBarcodes) {
+//		Barcode.setFalseBallBarcodes(falseBallBarcodes);
+//	}
 }
