@@ -21,6 +21,7 @@ public abstract class RobotPilot {
 	private Ball ball;
 	private int teamNumber;
 	
+	
 	public RobotPilot(int number){
 		this.movement=Movement.STOPPED;
 		this.robotPolygon=new RobotPolygon(this);

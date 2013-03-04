@@ -1,5 +1,6 @@
 package domain.maze.barcodes;
 
+import controller.Controller;
 import domain.robots.RobotPilot;
 
 public class FetchBallAction implements Action {
@@ -9,6 +10,7 @@ public class FetchBallAction implements Action {
 	public void run(RobotPilot robot) {
 		robot.setTeamNumber(getTeamNumber());
 		robot.fetchBall(); 
+		Controller.setStopped(true);
 	}
 	
 	private int getTeamNumber() {

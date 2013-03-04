@@ -338,6 +338,10 @@ public class Controller {
 	public static boolean isStopped() {
 		return stopped ;
 	}
+	
+	public static void setStopped(boolean stopped) {
+		Controller.stopped = stopped;
+	}
 
 
 

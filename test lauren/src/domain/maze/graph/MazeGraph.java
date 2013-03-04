@@ -42,7 +42,7 @@ public class MazeGraph {
 			tileIt.next();
 			while(tileIt.hasNext()){
 				TileNode nextNode = tileIt.next();
-				System.out.println("NEXTNODE"+nextNode.getX()+" "+nextNode.getY());
+				//System.out.println("NEXTNODE"+nextNode.getX()+" "+nextNode.getY());
 				Orientation nextOrientation = null;
 				for(Orientation o:Orientation.values()){
 					if(getCurrentNode().getNodeAt(o)!=null && getCurrentNode().getNodeAt(o).equals(nextNode)){
@@ -402,7 +402,7 @@ public class MazeGraph {
 		int e = 0;
 		while(!searchSet.isEmpty() && !searchSet.firstPathReachesGoal()){
 			searchSet.expand();
-			System.out.println("Expansion number "+e+" current queue: "+(searchSet.isEmpty()?"none":searchSet.toString()));
+			//System.out.println("Expansion number "+e+" current queue: "+(searchSet.isEmpty()?"none":searchSet.toString()));
 			e++;
 		}
 		if(searchSet.isEmpty()){

@@ -37,14 +37,14 @@ public class BallBarcodePanel implements ActionListener{
 		titlePanel.setSize(totalXDimensions, totalYDimensions);
 		variableGUI.add(titlePanel);
 
-		titleLabel = new JLabel("P&O - Team Groen - Lightsensor Calibration");
+		titleLabel = new JLabel("P&O - Team Groen - Ball Number Input");
 		titleLabel.setLocation(0, 0);
 		titleLabel.setSize(totalXDimensions, 30);
 		titleLabel.setHorizontalAlignment(0);
 		titleLabel.setForeground(Color.black);
 		titlePanel.add(titleLabel);
 		
-		JLabel correctBarcodeLabel = new JLabel("Own barcode number:");
+		JLabel correctBarcodeLabel = new JLabel("Own ball number:");
 		correctBarcodeLabel.setBounds(20, 20, 200, 30);
 		titlePanel.add(correctBarcodeLabel);
 		correctBarcodeField = new JTextField(16);
