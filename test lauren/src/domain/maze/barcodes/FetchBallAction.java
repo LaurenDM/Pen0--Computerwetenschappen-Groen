@@ -5,7 +5,8 @@ import domain.robots.RobotPilot;
 public class FetchBallAction implements Action {
 	//TODO
 	public void run(RobotPilot robot) {
-		robot.fetchBall(); 
+		robot.fetchBall();
+		robot.driveToFinish();
 	}
 
 //	@Override
