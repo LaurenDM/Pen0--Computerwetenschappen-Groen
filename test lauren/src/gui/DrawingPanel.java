@@ -388,7 +388,10 @@ public class DrawingPanel extends JPanel {
 	
 	public void removeBall(Ball ball){
 		g.setColor(Color.white);
-		g.fillOval((int)ball.getPosition().getX()-5+OFFSET, (int)ball.getPosition().getY()-5+OFFSET, 10, 10);
+		try {
+			g.fillOval((int)ball.getPosition().getX()-5+OFFSET, (int)ball.getPosition().getY()-5+OFFSET, 10, 10);
+		} catch (Exception e) {}
+		
 	}
 	
 

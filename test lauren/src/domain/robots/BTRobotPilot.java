@@ -500,7 +500,7 @@ public class BTRobotPilot extends RobotPilot  {
 
 	@Override
 	public void doNothing() {
-		
+		maze.setNextTileToDeadEnd();
 	}
 	
 

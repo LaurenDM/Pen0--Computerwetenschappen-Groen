@@ -28,6 +28,8 @@ public class ExploreMaze{
 	private boolean backWall = false;
 	private boolean interrupted = false;
 	
+	private boolean isDeadEnd = false;
+	
 	public ExploreMaze(RobotPilot simRobotPilot){
 		this.robot = simRobotPilot;
 	}
@@ -72,14 +74,21 @@ public class ExploreMaze{
 			distances = checkDistances();
 			makeWall(distances);
 			if(!maze.isComplete()){
-//				robot.setMovingSpeed(robot.getDefaultMovingSpeed());
-				Direction direction = getNextDirection(distances);
-				if(checkStraigthen(distances)){
-					moveWithStraighten(direction);
+				System.out.println(isDeadEnd);
+				if(! isDeadEnd){
+				//robot.setMovingSpeed(robot.getDefaultMovingSpeed());
+					Direction direction = getNextDirection(distances);
+					if(checkStraigthen(distances)){
+						moveWithStraighten(direction);
+					}
+					else{
+						move(direction);
+						System.out.println("Now at "+maze.getCurrentNode().getX()+" "+maze.getCurrentNode().getY());
+					}
 				}
 				else{
-					move(direction);
-					System.out.println("Now at "+maze.getCurrentNode().getX()+" "+maze.getCurrentNode().getY());
+					this.isDeadEnd = false;
+					moveWithStraighten(Direction.BACKWARD);
 				}
 			}
 		}
@@ -120,6 +129,7 @@ public class ExploreMaze{
 	 * These walls are added in the graph and in the GUI.
 	 */
 	public void setNextTileToDeadEnd(){
+		this.isDeadEnd = true;
 		maze.setNextTileToDeadEnd();
 		double orientation = robot.getOrientation();
 		double deadEndX = robot.getPosition().getX()+Math.cos(orientation/180*Math.PI)*MAZECONSTANT;
