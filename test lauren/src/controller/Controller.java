@@ -378,8 +378,8 @@ public class Controller {
 		}
 	}
 	
-	public void setBallBarcodes(int[] barcodes){
-		Barcode.setBallBarcodes(barcodes);
+	public void setBallNumber(int number){
+		Barcode.setBallNumber(number);
 	}
 
 
@@ -401,7 +401,7 @@ public class Controller {
 	}
 
 
-	public void setFalseBallBarcodes(int[] falseBallBarcodes) {
-		Barcode.setFalseBallBarcodes(falseBallBarcodes);
+	public void setFalseBallNumbers(int[] falseBallBarcodes) {
+		Barcode.setFalseBallNumbers(falseBallBarcodes);
 	}
 }

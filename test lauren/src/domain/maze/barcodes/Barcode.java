@@ -60,27 +60,27 @@ public class Barcode extends MazeElement{
 		else throw new IllegalArgumentException();
 	}
 	
-	private static int BALLBARCODE = 0;
-	private static int[] FALSEBARCODES = new int[] {1,2,3};
+	private static int ownBallNumber = 0;
+	private static int[] otherBallNumbers = new int[] {1,2,3};
 	
-	public static void setBallBarcode(int ballBarcodes) {
-		BALLBARCODE = ballBarcodes;
+	public static void setBallNumber(int ballNumber) {
+		ownBallNumber = ballNumber;
 	}
 	
-	public static void setFalseBallBarcodes(int[] barcodes){
-		FALSEBARCODES = barcodes;
+	public static void setFalseBallNumbers(int[] numbers){
+		otherBallNumbers = numbers;
 	}
 	
-	private static boolean isFalseBarcode(int number){
-		for (int falseBarcodeNbr : FALSEBARCODES) {
-			if(falseBarcodeNbr == number)
+	private static boolean isOtherBallNumber(int number){
+		for (int n : otherBallNumbers) {
+			if(n == number)
 				return true;
 		}
 		return false;
 	}
 	
-	private static boolean isBallBarcode(int number){
-		if(number == BALLBARCODE){
+	private static boolean isOwnBallNumber(int number){
+		if(number == ownBallNumber){
 			return true;
 		} else {
 			return false;
@@ -88,7 +88,7 @@ public class Barcode extends MazeElement{
 	}
 	
 	public static Action getAction(int number){
-		if((number<8) && (BALLBARCODE == number%4)){
+		if((number<8) && (ownBallNumber == number%4)){
 			if(number%4==number){
 				return new FetchBallAction(0);
 			} else {
@@ -96,9 +96,11 @@ public class Barcode extends MazeElement{
 			}
 		}
 
-		if(isFalseBarcode(number))
+		if(isOtherBallNumber(number))
 			return new DoNothingAction();
 		else{
+			// TODO add actions for seesaw, ...
+			
 //			switch (number){
 //			case 5: return new TurnLeftAction();
 //			case 9: return new TurnRightAction();
