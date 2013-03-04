@@ -6,7 +6,7 @@ import java.util.List;
 import domain.Position.Position;
 import domain.maze.MazeElement;
 import domain.maze.Orientation;
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 
 public class Barcode extends MazeElement{
 
@@ -60,11 +60,11 @@ public class Barcode extends MazeElement{
 		else throw new IllegalArgumentException();
 	}
 	
-	private static int BALLBARCODE = 15;
-	private static int[] FALSEBARCODES = new int[] {0};
+	private static int BALLBARCODE = 0;
+	private static int[] FALSEBARCODES = new int[] {1,2,3};
 	
-	public static void setBallBarcode(int ballBarcode) {
-		BALLBARCODE = ballBarcode;
+	public static void setBallBarcode(int ballBarcodes) {
+		BALLBARCODE = ballBarcodes;
 	}
 	
 	public static void setFalseBallBarcodes(int[] barcodes){
@@ -79,6 +79,14 @@ public class Barcode extends MazeElement{
 		return false;
 	}
 	
+	private static boolean isBallBarcode(int number){
+		if(number == BALLBARCODE){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public static Action getAction(int number){
 		if((number<8) && (BALLBARCODE == number%4)){
 			if(number%4==number){
@@ -87,6 +95,7 @@ public class Barcode extends MazeElement{
 				return new FetchBallAction(1);
 			}
 		}
+
 		if(isFalseBarcode(number))
 			return new DoNothingAction();
 		else{
@@ -109,7 +118,7 @@ public class Barcode extends MazeElement{
 		return action;
 	}
 	
-	public void runAction(Robot robot){
+	public void runAction(RobotPilot robot){
 		if(action != null){
 			action.run(robot);
 		}

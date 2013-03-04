@@ -3,22 +3,22 @@ package domain.robotFunctions;
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
 import domain.robots.CannotMoveException;
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 
 public class BarcodeGenerator extends RobotFunction {
 
-	private Robot robot;
+	private RobotPilot robot;
 	private final int MAZECONSTANT = 40;
 	
 	
-	public BarcodeGenerator(Robot robot){
+	public BarcodeGenerator(RobotPilot robot){
 		this.robot = robot;
 	}
 	
 // this method is called when the robot has detected a black line
 	public void generateBarcode(){
 		double turnSpeed = robot.getTurningSpeed();
-		double moveSpeed = robot.getMovingSpeedSetting();
+		double moveSpeed = robot.getMovingSpeed();
 		if(robot.getBoard().detectBarcodeAt(robot.getPosition())){
 			try {
 				System.out.println("ROBOT MOVES 8; BARCODE FOUND");

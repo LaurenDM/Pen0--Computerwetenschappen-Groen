@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import org.jfree.ui.Align;
 
@@ -33,11 +34,12 @@ import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
 import domain.maze.Ball;
 import domain.robots.CannotMoveException;
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 import domain.util.ColorPolygon;
 import exceptions.ConnectErrorException;
 
 public class ContentPanel implements ActionListener {
+	static ContentPanel runningPanel;
 	static JFrame frame = new JFrame("P&O - Groen");
     static JFrame variableFrame = new JFrame("P&O - Groen - Variables");
     static JFrame calibrationFrame = new JFrame("P&O - Groen - Lightsensor Calibration");
@@ -49,7 +51,7 @@ public class ContentPanel implements ActionListener {
     private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, lineLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, 
     calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton,
-    rotateSlowLeft,rotateSlowRight,startButton, barcodeButton, finishButton, resumeButton, resetButton,setBarcodeButton;
+    rotateLittleLeft,rotateLittleRight,startButton, barcodeButton, finishButton, resumeButton, resetButton,setBarcodeButton;
     private static JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
@@ -70,12 +72,8 @@ public class ContentPanel implements ActionListener {
     private boolean rightButtonPressed = false;
     private boolean downButtonPressed = false;
     private boolean showRawData = false;
-    private int rotateSlowAmount = 10;
+    private int rotateLittleAmount = 10;
     private ArrayList<Integer> printedBalls;
-    public enum Button {
-        UP, LEFT, DOWN, RIGHT,NONE
-    }
-	
     
     Controller controller;
 	private SensorGraphsPanel graphPanel;
@@ -115,39 +113,40 @@ public class ContentPanel implements ActionListener {
     	fixButtonLayout(source, jButton, xsize, ysize, xco,  yco, 9);
     }
     
-    public Button getCurrentPressedButton(){
-    	if(upButtonPressed == true)
-    		return Button.UP;
-    	else if(leftButtonPressed == true)
-    		return Button.LEFT;
-    	else if(rightButtonPressed == true)
-    		return Button.RIGHT;
-    	else if(downButtonPressed == true)
-    		return Button.DOWN;
-    	else
-    		return Button.NONE;
-    }
-    
-    public void setCurrentPressedButton(boolean pressed,Button button){
-    	if(button == Button.RIGHT){
-    		this.rightButtonPressed = pressed;
-    	}
-    		
-    	else if(button == Button.LEFT){
-    		this.leftButtonPressed = pressed;
-    	}
-    		
-    	else if(button == Button.UP){
-    		this.upButtonPressed = pressed;
-    	}
-    		
-    	else if(button == Button.DOWN){
-    		this.downButtonPressed = pressed;
-    	}
-    		
-    }
+//    public Button getCurrentPressedButton(){
+//    	if(upButtonPressed == true)
+//    		return Button.UP;
+//    	else if(leftButtonPressed == true)
+//    		return Button.LEFT;
+//    	else if(rightButtonPressed == true)
+//    		return Button.RIGHT;
+//    	else if(downButtonPressed == true)
+//    		return Button.DOWN;
+//    	else
+//    		return Button.NONE;
+//    }
+//    
+//    public void setCurrentPressedButton(boolean pressed,Button button){
+//    	if(button == Button.RIGHT){
+//    		this.rightButtonPressed = pressed;
+//    	}
+//    		
+//    	else if(button == Button.LEFT){
+//    		this.leftButtonPressed = pressed;
+//    	}
+//    		
+//    	else if(button == Button.UP){
+//    		this.upButtonPressed = pressed;
+//    	}
+//    		
+//    	else if(button == Button.DOWN){
+//    		this.downButtonPressed = pressed;
+//    	}
+//    		
+//    }
     
 	public ContentPanel() {
+		runningPanel=this;
 		//We create a controller that controls communication with the domain.
 	    controller = new Controller();
 		// We create a bottom JPanel to place everything on.
@@ -188,11 +187,11 @@ public class ContentPanel implements ActionListener {
         downButton = new JButton("BACKWARD");
         fixButtonLayout(buttonPanel, downButton, moveButtonWidth , allButtonHeight, moveButtonWidth, allButtonHeight);
         
-        rotateSlowLeft = new JButton("Slow L");
-        fixButtonLayout(buttonPanel, rotateSlowLeft, moveButtonWidth, allButtonHeight, 0, allButtonHeight);
+        rotateLittleLeft = new JButton("10 L");
+        fixButtonLayout(buttonPanel, rotateLittleLeft, moveButtonWidth, allButtonHeight, 0, allButtonHeight);
         
-        rotateSlowRight = new JButton("Slow R");
-        fixButtonLayout(buttonPanel,rotateSlowRight, moveButtonWidth, allButtonHeight, 2*moveButtonWidth, allButtonHeight);
+        rotateLittleRight = new JButton("10 R");
+        fixButtonLayout(buttonPanel,rotateLittleRight, moveButtonWidth, allButtonHeight, 2*moveButtonWidth, allButtonHeight);
         
         cancelButton = new JButton("STOP");
 		fixButtonLayout(buttonPanel, cancelButton, wideButtonWidth, allButtonHeight, 0, 2*allButtonHeight );
@@ -546,12 +545,12 @@ public class ContentPanel implements ActionListener {
         	controller.disableError();
         	buttonPanel.requestFocusInWindow();
         }
-        else if(e.getSource() == rotateSlowRight){
-        	controller.rotateAmount(rotateSlowAmount);
+        else if(e.getSource() == rotateLittleRight){
+        	controller.rotateAmount(rotateLittleAmount);
         	buttonPanel.requestFocusInWindow();
         }
-		else if(e.getSource() == rotateSlowLeft){
-			controller.rotateAmount(-rotateSlowAmount);
+		else if(e.getSource() == rotateLittleLeft){
+			controller.rotateAmount(-rotateLittleAmount);
 			buttonPanel.requestFocusInWindow();
         }
 		else if(e.getSource() == startButton){
@@ -605,78 +604,27 @@ public class ContentPanel implements ActionListener {
 			
 			@Override
 			public void keyReleased(KeyEvent e) {
-				//System.out.println("released");
-				if (e.getKeyCode() == KeyEvent.VK_RIGHT && getCurrentPressedButton() == Button.RIGHT){
-					setCurrentPressedButton(false,Button.RIGHT);
-					actionLabel.setText("The robot is doing nothing atm!");
-					rightButton.setSelected(false);
-					controller.cancel();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_LEFT && getCurrentPressedButton() == Button.LEFT){
-					setCurrentPressedButton(false,Button.LEFT);
-					actionLabel.setText("The robot is doing nothing atm!");
-					leftButton.setSelected(false);
-					controller.cancel();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_UP && getCurrentPressedButton() == Button.UP){
-					setCurrentPressedButton(false,Button.UP);
-					actionLabel.setText("The robot is doing nothing atm!");
-					upButton.setSelected(false);
-					controller.cancel();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_DOWN && getCurrentPressedButton() == Button.DOWN){
-					setCurrentPressedButton(false,Button.DOWN);
-					actionLabel.setText("The robot is doing nothing atm!");
-					downButton.setSelected(false);
-					controller.cancel();
-				}
-				
-			}
-			
+				// System.out.println("released");
+				Button pressedButton=Button.getButton(e.getKeyCode());
+				pressedButton.virtualRelease();
+			};
+
 			@Override
 			public void keyPressed(KeyEvent e) {
-				
-				if (getCurrentPressedButton() == Button.NONE){
-				if (e.getKeyCode() == KeyEvent.VK_RIGHT){
-					setCurrentPressedButton(true,Button.RIGHT);
-					actionLabel.setText("The robot is turning right!");
-					rightButton.setSelected(true);
-					controller.rotateRightNonBlocking();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_UP){
-					setCurrentPressedButton(true,Button.UP);
-					actionLabel.setText("The robot is going forward!");
-					upButton.setSelected(true);
-					try {
-						controller.moveForward();
-					} catch (CannotMoveException e1) {
-						actionLabel.setText("The robot has encountered an obstacle");
+				if (Button.nonePressed()) {
+					if (e.getKeyCode() == KeyEvent.VK_X) {
+						controller.turnSensorLeft();
+					} else if (e.getKeyCode() == KeyEvent.VK_C) {
+						controller.turnSensorRight();
+					} else if (e.getKeyCode() == KeyEvent.VK_D) {
+						controller.turnSensorForward();
+					} else {
+						Button pressedButton = Button.getButton(e.getKeyCode());
+						pressedButton.virtualPress();
 					}
 				}
-				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
-					setCurrentPressedButton(true,Button.LEFT);
-					actionLabel.setText("The robot is turning left!");
-					leftButton.setSelected(true);
-					controller.rotateLeftNonBlocking();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_DOWN){
-					setCurrentPressedButton(true,Button.DOWN);
-					actionLabel.setText("The robot is going back!");
-					downButton.setSelected(true);
-					controller.moveBack();
-				}
-				else if(e.getKeyCode() == KeyEvent.VK_X){
-					controller.turnSensorLeft();
-				}
-				else if(e.getKeyCode() == KeyEvent.VK_C){
-					controller.turnSensorRight();
-				}
-				else if(e.getKeyCode() == KeyEvent.VK_D){
-					controller.turnSensorForward();
-				}
-				}
 			}
-			
+
 		};
 		return l;
 	}
@@ -760,14 +708,14 @@ public class ContentPanel implements ActionListener {
 	
 	public void updateBalls(){
 //		System.out.println("updateBalls");
-		HashMap<Integer, Robot> otherRobots = controller.getOtherRobots();
-	    Iterator<Entry<Integer, Robot>> it = otherRobots.entrySet().iterator();
+		HashMap<Integer, RobotPilot> otherRobots = controller.getOtherRobots();
+	    Iterator<Entry<Integer, RobotPilot>> it = otherRobots.entrySet().iterator();
 		    while (it.hasNext()) {
-		        Map.Entry<Integer, Robot> pairs = (Entry<Integer, Robot>)it.next();
+		        Map.Entry<Integer, RobotPilot> pairs = (Entry<Integer, RobotPilot>)it.next();
 //		        System.out.println(pairs.getKey() + " = " + pairs.getValue());
 		        Integer identifier = pairs.getKey();
-		        Robot robot = pairs.getValue();
-		        if(!printedBalls.contains(identifier) && robot.getFoundBall()){
+		        RobotPilot robot = pairs.getValue();
+		        if(!printedBalls.contains(identifier) && robot.hasBall()){
 		        	printedBalls.add(identifier);
 		        	writeToDebug("Robot "+identifier+" has found its ball");
 		        	System.out.println("FOUND BALL------------------------");
@@ -790,7 +738,160 @@ public class ContentPanel implements ActionListener {
 		}
 	}
 	
-	
+
+	public enum Button {
+
+		UPCLASS(KeyEvent.VK_UP) {
+			@Override
+			void startAction() {
+				runningPanel.actionLabel.setText("The robot is going forward!");
+				runningPanel.upButton.setSelected(true);
+				try {
+					runningPanel.controller.moveForward();
+				} catch (CannotMoveException e1) {
+					runningPanel.actionLabel
+							.setText("The robot has encountered an obstacle");
+				}
+			}
+
+			@Override
+			void stopAction() {
+				runningPanel.actionLabel
+						.setText("The robot is doing nothing atm!");
+				runningPanel.upButton.setSelected(false);
+				runningPanel.controller.cancel();
+			}
+
+		},
+		LEFTCLASS(KeyEvent.VK_LEFT) {
+
+			@Override
+			void startAction() {
+				runningPanel.actionLabel.setText("The robot is turning left!");
+				runningPanel.leftButton.setSelected(true);
+				runningPanel.controller.rotateLeftNonBlocking();
+			}
+
+			@Override
+			void stopAction() {
+				runningPanel.actionLabel
+						.setText("The robot is doing nothing atm!");
+				runningPanel.leftButton.setSelected(false);
+				runningPanel.controller.cancel();
+			}
+		},
+		DOWNCLASS(KeyEvent.VK_DOWN) {
+			@Override
+			void startAction() {
+				runningPanel.actionLabel.setText("The robot is going back!");
+				runningPanel.downButton.setSelected(true);
+				runningPanel.controller.moveBack();
+			}
+
+			@Override
+			void stopAction() {
+				runningPanel.actionLabel
+						.setText("The robot is doing nothing atm!");
+				runningPanel.downButton.setSelected(false);
+				runningPanel.controller.cancel();
+			}
+		},
+		RIGHTCLASS(KeyEvent.VK_RIGHT) {
+			@Override
+			void startAction() {
+				runningPanel.actionLabel.setText("The robot is turning right!");
+				runningPanel.rightButton.setSelected(true);
+				runningPanel.controller.rotateRightNonBlocking();
+			}
+
+			@Override
+			void stopAction() {
+				runningPanel.actionLabel
+						.setText("The robot is doing nothing atm!");
+				runningPanel.rightButton.setSelected(false);
+				runningPanel.controller.cancel();
+			}
+		},
+		NONECLASS(Integer.MAX_VALUE) {
+			@Override
+			void stopAction() {
+				return;
+			}
+
+			@Override
+			void startAction() {
+				return;
+			}
+		};
+
+		private final int keyEventNumber;
+
+		Button(int keyEventNumber) {
+			timer.setRepeats(false);
+			this.keyEventNumber = keyEventNumber;
+		}
+
+		public static Button UP = UPCLASS, RIGHT = RIGHTCLASS,
+				DOWN = DOWNCLASS, LEFT = LEFTCLASS, NONE = NONECLASS;
+		public static Button[] allButtons = { UP, RIGHT, DOWN, LEFT };
+		private static final int LINUX_KEY_DELAY = 3;
+		boolean isAlreadyVirtuallyPressed = false;
+		boolean isReallyReleased = true;
+
+		ActionListener l = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				isReallyReleased=true;
+				stopAction();
+			}
+		};
+
+		abstract void stopAction();
+
+		abstract void startAction();
+
+		Timer timer = new Timer(LINUX_KEY_DELAY, l);
+
+		public static Button getButton(int keyCode) {
+			for (Button b : allButtons) {
+				if (b.keyEventNumber == keyCode) {
+					return b;
+				}
+			}
+			return NONE;
+		}
+
+		public static boolean nonePressed() {
+			for (Button b : allButtons) {
+				if (b.isAlreadyVirtuallyPressed) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		public void virtualPress() {
+			if (!this.isAlreadyVirtuallyPressed) {
+				this.isAlreadyVirtuallyPressed = true;
+				if (this.isReallyReleased) {
+					this.startAction();
+				} else {
+					this.timer.stop();
+
+				}
+			}
+		}
+
+		public void virtualRelease() {
+			if (this.isAlreadyVirtuallyPressed) {
+				this.isAlreadyVirtuallyPressed = false;
+				this.isReallyReleased = false;
+				this.timer.start();
+			}
+		}
+
+	    }
 }
 
  

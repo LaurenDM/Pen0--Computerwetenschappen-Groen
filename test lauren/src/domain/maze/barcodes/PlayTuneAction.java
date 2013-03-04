@@ -1,15 +1,13 @@
 package domain.maze.barcodes;
 
-import bluetooth.CMD;
-import lejos.nxt.Sound;
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 
 public class PlayTuneAction implements Action {
 	
 	
 	@Override
-	public void run(Robot robot) {
-		robot.playTune();
+	public void run(RobotPilot robot) {
+		robot.playSong();
 	}
 
 //	@Override

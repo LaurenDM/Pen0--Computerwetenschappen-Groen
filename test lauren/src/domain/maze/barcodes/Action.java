@@ -4,7 +4,7 @@ package domain.maze.barcodes;
 
 
 
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 
 
 
@@ -15,7 +15,7 @@ import domain.robots.Robot;
 public interface Action {
 
 	
-	public abstract void run(Robot robot);
+	public abstract void run(RobotPilot robot);
 
 	public abstract String toString();
 

@@ -20,7 +20,7 @@ import gui.ContentPanel;
 
 
 
-public class BTRobotPilot implements RobotPilot  {
+public class BTRobotPilot extends RobotPilot  {
 	
 	private BluetoothDriver pilot;
 //	private RegulatedMotor sensorMotor;
@@ -44,18 +44,16 @@ public class BTRobotPilot implements RobotPilot  {
 	private int prevSensorAngle;
 	private String bluetoothAdress="00:16:53:05:40:4c";
 	private final BTCommPC btComm;
-	private Robot robot;
 	private ExploreMaze maze;
 	
-	private Ball ball;
 
 
 	private long lastSensorUpdateTime;
 
 	
-	public BTRobotPilot(){
-
-			try {
+	public BTRobotPilot(int number){
+		super(number);
+		try {
 			btComm = (new BTCommPC(this));
 			btComm.open(null,bluetoothAdress );
 			pilot = new BluetoothDriver(wheelsDiameter, trackWidth, btComm);
@@ -63,17 +61,17 @@ public class BTRobotPilot implements RobotPilot  {
 			setMovingSpeed(defaultTravelSpeed);
 			setTurningSpeed(defaultTurnSpeed);
 
-			}
-			catch(ArrayIndexOutOfBoundsException indE){
-				System.out.println("we will throw ConnectErrorException because of ArrayIndexOutOfBoundsException after trying to make a BTRobotPilot");
-				throw new ConnectErrorException();
-				//TODO i3+
-			}
-		
-
+		}
+		catch(ArrayIndexOutOfBoundsException indE){
+			System.out.println("we will throw ConnectErrorException because of ArrayIndexOutOfBoundsException after trying to make a BTRobotPilot");
+			throw new ConnectErrorException();
+			//TODO i3+
+		}
 		board = new Board();
-
-
+	}
+	
+	public BTRobotPilot(){
+		this(0);
 	}
 	
 	public void setBoard(Board board){
@@ -82,6 +80,10 @@ public class BTRobotPilot implements RobotPilot  {
 	
 	public Board getBoard(){
 		return board;
+	}
+	
+	public ExploreMaze getMaze(){
+		return this.maze;
 	}
 
 	@Override
@@ -101,6 +103,7 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void forward() throws CannotMoveException {
+		setMovement(Movement.FORWARD);
 //		if(canMove())
 			pilot.forward();
 //		else{
@@ -111,11 +114,13 @@ public class BTRobotPilot implements RobotPilot  {
 
 	@Override
 	public void backward() {
+		setMovement(Movement.BACKWARD);
 		pilot.backward();
 	}
 
 	@Override
 	public void stop() {
+		setMovement(Movement.STOPPED);
 		pilot.stop();
 	}
 
@@ -173,7 +178,12 @@ public class BTRobotPilot implements RobotPilot  {
 //				throw new CannotMoveException();
 //			}
 //		}
+		if(distance>0)
+			setMovement(Movement.FORWARD);
+		else if(distance>0)
+			setMovement(Movement.BACKWARD);
 		pilot.travel(distance);
+		setMovement(Movement.STOPPED);
 	}
 
 	@Override
@@ -353,7 +363,7 @@ public class BTRobotPilot implements RobotPilot  {
 		double rightValue = readUltrasonicValue();
 		turnSensorForward();
 		if(leftValue < rightValue)
-			robot.turn(-10);
+			turn(-10);
 	}
 
 	private boolean wallDetected() {
@@ -423,12 +433,6 @@ public class BTRobotPilot implements RobotPilot  {
 //		setMovingSpeed(getDefaultMovingSpeed());
 	}
 
-	@Override
-	public void setRobot(Robot robot) {
-		this.robot = robot;
-		
-	}
-
 	// TODO: using this method makes all other bluetooth-commands be thrown
 	// away until this method returns 
 	@Override
@@ -442,17 +446,12 @@ public class BTRobotPilot implements RobotPilot  {
 		maze.setCurrentTileToCheckpoint();
 	}
 
-	@Override
-	public void setFinish() {
-		maze.setCurrentTileToFinish();		
-	}
-
 	public void makeBarcode(int[] data) {
 		Barcode barcode = new Barcode(data[2], new Position(data[0], data[1]),
 				data[3]);
 		getBoard().addFoundBarcode(barcode);
 		Action action = barcode.getAction();
-		if(action != null) action.run(robot);
+		if(action != null) action.run(this);
 	}
 
 	@Override
@@ -496,16 +495,13 @@ public class BTRobotPilot implements RobotPilot  {
 	@Override
 	public void fetchBall() {
 		btComm.sendCommand(CMD.FETCHBALL);
-		this.ball = new Ball();
+		setBall(new Ball());
+		maze.setNextTileToDeadEnd();
 	}
 
 	@Override
 	public void doNothing() {
-		
-	}
-	
-	public Ball getBall(){
-		return this.ball;
+		maze.setNextTileToDeadEnd();
 	}
 	
 

@@ -1,12 +1,11 @@
 package domain.maze.barcodes;
 
-import bluetooth.CMD;
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 
 public class Wait5Action implements Action {
 
 	@Override
-	public void run(Robot robot) {
+	public void run(RobotPilot robot) {
 		robot.wait5Seconds();
 	}
 

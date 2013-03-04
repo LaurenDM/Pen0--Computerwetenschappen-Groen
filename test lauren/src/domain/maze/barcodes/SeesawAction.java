@@ -3,7 +3,7 @@
  */
 package domain.maze.barcodes;
 
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 
 /**
  * @author Joren
@@ -11,12 +11,10 @@ import domain.robots.Robot;
  */
 public class SeesawAction implements Action {
 
-	/* (non-Javadoc)
-	 * @see domain.maze.barcodes.Action#run(domain.robots.Robot)
-	 */
 	@Override
-	public void run(Robot robot) {
-		//TODO send message over RabbitMQ?
+	public void run(RobotPilot robot) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

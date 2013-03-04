@@ -4,14 +4,14 @@ package domain.maze.barcodes;
 import domain.robotFunctions.BarcodeGenerator;
 import domain.robots.BTRobotPilot;
 import domain.robots.CannotMoveException;
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 
 public class BarcodesTester {
 
-	private static Robot robot;
+	private static RobotPilot robot;
 	
 	public static void main(String[] args) throws CannotMoveException{
-		robot = new Robot(new BTRobotPilot(), 0);
+		robot = new BTRobotPilot();
 		
 		
 		robot.forward();

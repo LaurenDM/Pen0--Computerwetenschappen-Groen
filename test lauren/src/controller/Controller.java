@@ -28,7 +28,7 @@ import domain.maze.barcodes.Barcode;
 import domain.robotFunctions.BarcodeGenerator;
 import domain.robots.BTRobotPilot;
 import domain.robots.CannotMoveException;
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 import domain.robots.SimRobotPilot;
 import domain.util.ColorPolygon;
 
@@ -36,19 +36,17 @@ import domain.util.ColorPolygon;
 public class Controller {
 	private static boolean stopped = false;
 	private Thread executingThread;
-	private Robot currentRobot;
-	private Robot btRobot;
-	private Robot simRobot;
-	private HashMap<Integer, Robot> otherRobots;
+	private RobotPilot currentRobot;
+	private RobotPilot btRobot;
+	private RobotPilot simRobot;
+	private HashMap<Integer, RobotPilot> otherRobots;
 	private Thread explorer;
 	private final EventPusher ep;
 //	private SimRobotPilot simRobotPilot ;
 	
 	public Controller() {
-		otherRobots = new HashMap<Integer, Robot>();
+		otherRobots = new HashMap<Integer, RobotPilot>();
 		SimRobotPilot simRobotPilot = new SimRobotPilot();
-		simRobot = new Robot(simRobotPilot, 0);
-		simRobot.getRobotPilot().setRobot(simRobot);
 		currentRobot=simRobot;
 		connectNewSimRobot(0, new Position(20,20), 0);
 		
@@ -74,8 +72,7 @@ public class Controller {
 	  
 	public void connectNewBtRobot() {
 		if(btRobot==null)
-		btRobot = new Robot(new BTRobotPilot(), 0);
-		btRobot.getRobotPilot().setRobot(btRobot);
+		btRobot = new BTRobotPilot();
 		currentRobot=btRobot;
 		currentRobot.setBoard(new Board());
 
@@ -84,18 +81,14 @@ public class Controller {
 	
 	//This is used to set the robot controlled by this GUI
 	public void connectNewSimRobot(double orientation, Position position, int number) {
-		SimRobotPilot simRobotPilot = new SimRobotPilot(orientation, position);
-		simRobot = new Robot(simRobotPilot, number);
-		simRobot.getRobotPilot().setRobot(simRobot);
+		simRobot = new SimRobotPilot(orientation, position,number);
 		currentRobot = simRobot ;
 		currentRobot.setBoard(new Board());
 	}
 	
 	//This is used to set the robot controlled by this GUI
 	public void connectExternalSimRobot(double orientation, Position position, int number) {
-		SimRobotPilot simRobotPilot = new SimRobotPilot(orientation, position);
-		Robot otherSimRobot = new Robot(simRobotPilot, number);
-		otherSimRobot.getRobotPilot().setRobot(otherSimRobot);
+		SimRobotPilot otherSimRobot = new SimRobotPilot(orientation, position,number);
 		otherSimRobot.setBoard(new Board()); //miss aanpassen, nog te bespreken. (elke robot individueel bord?)
 		otherRobots.put(number, otherSimRobot);
 		}
@@ -158,7 +151,7 @@ public class Controller {
 	}
 
 	public double getSpeed() {
-		return currentRobot.getMovingSpeedSetting();
+		return currentRobot.getMovingSpeed();
 //		return currentRobot.getActualMovingSpeed();
 	}
 
@@ -169,9 +162,9 @@ public class Controller {
 	public List<ColorPolygon> getColorPolygons(){
 		List<ColorPolygon> colPolyList=new ArrayList<ColorPolygon>();
 		colPolyList.add(currentRobot.getRobotPolygon());
-		Iterator<Entry<Integer, Robot>> it = otherRobots.entrySet().iterator();
+		Iterator<Entry<Integer, RobotPilot>> it = otherRobots.entrySet().iterator();
 	    while (it.hasNext()) {
-	        Map.Entry<Integer, Robot> pairs = (Map.Entry<Integer, Robot>)it.next();
+	        Map.Entry<Integer, RobotPilot> pairs = (Map.Entry<Integer, RobotPilot>)it.next();
 	        colPolyList.add(pairs.getValue().getRobotPolygon());
 //	        it.remove(); // avoids a ConcurrentModificationException
 	    }
@@ -244,7 +237,7 @@ public class Controller {
 		return readUltrasonicValue() < DISTANCE_LIMIT;
 	}
 
-	public Robot getRobot() {
+	public RobotPilot getRobot() {
 		return currentRobot;
 	}
 	public void arcForward(boolean left){
@@ -280,10 +273,7 @@ public class Controller {
 
 
 	public void rotateAmount(int i) {
-		currentRobot.setTurningSpeed(2);
-		currentRobot.turn(i);
-		currentRobot.resetToDefaultSpeeds();
-		
+		currentRobot.turn(i);		
 	}
 	
 	public void findBlackLineAndCreateBarcode(){
@@ -355,7 +345,7 @@ public class Controller {
 		currentRobot.autoCalibrateLight();}
 	
 	public void disableError() {
-		otherRobots.get(1).setPose(3, 100, 100);
+		otherRobots.get(1).setPose(3, 100, 100); //TODO uitleggen waarom aan francis
 //		simRobotPilot.disableError();
 	}
 	
@@ -370,8 +360,7 @@ public class Controller {
 	}
 
 
-	public Robot getRobotFromIdentifier(String string) {
-		int identifier = Integer.parseInt(string);
+	public RobotPilot getRobotFromIdentifier(int identifier) {
 //		System.out.println("IDENTIFIER"+identifier);
 //		System.out.println("currIDEN:"+ep.getRobotRandomIdentifier());
 		if(identifier==ep.getRobotRandomIdentifier()){
@@ -384,13 +373,13 @@ public class Controller {
 			}
 			else{
 				connectExternalSimRobot(2, new Position(220, 20), identifier);
-				return getRobotFromIdentifier(string);
+				return getRobotFromIdentifier(identifier);
 			}
 		}
 	}
 	
-	public void setBallBarcode(int barcode){
-		Barcode.setBallBarcode(barcode);
+	public void setBallBarcodes(int[] barcodes){
+		Barcode.setBallBarcodes(barcodes);
 	}
 
 
@@ -403,11 +392,11 @@ public class Controller {
 		return getRobot().getBall();
 	}
 	
-	public void ballFoundByOtherRobot(Robot robot){
-		robot.setFoundBall();
+	public void ballFoundByOtherRobot(RobotPilot robot){
+		robot.setFoundBall(robot.getNumber());
 	}
 	
-	public HashMap<Integer, Robot> getOtherRobots(){
+	public HashMap<Integer, RobotPilot> getOtherRobots(){
 		return otherRobots;
 	}
 

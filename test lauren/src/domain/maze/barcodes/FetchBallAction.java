@@ -1,12 +1,12 @@
 package domain.maze.barcodes;
 
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 
 public class FetchBallAction implements Action {
 	private int teamNumber;
 	
-	//TODO
-	public void run(Robot robot) {
+	
+	public void run(RobotPilot robot) {
 		robot.setTeamNumber(getTeamNumber());
 		robot.fetchBall(); 
 	}

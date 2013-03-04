@@ -5,148 +5,230 @@ import domain.maze.Ball;
 import domain.maze.Board;
 import domain.maze.Wall;
 import domain.maze.graph.MazePath;
+import domain.polygons.RobotPolygon;
+import domain.robotFunctions.ExploreMaze;
 import domain.util.TimeStamp;
 
-public interface RobotPilot {
-	public void UpdateUntil(TimeStamp timestamp);
+public abstract class RobotPilot {
 	
-	public void setRobot(Robot robot);
+	RobotPolygon robotPolygon;
+	private Movement movement;
+	private Position finish;
+	private int number; //0-3
+	
+	private Board board;
+	
+	private Ball ball;
+	private int teamNumber;
+	
+	public RobotPilot(int number){
+		this.movement=Movement.STOPPED;
+		this.robotPolygon=new RobotPolygon(this);
+		this.number = number;
+	}
+	
+	public RobotPolygon getRobotPolygon(){
+		return robotPolygon;
+	}
+	
+	public abstract void UpdateUntil(TimeStamp timestamp);
+	
+	public int getNumber(){
+		return number;
+	}
+	
+	public Movement getMovementStatus() {
+		return movement;
+	}
 		
-	public double getMovingSpeed();
+	public abstract double getMovingSpeed();
 	
-	public double getTurningSpeed();
+	public abstract double getTurningSpeed();
+	
+	public double getActualMovingSpeed() {
+		return getMovingSpeed()*movement.getSpeedMultiplier();
+	}
+	
 	/**
 	 * Can be used to get a clone of the current position of the robot
 	 * @return a clone of the position
 	 */
-	public Position getPosition();
+	public abstract Position getPosition();
 	
-	public void setBoard(Board board);
+	public void setBoard(Board board){
+		this.board = board;
+	}
 	
-	public Board getBoard();
+	public Board getBoard(){
+		return this.board;
+	}
 	
-	public void forward() throws CannotMoveException;
+	public abstract void forward() throws CannotMoveException;
 	
-	public void backward();
+	public void setMovement(Movement movement){
+		this.movement = movement;
+	}
 	
-	public void stop();
+	public abstract void backward();
+	
+	public abstract void stop();
 
 	/**
 	 * 
 	 * @param distance in cm
 	 */
-	public void move(double distance) throws CannotMoveException;
+	public abstract void move(double distance) throws CannotMoveException;
 	
 	/**
 	 * 
 	 * @param amount in degrees
 	 */
-	public void turn(double amount);
+	public abstract void turn(double amount);
 	
-	public void turnRight();
+	public abstract void turnRight();
 	
-	public void turnLeft();
+	public abstract void turnLeft();
 	
-	public int getSensorAngle();
+	public abstract int getSensorAngle();
 	
 	
 	/**
 	 * returns the current Orientation relative to the original orientation.
 	 */
-	public double getOrientation();
+	public abstract double getOrientation();
 	/**
 	 * 
 	 * @param speed in cm/s
 	 */
-	public void setMovingSpeed(double speed);
+	public abstract void setMovingSpeed(double speed);
+	
+	public void resetToDefaultSpeeds(){
+		setMovingSpeed(getDefaultMovingSpeed());
+		setTurningSpeed(getDefaultTurningSpeed());
+	}
+	
+	public void setHighSpeed(){
+		setMovingSpeed(getDefaultMovingSpeed()*2);
+		setTurningSpeed(getDefaultTurningSpeed()*2);
+	}
+	
+	public void setLowSpeed(){
+		setMovingSpeed(getDefaultMovingSpeed()/2);
+		setTurningSpeed(getDefaultTurningSpeed()/2);
+	}
 	
 	/**
 	 * 
 	 * @param speed in degrees/s
 	 */
-	public void setTurningSpeed(double speed);
+	public abstract void setTurningSpeed(double speed);
 	
 	//Method for testing whether the robot can move with takin into account the walls and otherobstructions.
-	public boolean canMove();
+	public abstract boolean canMove();
 	
-	public boolean isTouching();
+	public abstract boolean isTouching();
 	
-	public double readLightValue();
+	public abstract double readLightValue();
 	
-	public double readUltrasonicValue();
+	public abstract double readUltrasonicValue();
 	
-	public void calibrateLightHigh();
+	public abstract void calibrateLightHigh();
 	
-	public void calibrateLightLow();
+	public abstract void calibrateLightLow();
 	
-	public void turnUltrasonicSensor(int angle);
+	public abstract void turnUltrasonicSensor(int angle);
 	
-	public void turnSensorRight();
+	public abstract void turnSensorRight();
 	
-	public void turnSensorLeft();
+	public abstract void turnSensorLeft();
 	
-	public void turnSensorForward();
+	public abstract void turnSensorForward();
 	
-	public boolean detectWhiteLine();
+	public abstract boolean detectWhiteLine();
 	
-	public void straighten();
-	
-	
-	//public void findOrigin();
+	public abstract void straighten();
 	
 	//Starts moving de robot so that it makes an arc forward.
-	public void arcForward(boolean left);
+	public abstract void arcForward(boolean left);
 
 	//Starts moving de robot so that it makes an arc backward.
-	public void arcBackward(boolean left);
+	public abstract void arcBackward(boolean left);
 	
 	//Makes the robot make an arc of the specified angle. This method does not return immediately.
-	public void steer(double angle);
+	public abstract void steer(double angle);
 
-	public void keepTurning(boolean left);
+	public abstract void keepTurning(boolean left);
 
-	public void findWhiteLine();
+	public abstract void findWhiteLine();
 
-	public void interrupt();
+	public abstract void interrupt();
 
-	public double getDefaultMovingSpeed();
+	public abstract double getDefaultMovingSpeed();
 
-	public double getDefaultTurningSpeed();
+	public abstract double getDefaultTurningSpeed();
 	
-	public void playSong();
+	public abstract void playSong();
 
-	public void setPose(double orientation, int x, int y);
+	public abstract void setPose(double orientation, int x, int y);
 
-	public void startExplore();
+	public abstract void startExplore();
 	
-	public void addFoundWall(Wall wall);
+	public abstract void addFoundWall(Wall wall);
 
-	public boolean detectBlackLine();
+	public abstract boolean detectBlackLine();
 
-	public void findBlackLine();
+	public abstract void findBlackLine();
 
-	public void scanBarcode();
+	public abstract void scanBarcode();
 
-	public void setCheckpoint();
-
-	public void setFinish();
-
-	public void resumeExplore();
-
-	public void driveToFinish();
-
-	public void wait5Seconds();
-
-	public void autoCalibrateLight();
-	public MazePath getPathToFinish();
-
-	public void setDriveToFinishSpeed();
-
-	public void fetchBall();
+	public abstract void setCheckpoint();
 	
-	public void doNothing();
+	public abstract ExploreMaze getMaze();
 
-	public Ball getBall();
+	public void setFinish(){
+		this.finish = getPosition();
+		getMaze().setCurrentTileToFinish();
+	}
+
+	public abstract void resumeExplore();
+
+	public abstract void driveToFinish();
+
+	public abstract void wait5Seconds();
+
+	public abstract void autoCalibrateLight();
+	
+	public abstract MazePath getPathToFinish();
+
+	public abstract void setDriveToFinishSpeed();
+
+	public abstract void fetchBall();
+	
+	public abstract void doNothing();
+
+	public Ball getBall(){
+		return this.ball;
+	}
+	
+	public void setBall(Ball ball){
+		this.ball = ball;
+	}
+	
+	public boolean hasBall(){
+		return (getBall() != null);
+	}
+
+	public void setFoundBall(int number) {
+		setBall(new Ball(number));
+	}
+
+	public void setTeamNumber(int teamNumber) {
+		this.teamNumber = teamNumber;
+	}
+	
+	public int getTeamNumber(){
+		return teamNumber;
+	}
 
 
 
