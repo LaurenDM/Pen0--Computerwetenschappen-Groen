@@ -60,11 +60,11 @@ public class Barcode extends MazeElement{
 		else throw new IllegalArgumentException();
 	}
 	
-	private static int BALLBARCODE = 15;
+	private static int[] BALLBARCODES = new int[] {0};
 	private static int[] FALSEBARCODES = new int[] {0};
 	
-	public static void setBallBarcode(int ballBarcode) {
-		BALLBARCODE = ballBarcode;
+	public static void setBallBarcodes(int[] ballBarcodes) {
+		BALLBARCODES = ballBarcodes;
 	}
 	
 	public static void setFalseBallBarcodes(int[] barcodes){
@@ -79,8 +79,16 @@ public class Barcode extends MazeElement{
 		return false;
 	}
 	
+	private static boolean isBallBarcode(int number){
+		for (int ballBarcodeNbr : BALLBARCODES) {
+			if(ballBarcodeNbr == number)
+				return true;
+		}
+		return false;
+	}
+	
 	public static Action getAction(int number){
-		if(BALLBARCODE == number)
+		if(isBallBarcode(number))
 			return new FetchBallAction();
 		if(isFalseBarcode(number))
 			return new DoNothingAction();
