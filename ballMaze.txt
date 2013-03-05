@@ -1,8 +1,8 @@
 5 5
 
 # voorbeeld doolhof
-Corner.N	T.N		T.N		Straight.E.01		Corner.E.B
-T.W		Straight.S.02	Cross		Cross			Corner.E
+Corner.N	T.N		T.N		Straight.E.04		Corner.E.B
+T.W		Straight.S.00	Cross		Cross			Corner.E
 T.W		DeadEnd.S.B	DeadEnd.W.B	Straight.W.02		T.E
 T.W		Cross		Cross		Cross			T.E
-DeadEnd.W.B	Straight.W.04	T.S		Straight.E.03		DeadEnd.E.B
+DeadEnd.W.B	Straight.W.05	T.S		Straight.E.01		DeadEnd.E.B
