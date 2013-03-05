@@ -93,7 +93,7 @@ public class EventPusher {
 		System.out.println("Press ENTER to exit");
 		
 		// schedule a task every 100ms
-		this.timer.schedule(task, 0, 2000);
+		this.timer.schedule(task, 0, 100);
 	}
 	
 	public int getRobotRandomIdentifier(){

@@ -199,7 +199,7 @@ public class ContentPanel implements ActionListener {
         variableButton = new JButton("POLYGON");
         fixButtonLayout(buttonPanel, variableButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 2*allButtonHeight);
         
-        connectButton = new JButton("CONNECT TO ROBOT");
+        connectButton = new JButton("CONNECT TO BROBOT");
         fixButtonLayout(buttonPanel, connectButton, wideButtonWidth, allButtonHeight, 0, 3*allButtonHeight );
         
         calibrateButton = new JButton("CALIBRATE LIGHTSENSOR");
@@ -478,7 +478,7 @@ public class ContentPanel implements ActionListener {
         }
         else if(e.getSource() == connectButton){
         	if(getConnected() == true ){
-        		connectButton.setText("Connect to robot");
+        		connectButton.setText("Connect to brobot");
         		drawingPanel.clear();
         		drawingPanel.drawWhiteLines();
         		drawingPanel.updateUI();
@@ -488,7 +488,7 @@ public class ContentPanel implements ActionListener {
         	else{
         		try{
         		controller.connectNewBtRobot();
-        		connectButton.setText("Disconnect from robot");
+        		connectButton.setText("Disconnect from brobot");
         		setConnected(true);
         		drawingPanel.clear();
         		drawingPanel.drawWhiteLines();
