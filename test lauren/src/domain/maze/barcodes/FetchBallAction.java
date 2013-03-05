@@ -1,12 +1,13 @@
 package domain.maze.barcodes;
 
+import controller.Controller;
 import domain.robots.RobotPilot;
 
 public class FetchBallAction implements Action {
 	//TODO
 	public void run(RobotPilot robot) {
 		robot.fetchBall();
-		robot.driveToFinish();
+		Controller.setStopped();
 	}
 
 //	@Override

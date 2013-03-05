@@ -34,7 +34,7 @@ import domain.util.ColorPolygon;
 
 //Robotclass, generates/keeps track of current positioning.
 public class Controller {
-	private static boolean stopped = false;
+	private static boolean STOPPED = false;
 	private Thread executingThread;
 	private RobotPilot currentRobot;
 	private RobotPilot btRobot;
@@ -130,12 +130,12 @@ public class Controller {
 	}
 	
 	public void cancel() {
-		stopped = true;
+		STOPPED = true;
 		while(explorer!=null && explorer.isAlive()){}
 		currentRobot.interrupt();
 		startNewThread(null);
 		currentRobot.stop();
-		stopped = false;
+		STOPPED = false;
 	}
 	
 	public Position getPosition(){
@@ -290,9 +290,9 @@ public class Controller {
 
 	public void startExplore() {
 		if(explorer!=null){
-			stopped = true;
+			STOPPED = true;
 			while(explorer.isAlive()){}
-			stopped = false;
+			STOPPED = false;
 		}
 		Runnable explore = new Runnable() {
 
@@ -306,9 +306,9 @@ public class Controller {
 	}
 
 	public void resumeExplore() {
-		stopped = true;
+		STOPPED = true;
 		while(explorer.isAlive()){}
-		stopped = false;
+		STOPPED = false;
 		explorer = new Thread(new Runnable() {
 			public void run(){
 				currentRobot.resumeExplore();
@@ -318,9 +318,9 @@ public class Controller {
 	}
 
 	public void driveToFinish() {
-		stopped = true;
+		STOPPED = true;
 		while(explorer.isAlive()){}
-		stopped = false;
+		STOPPED = false;
 		explorer = new Thread(new Runnable() {
 			public void run(){
 				currentRobot.driveToFinish();
@@ -330,13 +330,13 @@ public class Controller {
 	}
 	
 	public void reset(){
-		stopped = true;
+		STOPPED = true;
 		while(explorer!=null && explorer.isAlive()){}
 		connectNewSimRobot(0, new Position(20,20), 0);
 	}
 
 	public static boolean isStopped() {
-		return stopped ;
+		return STOPPED ;
 	}
 
 
@@ -402,6 +402,10 @@ public class Controller {
 	
 	public int getTeamNumber(){
 		return currentRobot.getTeamNumber();
+	}
+	
+	public static void setStopped(){
+		STOPPED = true;
 	}
 
 
