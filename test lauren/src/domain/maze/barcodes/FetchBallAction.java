@@ -4,10 +4,25 @@ import controller.Controller;
 import domain.robots.RobotPilot;
 
 public class FetchBallAction implements Action {
-	//TODO
+	private int teamNumber;
+	
+	
 	public void run(RobotPilot robot) {
-		robot.fetchBall();
-		Controller.setStopped();
+		robot.setTeamNumber(getTeamNumber());
+		robot.fetchBall(); 
+		Controller.setStopped(true);
+	}
+	
+	private int getTeamNumber() {
+		return teamNumber;
+	}
+
+	private void setTeamNumber(int teamNumber) {
+		this.teamNumber = teamNumber;
+	}
+
+	public FetchBallAction(int teamNumber){
+		this.teamNumber=teamNumber;
 	}
 
 //	@Override

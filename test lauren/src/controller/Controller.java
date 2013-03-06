@@ -338,6 +338,10 @@ public class Controller {
 	public static boolean isStopped() {
 		return STOPPED ;
 	}
+	
+	public static void setStopped(boolean stopped) {
+		Controller.STOPPED = stopped;
+	}
 
 
 
@@ -378,8 +382,9 @@ public class Controller {
 		}
 	}
 	
-	public void setBallNumber(int barcodeNb){
-		Barcode.setBallNumber(barcodeNb);
+
+	public void setBallNumber(int number){
+		Barcode.setBallNumber(number);
 	}
 
 
@@ -409,7 +414,7 @@ public class Controller {
 	}
 
 
-//	public void setFalseBallBarcodes(int[] falseBallBarcodes) {
-//		Barcode.setFalseBallBarcodes(falseBallBarcodes);
-//	}
+	public void setFalseBallNumbers(int[] falseBallBarcodes) {
+		Barcode.setFalseBallNumbers(falseBallBarcodes);
+	}
 }

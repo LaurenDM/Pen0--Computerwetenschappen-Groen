@@ -74,7 +74,6 @@ public class ExploreMaze{
 			distances = checkDistances();
 			makeWall(distances);
 			if(!maze.isComplete()){
-				System.out.println(isDeadEnd);
 				if(! isDeadEnd){
 				//robot.setMovingSpeed(robot.getDefaultMovingSpeed());
 					Direction direction = getNextDirection(distances);

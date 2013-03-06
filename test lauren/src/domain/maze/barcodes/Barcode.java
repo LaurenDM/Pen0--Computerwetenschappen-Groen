@@ -60,58 +60,59 @@ public class Barcode extends MazeElement{
 		else throw new IllegalArgumentException();
 	}
 	
-	private static int[] BALLBARCODES = new int[]{0,4,1,5,2,6,3,7};
-//	private static int[] FALSEBARCODES = new int[] {0};
-	private static int BALLNUMBER = 0;
-	private static int TEAMNB = 0;
-	
-	public static int getTeamNumber(){
-		return TEAMNB;
-	}
+
+	private static int ownBallNumber = 0;
+	private static int[] otherBallNumbers = new int[] {1,2,3};
 	
 	public static void setBallNumber(int ballNumber) {
-		BALLNUMBER = ballNumber;
+		ownBallNumber = ballNumber;
 	}
 	
-//	public static void setFalseBallBarcodes(int[] barcodes){
-//		FALSEBARCODES = barcodes;
-//	}
-//	
-//	private static boolean isFalseBarcode(int number){
-//		for (int falseBarcodeNbr : FALSEBARCODES) {
-//			if(falseBarcodeNbr == number)
-//				return true;
-//		}
-//		return false;
-//	}
+	public static void setFalseBallNumbers(int[] numbers){
+		otherBallNumbers = numbers;
+	}
 	
-	private static boolean isBallBarcode(int number){
-		for (int ballBarcodeNbr : BALLBARCODES) {
-			if(ballBarcodeNbr == number)
+	private static boolean isOtherBallNumber(int number){
+		for (int n : otherBallNumbers) {
+			if(n == number)
 				return true;
 		}
 		return false;
 	}
 	
-	public static Action getAction(int number){
-		if(isBallBarcode(number) && number % 4 == BALLNUMBER){
-			TEAMNB = number / 4;
-			return new FetchBallAction();
+	private static boolean isOwnBallNumber(int number){
+		if(number == ownBallNumber){
+			return true;
+		} else {
+			return false;
 		}
-		else if(isBallBarcode(number) && number % 4 != BALLNUMBER)
+	}
+	
+	public static Action getAction(int number){
+		if((number<8) && (ownBallNumber == number%4)){
+			if(number%4==number){
+				return new FetchBallAction(0);
+			} else {
+				return new FetchBallAction(1);
+			}
+		}
+
+		if(isOtherBallNumber(number))
 			return new DoNothingAction();
 		else{
-			switch (number){
-			case 5: return new TurnLeftAction();
-			case 9: return new TurnRightAction();
-			case 13: return new SetCheckPointAction();
-			case 15: return new PlayTuneAction();
-			case 19: return new Wait5Action();
-			case 25: return new DriveSlowAction();
-			case 37: return new DriveFastAction();
-			case 55: return new SetFinishAction();
-			default: return null;
-			}
+			// TODO add actions for seesaw, ...
+			
+//			switch (number){
+//			case 5: return new TurnLeftAction();
+//			case 9: return new TurnRightAction();
+//			case 13: return new SetCheckPointAction();
+//			case 15: return new PlayTuneAction();
+//			case 19: return new Wait5Action();
+//			case 25: return new DriveSlowAction();
+//			case 37: return new DriveFastAction();
+//			case 55: return new SetFinishAction();
+//			default: return null;
+			return null;
 		}
 	}
 	

@@ -20,6 +20,8 @@ public abstract class RobotPilot {
 	private Board board;
 	
 	private Ball ball;
+	private int teamNumber;
+	
 	
 	public RobotPilot(int number){
 		this.movement=Movement.STOPPED;
@@ -221,9 +223,13 @@ public abstract class RobotPilot {
 	public void setFoundBall(int number) {
 		setBall(new Ball(number));
 	}
+
+	public void setTeamNumber(int teamNumber) {
+		this.teamNumber = teamNumber;
+	}
 	
 	public int getTeamNumber(){
-		return Barcode.getTeamNumber();
+		return teamNumber;
 	}
 
 
