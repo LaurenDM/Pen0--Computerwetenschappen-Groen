@@ -166,7 +166,7 @@ public class SimRobotPilot extends RobotPilot {
 	}
 	@Override
 	public void UpdateUntil(TimeStamp timestamp) {
-		//TODO
+		
 	}
 
 
@@ -379,8 +379,8 @@ public class SimRobotPilot extends RobotPilot {
 		}
 	}
 
-	@Override
-	public boolean isTouching() {
+	
+	private boolean isTouching() {
 		if(moveThread == null || moveThread.getMovement().equals(Movement.FORWARD)){
 			return getBoard().detectWallAt(getPosition().getNewPosition(getOrientation(), 14));
 		}
@@ -397,7 +397,7 @@ public class SimRobotPilot extends RobotPilot {
 		final double BLACK = -200;
 		return WOOD+detectWhiteLineGradient()*WHITE+detectBlackLineGradient()*BLACK+randomDouble(10);
 	}
-	//TODO: waardes hangen af van kalibratie van echte sensor
+	
 
 	@Override
 	public double readUltrasonicValue() {
@@ -419,6 +419,11 @@ public class SimRobotPilot extends RobotPilot {
 		}
 		lastDistance = shortestDistance;
 		return shortestDistance;
+	}
+	
+	public boolean detectInfrared(){
+		//TODO
+		return false;
 	}
 
 	@Override
@@ -498,7 +503,6 @@ public class SimRobotPilot extends RobotPilot {
 		try {
 			startMoveThread(Movement.FORWARD);
 		} catch (CannotMoveException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		startTurnThread(left);
@@ -509,7 +513,6 @@ public class SimRobotPilot extends RobotPilot {
 		try {
 			startMoveThread(Movement.BACKWARD);
 		} catch (CannotMoveException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		startTurnThread(left);
@@ -519,7 +522,6 @@ public class SimRobotPilot extends RobotPilot {
 		try {
 			startMoveThread(Movement.FORWARD);
 		} catch (CannotMoveException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		turn(angle);
@@ -544,7 +546,6 @@ public class SimRobotPilot extends RobotPilot {
 		try {
 			forward(true);
 		} catch (CannotMoveException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		while(detections<wantedDetections){
@@ -554,7 +555,6 @@ public class SimRobotPilot extends RobotPilot {
 		try {
 			move(1);
 		} catch (CannotMoveException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -589,7 +589,6 @@ public class SimRobotPilot extends RobotPilot {
 		try {
 			move(1);
 		} catch (CannotMoveException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -716,14 +715,12 @@ public class SimRobotPilot extends RobotPilot {
 		try {
 			move(40);
 		} catch (CannotMoveException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		setBall(getBoard().removeBall(getPosition()));
 		try {
 			move(-40);
 		} catch (CannotMoveException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

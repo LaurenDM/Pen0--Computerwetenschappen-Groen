@@ -48,7 +48,7 @@ public class ContentPanel implements ActionListener {
     private static ControllerPoller controllerPoller;
     private JPanel titlePanel, buttonPanel, debugPanel, bottomButtonPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
-    private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, lineLabel;
+    private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, infraredLabel, lineLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, 
     calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton,
     rotateLittleLeft,rotateLittleRight,startButton, barcodeButton, finishButton, resumeButton, resetButton,setBarcodeButton;
@@ -56,7 +56,6 @@ public class ContentPanel implements ActionListener {
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
     final static int totalXDimensions = 1100;
-//    final static int totalYDimensions = 750; TODO verwijderen indien niet gebruikt na i4
     final static int moveButtonWidth = 100;
     final static int allButtonHeight = 20;
     final static int wideButtonWidth=150;
@@ -317,9 +316,9 @@ public class ContentPanel implements ActionListener {
         yLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, yLabel, 125, 20, 100, 100);
         
-        touchingLabel = new JLabel("Touch: FALSE");
-        touchingLabel.setHorizontalTextPosition(JLabel.LEFT);
-        fixLabelLayout(debugPanel, touchingLabel, 125, 20, 200, 100);
+        infraredLabel = new JLabel("Infrared: FALSE");
+        infraredLabel.setHorizontalTextPosition(JLabel.LEFT);
+        fixLabelLayout(debugPanel, infraredLabel, 125, 20, 200, 100);
         
         speedLabel = new JLabel("Speed: 0");
         speedLabel.setHorizontalTextPosition(JLabel.LEFT);
@@ -405,7 +404,7 @@ public class ContentPanel implements ActionListener {
 					contentPanel.setRobotAngle(controller.getAngle());
 					contentPanel.setRobotLightValue(controller.readLightValue());
 					contentPanel.setRobotDistanceValue(controller.readUltrasonicValue());
-					contentPanel.setRobotTouchingValue(controller.isTouching());
+					contentPanel.setRobotInfraredValue(controller.detectInfrared());
 					contentPanel.setLineValue(controller.detectWhiteLine());
 					contentPanel.updateBalls();
 					if(controller.ballInPossesion() && count < 1){
@@ -414,7 +413,7 @@ public class ContentPanel implements ActionListener {
 					}
 					contentPanel.drawRawData();
 					contentPanel.updateInfoPanel();
-					//TODO
+					
 					sleep(100);
 				}
 			} catch(InterruptedException e){
@@ -689,8 +688,8 @@ public class ContentPanel implements ActionListener {
     	graphPanel.addValue(SensorGraphsPanel.DISTANCEPLOT, value);
     }
     
-    public void setRobotTouchingValue(boolean value){
-    	touchingLabel.setText("Touching: " + Boolean.valueOf(value).toString());
+    public void setRobotInfraredValue(boolean value){
+    	infraredLabel.setText("Infrared: " + Boolean.valueOf(value).toString());
     }
     
     public void setLineValue(boolean value){

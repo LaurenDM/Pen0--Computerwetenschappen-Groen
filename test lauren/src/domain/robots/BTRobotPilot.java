@@ -29,9 +29,7 @@ public class BTRobotPilot extends RobotPilot  {
 	private final double defaultTravelSpeed = 10;
 	private final double defaultTurnSpeed = 200;
 	
-//	private TouchSensor touchSensor;
-//	private UltrasonicSensor ultrasonicSensor;
-//	private LightSensor lightSensor;
+
 	
 	private Board board;
 	private  final float wheelsDiameter = 5.43F;
@@ -40,7 +38,7 @@ public class BTRobotPilot extends RobotPilot  {
 	private  final float trackWidth = 16.43F;
 	private int prevLightValue;
 	private int prevUltrasonicValue;
-	private boolean prevTouchBool;
+	private int prevIRValue;
 	private int prevSensorAngle;
 	private String bluetoothAdress="00:16:53:05:40:4c";
 	private final BTCommPC btComm;
@@ -65,7 +63,7 @@ public class BTRobotPilot extends RobotPilot  {
 		catch(ArrayIndexOutOfBoundsException indE){
 			System.out.println("we will throw ConnectErrorException because of ArrayIndexOutOfBoundsException after trying to make a BTRobotPilot");
 			throw new ConnectErrorException();
-			//TODO i3+
+
 		}
 		board = new Board();
 	}
@@ -131,7 +129,7 @@ public class BTRobotPilot extends RobotPilot  {
 		else return new Position(0,0);
 	}
 	
-	//TODO checken of de getheading waarden tussen 0 en 180 graden teruggeeft
+	
 	@Override
 	public double getOrientation() {
 		if(RobotChecker.interruptionAllowed())
@@ -147,7 +145,7 @@ public class BTRobotPilot extends RobotPilot  {
 
 	@Override
 	public void UpdateUntil(TimeStamp timestamp) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -205,16 +203,16 @@ public class BTRobotPilot extends RobotPilot  {
 		return prevSensorAngle;
 	}
 	
-	public boolean isTouching(){
-		if(RobotChecker.interruptionAllowed())
-			updateSensorValues(false);
-		return prevTouchBool;
-	}
+//	public boolean isTouching(){
+//		if(RobotChecker.interruptionAllowed())
+//			updateSensorValues(false);
+//		return prevTouchBool;
+//	}
 
 	public boolean canMove(){
 		int distance = (int) readUltrasonicValue();	
 		int testDistance = 10; 
-		if(distance < testDistance || isTouching()){
+		if(distance < testDistance){
 			//makeWall();
 			return false;
 		}
@@ -234,7 +232,7 @@ public class BTRobotPilot extends RobotPilot  {
 			e.printStackTrace();
 			System.out.println("could not read light value from robot ");
 			return -100;
-			//TODO i3+
+			
 		}
 	}
 	
@@ -244,13 +242,19 @@ public class BTRobotPilot extends RobotPilot  {
 		return prevUltrasonicValue;
 	}
 	
+	public boolean detectInfrared(){
+		if (RobotChecker.interruptionAllowed())
+			updateSensorValues(false);
+		return prevIRValue>130;	//TODO: waarde moet experimenteel bepaald worden
+	}
+	
 	private void updateSensorValues(boolean forced) {
 		if (lastSensorUpdateTime + 100 < System.currentTimeMillis()) {
 			int[] sensorValues = btComm.sendCommand(CMD.GETSENSORVALUES);
 			if (sensorValues != null) {
 				prevUltrasonicValue = sensorValues[1];
 				prevLightValue = sensorValues[0];
-				prevTouchBool = sensorValues[2] > 0;
+				prevIRValue = sensorValues[2];
 				prevSensorAngle = sensorValues[3];
 				lastSensorUpdateTime = System.currentTimeMillis();
 			}
@@ -298,25 +302,25 @@ public class BTRobotPilot extends RobotPilot  {
 	public int getBatteryVoltage(){
 		if(RobotChecker.interruptionAllowed())
 			return btComm.sendCommand(CMD.BATTERY)[0];
-			else return 0; //TODO
+			else return 0; 
 		
 	}
 
 	@Override
 	public void arcForward(boolean left) {
 		
-//		pilot.steer(calcTurnRate(left)); TODO i2
+//		pilot.steer(calcTurnRate(left)); 
 	}
 
 	@Override
 	public void arcBackward(boolean left) {
-//		pilot.steerBackward(calcTurnRate(left)); TODO i2
+//		pilot.steerBackward(calcTurnRate(left)); 
 	}
 
 	@Override
 	public void steer(double angle) {
 //		double turnrate=calcTurnRate(angle<0);
-//		pilot.steer(turnrate, angle); TODO i2
+//		pilot.steer(turnrate, angle); 
 	}
 	
 //	/**
@@ -331,7 +335,7 @@ public class BTRobotPilot extends RobotPilot  {
 //		else
 //			return (defaultTravelSpeed - turnWheelSpeed)
 //					/ (defaultTravelSpeed + turnWheelSpeed);
-//		//TODO kijken of left en right wel kloppen
+//		
 //	}
 
 	@Override
@@ -353,7 +357,7 @@ public class BTRobotPilot extends RobotPilot  {
 				fixWall();
 			found = detectWhiteLine();
 		}
-		stop();//TODO needs to be checked
+		stop();
 	}
 
 	private void fixWall() {
@@ -405,7 +409,7 @@ public class BTRobotPilot extends RobotPilot  {
 
 	@Override
 	public boolean detectBlackLine() {
-		//TODO: waarden checken en kalibreren
+		
 		if(readLightValue()<-100){
 			return true;
 		}
@@ -433,8 +437,9 @@ public class BTRobotPilot extends RobotPilot  {
 //		setMovingSpeed(getDefaultMovingSpeed());
 	}
 
-	// TODO: using this method makes all other bluetooth-commands be thrown
+	//  using this method makes all other bluetooth-commands be thrown
 	// away until this method returns 
+
 	@Override
 	public void scanBarcode() {
 		int[] results = btComm.sendCommand(CMD.SCANBARCODE);

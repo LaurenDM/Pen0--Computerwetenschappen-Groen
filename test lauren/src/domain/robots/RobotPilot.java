@@ -128,7 +128,7 @@ public abstract class RobotPilot {
 	//Method for testing whether the robot can move with takin into account the walls and otherobstructions.
 	public abstract boolean canMove();
 	
-	public abstract boolean isTouching();
+//	public abstract boolean isTouching();
 	
 	public abstract double readLightValue();
 	
@@ -231,6 +231,9 @@ public abstract class RobotPilot {
 	public int getTeamNumber(){
 		return teamNumber;
 	}
+	
+	public abstract boolean detectInfrared();
+
 
 
 

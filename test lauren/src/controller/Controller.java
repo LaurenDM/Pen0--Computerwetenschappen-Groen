@@ -203,9 +203,9 @@ public class Controller {
 	public double readUltrasonicValue(){
 		return currentRobot.readUltrasonicValue();
 	}
-	
-	public boolean isTouching(){
-		return currentRobot.isTouching();
+
+	public boolean detectInfrared(){
+		return currentRobot.detectInfrared();
 	}
 	
 	public void turnUltrasonicSensor(int angle){
@@ -349,7 +349,7 @@ public class Controller {
 		currentRobot.autoCalibrateLight();}
 	
 	public void disableError() {
-		otherRobots.get(1).setPose(3, 100, 100); //TODO uitleggen waarom aan francis
+		otherRobots.get(1).setPose(3, 100, 100); 
 //		simRobotPilot.disableError();
 	}
 	
