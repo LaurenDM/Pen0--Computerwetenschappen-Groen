@@ -234,9 +234,9 @@ public class MazeInterpreter {
 	             break;
 			}
 			if(posConflict!=null){
-			if(board.detectWallAt(posConflict)==false){
-				board.addWall(new Wall(position1, position2));
-			}
+				if(board.detectWallAt(posConflict)==false){
+					board.addWall(new Wall(position1, position2));
+				}
 			}
 	}
 	
@@ -245,7 +245,10 @@ public class MazeInterpreter {
 		int MAZECONSTANT = MazeElement.getMazeConstant();
 		xCoo = xCoo*MAZECONSTANT+(MAZECONSTANT/2);
 		yCoo = yCoo*MAZECONSTANT+(MAZECONSTANT/2);
-		board.addSimulatedBarcode(new Barcode(dec, new Position(xCoo, yCoo), orientation));
+		Position pos = new Position(xCoo,yCoo);
+		if(!board.detectBarcodeAt(pos)){
+			board.addSimulatedBarcode(new Barcode(dec, pos, orientation));
+		}
 //		testBarcode();
 	}
 	
