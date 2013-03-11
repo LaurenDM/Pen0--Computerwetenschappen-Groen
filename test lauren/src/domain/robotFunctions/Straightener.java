@@ -1,6 +1,4 @@
 package domain.robotFunctions;
-import domain.Position.Position;
-import domain.robots.BTRobotPilot;
 import domain.robots.CannotMoveException;
 import domain.robots.RobotPilot;
 import domain.robots.SimRobotPilot;

@@ -1,8 +1,6 @@
 package domain.robots;
 
 
-import java.io.IOException;
-
 import bluetooth.BTCommPC;
 import bluetooth.CMD;
 import domain.Position.Position;

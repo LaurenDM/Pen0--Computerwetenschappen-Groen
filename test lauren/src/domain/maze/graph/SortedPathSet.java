@@ -2,10 +2,9 @@ package domain.maze.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Iterator;
-import java.util.SortedSet;
-import java.util.TreeSet;
+
+import domain.maze.Orientation;
 
 public class SortedPathSet implements Iterable<MazePath> {
 
@@ -49,7 +48,7 @@ public class SortedPathSet implements Iterable<MazePath> {
 	
 	@Override
 	public SortedPathSet clone(){
-		MazePath dummyPath = new MazePath(new TileNode(null,null), new TileNode(null,null));
+		MazePath dummyPath = new MazePath(new TileNode(null,null),Orientation.NORTH, new TileNode(null,null));
 		SortedPathSet clone = new SortedPathSet(dummyPath);
 		clone.remove(dummyPath);
 		clone.addAll(sortedQueue);
