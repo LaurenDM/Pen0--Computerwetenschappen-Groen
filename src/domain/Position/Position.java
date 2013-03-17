@@ -2,6 +2,8 @@ package domain.Position;
 import java.awt.geom.Point2D.Float;
 import java.lang.Math;
 
+import domain.maze.Orientation;
+
 import lejos.geom.Point;
 
 public class Position implements Cloneable {
@@ -64,6 +66,12 @@ public class Position implements Cloneable {
 	@Override
 	public int hashCode(){
 		return 35*(int)getX() + 73*(int)getY() + 184*(int)getX()*(int)getY(); 
+	}
+	
+	public double getAngleTo(Position other){
+		int delta_x = (int) Math.abs(getX()-other.getX());
+		int delta_y = (int) Math.abs(getY()-other.getY());
+		return Math.atan(delta_y/delta_x);
 	}
 	
 	

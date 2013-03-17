@@ -422,7 +422,10 @@ public class SimRobotPilot extends RobotPilot {
 	}
 	
 	public boolean detectInfrared(){
-		//TODO
+		if(getBoard().detectRobotFrom(this)){
+			return true;
+		}
+		// TODO: ook test voor de wip invoegen
 		return false;
 	}
 
@@ -729,6 +732,8 @@ public class SimRobotPilot extends RobotPilot {
 	public void doNothing() {
 		maze.setNextTileToDeadEnd();
 	}
+	
+	
 	
 	
 

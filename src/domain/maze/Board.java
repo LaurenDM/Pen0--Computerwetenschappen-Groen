@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
+import domain.robots.RobotPilot;
 
 public class Board {
 	
@@ -17,6 +18,7 @@ public class Board {
 	private List<Ball> balls;
 	private List<Barcode> simulatedBarcodes;
 	private List<Barcode> foundBarcodes;
+	private List<RobotPilot> otherRobots;
 	
 	
 	public Board(){
@@ -33,6 +35,10 @@ public class Board {
 	
 	public synchronized void addBall(Ball ball){
 		balls.add(ball);
+	}
+	
+	public synchronized void addRobot(RobotPilot robot){
+		otherRobots.add(robot);
 	}
 	
 	public Ball removeBall(Position position) {
@@ -158,7 +164,31 @@ public class Board {
 		}
 		return false;
 	}
-
+	
+	public synchronized boolean detectRobotFrom(RobotPilot robot){
+		final int DISTANCE = 50; //TODO experimenteel bepalen van bereik van IRsensor
+		for(RobotPilot robot2 : otherRobots){
+			if(robot2.getPosition().getDistance(robot.getPosition())<DISTANCE){
+				double distance = robot2.getPosition().getDistance(robot.getPosition());
+				double angle = Math.abs(robot.getOrientation()-robot.getPosition().getAngleTo(robot2.getPosition()));
+				if(angle<135){
+					// andere robot in gezichtsveld van robot
+					robot.turnUltrasonicSensor((int) angle);
+					if(robot.readUltrasonicValue() >= distance){
+						// geen muur tussen robots
+						return true;
+					}
+					//wel muur tussen robots
+				}
+				//robot ziet andere robot niet
+			}
+			// buiten bereik
+		}
+		return false;
+	}
 	
 
 }
+
+	
+
