@@ -508,6 +508,11 @@ public class BTRobotPilot extends RobotPilot  {
 	public void doNothing() {
 		maze.setNextTileToDeadEnd();
 	}
+
+	@Override
+	public boolean checkForSeaSawInfrared() {
+		return detectInfrared();
+	}
 	
 
 }

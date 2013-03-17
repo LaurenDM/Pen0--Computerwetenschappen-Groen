@@ -234,6 +234,7 @@ public abstract class RobotPilot {
 	
 	public abstract boolean detectInfrared();
 
+	public abstract boolean checkForSeaSawInfrared();
 
 
 

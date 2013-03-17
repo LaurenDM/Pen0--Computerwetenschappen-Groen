@@ -425,8 +425,11 @@ public class SimRobotPilot extends RobotPilot {
 		if(getBoard().detectRobotFrom(this)){
 			return true;
 		}
-		// TODO: ook test voor de wip invoegen
 		return false;
+	}
+	
+	public boolean checkForSeaSawInfrared(){
+		return getBoard().checkForOpenSeaSawFrom(this);
 	}
 
 	@Override

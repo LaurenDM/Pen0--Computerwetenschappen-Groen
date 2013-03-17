@@ -63,6 +63,7 @@ public class Barcode extends MazeElement{
 
 	private static int ownBallNumber = 0;
 	private static int[] otherBallNumbers = new int[] {1,2,3};
+	private static int[] seaSawNumbers = new int[] {11,13,15,17,19,21,23,25};
 	
 	public static void setBallNumber(int ballNumber) {
 		ownBallNumber = ballNumber;
@@ -80,15 +81,23 @@ public class Barcode extends MazeElement{
 		return false;
 	}
 	
-	private static boolean isOwnBallNumber(int number){
-		if(number == ownBallNumber){
-			return true;
-		} else {
-			return false;
+//	private static boolean isOwnBallNumber(int number){
+//		if(number == ownBallNumber){
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
+	
+	private static boolean isSeaSawNumber(int number){
+		for(int n : seaSawNumbers){
+			if(n == number)
+				return true;
 		}
+		return false;
 	}
 	
-	public static Action getAction(int number){
+	public Action getAction(int number){
 		if((number<8) && (ownBallNumber == number%4)){
 			if(number%4==number){
 				return new FetchBallAction(0);
@@ -96,10 +105,13 @@ public class Barcode extends MazeElement{
 				return new FetchBallAction(1);
 			}
 		}
-
 		if(isOtherBallNumber(number))
 			return new DoNothingAction();
-		else{
+		
+		else if(isSeaSawNumber(number)){
+			Position pos = getCenterPosition().getNewPosition(getOrientation().getAngleToHorizontal(), 60);
+			return new SeaSawAction(number, pos, getOrientation());
+		}
 			// TODO add actions for seesaw, ...
 			
 //			switch (number){
@@ -113,7 +125,7 @@ public class Barcode extends MazeElement{
 //			case 55: return new SetFinishAction();
 //			default: return null;
 			return null;
-		}
+		
 	}
 	
 	

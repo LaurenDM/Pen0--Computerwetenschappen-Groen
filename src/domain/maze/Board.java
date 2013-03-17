@@ -1,6 +1,6 @@
 package domain.maze;
 
-import java.util.Collection;
+
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -19,6 +19,7 @@ public class Board {
 	private List<Barcode> simulatedBarcodes;
 	private List<Barcode> foundBarcodes;
 	private List<RobotPilot> otherRobots;
+	private HashMap<Position, SeaSaw> seaSaws;
 	
 	
 	public Board(){
@@ -27,6 +28,7 @@ public class Board {
 		foundBarcodes = new ArrayList<Barcode>();
 		foundWalls = new ArrayList<Wall>();
 		balls = new ArrayList<Ball>();
+		seaSaws = new HashMap<Position, SeaSaw>();
 		}
 	
 	public synchronized void addWall(Wall wall){
@@ -183,6 +185,22 @@ public class Board {
 				//robot ziet andere robot niet
 			}
 			// buiten bereik
+		}
+		return false;
+	}
+	
+	public void putSeaSaw(SeaSaw seasaw){
+		if(seaSaws.get(seasaw.getCenterPosition()) == null){
+			seaSaws.put(seasaw.getCenterPosition(),seasaw);
+		}
+	}
+	
+	public boolean checkForOpenSeaSawFrom(RobotPilot robot){
+		final int DISTANCE = 50;
+		for(SeaSaw seasaw : seaSaws.values()){
+			if(seasaw.getInfaredPosition().getDistance(robot.getPosition())<DISTANCE){
+				return true;
+			}
 		}
 		return false;
 	}
