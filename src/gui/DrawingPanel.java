@@ -15,6 +15,7 @@ import domain.Position.Position;
 import domain.maze.Ball;
 import domain.maze.MazeElement;
 import domain.maze.Orientation;
+import domain.maze.SeaSaw;
 import domain.maze.Wall;
 import domain.maze.barcodes.Barcode;
 import domain.maze.graph.MazePath;
@@ -186,6 +187,29 @@ public class DrawingPanel extends JPanel {
 		else{
 			drawVerticalWhiteLines(barcode);
 		}
+	}
+	
+	public void drawSeaSaws(){
+		List<SeaSaw> seaSaws = controller.getRobot().getBoard().getSeaSaws();
+		for(SeaSaw s : seaSaws){
+			drawSeaSaw(s);
+		}
+	}
+	
+	public void drawSeaSaw(SeaSaw seasaw){
+		Polygon pol = new Polygon();
+		int posX = (int) (seasaw.getCenterPosition().getX() + OFFSET);
+		int posY = (int) (seasaw.getCenterPosition().getY() + OFFSET);
+		
+		pol.addPoint(posX-40, posY-40);
+		pol.addPoint(posX+40, posY-40);
+		pol.addPoint(posX+40, posY+40);
+		pol.addPoint(posX-40, posY+40);
+		
+		g.setColor(Color.darkGray);
+		g.drawPolygon(pol);
+		g.fillPolygon(pol);
+		totalGui.repaint();
 	}
 	
 	public void drawHorizontalWhiteLines(Barcode barcode){

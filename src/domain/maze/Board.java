@@ -205,6 +205,10 @@ public class Board {
 		return false;
 	}
 	
+	public List<SeaSaw> getSeaSaws(){
+		return new ArrayList<SeaSaw>(seaSaws.values());
+	}
+	
 
 }
 
