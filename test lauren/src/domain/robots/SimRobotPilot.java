@@ -735,6 +735,16 @@ public class SimRobotPilot extends RobotPilot {
 	public void doNothing() {
 		maze.setNextTileToDeadEnd();
 	}
+
+	@Override
+	public void driveOverSeeSaw() {
+		try {
+			move(120);
+		} catch (CannotMoveException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	
 	
