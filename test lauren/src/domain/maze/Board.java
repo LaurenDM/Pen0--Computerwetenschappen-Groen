@@ -169,6 +169,7 @@ public class Board {
 	
 	public synchronized boolean detectRobotFrom(RobotPilot robot){
 		final int DISTANCE = 50; //TODO experimenteel bepalen van bereik van IRsensor
+		if(otherRobots!=null){
 		for(RobotPilot robot2 : otherRobots){
 			if(robot2.getPosition().getDistance(robot.getPosition())<DISTANCE){
 				double distance = robot2.getPosition().getDistance(robot.getPosition());
@@ -185,7 +186,7 @@ public class Board {
 				//robot ziet andere robot niet
 			}
 			// buiten bereik
-		}
+		}}
 		return false;
 	}
 	

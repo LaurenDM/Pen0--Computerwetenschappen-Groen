@@ -1,10 +1,10 @@
 package bluetooth;
 
 /**
- * This class denumerates a special reply code that should be used when adding
+ * This class enumerates a special reply code that should be used when adding
  * something to the reply. The first number of the array is the code, which
  * should always be negative to announce a special reply. The second number is
- * the lenght of the extra info.
+ * the length of the extra info.
  */
 public interface SpecialReplyCode {
 	public int getSpecialReplyLength(byte SpecialReply);
