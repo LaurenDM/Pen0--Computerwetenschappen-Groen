@@ -92,7 +92,7 @@ public class DrawingPanel extends JPanel {
 	
 	public void drawWall(Wall wall, boolean simulated){
 		Polygon pol = new Polygon();
-		Position pos = null;
+	//	Position pos = null;
 		int pos1X = (int)wall.getPos1().getX()+OFFSET;
 		int pos1Y = (int)wall.getPos1().getY()+OFFSET;
 		int pos2X = (int)wall.getPos2().getX()+OFFSET;
@@ -201,10 +201,18 @@ public class DrawingPanel extends JPanel {
 		int posX = (int) (seasaw.getCenterPosition().getX() + OFFSET);
 		int posY = (int) (seasaw.getCenterPosition().getY() + OFFSET);
 		
-		pol.addPoint(posX-40, posY-40);
-		pol.addPoint(posX+40, posY-40);
-		pol.addPoint(posX+40, posY+40);
-		pol.addPoint(posX-40, posY+40);
+		int xRange,yRange;
+		if(seasaw.getOrientation().equals(Orientation.EAST) || seasaw.getOrientation().equals(Orientation.WEST)){
+			xRange = 40; yRange = 20;
+		}
+		else{
+			xRange = 20; yRange = 40;
+		}
+		
+		pol.addPoint(posX-xRange, posY-yRange);
+		pol.addPoint(posX+xRange, posY-yRange);
+		pol.addPoint(posX+xRange, posY+yRange);
+		pol.addPoint(posX-xRange, posY+yRange);
 		
 		g.setColor(Color.darkGray);
 		g.drawPolygon(pol);

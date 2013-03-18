@@ -30,8 +30,17 @@ public class SeaSaw extends MazeElement {
 
 	@Override
 	public boolean hasPosition(Position position) {
-		if(position.getX() <= middlePosition.getX() + EDGE/2 && position.getX() >= middlePosition.getX() - EDGE/2){
-			if(position.getY() <= middlePosition.getY() + EDGE/2 && position.getY() >= middlePosition.getY() - EDGE/2){
+		int xRange, yRange;
+		if(getOrientation().equals(Orientation.EAST) || getOrientation().equals(Orientation.WEST )){
+			xRange = EDGE/2;
+			yRange = EDGE/4;
+		}
+		else {
+			xRange = EDGE/4;
+			yRange = EDGE/2;
+		}
+		if(position.getX() <= middlePosition.getX() + xRange && position.getX() >= middlePosition.getX() - xRange){
+			if(position.getY() <= middlePosition.getY() + yRange && position.getY() >= middlePosition.getY() - yRange){
 				return true;
 			}
 		}
