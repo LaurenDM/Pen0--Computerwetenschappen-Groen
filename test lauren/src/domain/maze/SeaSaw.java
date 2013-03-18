@@ -14,6 +14,7 @@ public class SeaSaw extends MazeElement {
 	public SeaSaw(Position middlePosition, Orientation orientation, int barcodeNb){
 		this.middlePosition = middlePosition;
 		this.barcodeNb= barcodeNb;
+		initialize();
 		this.ORIENTATION = orientation;
 	}
 	
