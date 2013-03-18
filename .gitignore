@@ -1,5 +1,8 @@
-"test lauren"/bin"
-*/bin/
+# ignore any bin folder
 bin/
+# ignore all class files
+*.class
+
+#ignore the '.classpath' file, doesn't matter in which folder is resides
 .classpath
-.class
+
