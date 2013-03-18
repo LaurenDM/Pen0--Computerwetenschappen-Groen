@@ -172,23 +172,24 @@ public class Board {
 	public synchronized boolean detectRobotFrom(RobotPilot robot){
 		final int DISTANCE = 50; //TODO experimenteel bepalen van bereik van IRsensor
 		if(otherRobots!=null){
-		for(RobotPilot robot2 : otherRobots){
-			if(robot2.getPosition().getDistance(robot.getPosition())<DISTANCE){
-				double distance = robot2.getPosition().getDistance(robot.getPosition());
-				double angle = Math.abs(robot.getOrientation()-robot.getPosition().getAngleTo(robot2.getPosition()));
-				if(angle<135){
-					// andere robot in gezichtsveld van robot
-					robot.turnUltrasonicSensor((int) angle);
-					if(robot.readUltrasonicValue() >= distance){
-						// geen muur tussen robots
-						return true;
+			for(RobotPilot robot2 : otherRobots){
+				if(robot2.getPosition().getDistance(robot.getPosition())<DISTANCE){
+					double distance = robot2.getPosition().getDistance(robot.getPosition());
+					double angle = Math.abs(robot.getOrientation()-robot.getPosition().getAngleTo(robot2.getPosition()));
+					if(angle<135){
+						// andere robot in gezichtsveld van robot
+						robot.turnUltrasonicSensor((int) angle);
+						if(robot.readUltrasonicValue() >= distance){
+							// geen muur tussen robots
+							return true;
+						}
+						//wel muur tussen robots
 					}
-					//wel muur tussen robots
+					//robot ziet andere robot niet
 				}
-				//robot ziet andere robot niet
+				// buiten bereik
 			}
-			// buiten bereik
-		}}
+		}
 		return false;
 	}
 	

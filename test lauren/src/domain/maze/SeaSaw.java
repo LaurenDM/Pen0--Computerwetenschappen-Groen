@@ -16,6 +16,17 @@ public class SeaSaw extends MazeElement {
 		this.barcodeNb= barcodeNb;
 		this.ORIENTATION = orientation;
 	}
+	
+	public void initialize(){
+		if(barcodeNb % 4 == 3){
+			//eerste barcode van een paar --> open
+			infrared = 1;
+		}
+		else{
+			infrared = 0;
+		}
+	}
+	
 
 	@Override
 	public boolean hasPosition(Position position) {
