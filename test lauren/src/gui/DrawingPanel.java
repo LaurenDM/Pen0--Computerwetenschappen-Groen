@@ -76,6 +76,7 @@ public class DrawingPanel extends JPanel {
 			drawWall(w, true);
 		}
 		drawSimulatedBarcodes();
+		drawSeaSaws();
 	}
 	
 	public void drawFoundWalls(){
@@ -192,11 +193,18 @@ public class DrawingPanel extends JPanel {
 	public void drawSeaSaws(){
 		List<SeaSaw> seaSaws = controller.getRobot().getBoard().getSeaSaws();
 		for(SeaSaw s : seaSaws){
-			drawSeaSaw(s);
+			drawSeaSaw(s,true);
 		}
 	}
 	
-	public void drawSeaSaw(SeaSaw seasaw){
+	public void drawFoundSeaSaws(){
+		List<SeaSaw> seaSaws = controller.getRobot().getBoard().getFoundSeaSaws();
+		for(SeaSaw s : seaSaws){
+			drawSeaSaw(s,false);
+		}
+	}
+	
+	public void drawSeaSaw(SeaSaw seasaw, boolean simulated){
 		Polygon pol = new Polygon();
 		int posX = (int) (seasaw.getCenterPosition().getX() + OFFSET);
 		int posY = (int) (seasaw.getCenterPosition().getY() + OFFSET);
@@ -214,7 +222,12 @@ public class DrawingPanel extends JPanel {
 		pol.addPoint(posX+xRange, posY+yRange);
 		pol.addPoint(posX-xRange, posY+yRange);
 		
-		g.setColor(Color.darkGray);
+		if(simulated){
+			g.setColor(Color.lightGray);
+		}
+		else{
+			g.setColor(Color.darkGray);
+		}
 		g.drawPolygon(pol);
 		g.fillPolygon(pol);
 		totalGui.repaint();
