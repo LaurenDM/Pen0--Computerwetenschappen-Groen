@@ -23,6 +23,15 @@ public enum Orientation {
 			return NORTH;
 		}
 	}
+	
+	public static Orientation getOrientation(double angle){
+		final int MARGE = 10;
+		if(Math.abs(angle-0)<MARGE) return EAST;
+		else if(Math.abs(angle-90) <MARGE) return SOUTH;
+		else if(Math.abs(angle-180) <MARGE || Math.abs(angle+180)<MARGE) return WEST;
+		else if(Math.abs(angle+90) <MARGE) return NORTH;
+		else throw new IllegalArgumentException();
+	}
 
 	public Orientation getLeft(){
 		return this.getOffset(-1);

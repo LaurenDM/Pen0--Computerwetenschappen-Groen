@@ -409,12 +409,22 @@ public class Controller {
 		return currentRobot.getTeamNumber();
 	}
 	
-	public static void setStopped(){
-		STOPPED = true;
+	public void setPlayerNb(int nb){
+		currentRobot.setPlayerNb(nb);
 	}
 
 
 	public void setFalseBallNumbers(int[] falseBallBarcodes) {
 		Barcode.setFalseBallNumbers(falseBallBarcodes);
+	}
+	
+	public void playerJoined(int identifier){
+		//RobotPilot newRobot = new RobotPilot(identifier);
+		// TODO simrobot of btrobot aanmaken + hoe bepalen?
+		//otherRobots.put(identifier, newRobot);
+	}
+	
+	public void playerLeft(int identifier){
+		otherRobots.remove(identifier);
 	}
 }
