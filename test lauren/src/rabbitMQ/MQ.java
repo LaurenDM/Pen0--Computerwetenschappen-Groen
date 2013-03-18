@@ -6,7 +6,7 @@ import java.net.ConnectException;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.ConnectionParameters;
+//import com.rabbitmq.client.ConnectionParameters;
 
 public class MQ {
 	/**
@@ -19,8 +19,8 @@ public class MQ {
 	public static Connection createConnection() throws IOException {
 
 	//	try{
-		ConnectionParameters params = new ConnectionParameters();
-		params.setRequestedHeartbeat(0);
+	//	ConnectionParameters params = new ConnectionParameters();
+	//	params.setRequestedHeartbeat(0);
 		//ConnectionFactory factory = new ConnectionFactory(params);
 		System.out.println("Trying to connect...");
 		//Connection conn = factory.newConnection("localhost", 8888);
@@ -36,11 +36,11 @@ public class MQ {
 	
 	public static Connection createCampusConnection() throws IOException{
 	//	try{
-			ConnectionParameters params = new ConnectionParameters();
-			params.setUsername(Config.USER_NAME);
-			params.setPassword(Config.PASSWORD);
-			params.setVirtualHost(Config.VIRTUAL_HOST);
-			params.setRequestedHeartbeat(0);
+	//		ConnectionParameters params = new ConnectionParameters();
+	//		params.setUsername(Config.USER_NAME);
+	//		params.setPassword(Config.PASSWORD);
+	//		params.setVirtualHost(Config.VIRTUAL_HOST);
+	//		params.setRequestedHeartbeat(0);
 		//	ConnectionFactory factory = new ConnectionFactory(params);
 
 		//	Connection conn = factory.newConnection(Config.HOST_NAME, Config.PORT);
