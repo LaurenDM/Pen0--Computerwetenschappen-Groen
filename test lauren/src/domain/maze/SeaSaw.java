@@ -53,5 +53,7 @@ public class SeaSaw extends MazeElement {
 		setInfrared((this.infrared + 1)%2);
 	}
 	
+	
+	
 
 }
