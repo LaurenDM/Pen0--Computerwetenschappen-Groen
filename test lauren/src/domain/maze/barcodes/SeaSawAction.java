@@ -18,7 +18,7 @@ public class SeaSawAction implements Action {
 
 	@Override
 	public void run(RobotPilot robot) {
-		robot.getBoard().putSeaSaw(new SeaSaw(center, orientation, barcodeNb));
+		robot.getBoard().addFoundSeaSaw(center, orientation, barcodeNb);
 		boolean open = robot.checkForSeaSawInfrared();
 		//TODO: iets toevoegen met het resultaat
 	}

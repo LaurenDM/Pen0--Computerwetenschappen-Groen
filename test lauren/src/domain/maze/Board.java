@@ -20,6 +20,7 @@ public class Board {
 	private List<Barcode> foundBarcodes;
 	private List<RobotPilot> otherRobots;
 	private HashMap<Position, SeaSaw> seaSaws;
+	private List<SeaSaw> foundSeaSaws;
 	
 	
 	public Board(){
@@ -29,6 +30,7 @@ public class Board {
 		foundWalls = new ArrayList<Wall>();
 		balls = new ArrayList<Ball>();
 		seaSaws = new HashMap<Position, SeaSaw>();
+		foundSeaSaws = new ArrayList<SeaSaw>();
 		}
 	
 	public synchronized void addWall(Wall wall){
@@ -195,6 +197,17 @@ public class Board {
 		}
 	}
 	
+	public void addFoundSeaSaw(Position position, Orientation orientation, int nb){
+		SeaSaw foundSeaSaw;
+		if(seaSaws.get(position) == null){
+			foundSeaSaw = new SeaSaw(position, orientation, nb);
+		}
+		else {
+			foundSeaSaw = seaSaws.get(position);
+		}
+		foundSeaSaws.add(foundSeaSaw);
+	}
+	
 	public boolean checkForOpenSeaSawFrom(RobotPilot robot){
 		final int DISTANCE = 50;
 		for(SeaSaw seasaw : seaSaws.values()){
@@ -208,6 +221,11 @@ public class Board {
 	public List<SeaSaw> getSeaSaws(){
 		return new ArrayList<SeaSaw>(seaSaws.values());
 	}
+	
+	public List<SeaSaw> getFoundSeaSaws(){
+		return foundSeaSaws;
+	}
+
 	
 
 }
