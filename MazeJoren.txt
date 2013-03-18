@@ -1,8 +1,0 @@
-3 3
-
-# doolhof Joren
-Corner.N	Straight.W.1	Corner.E
-Straight.S.15	T.E		Corner.S
-Corner.W	T.S		DeadEnd.E
-
-

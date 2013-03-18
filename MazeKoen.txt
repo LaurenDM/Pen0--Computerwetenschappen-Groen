@@ -1,7 +1,0 @@
-2 2
-
-# doolhof Koen
-Corner.N	Corner.E
-Corner.W	Corner.S
-
-
