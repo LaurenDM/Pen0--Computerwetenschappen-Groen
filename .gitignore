@@ -4,5 +4,5 @@ bin/
 *.class
 
 #ignore the '.classpath' file, doesn't matter in which folder is resides
-.classpath
+#.classpath
 
