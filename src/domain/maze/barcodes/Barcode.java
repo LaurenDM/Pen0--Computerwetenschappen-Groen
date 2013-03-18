@@ -24,7 +24,7 @@ public class Barcode extends MazeElement{
 		}
 		this.bits = bits;
 		this.pos = pos;
-		this.orientation = getOrientation(angle);
+		this.orientation = Orientation.getOrientation(angle);
 		int decimal = getDecimal(bits);
 		if(!legalInts.contains(decimal)){
 			mirrorBits();
@@ -48,16 +48,7 @@ public class Barcode extends MazeElement{
 	}
 	
 	public Barcode(int decimal, Position pos, double angle){
-		this(decimal, pos, getOrientation(angle));
-	}
-	
-	public static Orientation getOrientation(double angle) {
-		final int MARGE = 10;
-		if(Math.abs(angle-0)<MARGE) return Orientation.EAST;
-		else if(Math.abs(angle-90) <MARGE) return Orientation.SOUTH;
-		else if(Math.abs(angle-180) <MARGE || Math.abs(angle+180)<MARGE) return Orientation.WEST;
-		else if(Math.abs(angle+90) <MARGE) return Orientation.NORTH;
-		else throw new IllegalArgumentException();
+		this(decimal, pos, Orientation.getOrientation(angle));
 	}
 	
 

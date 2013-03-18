@@ -29,6 +29,10 @@ public abstract class RobotPilot {
 		this.number = number;
 	}
 	
+	public void setPlayerNb(int nb){
+		this.number = nb;
+	}
+	
 	public RobotPolygon getRobotPolygon(){
 		return robotPolygon;
 	}
