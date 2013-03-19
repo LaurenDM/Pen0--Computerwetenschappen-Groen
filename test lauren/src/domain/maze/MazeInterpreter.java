@@ -11,6 +11,7 @@ import java.util.List;
 
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
+import domain.maze.barcodes.SeaSawAction;
 
 public class MazeInterpreter {
 	
@@ -249,7 +250,17 @@ public class MazeInterpreter {
 		if(!board.detectBarcodeAt(pos)){
 			board.addSimulatedBarcode(new Barcode(dec, pos, orientation));
 		}
-//		testBarcode();
+		if((dec>10) && (dec<22) && (dec%2==1)){
+			// barcode is voor wip
+			Position pos2 = pos.getNewPosition(orientation.getAngleToHorizontal(), 60);
+			createSeaSaw(pos2, orientation, dec);
+			//TODO: werkt alleen indien orientatie van barcode in mazefile naar de wip wijst!
+			// ofwel oplossing voor zoeken ofwel moet scheidsrechtercommissie dit vastleggen
+		}
+	}
+	
+	private void createSeaSaw(Position pos, Orientation orientation, int nb){
+		board.putSeaSaw(new SeaSaw(pos, orientation, nb));
 	}
 	
 	private void testBarcode(){

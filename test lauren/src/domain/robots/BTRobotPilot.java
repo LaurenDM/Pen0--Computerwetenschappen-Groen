@@ -526,6 +526,12 @@ public class BTRobotPilot extends RobotPilot  {
 	public boolean checkForSeaSawInfrared() {
 		return detectInfrared();
 	}
+
+	@Override
+	public void driveOverSeeSaw() {
+		// TODO Auto-generated method stub (Koen?)
+		
+	}
 	
 
 }

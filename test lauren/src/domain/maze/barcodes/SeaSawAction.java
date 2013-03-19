@@ -18,9 +18,16 @@ public class SeaSawAction implements Action {
 
 	@Override
 	public void run(RobotPilot robot) {
-		robot.getBoard().putSeaSaw(new SeaSaw(center, orientation, barcodeNb));
+		robot.getBoard().addFoundSeaSaw(center, orientation, barcodeNb);
 		boolean open = robot.checkForSeaSawInfrared();
-		//TODO: iets toevoegen met het resultaat
+		if(!open){
+			robot.driveOverSeeSaw();
+			//TODO iets in het maze zodat we aan de overkant de juiste positie hebben en dat de maze
+			// weet dat er een wip is (joren)
+		}
+		else{
+			// TODO wat doen we dan?
+		}
 	}
 
 }

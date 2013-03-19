@@ -54,7 +54,7 @@ public class Barcode extends MazeElement{
 
 	private static int ownBallNumber = 0;
 	private static int[] otherBallNumbers = new int[] {1,2,3};
-	private static int[] seaSawNumbers = new int[] {11,13,15,17,19,21,23,25};
+	private static int[] seaSawNumbers = new int[] {11,13,15,17,19,21};
 	
 	public static void setBallNumber(int ballNumber) {
 		ownBallNumber = ballNumber;

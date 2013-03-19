@@ -239,6 +239,9 @@ public abstract class RobotPilot {
 
 	public abstract boolean checkForSeaSawInfrared();
 
+	public abstract void driveOverSeeSaw();
+	// de check van infrarood is reeds gebeurd als deze methode word aangeroepen!
+	
 
 
 	

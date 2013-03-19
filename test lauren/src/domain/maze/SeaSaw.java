@@ -14,13 +14,34 @@ public class SeaSaw extends MazeElement {
 	public SeaSaw(Position middlePosition, Orientation orientation, int barcodeNb){
 		this.middlePosition = middlePosition;
 		this.barcodeNb= barcodeNb;
+		initialize();
 		this.ORIENTATION = orientation;
 	}
+	
+	public void initialize(){
+		if(barcodeNb % 4 == 3){
+			//eerste barcode van een paar --> open
+			infrared = 1;
+		}
+		else{
+			infrared = 0;
+		}
+	}
+	
 
 	@Override
 	public boolean hasPosition(Position position) {
-		if(position.getX() <= middlePosition.getX() + EDGE/2 && position.getX() >= middlePosition.getX() - EDGE/2){
-			if(position.getY() <= middlePosition.getY() + EDGE/2 && position.getY() >= middlePosition.getY() - EDGE/2){
+		int xRange, yRange;
+		if(getOrientation().equals(Orientation.EAST) || getOrientation().equals(Orientation.WEST )){
+			xRange = EDGE/2;
+			yRange = EDGE/4;
+		}
+		else {
+			xRange = EDGE/4;
+			yRange = EDGE/2;
+		}
+		if(position.getX() <= middlePosition.getX() + xRange && position.getX() >= middlePosition.getX() - xRange){
+			if(position.getY() <= middlePosition.getY() + yRange && position.getY() >= middlePosition.getY() - yRange){
 				return true;
 			}
 		}
@@ -52,6 +73,8 @@ public class SeaSaw extends MazeElement {
 	public void rollOver(){
 		setInfrared((this.infrared + 1)%2);
 	}
+	
+	
 	
 
 }

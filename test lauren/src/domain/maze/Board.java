@@ -20,6 +20,7 @@ public class Board {
 	private List<Barcode> foundBarcodes;
 	private List<RobotPilot> otherRobots;
 	private HashMap<Position, SeaSaw> seaSaws;
+	private List<SeaSaw> foundSeaSaws;
 	
 	
 	public Board(){
@@ -29,6 +30,7 @@ public class Board {
 		foundWalls = new ArrayList<Wall>();
 		balls = new ArrayList<Ball>();
 		seaSaws = new HashMap<Position, SeaSaw>();
+		foundSeaSaws = new ArrayList<SeaSaw>();
 		}
 	
 	public synchronized void addWall(Wall wall){
@@ -169,22 +171,24 @@ public class Board {
 	
 	public synchronized boolean detectRobotFrom(RobotPilot robot){
 		final int DISTANCE = 50; //TODO experimenteel bepalen van bereik van IRsensor
-		for(RobotPilot robot2 : otherRobots){
-			if(robot2.getPosition().getDistance(robot.getPosition())<DISTANCE){
-				double distance = robot2.getPosition().getDistance(robot.getPosition());
-				double angle = Math.abs(robot.getOrientation()-robot.getPosition().getAngleTo(robot2.getPosition()));
-				if(angle<135){
-					// andere robot in gezichtsveld van robot
-					robot.turnUltrasonicSensor((int) angle);
-					if(robot.readUltrasonicValue() >= distance){
-						// geen muur tussen robots
-						return true;
+		if(otherRobots!=null){
+			for(RobotPilot robot2 : otherRobots){
+				if(robot2.getPosition().getDistance(robot.getPosition())<DISTANCE){
+					double distance = robot2.getPosition().getDistance(robot.getPosition());
+					double angle = Math.abs(robot.getOrientation()-robot.getPosition().getAngleTo(robot2.getPosition()));
+					if(angle<135){
+						// andere robot in gezichtsveld van robot
+						robot.turnUltrasonicSensor((int) angle);
+						if(robot.readUltrasonicValue() >= distance){
+							// geen muur tussen robots
+							return true;
+						}
+						//wel muur tussen robots
 					}
-					//wel muur tussen robots
+					//robot ziet andere robot niet
 				}
-				//robot ziet andere robot niet
+				// buiten bereik
 			}
-			// buiten bereik
 		}
 		return false;
 	}
@@ -193,6 +197,17 @@ public class Board {
 		if(seaSaws.get(seasaw.getCenterPosition()) == null){
 			seaSaws.put(seasaw.getCenterPosition(),seasaw);
 		}
+	}
+	
+	public void addFoundSeaSaw(Position position, Orientation orientation, int nb){
+		SeaSaw foundSeaSaw;
+		if(seaSaws.get(position) == null){
+			foundSeaSaw = new SeaSaw(position, orientation, nb);
+		}
+		else {
+			foundSeaSaw = seaSaws.get(position);
+		}
+		foundSeaSaws.add(foundSeaSaw);
 	}
 	
 	public boolean checkForOpenSeaSawFrom(RobotPilot robot){
@@ -208,6 +223,11 @@ public class Board {
 	public List<SeaSaw> getSeaSaws(){
 		return new ArrayList<SeaSaw>(seaSaws.values());
 	}
+	
+	public List<SeaSaw> getFoundSeaSaws(){
+		return foundSeaSaws;
+	}
+
 	
 
 }
