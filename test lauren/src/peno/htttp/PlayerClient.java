@@ -1,10 +1,13 @@
 package peno.htttp;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -17,9 +20,9 @@ import java.util.concurrent.TimeUnit;
 
 import peno.htttp.impl.Consumer;
 import peno.htttp.impl.NamedThreadFactory;
-import peno.htttp.impl.PlayerInfo;
 import peno.htttp.impl.PlayerRegister;
 import peno.htttp.impl.PlayerRoll;
+import peno.htttp.impl.PlayerState;
 import peno.htttp.impl.RequestProvider;
 import peno.htttp.impl.Requester;
 
@@ -31,9 +34,9 @@ import com.rabbitmq.client.ShutdownSignalException;
 import com.rabbitmq.tools.json.JSONWriter;
 
 /**
- * A client for communicating over the HTTTP protocol.
+ * A client for playing a game over the HTTTP protocol.
  */
-public class Client {
+public class PlayerClient {
 
 	/*
 	 * Constants
@@ -49,7 +52,7 @@ public class Client {
 	private final Connection connection;
 	private Channel channel;
 	private RequestProvider requestProvider;
-	private final Handler handler;
+	private final PlayerHandler handler;
 	private Consumer joinConsumer;
 	private Consumer publicConsumer;
 	private Consumer teamConsumer;
@@ -63,7 +66,7 @@ public class Client {
 	 * Game state
 	 */
 	private volatile GameState gameState = GameState.DISCONNECTED;
-	private final PlayerInfo localPlayer;
+	private final PlayerState localPlayer;
 	private final PlayerRegister players = new PlayerRegister();
 
 	/*
@@ -83,7 +86,7 @@ public class Client {
 	 * Create a game client.
 	 * 
 	 * @param connection
-	 *            The AMPQ connection for communication.
+	 *            The AMQP connection for communication.
 	 * @param handler
 	 *            The event handler which listens to this client.
 	 * @param gameID
@@ -92,15 +95,14 @@ public class Client {
 	 *            The local player identifier.
 	 * @throws IOException
 	 */
-	public Client(Connection connection, Handler handler, String gameID, String playerID) throws IOException {
+	public PlayerClient(Connection connection, PlayerHandler handler, String gameID, String playerID)
+			throws IOException {
 		this.connection = connection;
 		this.handler = handler;
 		this.gameID = gameID;
 
 		String clientID = UUID.randomUUID().toString();
-		this.localPlayer = new PlayerInfo(clientID, playerID);
-
-		setup();
+		this.localPlayer = new PlayerState(clientID, playerID);
 	}
 
 	/**
@@ -172,7 +174,7 @@ public class Client {
 	public Set<String> getPlayers() {
 		Set<String> playerIDs = new HashSet<String>();
 		synchronized (players) {
-			for (PlayerInfo player : players.getConfirmed()) {
+			for (PlayerState player : players.getConfirmed()) {
 				playerIDs.add(player.getPlayerID());
 			}
 		}
@@ -192,36 +194,58 @@ public class Client {
 		}
 	}
 
-	private PlayerInfo getPlayer(String playerID) {
+	private PlayerState getPlayer(String playerID) {
 		synchronized (players) {
 			return players.getConfirmed(playerID);
 		}
 	}
 
-	private PlayerInfo getLocalPlayer() {
+	private PlayerState getLocalPlayer() {
 		return localPlayer;
 	}
 
-	private void confirmPlayer(String clientID, String playerID, boolean isReady) {
+	private PlayerState confirmPlayer(String clientID, String playerID, boolean isReady) {
 		synchronized (players) {
-			PlayerInfo player = players.getVoted(clientID, playerID);
+			// Attempt to use voted player
+			PlayerState player = players.getVoted(clientID, playerID);
 			if (player == null) {
-				player = new PlayerInfo(clientID, playerID);
+				// Not previously voted for player, create new
+				player = new PlayerState(clientID, playerID);
 			}
-			player.setReady(isReady);
+			// Restore from missing
+			restorePlayer(player);
+			// Confirm and set ready
 			players.confirm(player);
+			player.setReady(isReady);
+			return player;
 		}
 	}
 
-	private void votePlayer(String clientID, String playerID) {
+	private PlayerState votePlayer(String clientID, String playerID) {
 		synchronized (players) {
-			players.vote(new PlayerInfo(clientID, playerID));
+			// Create player
+			PlayerState player = new PlayerState(clientID, playerID);
+			// Restore from missing
+			restorePlayer(player);
+			// Vote
+			players.vote(player);
+			return player;
 		}
 	}
 
 	private void removePlayer(String clientID, String playerID) {
 		synchronized (players) {
+			// Remove from confirmed and voted
 			players.remove(clientID, playerID);
+		}
+	}
+
+	private void restorePlayer(PlayerState player) {
+		synchronized (players) {
+			PlayerState missingPlayer = players.getMissing(player.getPlayerID());
+			if (missingPlayer != null) {
+				missingPlayer.copyTo(player);
+			}
 		}
 	}
 
@@ -231,23 +255,30 @@ public class Client {
 		}
 	}
 
-	private Set<String> getMissingPlayers() {
+	private Collection<PlayerState> getMissingPlayers() {
 		synchronized (players) {
 			return players.getMissing();
 		}
 	}
 
-	private void setMissingPlayer(String missingPlayer) {
+	private void setMissingPlayer(PlayerState missingPlayer) {
 		synchronized (players) {
-			players.setMissing(missingPlayer);
+			if (missingPlayer != null) {
+				players.setMissing(missingPlayer);
+			}
 		}
 	}
 
-	private void setMissingPlayers(Iterable<String> missingPlayers) {
+	private boolean isPlayerConnected(String clientID, String playerID) {
 		synchronized (players) {
-			for (String missingPlayer : missingPlayers) {
-				players.setMissing(missingPlayer);
-			}
+			// Missing players are disconnected
+			if (isMissingPlayer(playerID))
+				return false;
+			// Confirmed players are connected
+			if (hasPlayer(clientID, playerID))
+				return true;
+			// Voted players are connected
+			return players.isVoted(clientID, playerID);
 		}
 	}
 
@@ -298,6 +329,7 @@ public class Client {
 			// Only missing players can join
 			return isMissingPlayer(playerID);
 		case JOINING:
+		case STARTING:
 		case WAITING:
 			// Reject duplicate players
 			if (!players.canJoin(clientID, playerID))
@@ -314,13 +346,52 @@ public class Client {
 	private void joined() throws IOException {
 		// Setup public queue
 		setupPublic();
+		// Try to roll
+		tryRoll();
+		// Trigger handlers for previously found objects
+		triggerFoundObjects();
+		// Rejoin team
+		if (hasTeamNumber()) {
+			joinTeam(getTeamNumber());
+		}
 	}
 
-	private void playerJoined(String clientID, String playerID, boolean isReady) {
+	private void playerJoining(String clientID, String playerID, BasicProperties props) throws IOException {
+		// Retrieve game state before voting
+		Map<String, Object> gameState = writeGameState();
+
+		// Check if accepted
+		boolean isAccepted = canJoin(clientID, playerID);
+		// Vote for player
+		votePlayer(clientID, playerID);
+
+		// Create and send reply
+		Map<String, Object> reply = newMessage();
+		reply.put("result", isAccepted);
+		// Add data if accepted
+		if (isAccepted) {
+			// Report own player state
+			PlayerState player = getLocalPlayer();
+			reply.put("clientID", player.getClientID());
+			reply.put("isReady", player.isReady());
+			reply.put("isJoined", isJoined());
+			reply.putAll(player.write());
+			// Report game state
+			reply.putAll(gameState);
+		}
+		reply(props, reply);
+
+		// Call handler
+		handler.playerJoining(playerID);
+	}
+
+	private synchronized void playerJoined(String clientID, String playerID) throws IOException {
 		// Confirm player
-		confirmPlayer(clientID, playerID, isReady);
-		// Report
+		confirmPlayer(clientID, playerID, false);
+		// Call handler
 		handler.playerJoined(playerID);
+		// Try to roll
+		tryRoll();
 	}
 
 	/**
@@ -336,6 +407,10 @@ public class Client {
 	 * @throws IOException
 	 */
 	public void leave() throws IOException {
+		disconnect(DisconnectReason.LEAVE);
+	}
+
+	private void disconnect(DisconnectReason reason) throws IOException {
 		// Reset game
 		resetGame();
 		// Stop request provider
@@ -351,7 +426,8 @@ public class Client {
 			// Publish leave
 			Map<String, Object> message = newMessage();
 			message.put("clientID", getClientID());
-			publish("leave", message);
+			message.put("reason", reason.name());
+			publish("disconnect", message);
 		} catch (IOException e) {
 			throw e;
 		} catch (ShutdownSignalException e) {
@@ -359,25 +435,28 @@ public class Client {
 			try {
 				// Shut down channel
 				channel.close();
-			} catch (IOException e){
-				
-			} catch ( ShutdownSignalException e) {
-				 
-			}
-			finally {
+			} catch (IOException e) {
+			} catch (ShutdownSignalException e) {
+			} finally {
 				channel = null;
 			}
 		}
 	}
 
-	private void playerLeft(String clientID, String playerID) {
-		// Report
-		if (hasPlayer(clientID, playerID)) {
-			handler.playerLeft(playerID);
-		}
+	private synchronized void playerDisconnected(String clientID, String playerID, DisconnectReason reason) {
+		// Ignore if player has already disconnected
+		// Can occur when receiving multiple heart beat timeout disconnects
+		if (!isPlayerConnected(clientID, playerID))
+			return;
+
+		// Call handler
+		handler.playerDisconnected(playerID, reason);
 
 		switch (getGameState()) {
 		case WAITING:
+		case STARTING:
+			// Revert to waiting
+			setGameState(GameState.WAITING);
 			// Remove player
 			removePlayer(clientID, playerID);
 			// Invalidate player numbers
@@ -387,7 +466,7 @@ public class Client {
 		case PAUSED:
 			if (hasPlayer(clientID, playerID)) {
 				// Player went missing
-				setMissingPlayer(playerID);
+				setMissingPlayer(getPlayer(playerID));
 				// Paused
 				paused();
 			}
@@ -420,14 +499,14 @@ public class Client {
 	 */
 	public boolean canStart() {
 		switch (getGameState()) {
-		case WAITING:
+		case STARTING:
 		case PAUSED:
 			// Game must be full
 			if (!isFull())
 				return false;
 			// All players must be ready
-			for (PlayerInfo playerInfo : players.getConfirmed()) {
-				if (!playerInfo.isReady())
+			for (PlayerState player : players.getConfirmed()) {
+				if (!player.isReady())
 					return false;
 			}
 			return true;
@@ -448,30 +527,35 @@ public class Client {
 	 * 
 	 * @param isReady
 	 *            True if the local player is ready.
+	 * @throws IllegalStateException
+	 *             If not joined.
 	 * @throws IOException
 	 */
 	public void setReady(boolean isReady) throws IOException {
-		if (isReady != getLocalPlayer().isReady()) {
+		if (!isJoined()) {
+			throw new IllegalStateException("Not joined in the game.");
+		}
+
+		if (isReady != isReady()) {
 			// Publish updated state
 			Map<String, Object> message = newMessage();
 			message.put("isReady", isReady);
 			publish("ready", message);
-
-			// Handle local player ready
-			playerReady(getPlayerID(), isReady);
 		}
 	}
 
 	private void playerReady(String playerID, boolean isReady) throws IOException {
 		// Set ready state
 		getPlayer(playerID).setReady(isReady);
+		// Call handler
+		handler.playerReady(playerID, isReady);
 
 		if (isReady) {
-			// Try to start rolling
-			tryRoll();
-		} else if (getGameState() == GameState.WAITING) {
-			// Clear rolls when not ready while waiting
-			clearPlayerNumbers();
+			// Try to start
+			tryStart();
+		} else {
+			// TODO Should we pause here when playing?
+			// Related: should we replace pause() with setReady(false)?
 		}
 	}
 
@@ -483,7 +567,7 @@ public class Client {
 	 *             player numbers not determined yet.
 	 * @throws IOException
 	 */
-	public void start() throws IllegalStateException, IOException {
+	protected void start() throws IllegalStateException, IOException {
 		if (!isJoined()) {
 			throw new IllegalStateException("Not joined in the game.");
 		}
@@ -499,6 +583,12 @@ public class Client {
 
 		// Publish
 		publish("start", null);
+	}
+
+	private void tryStart() throws IOException {
+		if (isJoined() && !isPlaying() && canStart() && hasPlayerNumber()) {
+			start();
+		}
 	}
 
 	private synchronized void started() {
@@ -611,15 +701,29 @@ public class Client {
 	 * Check if the player numbers have been determined.
 	 */
 	public boolean hasPlayerNumber() {
-		return playerNumbers.size() == nbPlayers;
+		switch (getGameState()) {
+		case PAUSED:
+		case PLAYING:
+		case STARTING:
+			return (playerNumbers.size() == nbPlayers);
+		default:
+			return false;
+		}
+	}
+
+	/**
+	 * Check if the player numbers can be rolled.
+	 */
+	public boolean canRoll() {
+		return getGameState() == GameState.WAITING && isFull();
 	}
 
 	/**
 	 * Roll for player numbers.
 	 * 
 	 * @throws IllegalStateException
-	 *             If not joined, if already started, if unable to start or if
-	 *             player numbers already determined.
+	 *             If not joined, if already rolled or started or if not all
+	 *             players have joined yet.
 	 * @throws IOException
 	 */
 	protected void roll() throws IOException {
@@ -629,11 +733,11 @@ public class Client {
 		if (isPlaying()) {
 			throw new IllegalStateException("Game already started.");
 		}
-		if (!canStart()) {
-			throw new IllegalStateException("Cannot start the game.");
-		}
 		if (hasPlayerNumber()) {
 			throw new IllegalStateException("Already rolled for player numbers.");
+		}
+		if (!canRoll()) {
+			throw new IllegalStateException("Not all players have joined yet.");
 		}
 
 		// Roll own number if needed
@@ -645,16 +749,14 @@ public class Client {
 	}
 
 	/**
-	 * Attempt to start the game.
+	 * Attempt to roll for player numbers.
 	 * 
 	 * @throws IOException
 	 */
-	protected boolean tryRoll() throws IOException {
-		if (isJoined() && !isPlaying() && canStart() && !hasPlayerNumber()) {
+	protected void tryRoll() throws IOException {
+		if (isJoined() && !isPlaying() && !hasPlayerNumber() && canRoll()) {
 			roll();
-			return true;
 		}
-		return false;
 	}
 
 	private boolean hasRolledOwn() {
@@ -690,6 +792,8 @@ public class Client {
 		if (!hasPlayerNumber() && playerRolls.size() == nbPlayers) {
 			// Sort rolls and retrieve player numbers
 			sortPlayerRolls();
+			// Set as starting
+			setGameState(GameState.STARTING);
 			// Call handler
 			handler.gameRolled(getPlayerNumber());
 		}
@@ -718,7 +822,7 @@ public class Client {
 	}
 
 	/*
-	 * Notifications
+	 * Position
 	 */
 
 	/**
@@ -737,19 +841,46 @@ public class Client {
 	 * @param angle
 	 *            The angle of rotation.
 	 * @throws IllegalStateException
-	 *             If not joined in the game.
+	 *             If not playing.
 	 * @throws IOException
 	 */
 	public void updatePosition(double x, double y, double angle) throws IllegalStateException, IOException {
-		if (!isJoined()) {
-			throw new IllegalStateException("Not joined in the game.");
+		if (!isPlaying()) {
+			throw new IllegalStateException("Cannot update position when not playing.");
 		}
 
 		Map<String, Object> message = newMessage();
 		message.put("x", x);
 		message.put("y", y);
 		message.put("angle", angle);
-		publish("position", message);
+		message.put("playerNumber", getPlayerNumber());
+		message.put("foundObject", hasFoundObject());
+		publish("update", message);
+	}
+
+	/*
+	 * Object finding
+	 */
+
+	/**
+	 * Check whether the local player has found their object.
+	 */
+	public boolean hasFoundObject() {
+		return getLocalPlayer().hasFoundObject();
+	}
+
+	private void triggerFoundObjects() throws IOException {
+		if (!hasPlayerNumber())
+			return;
+
+		// Trigger handlers for currently connected players
+		// This includes the local player
+		for (PlayerState player : players.getConfirmed()) {
+			if (player.hasFoundObject()) {
+				String playerID = player.getPlayerID();
+				handler.playerFoundObject(playerID, playerNumbers.get(playerID));
+			}
+		}
 	}
 
 	/**
@@ -757,16 +888,33 @@ public class Client {
 	 * object.
 	 * 
 	 * @throws IllegalStateException
-	 *             If not playing.
+	 *             If not playing or if already found.
 	 * @throws IOException
 	 */
 	public void foundObject() throws IllegalStateException, IOException {
 		if (!isPlaying()) {
 			throw new IllegalStateException("Cannot find object when not playing.");
 		}
+		if (hasFoundObject()) {
+			throw new IllegalStateException("Object already found.");
+		}
+
+		// Mark own object as found
+		getLocalPlayer().setFoundObject(true);
 
 		// Publish
-		publish("found", null);
+		Map<String, Object> message = newMessage();
+		message.put("playerNumber", getPlayerNumber());
+		publish("found", message);
+	}
+
+	private void playerFoundObject(String playerID) {
+		// Mark object as found
+		getPlayer(playerID).setFoundObject(true);
+
+		// Call handler
+		int playerNumber = playerNumbers.get(playerID);
+		handler.playerFoundObject(playerID, playerNumber);
 	}
 
 	/*
@@ -812,9 +960,9 @@ public class Client {
 	private void heartbeatCheck() throws IOException {
 		final long limit = System.currentTimeMillis() - heartbeatExpiration;
 		// Clone for safe iteration
-		final PlayerInfo[] confirmed = players.getConfirmed().toArray(new PlayerInfo[0]);
+		final PlayerState[] confirmed = players.getConfirmed().toArray(new PlayerState[0]);
 		// Check all confirmed players
-		for (PlayerInfo player : confirmed) {
+		for (PlayerState player : confirmed) {
 			final long lastHeartbeat = player.getLastHeartbeat();
 			if (lastHeartbeat > 0 && lastHeartbeat < limit) {
 				// Heart beat expired, report missing
@@ -823,16 +971,20 @@ public class Client {
 		}
 	}
 
-	private void heartbeatMissing(PlayerInfo player) throws IOException {
+	private void heartbeatMissing(PlayerState player) throws IOException {
+		// Handle locally
+		playerDisconnected(player.getClientID(), player.getPlayerID(), DisconnectReason.TIMEOUT);
+
 		// Publish leave for player
 		Map<String, Object> message = newMessage();
 		message.put("playerID", player.getPlayerID());
 		message.put("clientID", player.getClientID());
-		publish("leave", message);
+		message.put("reason", DisconnectReason.TIMEOUT.name());
+		publish("disconnect", message);
 	}
 
 	private void heartbeatReceived(String playerID) {
-		PlayerInfo player = getPlayer(playerID);
+		PlayerState player = getPlayer(playerID);
 		if (player != null) {
 			player.setLastHeartbeat(System.currentTimeMillis());
 		}
@@ -861,21 +1013,47 @@ public class Client {
 	 */
 
 	/**
+	 * Get the local player's team number.
+	 */
+	public int getTeamNumber() {
+		if (!hasTeamNumber()) {
+			throw new IllegalStateException("Not in any team yet.");
+		}
+
+		return getLocalPlayer().getTeamNumber();
+	}
+
+	/**
+	 * Check if the local player is in a team yet.
+	 */
+	public boolean hasTeamNumber() {
+		return getLocalPlayer().getTeamNumber() >= 0;
+	}
+
+	/**
 	 * Join the given team.
 	 * 
-	 * @param teamId
-	 *            The team identifier.
+	 * @param teamNumber
+	 *            The team number.
 	 * @throws IllegalStateException
 	 *             If not playing.
 	 * @throws IOException
 	 */
-	public void joinTeam(int teamId) throws IOException {
+	public void joinTeam(int teamNumber) throws IOException {
 		if (!isPlaying()) {
 			throw new IllegalStateException("Cannot join team when not playing.");
 		}
+		// TODO Check whether already in the team channel.
+
+		// Set team number
+		getLocalPlayer().setTeamNumber(teamNumber);
+		/*
+		 * TODO Publish team number for others to store it in case this player
+		 * loses their connection and rejoins.
+		 */
 
 		// Setup team
-		setupTeam(teamId);
+		setupTeam(teamNumber);
 	}
 
 	/*
@@ -917,9 +1095,9 @@ public class Client {
 		}
 	}
 
-	private void setupTeam(int teamId) throws IOException {
+	private void setupTeam(int teamNumber) throws IOException {
 		teamConsumer = new TeamConsumer(channel);
-		teamConsumer.bind(getGameID(), "team." + teamId + ".*");
+		teamConsumer.bind(getGameID(), "team." + teamNumber + ".*");
 	}
 
 	private void shutdownTeam() throws IOException {
@@ -933,8 +1111,8 @@ public class Client {
 		setGameState(GameState.DISCONNECTED);
 		// Clear player rolls and numbers
 		clearPlayerNumbers();
-		// Set as not ready
-		getLocalPlayer().setReady(false);
+		// Reset local player
+		getLocalPlayer().reset();
 		// Only retain local player
 		synchronized (players) {
 			players.clear();
@@ -958,26 +1136,41 @@ public class Client {
 
 		// Missing players (if valid)
 		@SuppressWarnings("unchecked")
-		Iterable<String> missingPlayers = (Iterable<String>) message.get("missingPlayers");
+		Iterable<Map<String, Object>> missingPlayers = (Iterable<Map<String, Object>>) message.get("missingPlayers");
 		if (missingPlayers != null) {
-			setMissingPlayers(missingPlayers);
+			for (Map<String, Object> playerData : missingPlayers) {
+				// Create missing player
+				String playerID = (String) playerData.get("playerID");
+				PlayerState missingPlayer = new PlayerState(null, playerID);
+				missingPlayer.read(playerData);
+				// Store as missing player
+				setMissingPlayer(missingPlayer);
+			}
+			// Try to restore from missing local player
+			restorePlayer(getLocalPlayer());
 		}
 	}
 
-	private void writeGameState(Map<String, Object> message) {
+	private Map<String, Object> writeGameState() {
+		Map<String, Object> state = new HashMap<String, Object>();
 		// Game state
 		if (isJoined()) {
-			message.put("gameState", getGameState().name());
+			state.put("gameState", getGameState().name());
 		}
 		// Player numbers
 		if (hasPlayerNumber()) {
-			message.put("playerNumbers", playerNumbers);
+			state.put("playerNumbers", playerNumbers);
 		}
 		// Missing players
-		Set<String> missingPlayers = getMissingPlayers();
+		Collection<PlayerState> missingPlayers = getMissingPlayers();
 		if (!missingPlayers.isEmpty()) {
-			message.put("missingPlayers", missingPlayers);
+			List<Map<String, Object>> out = new ArrayList<Map<String, Object>>(missingPlayers.size());
+			for (PlayerState missingPlayer : missingPlayers) {
+				out.add(missingPlayer.write());
+			}
+			state.put("missingPlayers", out);
 		}
+		return state;
 	}
 
 	/*
@@ -1057,12 +1250,14 @@ public class Client {
 				boolean isJoined = (Boolean) message.get("isJoined");
 
 				// Store player
+				PlayerState player;
 				if (isJoined) {
-					confirmPlayer(clientID, playerID, isReady);
+					player = confirmPlayer(clientID, playerID, isReady);
 				} else {
-					votePlayer(clientID, playerID);
+					player = votePlayer(clientID, playerID);
 				}
-
+				// Read player state
+				player.read(message);
 				// Read game state
 				readGameState(message);
 
@@ -1109,8 +1304,8 @@ public class Client {
 			try {
 				// Cancel request
 				cancel();
-				// Leave
-				leave();
+				// Disconnect
+				disconnect(DisconnectReason.REJECT);
 			} catch (IOException e) {
 				callback.onFailure(e);
 			}
@@ -1127,10 +1322,9 @@ public class Client {
 		}
 
 		private Map<String, Object> createMessage() {
-			PlayerInfo playerInfo = getLocalPlayer();
+			PlayerState player = getLocalPlayer();
 			Map<String, Object> message = newMessage();
-			message.put("clientID", playerInfo.getClientID());
-			message.put("isReady", playerInfo.isReady());
+			message.put("clientID", player.getClientID());
 			return message;
 		}
 
@@ -1156,35 +1350,19 @@ public class Client {
 				return;
 
 			if (topic.equals("join")) {
-				// Prepare reply
-				PlayerInfo playerInfo = getLocalPlayer();
-				Map<String, Object> reply = newMessage();
-
-				// Check if accepted
-				boolean isAccepted = canJoin(clientID, playerID);
-				reply.put("result", isAccepted);
-
-				// Store player
-				votePlayer(clientID, playerID);
-
-				if (isAccepted) {
-					// Report own player info
-					reply.put("clientID", playerInfo.getClientID());
-					reply.put("isReady", playerInfo.isReady());
-					reply.put("isJoined", isJoined());
-					// Report game state
-					writeGameState(reply);
-				}
-
-				// Send reply
-				reply(props, reply);
+				// Player joining
+				playerJoining(clientID, playerID, props);
 			} else if (topic.equals("joined")) {
-				// Handle player joined
-				boolean isReady = (Boolean) message.get("isReady");
-				playerJoined(clientID, playerID, isReady);
-			} else if (topic.equals("leave")) {
-				// Handle player left
-				playerLeft(clientID, playerID);
+				// Player joined
+				playerJoined(clientID, playerID);
+			} else if (topic.equals("disconnect")) {
+				// Player disconnected
+				DisconnectReason reason = DisconnectReason.valueOf((String) message.get("reason"));
+				playerDisconnected(clientID, playerID, reason);
+			} else if (topic.equals("roll")) {
+				// Player rolled their number
+				int roll = (Integer) message.get("roll");
+				rollReceived(playerID, roll);
 			}
 		}
 
@@ -1203,33 +1381,23 @@ public class Client {
 		public void handleMessage(String topic, Map<String, Object> message, BasicProperties props) throws IOException {
 			String playerID = (String) message.get("playerID");
 			if (topic.equals("ready")) {
-				// Handle player ready
+				// Player ready
 				boolean isReady = (Boolean) message.get("isReady");
 				playerReady(playerID, isReady);
 			} else if (topic.equals("start")) {
-				// Handle start
+				// Game started
 				started();
 			} else if (topic.equals("stop")) {
-				// Handle stopped
+				// Game stopped
 				stopped();
 			} else if (topic.equals("pause")) {
-				// Handle paused
+				// Game paused
 				paused();
-			} else if (topic.equals("roll")) {
-				// Handle roll
-				int roll = (Integer) message.get("roll");
-				rollReceived(playerID, roll);
-			} else if (topic.equals("position")) {
-				// Handle position update
-				double x = ((Number) message.get("x")).doubleValue();
-				double y = ((Number) message.get("y")).doubleValue();
-				double angle = ((Number) message.get("angle")).doubleValue();
-				handler.playerPosition(playerID, x, y, angle);
 			} else if (topic.equals("found")) {
-				// Handle object found
-				handler.playerFoundObject(playerID);
+				// Player found their object
+				playerFoundObject(playerID);
 			} else if (topic.equals("heartbeat")) {
-				// Handle heartbeat
+				// Heartbeat
 				heartbeatReceived(playerID);
 			}
 		}

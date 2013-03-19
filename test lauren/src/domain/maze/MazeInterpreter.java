@@ -7,6 +7,7 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import domain.Position.Position;
@@ -18,9 +19,12 @@ public class MazeInterpreter {
 	private Board board;
 	private int firstLine; //number of line with first command
 	
+	private HashMap<Position,Integer> barcodePositions;
+	
 	
 	public MazeInterpreter(Board board){
 		this.board = board;
+		barcodePositions = new HashMap<Position,Integer>();
 	}
 	
 	public void readFile(String fileLocation){
@@ -47,7 +51,7 @@ public class MazeInterpreter {
 	
 	public void readline(String strLine, int numberOfLine){
 		if((strLine.startsWith("DeadEnd") || strLine.startsWith("Corner")
-		|| strLine.startsWith("Straight") || strLine.startsWith("T."))){
+		|| strLine.startsWith("Straight") || strLine.startsWith("T.") || strLine.startsWith("SeeSaw"))){
 			if(firstLine==-1){
 				firstLine = numberOfLine; 
 			}
@@ -79,6 +83,9 @@ public class MazeInterpreter {
 		}
 		else if(commandSplit[0].equals("Straight")){
 			createStraight(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
+		}
+		else if(commandSplit[0].equals("SeeSaw")){
+			createSeaSaw(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
 		}
 		if(commandSplit.length>2){
 			if(commandSplit[2].equals("B")){
@@ -252,29 +259,35 @@ public class MazeInterpreter {
 		}
 		if((dec>10) && (dec<22) && (dec%2==1)){
 			// barcode is voor wip
-			Position pos2 = pos.getNewPosition(orientation.getAngleToHorizontal(), 60);
-			createSeaSaw(pos2, orientation, dec);
-			//TODO: werkt alleen indien orientatie van barcode in mazefile naar de wip wijst!
-			// ofwel oplossing voor zoeken ofwel moet scheidsrechtercommissie dit vastleggen
+			barcodePositions.put(pos, dec);
 		}
 	}
 	
-	private void createSeaSaw(Position pos, Orientation orientation, int nb){
-		board.putSeaSaw(new SeaSaw(pos, orientation, nb));
+	private void createSeaSaw(int xCoo, int yCoo, Orientation orientation){
+		int MAZECONSTANT = MazeElement.getMazeConstant();
+		xCoo = xCoo*MAZECONSTANT+(MAZECONSTANT/2);
+		yCoo = yCoo*MAZECONSTANT+(MAZECONSTANT/2);
+		Position pos = new Position(xCoo,yCoo);
+		Position pos2 = pos.getNewPosition(orientation.getAngleToHorizontal(), 40);
+		if(barcodePositions.get(pos2) == null){
+			pos2 = pos.getNewPosition(orientation.getAngleToHorizontal(), -40);
+		}
+		int dec = barcodePositions.get(pos2);
+		board.putSeaSaw(new SeaSaw(pos2, orientation,dec));
 	}
 	
-	private void testBarcode(){
-		for(Barcode b: board.getSimulatedBarcodes()){
-			for(int i = 0; i<200; i++){
-			boolean test1 = b.isBlackAt(new Position(20, i));
-			boolean test2 = b.isBlackAt(new Position(60, i));
-			boolean test3 = b.isBlackAt(new Position(100, i));
-			boolean test4 = b.isBlackAt(new Position(140, i));
-			boolean test5 = b.isBlackAt(new Position(180, i));
-			boolean test6 = b.isBlackAt(new Position(220, i));
-			System.out.println("Y:"+i+" "+test1+" "+test2+" "+test3+" "+test4+" "+test5+" "+test6);
-			}
-		}
-	}
+//	private void testBarcode(){
+//		for(Barcode b: board.getSimulatedBarcodes()){
+//			for(int i = 0; i<200; i++){
+//			boolean test1 = b.isBlackAt(new Position(20, i));
+//			boolean test2 = b.isBlackAt(new Position(60, i));
+//			boolean test3 = b.isBlackAt(new Position(100, i));
+//			boolean test4 = b.isBlackAt(new Position(140, i));
+//			boolean test5 = b.isBlackAt(new Position(180, i));
+//			boolean test6 = b.isBlackAt(new Position(220, i));
+//			System.out.println("Y:"+i+" "+test1+" "+test2+" "+test3+" "+test4+" "+test5+" "+test6);
+//			}
+//		}
+//	}
 	
 }
