@@ -234,13 +234,9 @@ public abstract class RobotPilot {
 	public int getTeamNumber(){
 		return teamNumber;
 	}
-	
-	public abstract boolean detectInfrared();
-
-	public abstract boolean checkForSeaSawInfrared();
-	
+		
 	public void driveOverSeeSawIfPossible(){
-		boolean open = checkForSeaSawInfrared();
+		boolean open = detectInfrared();
 		if(!open){
 			driveOverSeeSaw();
 			//TODO iets in het maze zodat we aan de overkant de juiste positie hebben en dat de maze
@@ -251,9 +247,15 @@ public abstract class RobotPilot {
 		}
 	}
 
+	public  boolean detectInfrared(){
+		return getInfraredValue()>100; //TODO infrarood francis
+	};
+
+
 	public abstract void driveOverSeeSaw();
-	// de check van infrarood is reeds gebeurd als deze methode word aangeroepen!
-	
+	// de check van infrarood is reeds gebeurd als deze methode wordt aangeroepen!
+
+	public abstract int getInfraredValue();
 
 
 	
