@@ -422,4 +422,10 @@ public class Controller {
 	public void playerLeft(int identifier){
 		otherRobots.remove(identifier);
 	}
+
+
+
+	public void launchCatapult() {
+		turnUltrasonicSensor(120);		
+	}
 }

@@ -19,7 +19,7 @@ public class SensorOrientationPanel implements ActionListener{
 	JFrame surroundingFrame;
 	static int totalXDimensions = 400;
 	static int totalYDimensions = 400;
-	private JButton okButton, forwardButton, leftButton, rightButton;
+	private JButton okButton, forwardButton, leftButton, rightButton, catapultButton;
 	private Controller controller;
 
 	public SensorOrientationPanel(JFrame surroundingFrame, Controller controller) {
@@ -58,6 +58,11 @@ public class SensorOrientationPanel implements ActionListener{
 		titlePanel.add(rightButton);
 		rightButton.addActionListener(this);
 
+		catapultButton = new JButton("Launch Catapult");
+		catapultButton.setBounds(20,140,200,30);
+		titlePanel.add(catapultButton);
+		catapultButton.addActionListener(this);
+		
 		okButton = new JButton();
 		okButton.setBounds(20, 140, 120, 30);
 		okButton.setText("OK");
