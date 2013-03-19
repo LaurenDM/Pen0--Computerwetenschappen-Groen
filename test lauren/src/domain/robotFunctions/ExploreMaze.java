@@ -28,7 +28,7 @@ public class ExploreMaze{
 	private boolean backWall = false;
 	private boolean interrupted = false;
 	
-	private boolean isDeadEnd = false;
+	private boolean atDeadEnd = false;
 	
 	public ExploreMaze(RobotPilot simRobotPilot){
 		this.robot = simRobotPilot;
@@ -74,7 +74,7 @@ public class ExploreMaze{
 			distances = checkDistances();
 			makeWall(distances);
 			if(!maze.isComplete()){
-				if(! isDeadEnd){
+				if(! atDeadEnd){
 				//robot.setMovingSpeed(robot.getDefaultMovingSpeed());
 					Direction direction = getNextDirection(distances);
 					if(checkStraigthen(distances)){
@@ -86,7 +86,7 @@ public class ExploreMaze{
 					}
 				}
 				else{
-					this.isDeadEnd = false;
+					this.atDeadEnd = false;
 					moveWithStraighten(Direction.BACKWARD);
 				}
 			}
@@ -128,7 +128,7 @@ public class ExploreMaze{
 	 * These walls are added in the graph and in the GUI.
 	 */
 	public void setNextTileToDeadEnd(){
-		this.isDeadEnd = true;
+		this.atDeadEnd = true;
 		maze.setNextTileToDeadEnd();
 		double orientation = robot.getOrientation();
 		double deadEndX = robot.getPosition().getX()+Math.cos(orientation/180*Math.PI)*MAZECONSTANT;
@@ -140,6 +140,24 @@ public class ExploreMaze{
 		calculateWall(deadEndX, deadEndY, orientation, Direction.RIGHT);
 	}
 	
+	public void setNextTileToSeesaw(boolean isUpAtThisSide){
+		maze.setNextTileToSeesaw(isUpAtThisSide);
+		double orientation = robot.getOrientation();
+		double[] x = new double[2];
+		double[] y = new double[2];
+		x[0] = robot.getPosition().getX()+Math.cos(orientation/180*Math.PI)*MAZECONSTANT;
+		y[0] = robot.getPosition().getY()+Math.sin(orientation/180*Math.PI)*MAZECONSTANT;
+		x[1] = robot.getPosition().getX()+Math.cos(orientation/180*Math.PI)*2*MAZECONSTANT;
+		y[1] = robot.getPosition().getY()+Math.sin(orientation/180*Math.PI)*2*MAZECONSTANT;
+		for(int i=0; i==1; i++){
+			for(Direction d : Direction.values()){
+				if(!d.equals(Direction.BACKWARD)&&!d.equals(Direction.FORWARD)){
+					calculateWall(x[i], y[i], orientation, d);
+				}
+			}
+		}
+	}
+
 	private void moveWithStraighten(Direction direction) {
 		switch (direction) {
 		case LEFT:
