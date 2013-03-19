@@ -529,7 +529,7 @@ public class BTRobotPilot extends RobotPilot  {
 
 	@Override
 	public void driveOverSeeSaw() {
-		// TODO Auto-generated method stub (Koen?)
+		btComm.sendCommand(CMD.SEASAWACTION);
 		
 	}
 	
