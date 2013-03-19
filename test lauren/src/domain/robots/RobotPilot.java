@@ -238,6 +238,18 @@ public abstract class RobotPilot {
 	public abstract boolean detectInfrared();
 
 	public abstract boolean checkForSeaSawInfrared();
+	
+	public void driveOverSeeSawIfPossible(){
+		boolean open = checkForSeaSawInfrared();
+		if(!open){
+			driveOverSeeSaw();
+			//TODO iets in het maze zodat we aan de overkant de juiste positie hebben en dat de maze
+			// weet dat er een wip is (joren)
+		}
+		else{
+			// TODO wat doen we dan?
+		}
+	}
 
 	public abstract void driveOverSeeSaw();
 	// de check van infrarood is reeds gebeurd als deze methode word aangeroepen!
