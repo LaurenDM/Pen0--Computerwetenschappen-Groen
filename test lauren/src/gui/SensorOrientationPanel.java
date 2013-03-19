@@ -59,7 +59,7 @@ public class SensorOrientationPanel implements ActionListener{
 		rightButton.addActionListener(this);
 
 		catapultButton = new JButton("Launch Catapult");
-		catapultButton.setBounds(20,140,200,30);
+		catapultButton.setBounds(20,200,200,30);
 		titlePanel.add(catapultButton);
 		catapultButton.addActionListener(this);
 		
@@ -94,6 +94,10 @@ public class SensorOrientationPanel implements ActionListener{
 		if(e.getSource() == rightButton){
 			rightButton.setSelected(false);
 			controller.turnSensorRight();
+		}
+		if(e.getSource() == catapultButton){
+			catapultButton.setSelected(false);
+			controller.launchCatapult();
 		}
 	}
 	
