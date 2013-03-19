@@ -59,6 +59,7 @@ public class TileNode extends MazeNode {
 		finish = true;
 	}
 
+	@Override
 	public boolean isFinish() {
 		return finish;
 	}
@@ -79,6 +80,7 @@ public class TileNode extends MazeNode {
 		return y;
 	}
 	
+	@Override
 	public String toString(){
 		return "Tile("+x+","+y+","+(connectedNodes.get(Orientation.NORTH)!=null)+","+(connectedNodes.get(Orientation.EAST)!=null)+","+(connectedNodes.get(Orientation.SOUTH)!=null)+","+(connectedNodes.get(Orientation.WEST)!=null)+")";
 	}

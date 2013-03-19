@@ -29,7 +29,8 @@ public class GUI{
     
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
+            @Override
+			public void run() {
                 createAndShowGUI();
             }
         });
@@ -67,7 +68,7 @@ public class GUI{
      * Write a new line to the debug info panel
      */
     public void writeToDebug(String debugInfo){
-    	contentPanel.writeToDebug(debugInfo);
+    	ContentPanel.writeToDebug(debugInfo);
     }
     
     

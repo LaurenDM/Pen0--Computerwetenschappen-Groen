@@ -47,6 +47,7 @@ public class DrawingPanel extends JPanel {
 	private BufferedImage image = new BufferedImage(IMG_WIDTH, IMG_HEIGHT,
 			BufferedImage.TYPE_INT_ARGB);
 
+	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if (image != null) {
@@ -271,6 +272,7 @@ public class DrawingPanel extends JPanel {
 		totalGui.repaint();
 	}
 
+	@Override
 	public Graphics getGraphics() {
 		return image.getGraphics();
 	}
@@ -333,17 +335,17 @@ public class DrawingPanel extends JPanel {
 						if(beginOrient<45 && beginOrient>-45){
 						
 						if(firstPos){
-						zeroX = (robotX - (int) nextNode1.getY()*40);
-						zeroY = (robotY - (int) nextNode1.getX()*40);
+						zeroX = (robotX - nextNode1.getY()*40);
+						zeroY = (robotY - nextNode1.getX()*40);
 						//System.out.println("ZEROPOS "+zeroX+" "+zeroY);
 						firstPos = false;
 						}
 						
 						//oost
-						x1 = Math.abs((int) nextNode1.getY()*40 + OFFSET + zeroX); 
-						y1 = Math.abs((int) nextNode1.getX()*40 + OFFSET + zeroY);
-						x2 = Math.abs((int) nextNode2.getY()*40 + OFFSET + zeroX); 
-						y2 = Math.abs((int) nextNode2.getX()*40 + OFFSET + zeroY);
+						x1 = Math.abs(nextNode1.getY()*40 + OFFSET + zeroX); 
+						y1 = Math.abs(nextNode1.getX()*40 + OFFSET + zeroY);
+						x2 = Math.abs(nextNode2.getY()*40 + OFFSET + zeroX); 
+						y2 = Math.abs(nextNode2.getX()*40 + OFFSET + zeroY);
 						//System.out.println("POS "+x1+" "+y1+";  "+x2+" "+y2);
 						
 						}

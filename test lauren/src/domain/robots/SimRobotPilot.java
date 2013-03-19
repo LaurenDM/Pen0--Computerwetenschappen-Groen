@@ -10,10 +10,8 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 import domain.Position.Position;
-import domain.maze.Ball;
 import domain.maze.Board;
 import domain.maze.Wall;
-import domain.maze.barcodes.Barcode;
 import domain.maze.graph.MazePath;
 import domain.robotFunctions.BarcodeGenerator;
 import domain.robotFunctions.ExploreMaze;
@@ -56,6 +54,7 @@ public class SimRobotPilot extends RobotPilot {
 		this(0);
 	}
 	
+	@Override
 	public ExploreMaze getMaze(){
 		return this.maze;
 	}
@@ -85,6 +84,7 @@ public class SimRobotPilot extends RobotPilot {
 		return position;
 	}
 
+	@Override
 	public int getSensorAngle(){
 		return sensorAngle;
 	}
@@ -324,6 +324,7 @@ public class SimRobotPilot extends RobotPilot {
 		this.rotateSpeed = speed;
 	}
 
+	@Override
 	public boolean canMove(){
 		if(moveThread.getMovement().equals(Movement.BACKWARD)){
 			return canMoveBackward();
@@ -421,6 +422,7 @@ public class SimRobotPilot extends RobotPilot {
 		return shortestDistance;
 	}
 	
+	@Override
 	public boolean detectInfrared(){
 		if(getBoard().detectRobotFrom(this)){
 			return true;
@@ -428,6 +430,7 @@ public class SimRobotPilot extends RobotPilot {
 		return false;
 	}
 	
+	@Override
 	public boolean checkForSeaSawInfrared(){
 		return getBoard().checkForOpenSeaSawFrom(this);
 	}
@@ -575,6 +578,7 @@ public class SimRobotPilot extends RobotPilot {
 			turn(90);
 	}
 
+	@Override
 	public void findBlackLine(){
 		int wantedDetections=1;
 		setMovingSpeed(2);
@@ -639,6 +643,7 @@ public class SimRobotPilot extends RobotPilot {
 		maze.start();
 	}
 
+	@Override
 	public void addFoundWall(Wall wall){
 		getBoard().foundNewWall(wall);
 	}

@@ -1,12 +1,8 @@
 package rabbitMQ;
 
 import java.io.IOException;
-import java.net.ConnectException;
-
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-//import com.rabbitmq.client.ConnectionParameters;
 
 public class MQ {
 	/**

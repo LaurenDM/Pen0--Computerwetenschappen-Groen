@@ -1,6 +1,5 @@
 package domain.maze.barcodes;
 
-import bluetooth.CMD;
 import domain.robots.RobotPilot;
 
 public class DriveSlowAction implements Action {

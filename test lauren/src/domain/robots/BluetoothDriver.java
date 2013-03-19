@@ -5,7 +5,6 @@ import java.util.Stack;
 import bluetooth.BTCommPC;
 import bluetooth.CMD;
 
-import lejos.robotics.navigation.Move.MoveType;
 import domain.Position.Position;
 import domain.util.WaitObject;
 

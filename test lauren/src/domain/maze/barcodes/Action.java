@@ -6,6 +6,7 @@ public interface Action {
 	
 	public abstract void run(RobotPilot robot);
 
+	@Override
 	public abstract String toString();	
 	
 }

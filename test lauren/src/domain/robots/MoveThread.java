@@ -11,7 +11,8 @@ public class MoveThread extends Thread {
 		this.whiteLine= whiteLine;
 		
 		Thread.UncaughtExceptionHandler h = new Thread.UncaughtExceptionHandler() {
-		    public void uncaughtException(Thread th, Throwable ex) {
+		    @Override
+			public void uncaughtException(Thread th, Throwable ex) {
 		    	ex.printStackTrace();
 		    }
 		};

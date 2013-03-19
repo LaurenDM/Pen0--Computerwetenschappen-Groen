@@ -1,8 +1,5 @@
 package domain.Position;
-import java.awt.geom.Point2D.Float;
 import java.lang.Math;
-
-import domain.maze.Orientation;
 
 import lejos.geom.Point;
 

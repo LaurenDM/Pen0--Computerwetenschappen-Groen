@@ -297,6 +297,7 @@ public class TestGUI {
 	                
 		}
 		
+		@Override
 		public void actionPerformed(ActionEvent e) {
 	        if(e.getSource() == upButton){
 	        	actionLabel.setText("The robot is going forward!");

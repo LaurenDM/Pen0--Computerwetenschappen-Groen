@@ -3,7 +3,6 @@ package rabbitMQ;
 import controller.Controller;
 import domain.robots.RobotPilot;
 import peno.htttp.Handler;
-import domain.maze.Orientation;
 
 public class BrobotHandler implements Handler {
 	

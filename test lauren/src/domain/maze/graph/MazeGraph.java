@@ -202,7 +202,7 @@ public class MazeGraph {
 		boolean thisNodeAlreadyExists = false;
 		HashMap<Orientation,TileNode> neighbours = new HashMap<Orientation,TileNode>();
 		for(TileNode node:nodes){
-			if(((TileNode) node).getX()==newNode.getX() && ((TileNode)node).getY()==newNode.getY()){
+			if((node).getX()==newNode.getX() && (node).getY()==newNode.getY()){
 				tile.setNodeAt(absoluteOrientation, node);
 				node.setNodeAt(orientationToCurrent, tile);
 				thisNodeAlreadyExists = true;

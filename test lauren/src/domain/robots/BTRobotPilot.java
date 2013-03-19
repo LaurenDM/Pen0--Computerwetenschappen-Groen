@@ -1,8 +1,6 @@
 package domain.robots;
 
 
-import java.io.IOException;
-
 import bluetooth.BTCommPC;
 import bluetooth.CMD;
 import domain.Position.Position;
@@ -72,14 +70,17 @@ public class BTRobotPilot extends RobotPilot  {
 		this(0);
 	}
 	
+	@Override
 	public void setBoard(Board board){
 		this.board=  board;
 	}
 	
+	@Override
 	public Board getBoard(){
 		return board;
 	}
 	
+	@Override
 	public ExploreMaze getMaze(){
 		return this.maze;
 	}
@@ -209,6 +210,7 @@ public class BTRobotPilot extends RobotPilot  {
 //		return prevTouchBool;
 //	}
 
+	@Override
 	public boolean canMove(){
 		int distance = (int) readUltrasonicValue();	
 		int testDistance = 10; 
@@ -221,6 +223,7 @@ public class BTRobotPilot extends RobotPilot  {
 	}
 	
 	
+	@Override
 	public double readLightValue(){
 		try{
 			if(RobotChecker.interruptionAllowed())
@@ -236,12 +239,14 @@ public class BTRobotPilot extends RobotPilot  {
 		}
 	}
 	
+	@Override
 	public double readUltrasonicValue() {
 		if (RobotChecker.interruptionAllowed())
 			updateSensorValues(false);
 		return prevUltrasonicValue;
 	}
 	
+	@Override
 	public boolean detectInfrared(){
 		if (RobotChecker.interruptionAllowed())
 			updateSensorValues(false);
@@ -261,29 +266,35 @@ public class BTRobotPilot extends RobotPilot  {
 		}
 	}
 
+	@Override
 	public void turnUltrasonicSensor(int angle){
 		btComm.sendCommand(CMD.TURNSENSOR,angle);
 	}
 	
+	@Override
 	public void turnSensorRight(){
 		btComm.sendCommand(CMD.TURNSENSORTO,-90);
 //		canMove();
 	}
 	
+	@Override
 	public void turnSensorLeft(){
 		btComm.sendCommand(CMD.TURNSENSORTO,90);
 //		canMove();
 	}
 	
+	@Override
 	public void turnSensorForward(){
 		btComm.sendCommand(CMD.TURNSENSORTO,0);
 //		canMove();
 	}
 	
+	@Override
 	public void calibrateLightHigh(){
 		btComm.sendCommand(CMD.CALIBRATELSHIGH);
 	}
 	
+	@Override
 	public void calibrateLightLow(){
 		btComm.sendCommand(CMD.CALIBRATELSLOW);
 	}
@@ -294,6 +305,7 @@ public class BTRobotPilot extends RobotPilot  {
 		else return false;
 	}
 	
+	@Override
 	public void straighten(){
 		btComm.sendCommand(CMD.STRAIGHTEN);
 	}
@@ -488,6 +500,7 @@ public class BTRobotPilot extends RobotPilot  {
 	public void autoCalibrateLight() {
 		btComm.sendCommand(CMD.AUTOCALIBRATELS,8);
 	}
+	@Override
 	public MazePath getPathToFinish() {
 		return maze.getPathToFinish();
 	}

@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -14,25 +13,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-
-import org.jfree.ui.Align;
+import javax.swing.WindowConstants;
 
 import controller.Controller;
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
-import domain.maze.Ball;
 import domain.robots.CannotMoveException;
 import domain.robots.RobotPilot;
 import domain.util.ColorPolygon;
@@ -92,7 +86,7 @@ public class ContentPanel implements ActionListener {
     	object.setLayout(null);
     	object.setLocation(xco, yco);
     	object.setSize(xsize, ysize);
-    	object.setHorizontalAlignment(JLabel.LEFT);
+    	object.setHorizontalAlignment(SwingConstants.LEFT);
         object.setForeground(Color.black);
     	//totalGUI.add(object);
     	source.add(object);
@@ -262,25 +256,25 @@ public class ContentPanel implements ActionListener {
         //Creating variable panel
         VariablePanel variablePanel = new VariablePanel(variableFrame,controller);
         variableFrame.setContentPane(variablePanel.getContentPanel());;
-        variableFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        variableFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         variableFrame.setSize(400, 400);
         
         //Creating calibration panel
         CalibrationPanel calibrationPanel = new CalibrationPanel(calibrationFrame, controller);
         calibrationFrame.setContentPane(calibrationPanel.getContentPanel());
-        calibrationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        calibrationFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         calibrationFrame.setSize(400,400);
         
         //Creating sensorOrientation panel
         SensorOrientationPanel sensorOrientationPanel = new SensorOrientationPanel(sensorOrientationFrame, controller);
         sensorOrientationFrame.setContentPane(sensorOrientationPanel.getContentPanel());
-        sensorOrientationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        sensorOrientationFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         sensorOrientationFrame.setSize(400,400);
         
         //Creating barcodePanel
         BallBarcodePanel ballBarcodePanel = new BallBarcodePanel(barcodeFrame, controller);
         barcodeFrame.setContentPane(ballBarcodePanel.getContentPanel());
-        barcodeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        barcodeFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         barcodeFrame.setSize(400,210);
         
         
@@ -309,23 +303,23 @@ public class ContentPanel implements ActionListener {
         writeToDebug("Program started successfully");
         //Infolabels
         xLabel = new JLabel("X: 0");
-        xLabel.setHorizontalTextPosition(JLabel.LEFT);
+        xLabel.setHorizontalTextPosition(SwingConstants.LEFT);
         fixLabelLayout(debugPanel, xLabel, 125, 20, 0, 100);
         
         yLabel = new JLabel("Y: 0");
-        yLabel.setHorizontalTextPosition(JLabel.LEFT);
+        yLabel.setHorizontalTextPosition(SwingConstants.LEFT);
         fixLabelLayout(debugPanel, yLabel, 125, 20, 100, 100);
         
         infraredLabel = new JLabel("Infrared: FALSE");
-        infraredLabel.setHorizontalTextPosition(JLabel.LEFT);
+        infraredLabel.setHorizontalTextPosition(SwingConstants.LEFT);
         fixLabelLayout(debugPanel, infraredLabel, 125, 20, 200, 100);
         
         speedLabel = new JLabel("Speed: 0");
-        speedLabel.setHorizontalTextPosition(JLabel.LEFT);
+        speedLabel.setHorizontalTextPosition(SwingConstants.LEFT);
         fixLabelLayout(debugPanel, speedLabel, 125, 20, 0, 120);
         
         angleLabel = new JLabel("Angle: 0");
-        angleLabel.setHorizontalTextPosition(JLabel.LEFT);
+        angleLabel.setHorizontalTextPosition(SwingConstants.LEFT);
         fixLabelLayout(debugPanel, angleLabel, 125, 20, 100, 120);
 		
 //        lightLabel = new JLabel("Lightsensor: 0");
@@ -647,6 +641,7 @@ public class ContentPanel implements ActionListener {
 	 */
 	public static void writeToDebug(final String text) {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				debugText.append(text + "\n");
 			}

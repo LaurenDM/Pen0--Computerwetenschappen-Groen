@@ -1,7 +1,5 @@
 package controller;
 
-import java.io.IOException;
-import java.security.Permission;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,12 +10,6 @@ import java.util.Map.Entry;
 import rabbitMQ.EventPusher;
 import rabbitMQ.SubscribeMonitor;
 
-import lejos.nxt.Motor;
-import lejos.pc.comm.NXTCommandConnector;
-import lejos.util.PilotProps;
-
-
-
 import domain.PolygonDriver;
 import domain.Position.Position;
 import domain.maze.Ball;
@@ -25,7 +17,6 @@ import domain.maze.Board;
 import domain.maze.MazeInterpreter;
 import domain.maze.RandomMazeGenerator;
 import domain.maze.barcodes.Barcode;
-import domain.robotFunctions.BarcodeGenerator;
 import domain.robots.BTRobotPilot;
 import domain.robots.CannotMoveException;
 import domain.robots.RobotPilot;
@@ -52,7 +43,8 @@ public class Controller {
 		
 		ep = new EventPusher();
 		Thread epThread = new Thread(){
-		    public void run(){
+		    @Override
+			public void run(){
 				ep.run(currentRobot);	//method to adjust current robot in ep needed
 		    }
 		  };
@@ -60,7 +52,8 @@ public class Controller {
 	
     	final SubscribeMonitor sm = new SubscribeMonitor(this);	
    		Thread smThread = new Thread(){
-		    public void run(){
+		    @Override
+			public void run(){
 		    	sm.run();
 		    }
 		  };
@@ -164,7 +157,7 @@ public class Controller {
 		colPolyList.add(currentRobot.getRobotPolygon());
 		Iterator<Entry<Integer, RobotPilot>> it = otherRobots.entrySet().iterator();
 	    while (it.hasNext()) {
-	        Map.Entry<Integer, RobotPilot> pairs = (Map.Entry<Integer, RobotPilot>)it.next();
+	        Map.Entry<Integer, RobotPilot> pairs = it.next();
 	        colPolyList.add(pairs.getValue().getRobotPolygon());
 //	        it.remove(); // avoids a ConcurrentModificationException
 	    }
@@ -310,6 +303,7 @@ public class Controller {
 		while(explorer.isAlive()){}
 		STOPPED = false;
 		explorer = new Thread(new Runnable() {
+			@Override
 			public void run(){
 				currentRobot.resumeExplore();
 			}
@@ -322,6 +316,7 @@ public class Controller {
 		while(explorer.isAlive()){}
 		STOPPED = false;
 		explorer = new Thread(new Runnable() {
+			@Override
 			public void run(){
 				currentRobot.driveToFinish();
 			}
