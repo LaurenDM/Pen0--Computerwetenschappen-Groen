@@ -197,8 +197,8 @@ public class Controller {
 		return currentRobot.readUltrasonicValue();
 	}
 
-	public boolean detectInfrared(){
-		return currentRobot.detectInfrared();
+	public int getInfraredValue(){
+		return currentRobot.getInfraredValue();
 	}
 	
 	public void turnUltrasonicSensor(int angle){
@@ -427,5 +427,8 @@ public class Controller {
 
 	public void launchCatapult() {
 		turnUltrasonicSensor(120);		
+	}
+	public boolean detectInfrared() {
+		return currentRobot.detectInfrared();
 	}
 }

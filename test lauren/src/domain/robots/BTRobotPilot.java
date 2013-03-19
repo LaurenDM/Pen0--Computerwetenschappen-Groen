@@ -11,7 +11,6 @@ import domain.maze.barcodes.Action;
 import domain.maze.barcodes.Barcode;
 import domain.maze.graph.MazePath;
 import domain.robotFunctions.ExploreMaze;
-import domain.util.RobotChecker;
 import domain.util.TimeStamp;
 import exceptions.ConnectErrorException;
 import gui.ContentPanel;
@@ -125,17 +124,13 @@ public class BTRobotPilot extends RobotPilot  {
 
 	@Override
 	public Position getPosition() {
-		if(RobotChecker.interruptionAllowed()){
-		return pilot.getPosition();}
-		else return new Position(0,0);
+		return pilot.getPosition();
 	}
 	
 	
 	@Override
 	public double getOrientation() {
-		if(RobotChecker.interruptionAllowed())
 			return pilot.getRotation();
-		else return 0;
 		
 	}
 
@@ -199,13 +194,11 @@ public class BTRobotPilot extends RobotPilot  {
 	
 	@Override
 	public int getSensorAngle(){
-		if(RobotChecker.interruptionAllowed())
 			updateSensorValues(false);
 		return prevSensorAngle;
 	}
 	
 //	public boolean isTouching(){
-//		if(RobotChecker.interruptionAllowed())
 //			updateSensorValues(false);
 //		return prevTouchBool;
 //	}
@@ -226,7 +219,6 @@ public class BTRobotPilot extends RobotPilot  {
 	@Override
 	public double readLightValue(){
 		try{
-			if(RobotChecker.interruptionAllowed())
 				updateSensorValues(false);
 			return prevLightValue;
 		}catch(Exception e){
@@ -241,16 +233,14 @@ public class BTRobotPilot extends RobotPilot  {
 	
 	@Override
 	public double readUltrasonicValue() {
-		if (RobotChecker.interruptionAllowed())
 			updateSensorValues(false);
 		return prevUltrasonicValue;
 	}
 	
 	@Override
-	public boolean detectInfrared(){
-		if (RobotChecker.interruptionAllowed())
+	public int getInfraredValue(){
 			updateSensorValues(false);
-		return prevIRValue>130;	//TODO: waarde moet experimenteel bepaald worden
+		return prevIRValue;	//TODO: waarde moet experimenteel bepaald worden
 	}
 	
 	private void updateSensorValues(boolean forced) {
@@ -312,10 +302,7 @@ public class BTRobotPilot extends RobotPilot  {
 	
 
 	public int getBatteryVoltage(){
-		if(RobotChecker.interruptionAllowed())
-			return btComm.sendCommand(CMD.BATTERY)[0];
-			else return 0; 
-		
+			return btComm.sendCommand(CMD.BATTERY)[0];		
 	}
 
 	@Override
@@ -521,12 +508,7 @@ public class BTRobotPilot extends RobotPilot  {
 	public void doNothing() {
 		maze.setNextTileToDeadEnd();
 	}
-
-	@Override
-	public boolean checkForSeaSawInfrared() {
-		return detectInfrared();
-	}
-
+	
 	@Override
 	public void driveOverSeeSaw() {
 		btComm.sendCommand(CMD.SEASAWACTION);
