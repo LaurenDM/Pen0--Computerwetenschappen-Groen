@@ -2,8 +2,11 @@ package domain.maze;
 
 import java.util.ArrayList;
 
+/**
+ * Orientations represent the 4 different orientations a robot can have in the maze.
+ */
 public enum Orientation {
-	NORTH(0,1,90), EAST(1,0,0), SOUTH(0,-1,-90), WEST(-1,0,180);
+	NORTH(0,1,90,0), EAST(1,0,0,1), SOUTH(0,-1,-90,2), WEST(-1,0,180,-1);
 
 	public static Orientation getOrientation(String str){
 		if(str.equals("N")){
@@ -67,15 +70,17 @@ public enum Orientation {
 
 	private static final Orientation[] orderedArray = {NORTH, EAST, SOUTH, WEST, NORTH, EAST};
 
-	private Orientation(int x, int y, double angle){
+	private Orientation(int x, int y, double angle, int relativeOffset){
 		this.x = x;
 		this.y = y;	
 		this.angle = angle;
+		this.relativeOffset = relativeOffset;
 	}
 
 	private final int x;
 	private final int y;
 	private final double angle;
+	private final int relativeOffset;
 	private ArrayList<Orientation> orderedList;
 
 	public int getXValue(){
@@ -83,6 +88,19 @@ public enum Orientation {
 	}
 	public int getYValue(){
 		return y;
+	}
+	
+	/**
+	 * Returns the orientation in front of, right of, behind, left of this orientation if "relative" is NORTH, EAST, SOUTH, WEST respectively.
+	 * @param relative
+	 * @return
+	 */
+	public Orientation getRelativeOrientation(Orientation relative){
+		return this.getOffset(relative.getRelativeOffset());
+	}
+
+	private int getRelativeOffset() {
+		return relativeOffset;
 	}
 
 

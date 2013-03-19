@@ -10,7 +10,7 @@ import domain.maze.Orientation;
 import domain.robots.RobotPilot;
 
 public class MazeGraph {
-	private ArrayList<TileNode> nodes;
+	private ArrayList<TileNode> tileNodes;
 	private Orientation currentRobotOrientation;
 	private TileNode startNode;
 	private TileNode currentNode;
@@ -23,10 +23,10 @@ public class MazeGraph {
 	 * is because everything is handled relative to the starting orientation)
 	 */
 	public MazeGraph(){
-		nodes = new ArrayList<TileNode>();
+		tileNodes = new ArrayList<TileNode>();
 		startNode = new TileNode(null,null);
 		setCurrentNode(startNode);
-		nodes.add(startNode);
+		tileNodes.add(startNode);
 		setCurrentRobotOrientation(Orientation.NORTH);
 		System.out.println("");
 	}
@@ -101,7 +101,7 @@ public class MazeGraph {
 	 */
 	public boolean isComplete(){
 		boolean isComplete = true;
-		for(TileNode tileNode:nodes){
+		for(TileNode tileNode:tileNodes){
 			if(!tileNode.isFullyExpanded()) { isComplete = false;}
 		}
 		return isComplete;
@@ -139,7 +139,7 @@ public class MazeGraph {
 	 */
 	public Orientation getNextMoveOrientation(){
 		ArrayList<TileNode> unexpanded = new ArrayList<TileNode>();
-		for(TileNode node : nodes){
+		for(TileNode node : tileNodes){
 			if(!node.isFullyExpanded()){
 				unexpanded.add(node);
 			}
@@ -147,7 +147,7 @@ public class MazeGraph {
 		if(unexpanded.size()!=0){
 			SortedPathSet possiblePaths = new SortedPathSet();
 			for(TileNode node : unexpanded){
-				possiblePaths.add(new MazePath(getCurrentNode(),node));
+				possiblePaths.add(new MazePath(getCurrentNode(),getCurrentRobotOrientation(),node));
 			}
 			int shortestFound = Integer.MAX_VALUE;
 			ArrayList<MazePath> candidates = new ArrayList<MazePath>();
@@ -177,7 +177,7 @@ public class MazeGraph {
 			orderedOrientations.add(Orientation.SOUTH);
 			for(Orientation o : orderedOrientations){
 				for(MazePath path : candidates){
-					if(path.contains(getCurrentNode().getNodeAt(getRelativeOrientation(getCurrentRobotOrientation(),o))))
+					if(path.contains(getCurrentNode().getNodeAt(getCurrentRobotOrientation().getRelativeOrientation(o))))
 						return o;
 				}
 			}
@@ -191,7 +191,7 @@ public class MazeGraph {
 	 * @param orientation
 	 */
 	public void generateTileNodeAt(Orientation orientation){
-		Orientation absoluteOrientation = getRelativeOrientation(getCurrentRobotOrientation(),orientation);
+		Orientation absoluteOrientation = getCurrentRobotOrientation().getRelativeOrientation(orientation);
 		generateTileNodeAt(getCurrentNode(), absoluteOrientation);
 	}
 	
@@ -200,14 +200,18 @@ public class MazeGraph {
 		Orientation orientationToCurrent = absoluteOrientation.getBack();
 		TileNode newNode = new TileNode(tile,orientationToCurrent);
 		boolean thisNodeAlreadyExists = false;
-		HashMap<Orientation,TileNode> neighbours = new HashMap<Orientation,TileNode>();
-		for(TileNode node:nodes){
+		//Cycle the collection of all tilenodes, check if the node that we're trying to create already exists
+		//Also check if we have info about neighbouring nodes so we can set walls at the correct places.
+		//Note that connections to nodes are not automatically made if we don't know if there's a wall or not!
+		for(TileNode node:tileNodes){
+			//Deduplication
 			if((node).getX()==newNode.getX() && (node).getY()==newNode.getY()){
 				tile.setNodeAt(absoluteOrientation, node);
 				node.setNodeAt(orientationToCurrent, tile);
 				thisNodeAlreadyExists = true;
 				break;
 			}
+			//Wallinfo check
 			for(Orientation o: Orientation.values()){
 				if(node.getX()==newNode.getX()+o.getXValue()&&node.getY()==newNode.getY()+o.getYValue()){
 					MazeNode nodeAtOBack = node.getNodeAt(o.getBack());
@@ -220,7 +224,7 @@ public class MazeGraph {
 		}
 		if(!thisNodeAlreadyExists){
 			tile.setNodeAt(absoluteOrientation, newNode);
-			nodes.add(newNode);
+			tileNodes.add(newNode);
 		}
 	}
 	
@@ -230,7 +234,7 @@ public class MazeGraph {
 	 * @return true if the wall has been added, false if it's clear that there can be no wall at that location.
 	 */
 	public boolean generateWallNodeAt(Orientation orientation){
-		Orientation absoluteOrientation = getRelativeOrientation(getCurrentRobotOrientation(),orientation);
+		Orientation absoluteOrientation = getCurrentRobotOrientation().getRelativeOrientation(orientation);
 		return generateWallNodeAt(getCurrentNode(),absoluteOrientation);
 	}
 	
@@ -247,7 +251,7 @@ public class MazeGraph {
 		//If this tile has a wall at a certain orientation it's neighbouring tile will have one in the opposite orientation
 		//A new tile isn't generated there because then we would generate nodes outside of the maze's edge
 		TileNode otherSide = null;
-		for(TileNode node : nodes){
+		for(TileNode node : tileNodes){
 			if(node.getX()==tile.getX()+absoluteOrientation.getXValue() && node.getY()==tile.getY()+absoluteOrientation.getYValue()){
 				otherSide = node;
 				break;
@@ -284,7 +288,7 @@ public class MazeGraph {
 	 * @return Whether the node at the given orientation with respect to the robot is fully expanded
 	 */
 	public boolean isNodeThereFullyExpanded(Orientation orientation){
-		return getCurrentNode().getNodeAt(getRelativeOrientation(getCurrentRobotOrientation(),orientation)).isFullyExpanded();
+		return getCurrentNode().getNodeAt(getCurrentRobotOrientation().getRelativeOrientation(orientation)).isFullyExpanded();
 	}
 	
 	/**
@@ -345,7 +349,7 @@ public class MazeGraph {
 	 */
 	public void setCurrentTileToFinish(){
 		boolean finishAlreadyExists=false;
-		for(TileNode node:nodes){
+		for(TileNode node:tileNodes){
 			if(node.isFinish() && !node.equals(getCurrentNode())){
 				System.out.println("The finish node already exists! Cannot have 2 finish nodes!");
 				finishAlreadyExists=true;
@@ -386,7 +390,7 @@ public class MazeGraph {
 	
 	public ArrayList<TileNode> getCheckpoints(){
 		ArrayList<TileNode> checkpoints = new ArrayList<TileNode>();
-		for(TileNode node: nodes){
+		for(TileNode node: tileNodes){
 			if(node.isCheckpoint()) checkpoints.add(node);
 		}
 		return checkpoints;
@@ -398,16 +402,14 @@ public class MazeGraph {
 	 * @return
 	 */
 	public MazePath findShortestPathFromTo(TileNode startNode, TileNode finishNode) {
-		SortedPathSet searchSet = new SortedPathSet(new MazePath(startNode,finishNode));
-		int e = 0;
+		SortedPathSet searchSet = new SortedPathSet(new MazePath(startNode,getCurrentRobotOrientation(),finishNode));
 		while(!searchSet.isEmpty() && !searchSet.firstPathReachesGoal()){
 			searchSet.expand();
 			//System.out.println("Expansion number "+e+" current queue: "+(searchSet.isEmpty()?"none":searchSet.toString()));
-			e++;
 		}
 		if(searchSet.isEmpty()){
 			System.out.println("No path found...");
-			return new MazePath(getCurrentNode(),finishNode);
+			return new MazePath(getCurrentNode(),getCurrentRobotOrientation(),finishNode);
 		} else {
 			System.out.println(searchSet.first());
 			return searchSet.first();
@@ -415,24 +417,10 @@ public class MazeGraph {
 	}
 	
 	private TileNode getFinishNode() {
-		for(TileNode node: nodes){
+		for(TileNode node: tileNodes){
 			if(node.isFinish()) return node;
 		}
 		return null;
-	}
-
-	private Orientation getRelativeOrientation(Orientation original, Orientation relative){
-		if(relative == null){
-			System.out.println("Got relative orientation null!");
-			return null;
-		}
-		switch(relative){
-		case NORTH: return original;
-		case EAST: return original.getRight();
-		case SOUTH: return original.getBack();
-		case WEST: return original.getLeft();
-		default: return null;
-		}
 	}
 
 	private boolean isCurrentNode(TileNode node){
@@ -460,7 +448,7 @@ public class MazeGraph {
 	 */
 	public void continueExploring(int x, int y, Orientation o) {
 		if(o!=null){
-			for(TileNode node : nodes){
+			for(TileNode node : tileNodes){
 				if(node.getX()==x && node.getY()==y){
 					setCurrentNode(node);
 				}
@@ -501,9 +489,9 @@ public class MazeGraph {
 		}
 		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())!=null && getCurrentNode().getNodeAt(getCurrentRobotOrientation()).getClass().equals(TileNode.class)){
 			TileNode deadEndNode = (TileNode)getCurrentNode().getNodeAt(getCurrentRobotOrientation());
-			generateWallNodeAt(deadEndNode, getRelativeOrientation(getCurrentRobotOrientation(),Orientation.WEST));
-			generateWallNodeAt(deadEndNode, getRelativeOrientation(getCurrentRobotOrientation(),Orientation.NORTH));
-			generateWallNodeAt(deadEndNode, getRelativeOrientation(getCurrentRobotOrientation(),Orientation.EAST));
+			generateWallNodeAt(deadEndNode, getCurrentRobotOrientation().getRelativeOrientation(Orientation.WEST));
+			generateWallNodeAt(deadEndNode, getCurrentRobotOrientation().getRelativeOrientation(Orientation.NORTH));
+			generateWallNodeAt(deadEndNode, getCurrentRobotOrientation().getRelativeOrientation(Orientation.EAST));
 		} else {
 			ContentPanel.writeToDebug("Couldn't create a dead end at the position in front of the robot.");
 		}

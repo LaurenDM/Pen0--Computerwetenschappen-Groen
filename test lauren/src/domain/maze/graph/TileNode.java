@@ -110,4 +110,32 @@ public class TileNode extends MazeNode {
 		return ret;
 	}
 	
+	public Orientation relativeOrientationTo(TileNode otherTile) {
+		Orientation rOrientation = null;
+		if(otherTile==null){
+			System.out.println("Warning! Tried to calculate relative orientation to null!");
+		} else if(otherTile.getX()!=this.getX()&&otherTile.getY()!=otherTile.getY()){
+			throw new IllegalArgumentException("Invalid relative tile location.");
+		} else if(otherTile.getX()==this.getX()) {
+			int yDist = otherTile.getY()-this.getY();
+			for(Orientation o : Orientation.values()){
+				if(yDist/Math.abs(yDist)==o.getYValue()){
+					rOrientation = o;
+				}
+			}
+		} else if(otherTile.getY()==this.getY()) {
+			int xDist = otherTile.getX()-this.getX();
+			for(Orientation o : Orientation.values()){
+				if(xDist/Math.abs(xDist)==o.getYValue()){
+					rOrientation = o;
+				}
+			}
+		}
+		return rOrientation;
+	}
+	
+	public boolean isAccessible() {
+		return this.isAccessible();
+	}
+	
 }
