@@ -200,7 +200,6 @@ public class MazeGraph {
 		Orientation orientationToCurrent = absoluteOrientation.getBack();
 		TileNode newNode = new TileNode(tile,orientationToCurrent);
 		boolean thisNodeAlreadyExists = false;
-		HashMap<Orientation,TileNode> neighbours = new HashMap<Orientation,TileNode>();
 		for(TileNode node:nodes){
 			if((node).getX()==newNode.getX() && (node).getY()==newNode.getY()){
 				tile.setNodeAt(absoluteOrientation, node);
