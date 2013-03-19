@@ -236,13 +236,14 @@ public abstract class RobotPilot {
 		return teamNumber;
 	}
 	
-	public abstract boolean detectRobotInfrared();
-
-	public abstract boolean detectSeaSawInfrared();
+	public  boolean detectInfrared(){
+		return getInfraredValue()>100; //TODO infrarood francis
+	};
 
 	public abstract void driveOverSeeSaw();
-	// de check van infrarood is reeds gebeurd als deze methode word aangeroepen!
-	
+	// de check van infrarood is reeds gebeurd als deze methode wordt aangeroepen!
+
+	public abstract int getInfraredValue();
 
 
 	

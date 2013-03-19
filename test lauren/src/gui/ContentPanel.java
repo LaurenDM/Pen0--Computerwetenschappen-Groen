@@ -316,7 +316,7 @@ public class ContentPanel implements ActionListener {
         yLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, yLabel, 125, 20, 100, 100);
         
-        infraredLabel = new JLabel("Infrared: FALSE");
+        infraredLabel = new JLabel("Infrared: 0");
         infraredLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, infraredLabel, 125, 20, 200, 100);
         
@@ -405,7 +405,7 @@ public class ContentPanel implements ActionListener {
 					contentPanel.setRobotAngle(controller.getAngle());
 					contentPanel.setRobotLightValue(controller.readLightValue());
 					contentPanel.setRobotDistanceValue(controller.readUltrasonicValue());
-					contentPanel.setRobotInfraredValue(controller.detectRobotInfrared()); //TODO infra francis
+					contentPanel.setRobotInfraredValue(controller.getInfraredValue()); //TODO infra francis
 					contentPanel.setLineValue(controller.detectWhiteLine());
 					contentPanel.updateBalls();
 					if(controller.ballInPossesion() && count < 1){
@@ -689,9 +689,14 @@ public class ContentPanel implements ActionListener {
     	graphPanel.addValue(SensorGraphsPanel.DISTANCEPLOT, value);
     }
     
-    public void setRobotInfraredValue(boolean value){ //TODO infra francis
-    	infraredLabel.setText("Infrared: " + Boolean.valueOf(value).toString());
-    }
+    public void setRobotInfraredValue(int value){ //TODO infra francis
+		if (!controller.detectInfrared()) {
+			infraredLabel.setForeground(Color.BLACK);
+		} else {
+			infraredLabel.setForeground(Color.RED);
+		}
+		infraredLabel.setText("Infrared: " + value);
+	}
     
     public void setLineValue(boolean value){
     	lineLabel.setText("Line: " + Boolean.valueOf(value).toString());

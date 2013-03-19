@@ -204,12 +204,10 @@ public class Controller {
 		return currentRobot.readUltrasonicValue();
 	}
 
-	public boolean detectRobotInfrared(){
-		return currentRobot.detectRobotInfrared();
+	public int getInfraredValue(){
+		return currentRobot.getInfraredValue();
 	}
-	public boolean detectseeSawInfrared(){
-		return currentRobot.detectSeaSawInfrared();
-	}
+	
 	
 	public void turnUltrasonicSensor(int angle){
 		currentRobot.turnUltrasonicSensor(angle);
@@ -429,5 +427,11 @@ public class Controller {
 	
 	public void playerLeft(int identifier){
 		otherRobots.remove(identifier);
+	}
+
+
+
+	public boolean detectInfrared() {
+		return currentRobot.detectInfrared();
 	}
 }

@@ -421,17 +421,8 @@ public class SimRobotPilot extends RobotPilot {
 		return shortestDistance;
 	}
 	
-	public boolean detectRobotInfrared(){
-		if(getBoard().detectRobotFrom(this)){
-			return true;
-		}
-		return false;
-	}
 	
-	public boolean detectSeaSawInfrared(){
-		return getBoard().checkForOpenSeaSawFrom(this);
-	}
-
+	
 	@Override
 	public void calibrateLightHigh() {
 		//doet niets
@@ -744,6 +735,11 @@ public class SimRobotPilot extends RobotPilot {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public int getInfraredValue() {
+			return getBoard().detectRobotFrom(this) || getBoard().checkForOpenSeaSawFrom(this)?150:0;
 	}
 	
 	
