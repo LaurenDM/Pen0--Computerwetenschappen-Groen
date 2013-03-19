@@ -242,7 +242,7 @@ public class BTRobotPilot extends RobotPilot  {
 		return prevUltrasonicValue;
 	}
 	
-	public boolean detectInfrared(){
+	public boolean detectRobotInfrared(){
 		if (RobotChecker.interruptionAllowed())
 			updateSensorValues(false);
 		return prevIRValue>130;	//TODO: waarde moet experimenteel bepaald worden
@@ -510,8 +510,8 @@ public class BTRobotPilot extends RobotPilot  {
 	}
 
 	@Override
-	public boolean checkForSeaSawInfrared() {
-		return detectInfrared();
+	public boolean detectSeaSawInfrared() {
+		return detectRobotInfrared();
 	}
 
 	@Override

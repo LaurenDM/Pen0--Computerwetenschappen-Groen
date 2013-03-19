@@ -405,7 +405,7 @@ public class ContentPanel implements ActionListener {
 					contentPanel.setRobotAngle(controller.getAngle());
 					contentPanel.setRobotLightValue(controller.readLightValue());
 					contentPanel.setRobotDistanceValue(controller.readUltrasonicValue());
-					contentPanel.setRobotInfraredValue(controller.detectInfrared());
+					contentPanel.setRobotInfraredValue(controller.detectRobotInfrared()); //TODO infra francis
 					contentPanel.setLineValue(controller.detectWhiteLine());
 					contentPanel.updateBalls();
 					if(controller.ballInPossesion() && count < 1){
@@ -689,7 +689,7 @@ public class ContentPanel implements ActionListener {
     	graphPanel.addValue(SensorGraphsPanel.DISTANCEPLOT, value);
     }
     
-    public void setRobotInfraredValue(boolean value){
+    public void setRobotInfraredValue(boolean value){ //TODO infra francis
     	infraredLabel.setText("Infrared: " + Boolean.valueOf(value).toString());
     }
     

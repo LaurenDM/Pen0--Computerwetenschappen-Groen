@@ -421,14 +421,14 @@ public class SimRobotPilot extends RobotPilot {
 		return shortestDistance;
 	}
 	
-	public boolean detectInfrared(){
+	public boolean detectRobotInfrared(){
 		if(getBoard().detectRobotFrom(this)){
 			return true;
 		}
 		return false;
 	}
 	
-	public boolean checkForSeaSawInfrared(){
+	public boolean detectSeaSawInfrared(){
 		return getBoard().checkForOpenSeaSawFrom(this);
 	}
 

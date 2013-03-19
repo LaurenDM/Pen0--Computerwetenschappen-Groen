@@ -236,9 +236,9 @@ public abstract class RobotPilot {
 		return teamNumber;
 	}
 	
-	public abstract boolean detectInfrared();
+	public abstract boolean detectRobotInfrared();
 
-	public abstract boolean checkForSeaSawInfrared();
+	public abstract boolean detectSeaSawInfrared();
 
 	public abstract void driveOverSeeSaw();
 	// de check van infrarood is reeds gebeurd als deze methode word aangeroepen!
