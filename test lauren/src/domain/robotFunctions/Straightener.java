@@ -7,7 +7,7 @@ import domain.robots.SimRobotPilot;
  * A class that contains functions for straightening a robot (real or simulated).
  * @author Joren
  */
-public class Straightener extends RobotFunction {
+public class Straightener {
 	private static final int DISTANCE_BETWEEN_SENSOR_AND_WHEELS = 8;
 	//The robot that needs to be straightened
 	private RobotPilot robot;

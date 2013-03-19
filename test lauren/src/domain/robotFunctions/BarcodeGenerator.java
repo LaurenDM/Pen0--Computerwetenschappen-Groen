@@ -5,7 +5,7 @@ import domain.maze.barcodes.Barcode;
 import domain.robots.CannotMoveException;
 import domain.robots.RobotPilot;
 
-public class BarcodeGenerator extends RobotFunction {
+public class BarcodeGenerator {
 
 	private RobotPilot robot;
 	private final int MAZECONSTANT = 40;
