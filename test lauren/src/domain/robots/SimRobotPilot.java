@@ -73,7 +73,7 @@ public class SimRobotPilot extends RobotPilot {
 		this(orientation, position, 0);
 	}
 
-	private void setOrientation(double orientation) {
+	void setOrientation(double orientation) {
 		if(Math.abs(orientation)>180){
 			throw new IllegalArgumentException();
 		}
@@ -151,12 +151,12 @@ public class SimRobotPilot extends RobotPilot {
 
 	public void keepTurningLeft(){
 		stop();
-		startTurnThread(true);
+		startTurnThread(MoveType.TURNLEFT);
 	}
 
 	public void keepTurningRight(){
 		stop();
-		startTurnThread(false);
+		startTurnThread(MoveType.TURNRIGHT);
 	}
 
 
@@ -182,20 +182,20 @@ public class SimRobotPilot extends RobotPilot {
 
 	@Override
 	public void forward() throws CannotMoveException {
-		setMovement(Movement.FORWARD);
+		setMovement(MoveType.FORWARD);
 		forward(false);
 	}
 
 	public void forward(boolean whiteLine) throws CannotMoveException {
 		stop();
-		startMoveThread(Movement.FORWARD, whiteLine);
+		startMoveThread(MoveType.FORWARD, whiteLine);
 	}
 
-	private void startMoveThread(Movement movement) throws CannotMoveException {
+	private void startMoveThread(MoveType movement) throws CannotMoveException {
 		startMoveThread(movement, false);
 	}
 
-	private void startMoveThread(Movement movement, boolean whiteLine) throws CannotMoveException{
+	private void startMoveThread(MoveType movement, boolean whiteLine) throws CannotMoveException{
 		stopThread(moveThread);
 		moveThread= new MoveThread(movement, this,whiteLine);
 		try{
@@ -206,18 +206,18 @@ public class SimRobotPilot extends RobotPilot {
 		}
 	}
 
-	private void startTurnThread(boolean left) {
+	private void startTurnThread(MoveType moveType) {
 		stopThread(turnThread);
-		turnThread= new TurnThread(left, this);
+		turnThread= new TurnThread(moveType, this);
 		turnThread.start();
 	}
 
 	@Override
 	public void backward(){
-		setMovement(Movement.BACKWARD);
+		setMovement(MoveType.BACKWARD);
 		stop();
 		try {
-			startMoveThread(Movement.BACKWARD);
+			startMoveThread(MoveType.BACKWARD);
 		} catch (CannotMoveException e) {
 			
 		}
@@ -226,7 +226,7 @@ public class SimRobotPilot extends RobotPilot {
 
 	@Override
 	public void stop() {
-		setMovement(Movement.STOPPED);
+		setMovement(MoveType.STOPPED);
 		stopThread(moveThread);
 		stopThread(turnThread);
 	}
@@ -240,9 +240,9 @@ public class SimRobotPilot extends RobotPilot {
 	@Override
 	public synchronized void move(double wantedDistance) throws CannotMoveException {
 		if (wantedDistance > 0)
-			setMovement(Movement.FORWARD);
+			setMovement(MoveType.FORWARD);
 		else if (wantedDistance < 0)
-			setMovement(Movement.BACKWARD);
+			setMovement(MoveType.BACKWARD);
 		Position pos1 = getPosition().clone();
 		boolean running = true;
 		if (wantedDistance > 0) {
@@ -301,7 +301,7 @@ public class SimRobotPilot extends RobotPilot {
 				stopThread(moveThread);
 			}
 		}
-		setMovement(Movement.STOPPED);
+		setMovement(MoveType.STOPPED);
 	}
 
 	@Override
@@ -326,7 +326,7 @@ public class SimRobotPilot extends RobotPilot {
 
 	@Override
 	public boolean canMove(){
-		if(moveThread.getMovement().equals(Movement.BACKWARD)){
+		if(moveThread.getMovement().equals(MoveType.BACKWARD)){
 			return canMoveBackward();
 		}
 		double distance = readUltrasonicValue();	
@@ -344,7 +344,7 @@ public class SimRobotPilot extends RobotPilot {
 			return true;
 	}
 
-	private double calcNewOrientation(double turnAmount) {
+	double calcNewOrientation(double turnAmount) {
 		double newOrientation = getOrientation()+turnAmount;
 		while (newOrientation < -179) {
 			newOrientation += 360;
@@ -355,34 +355,11 @@ public class SimRobotPilot extends RobotPilot {
 		return newOrientation;
 	}
 
-	private class TurnThread extends Thread{
-		private boolean left;
-		private SimRobotPilot simRobotPilot;
-		public TurnThread(boolean left, SimRobotPilot simRobotPilot){
-			this.simRobotPilot=simRobotPilot;
-			this.left=left;
-		}
 
-		@Override
-		public void run() {
-			double speed = simRobotPilot.getTurningSpeed();
-			double turnAmount = left ? -1 : 1;
-			int sleepTime = Math.abs((int) Math.round( (500 * turnAmount / speed)));
-			while (true) {
-				double newOrientation = calcNewOrientation(turnAmount);
-				setOrientation(newOrientation);
-				try {
-					Thread.sleep(sleepTime);
-				} catch (InterruptedException e) {
-					break;
-				}
-			}
-		}
-	}
 
 	
 	private boolean isTouching() {
-		if(moveThread == null || moveThread.getMovement().equals(Movement.FORWARD)){
+		if(moveThread == null || moveThread.getMovement().equals(MoveType.FORWARD)){
 			return getBoard().detectWallAt(getPosition().getNewPosition(getOrientation(), 14));
 		}
 		else{
@@ -496,28 +473,9 @@ public class SimRobotPilot extends RobotPilot {
 
 
 	@Override
-	public void arcForward(boolean left) {
-		try {
-			startMoveThread(Movement.FORWARD);
-		} catch (CannotMoveException e) {
-			e.printStackTrace();
-		}
-		startTurnThread(left);
-	}
-
-	@Override
-	public void arcBackward(boolean left) {
-		try {
-			startMoveThread(Movement.BACKWARD);
-		} catch (CannotMoveException e) {
-			e.printStackTrace();
-		}
-		startTurnThread(left);
-	}
-	@Override
 	public void steer(double angle) {
 		try {
-			startMoveThread(Movement.FORWARD);
+			startMoveThread(MoveType.FORWARD);
 		} catch (CannotMoveException e) {
 			e.printStackTrace();
 		}
@@ -533,7 +491,8 @@ public class SimRobotPilot extends RobotPilot {
 
 	@Override
 	public void keepTurning(boolean left) {
-		startTurnThread(left);
+		MoveType moveType= left?MoveType.TURNLEFT:MoveType.TURNRIGHT;
+		startTurnThread(moveType);
 	}
 
 	@Override

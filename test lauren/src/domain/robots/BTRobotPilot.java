@@ -101,7 +101,7 @@ public class BTRobotPilot extends RobotPilot  {
 
 	@Override
 	public void forward() throws CannotMoveException {
-		setMovement(Movement.FORWARD);
+		setMovement(MoveType.FORWARD);
 //		if(canMove())
 			pilot.forward();
 //		else{
@@ -112,13 +112,13 @@ public class BTRobotPilot extends RobotPilot  {
 
 	@Override
 	public void backward() {
-		setMovement(Movement.BACKWARD);
+		setMovement(MoveType.BACKWARD);
 		pilot.backward();
 	}
 
 	@Override
 	public void stop() {
-		setMovement(Movement.STOPPED);
+		setMovement(MoveType.STOPPED);
 		pilot.stop();
 	}
 
@@ -173,11 +173,11 @@ public class BTRobotPilot extends RobotPilot  {
 //			}
 //		}
 		if(distance>0)
-			setMovement(Movement.FORWARD);
+			setMovement(MoveType.FORWARD);
 		else if(distance>0)
-			setMovement(Movement.BACKWARD);
+			setMovement(MoveType.BACKWARD);
 		pilot.travel(distance);
-		setMovement(Movement.STOPPED);
+		setMovement(MoveType.STOPPED);
 	}
 
 	@Override
@@ -303,17 +303,6 @@ public class BTRobotPilot extends RobotPilot  {
 
 	public int getBatteryVoltage(){
 			return btComm.sendCommand(CMD.BATTERY)[0];		
-	}
-
-	@Override
-	public void arcForward(boolean left) {
-		
-//		pilot.steer(calcTurnRate(left)); 
-	}
-
-	@Override
-	public void arcBackward(boolean left) {
-//		pilot.steerBackward(calcTurnRate(left)); 
 	}
 
 	@Override

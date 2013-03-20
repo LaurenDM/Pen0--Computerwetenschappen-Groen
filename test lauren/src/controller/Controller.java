@@ -233,13 +233,6 @@ public class Controller {
 	public RobotPilot getRobot() {
 		return currentRobot;
 	}
-	public void arcForward(boolean left){
-		currentRobot.arcForward(left);
-	};
-
-	public void arcBackward(boolean left) {
-		currentRobot.arcBackward(left);
-	};
 
 	public void readMazeFromFile(String fileLocation) {
 		MazeInterpreter MI = new MazeInterpreter(this.getRobot().getBoard());

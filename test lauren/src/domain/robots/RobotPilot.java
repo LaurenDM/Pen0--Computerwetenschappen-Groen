@@ -12,7 +12,7 @@ import domain.util.TimeStamp;
 public abstract class RobotPilot {
 	
 	RobotPolygon robotPolygon;
-	private Movement movement;
+	private MoveType movement;
 	private Position finish;
 	private int number; //0-3
 	
@@ -23,7 +23,7 @@ public abstract class RobotPilot {
 	
 	
 	public RobotPilot(int number){
-		this.movement=Movement.STOPPED;
+		this.movement=MoveType.STOPPED;
 		this.robotPolygon=new RobotPolygon(this);
 		this.number = number;
 	}
@@ -42,7 +42,7 @@ public abstract class RobotPilot {
 		return number;
 	}
 	
-	public Movement getMovementStatus() {
+	public MoveType getMovementStatus() {
 		return movement;
 	}
 		
@@ -70,7 +70,7 @@ public abstract class RobotPilot {
 	
 	public abstract void forward() throws CannotMoveException;
 	
-	public void setMovement(Movement movement){
+	public void setMovement(MoveType movement){
 		this.movement = movement;
 	}
 	
@@ -152,13 +152,6 @@ public abstract class RobotPilot {
 	public abstract boolean detectWhiteLine();
 	
 	public abstract void straighten();
-	
-	//Starts moving de robot so that it makes an arc forward.
-	public abstract void arcForward(boolean left);
-
-	//Starts moving de robot so that it makes an arc backward.
-	public abstract void arcBackward(boolean left);
-	
 	//Makes the robot make an arc of the specified angle. This method does not return immediately.
 	public abstract void steer(double angle);
 
