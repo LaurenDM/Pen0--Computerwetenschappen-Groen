@@ -514,6 +514,11 @@ public class BTRobotPilot extends RobotPilot  {
 		btComm.sendCommand(CMD.SEASAWACTION);
 		
 	}
+
+	@Override
+	public void turnUltrasonicSensorTo(int angle) {
+		btComm.sendCommand(CMD.TURNSENSORTO,angle);
+	}
 	
 
 }

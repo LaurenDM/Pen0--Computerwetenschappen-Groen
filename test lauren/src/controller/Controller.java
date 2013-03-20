@@ -426,8 +426,14 @@ public class Controller {
 
 
 	public void launchCatapult() {
-		turnUltrasonicSensor(120);		
+		turnUltrasonicSensorTo(180);		
 	}
+	private void turnUltrasonicSensorTo(int angle) {
+		currentRobot.turnUltrasonicSensorTo(angle);
+	}
+
+
+
 	public boolean detectInfrared() {
 		return currentRobot.detectInfrared();
 	}

@@ -257,6 +257,8 @@ public abstract class RobotPilot {
 
 	public abstract int getInfraredValue();
 
+	public abstract void turnUltrasonicSensorTo(int angle);
+
 
 	
 }

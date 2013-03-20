@@ -743,6 +743,12 @@ public class SimRobotPilot extends RobotPilot {
 	public int getInfraredValue() {
 			return getBoard().detectRobotFrom(this) || getBoard().checkForOpenSeaSawFrom(this)?150:0;
 	}
+
+	@Override
+	public void turnUltrasonicSensorTo(int angle) {
+		setSensorAngle(angle);
+		
+	}
 	
 	
 	
