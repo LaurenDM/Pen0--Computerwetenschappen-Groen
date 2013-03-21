@@ -19,8 +19,8 @@ public class Board {
 	private List<Barcode> simulatedBarcodes;
 	private List<Barcode> foundBarcodes;
 	private List<RobotPilot> otherRobots;
-	private HashMap<Position, SeaSaw> seaSaws;
-	private List<SeaSaw> foundSeaSaws;
+	private HashMap<Position, Seesaw> seesaws;
+	private List<Seesaw> foundSeesaws;
 	
 	
 	public Board(){
@@ -29,8 +29,8 @@ public class Board {
 		foundBarcodes = new ArrayList<Barcode>();
 		foundWalls = new ArrayList<Wall>();
 		balls = new ArrayList<Ball>();
-		seaSaws = new HashMap<Position, SeaSaw>();
-		foundSeaSaws = new ArrayList<SeaSaw>();
+		seesaws = new HashMap<Position, Seesaw>();
+		foundSeesaws = new ArrayList<Seesaw>();
 		}
 	
 	public synchronized void addWall(Wall wall){
@@ -193,39 +193,39 @@ public class Board {
 		return false;
 	}
 	
-	public void putSeaSaw(SeaSaw seasaw){
-		if(seaSaws.get(seasaw.getCenterPosition()) == null){
-			seaSaws.put(seasaw.getCenterPosition(),seasaw);
+	public void putSeesaw(Seesaw seesaw){
+		if(seesaws.get(seesaw.getCenterPosition()) == null){
+			seesaws.put(seesaw.getCenterPosition(),seesaw);
 		}
 	}
 	
-	public void addFoundSeaSaw(Position position, Orientation orientation, int nb){
-		SeaSaw foundSeaSaw;
-		if(seaSaws.get(position) == null){
-			foundSeaSaw = new SeaSaw(position, orientation, nb);
+	public void addFoundSeesaw(Position position, Orientation orientation, int nb){
+		Seesaw foundSeesaw;
+		if(seesaws.get(position) == null){
+			foundSeesaw = new Seesaw(position, orientation, nb);
 		}
 		else {
-			foundSeaSaw = seaSaws.get(position);
+			foundSeesaw = seesaws.get(position);
 		}
-		foundSeaSaws.add(foundSeaSaw);
+		foundSeesaws.add(foundSeesaw);
 	}
 	
-	public boolean checkForOpenSeaSawFrom(RobotPilot robot){
+	public boolean checkForOpenSeesawFrom(RobotPilot robot){
 		final int DISTANCE = 50;
-		for(SeaSaw seasaw : seaSaws.values()){
-			if(seasaw.getInfaredPosition().getDistance(robot.getPosition())<DISTANCE){
+		for(Seesaw seesaw : seesaws.values()){
+			if(seesaw.getInfaredPosition().getDistance(robot.getPosition())<DISTANCE){
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	public List<SeaSaw> getSeaSaws(){
-		return new ArrayList<SeaSaw>(seaSaws.values());
+	public List<Seesaw> getSeesaws(){
+		return new ArrayList<Seesaw>(seesaws.values());
 	}
 	
-	public List<SeaSaw> getFoundSeaSaws(){
-		return foundSeaSaws;
+	public List<Seesaw> getFoundSeesaws(){
+		return foundSeesaws;
 	}
 
 	

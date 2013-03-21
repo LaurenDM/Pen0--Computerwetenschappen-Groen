@@ -500,7 +500,7 @@ public class BTRobotPilot extends RobotPilot  {
 	
 	@Override
 	public void driveOverSeeSaw() {
-		btComm.sendCommand(CMD.SEASAWACTION);
+		btComm.sendCommand(CMD.SEESAWACTION);
 		
 	}
 

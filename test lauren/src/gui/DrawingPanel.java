@@ -15,7 +15,7 @@ import domain.Position.Position;
 import domain.maze.Ball;
 import domain.maze.MazeElement;
 import domain.maze.Orientation;
-import domain.maze.SeaSaw;
+import domain.maze.Seesaw;
 import domain.maze.Wall;
 import domain.maze.barcodes.Barcode;
 import domain.maze.graph.MazePath;
@@ -77,7 +77,7 @@ public class DrawingPanel extends JPanel {
 			drawWall(w, true);
 		}
 		drawSimulatedBarcodes();
-		drawSeaSaws();
+		drawSeesaws();
 	}
 	
 	public void drawFoundWalls(){
@@ -191,27 +191,27 @@ public class DrawingPanel extends JPanel {
 		}
 	}
 	
-	public void drawSeaSaws(){
-		List<SeaSaw> seaSaws = controller.getRobot().getBoard().getSeaSaws();
-		for(SeaSaw s : seaSaws){
-			drawSeaSaw(s,true);
+	public void drawSeesaws(){
+		List<Seesaw> seesaws = controller.getRobot().getBoard().getSeesaws();
+		for(Seesaw s : seesaws){
+			drawSeesaw(s,true);
 		}
 	}
 	
-	public void drawFoundSeaSaws(){
-		List<SeaSaw> seaSaws = controller.getRobot().getBoard().getFoundSeaSaws();
-		for(SeaSaw s : seaSaws){
-			drawSeaSaw(s,false);
+	public void drawFoundSeesaws(){
+		List<Seesaw> seesaws = controller.getRobot().getBoard().getFoundSeesaws();
+		for(Seesaw s : seesaws){
+			drawSeesaw(s,false);
 		}
 	}
 	
-	public void drawSeaSaw(SeaSaw seasaw, boolean simulated){
+	public void drawSeesaw(Seesaw seesaw, boolean simulated){
 		Polygon pol = new Polygon();
-		int posX = (int) (seasaw.getCenterPosition().getX() + OFFSET);
-		int posY = (int) (seasaw.getCenterPosition().getY() + OFFSET);
+		int posX = (int) (seesaw.getCenterPosition().getX() + OFFSET);
+		int posY = (int) (seesaw.getCenterPosition().getY() + OFFSET);
 		
 		int xRange,yRange;
-		if(seasaw.getOrientation().equals(Orientation.EAST) || seasaw.getOrientation().equals(Orientation.WEST)){
+		if(seesaw.getOrientation().equals(Orientation.EAST) || seesaw.getOrientation().equals(Orientation.WEST)){
 			xRange = 40; yRange = 20;
 		}
 		else{

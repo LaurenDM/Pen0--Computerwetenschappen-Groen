@@ -12,7 +12,7 @@ import java.util.List;
 
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
-import domain.maze.barcodes.SeaSawAction;
+import domain.maze.barcodes.SeesawAction;
 
 public class MazeInterpreter {
 	
@@ -85,7 +85,7 @@ public class MazeInterpreter {
 			createStraight(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
 		}
 		else if(commandSplit[0].equals("SeeSaw")){
-			createSeaSaw(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
+			createSeesaw(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
 		}
 		if(commandSplit.length>2){
 			if(commandSplit[2].equals("B")){
@@ -263,7 +263,7 @@ public class MazeInterpreter {
 		}
 	}
 	
-	private void createSeaSaw(int xCoo, int yCoo, Orientation orientation){
+	private void createSeesaw(int xCoo, int yCoo, Orientation orientation){
 		int MAZECONSTANT = MazeElement.getMazeConstant();
 		xCoo = xCoo*MAZECONSTANT+(MAZECONSTANT/2);
 		yCoo = yCoo*MAZECONSTANT+(MAZECONSTANT/2);
@@ -273,7 +273,7 @@ public class MazeInterpreter {
 			pos2 = pos.getNewPosition(orientation.getAngleToHorizontal(), -40);
 		}
 		int dec = barcodePositions.get(pos2);
-		board.putSeaSaw(new SeaSaw(pos2, orientation,dec));
+		board.putSeesaw(new Seesaw(pos2, orientation,dec));
 	}
 	
 //	private void testBarcode(){

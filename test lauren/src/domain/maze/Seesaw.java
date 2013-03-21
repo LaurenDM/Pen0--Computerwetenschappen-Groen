@@ -2,7 +2,7 @@ package domain.maze;
 
 import domain.Position.Position;
 
-public class SeaSaw extends MazeElement {
+public class Seesaw extends MazeElement {
 	
 	private Position middlePosition;
 	private final int EDGE = 80; 
@@ -11,7 +11,7 @@ public class SeaSaw extends MazeElement {
 	
 	private int infrared; 
 	
-	public SeaSaw(Position middlePosition, Orientation orientation, int barcodeNb){
+	public Seesaw(Position middlePosition, Orientation orientation, int barcodeNb){
 		this.middlePosition = middlePosition;
 		this.barcodeNb= barcodeNb;
 		initialize();

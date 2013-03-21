@@ -700,7 +700,7 @@ public class SimRobotPilot extends RobotPilot {
 
 	@Override
 	public int getInfraredValue() {
-			return getBoard().detectRobotFrom(this) || getBoard().checkForOpenSeaSawFrom(this)?150:0;
+			return getBoard().detectRobotFrom(this) || getBoard().checkForOpenSeesawFrom(this)?150:0;
 	}
 
 	@Override
