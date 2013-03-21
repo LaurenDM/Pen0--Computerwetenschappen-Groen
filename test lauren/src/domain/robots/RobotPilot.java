@@ -228,12 +228,12 @@ public abstract class RobotPilot {
 		return teamNumber;
 	}
 		
-	public void driveOverSeeSawIfPossible(){
+	public void addSeesaw(){
 		boolean open = detectInfrared();
+		getMaze().setNextTileToSeesaw(open);
 		if(!open){
 			driveOverSeeSaw();
-			//TODO iets in het maze zodat we aan de overkant de juiste positie hebben en dat de maze
-			// weet dat er een wip is (joren)
+			getMaze().driveOverSeesaw();
 		}
 		else{
 			// TODO wat doen we dan?
@@ -251,7 +251,5 @@ public abstract class RobotPilot {
 	public abstract int getInfraredValue();
 
 	public abstract void turnUltrasonicSensorTo(int angle);
-
-
 	
 }

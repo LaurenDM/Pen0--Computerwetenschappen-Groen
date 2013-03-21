@@ -354,4 +354,12 @@ public class ExploreMaze{
 	public MazePath getPathToFinish(){
 		return maze.getShortestPath();
 	}
+
+	public void driveOverSeesaw() {
+		if(maze.getCurrentNode().isAccessible()){
+			maze.move();
+			maze.move();
+			maze.move();
+		}
+	}
 }

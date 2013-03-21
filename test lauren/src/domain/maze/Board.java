@@ -220,7 +220,7 @@ public class Board {
 		return false;
 	}
 	
-	public boolean hasSeaSawAt(Position pos){
+	public boolean hasSeesawAt(Position pos){
 		if(seesaws.get(pos) != null){
 			return true;
 		}

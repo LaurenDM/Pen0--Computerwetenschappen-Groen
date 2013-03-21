@@ -270,7 +270,7 @@ public class MazeInterpreter {
 		Position pos = new Position(xCoo,yCoo);
 		Position pos2 = pos.getNewPosition(orientation.getAngleToHorizontal(), -MAZECONSTANT);
 		pos = pos.getNewPosition(orientation.getAngleToHorizontal(), MAZECONSTANT/2);
-		if(!board.hasSeaSawAt(pos)){
+		if(!board.hasSeesawAt(pos)){
 			int dec = barcodePositions.get(pos2);
 			board.putSeesaw(new Seesaw(pos, orientation,dec));
 		}
