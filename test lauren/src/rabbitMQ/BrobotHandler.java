@@ -2,9 +2,10 @@ package rabbitMQ;
 
 import controller.Controller;
 import domain.robots.RobotPilot;
-import peno.htttp.Handler;
+import peno.htttp.DisconnectReason;
+import peno.htttp.GameHandler;
 
-public class BrobotHandler implements Handler {
+public class BrobotHandler implements GameHandler {
 	
 	private Controller controller;
 	
@@ -29,30 +30,32 @@ public class BrobotHandler implements Handler {
 	}
 
 	@Override
-	public void gameRolled(int playerNumber) {
-		controller.setPlayerNb(playerNumber);
-	}
-
-	@Override
 	public void playerJoined(String playerID) {
 		controller.playerJoined(Integer.parseInt(playerID));
 	}
 
 	@Override
-	public void playerLeft(String playerID) {
-		controller.playerLeft(Integer.parseInt(playerID));
+	public void playerJoining(String playerID) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public void playerPosition(String playerID, double x, double y, double angle) {
-		RobotPilot robot = controller.getRobotFromIdentifier(Integer.parseInt(playerID));
-		robot.setPose(angle,(int) x, (int) y);
+	public void playerReady(String playerID, boolean isReady) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
-	public void playerFoundObject(String playerID) {
-		int identifier = Integer.parseInt(playerID);
-		controller.getRobotFromIdentifier(identifier).setFoundBall(identifier);
+	public void playerFoundObject(String playerID, int playerNumber) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void playerDisconnected(String playerID, DisconnectReason reason) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
