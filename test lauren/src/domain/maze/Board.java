@@ -220,6 +220,20 @@ public class Board {
 		return false;
 	}
 	
+	public boolean hasSeaSawAt(Position pos){
+		if(seesaws.get(pos) != null){
+			return true;
+		}
+		else {
+			for(Seesaw s : getSeesaws()){
+				if(s.hasPosition(pos)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public List<Seesaw> getSeesaws(){
 		return new ArrayList<Seesaw>(seesaws.values());
 	}
