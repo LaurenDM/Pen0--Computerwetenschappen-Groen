@@ -73,5 +73,9 @@ public class SeesawNode extends TileNode {
 	public boolean isAccessible() {
 		return !isUp();
 	}
+	
+	public SeesawNode getPairedNode(){
+		return pairedSeesawNode;
+	}
 
 }
