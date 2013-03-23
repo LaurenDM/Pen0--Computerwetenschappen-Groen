@@ -1,5 +1,7 @@
 package controller;
 
+import groen.htttp.HtttpImplementation;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,8 +34,9 @@ public class Controller {
 	private RobotPilot simRobot;
 	private HashMap<Integer, RobotPilot> otherRobots;
 	private Thread explorer;
-	private final EventPusher ep;
+//	private final EventPusher ep;
 //	private SimRobotPilot simRobotPilot ;
+	private HtttpImplementation htttpImplementation;
 	
 	public Controller() {
 		otherRobots = new HashMap<Integer, RobotPilot>();
@@ -41,23 +44,25 @@ public class Controller {
 		currentRobot=simRobot;
 		connectNewSimRobot(0, new Position(20,20), 0);
 		
-		ep = new EventPusher();
-		Thread epThread = new Thread(){
-		    @Override
-			public void run(){
-				ep.run(currentRobot);	//method to adjust current robot in ep needed
-		    }
-		  };
-		epThread.start();
-	
-    	final SubscribeMonitor sm = new SubscribeMonitor(this);	
-   		Thread smThread = new Thread(){
-		    @Override
-			public void run(){
-		    	sm.run();
-		    }
-		  };
-		smThread.start();
+		htttpImplementation = new HtttpImplementation(this);
+		
+//		ep = new EventPusher();
+//		Thread epThread = new Thread(){
+//		    @Override
+//			public void run(){
+//				ep.run(currentRobot);	//method to adjust current robot in ep needed
+//		    }
+//		  };
+//		epThread.start();
+//	
+//    	final SubscribeMonitor sm = new SubscribeMonitor(this);	
+//   		Thread smThread = new Thread(){
+//		    @Override
+//			public void run(){
+//		    	sm.run();
+//		    }
+//		  };
+//		smThread.start();
 		
 	}
 
@@ -353,21 +358,22 @@ public class Controller {
 
 
 	public RobotPilot getRobotFromIdentifier(int identifier) {
-//		System.out.println("IDENTIFIER"+identifier);
-//		System.out.println("currIDEN:"+ep.getRobotRandomIdentifier());
-		if(identifier==ep.getRobotRandomIdentifier()){
-			//message komt van deze robot
-			return null;
-		}
-		else{
-			if(otherRobots.containsKey(identifier)){
-				return otherRobots.get(identifier);
-			}
-			else{
-				connectExternalSimRobot(2, new Position(220, 20), identifier);
-				return getRobotFromIdentifier(identifier);
-			}
-		}
+////		System.out.println("IDENTIFIER"+identifier);
+////		System.out.println("currIDEN:"+ep.getRobotRandomIdentifier());
+//		if(identifier==ep.getRobotRandomIdentifier()){
+//			//message komt van deze robot
+//			return null;
+//		}
+//		else{
+//			if(otherRobots.containsKey(identifier)){
+//				return otherRobots.get(identifier);
+//			}
+//			else{
+//				connectExternalSimRobot(2, new Position(220, 20), identifier);
+//				return getRobotFromIdentifier(identifier);
+//			}
+//		}
+		return null;
 	}
 	
 
@@ -429,5 +435,11 @@ public class Controller {
 
 	public boolean detectInfrared() {
 		return currentRobot.detectInfrared();
+	}
+
+
+
+	public void setReady(boolean ready) {
+		htttpImplementation.setReady(ready);
 	}
 }
