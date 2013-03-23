@@ -32,14 +32,14 @@ public class Controller {
 	private RobotPilot currentRobot;
 	private RobotPilot btRobot;
 	private RobotPilot simRobot;
-	private HashMap<Integer, RobotPilot> otherRobots;
+	private HashMap<String, RobotPilot> otherRobots;
 	private Thread explorer;
 //	private final EventPusher ep;
 //	private SimRobotPilot simRobotPilot ;
 	private HtttpImplementation htttpImplementation;
 	
 	public Controller() {
-		otherRobots = new HashMap<Integer, RobotPilot>();
+		otherRobots = new HashMap<String, RobotPilot>();
 		SimRobotPilot simRobotPilot = new SimRobotPilot();
 		currentRobot=simRobot;
 		connectNewSimRobot(0, new Position(20,20), 0);
@@ -84,11 +84,11 @@ public class Controller {
 		currentRobot.setBoard(new Board());
 	}
 	
-	//This is used to set the robot controlled by this GUI
-	public void connectExternalSimRobot(double orientation, Position position, int number) {
-		SimRobotPilot otherSimRobot = new SimRobotPilot(orientation, position,number);
-		otherSimRobot.setBoard(new Board()); //miss aanpassen, nog te bespreken. (elke robot individueel bord?)
-		otherRobots.put(number, otherSimRobot);
+	//This is used to set the robot controlled by other GUI
+	public void connectExternalSimRobot(double orientation, Position position, String playerID) {
+		SimRobotPilot otherSimRobot = new SimRobotPilot(orientation, position);
+		otherSimRobot.setBoard(new Board()); 
+		otherRobots.put(playerID, otherSimRobot);
 		}
 	
 	
@@ -160,9 +160,9 @@ public class Controller {
 	public List<ColorPolygon> getColorPolygons(){
 		List<ColorPolygon> colPolyList=new ArrayList<ColorPolygon>();
 		colPolyList.add(currentRobot.getRobotPolygon());
-		Iterator<Entry<Integer, RobotPilot>> it = otherRobots.entrySet().iterator();
+		Iterator<Entry<String, RobotPilot>> it = otherRobots.entrySet().iterator();
 	    while (it.hasNext()) {
-	        Map.Entry<Integer, RobotPilot> pairs = it.next();
+	        Map.Entry<String, RobotPilot> pairs = it.next();
 	        colPolyList.add(pairs.getValue().getRobotPolygon());
 //	        it.remove(); // avoids a ConcurrentModificationException
 	    }
@@ -341,20 +341,20 @@ public class Controller {
 	public void autoCalibrateLight() {
 		currentRobot.autoCalibrateLight();}
 	
-	public void disableError() {
-		otherRobots.get(1).setPose(3, 100, 100); 
-//		simRobotPilot.disableError();
-	}
+//	public void disableError() {
+//		otherRobots.get(1).setPose(3, 100, 100); 
+////		simRobotPilot.disableError();
+//	}
 	
-	//set the simRobot of this gui to the first robot
-	public void setFirstRobot(){
-		connectNewSimRobot(0, new Position(20,20), 0);
-	}
-	
-	//set the simRobot of this gui to the first robot
-	public void setSecondRobot(){
-		connectNewSimRobot(0, new Position(100,20), 1);
-	}
+//	//set the simRobot of this gui to the first robot
+//	public void setFirstRobot(){
+//		connectNewSimRobot(0, new Position(20,20), 0);
+//	}
+//	
+//	//set the simRobot of this gui to the first robot
+//	public void setSecondRobot(){
+//		connectNewSimRobot(0, new Position(100,20), 1);
+//	}
 
 
 	public RobotPilot getRobotFromIdentifier(int identifier) {
@@ -395,7 +395,7 @@ public class Controller {
 		robot.setFoundBall(robot.getNumber());
 	}
 	
-	public HashMap<Integer, RobotPilot> getOtherRobots(){
+	public HashMap<String, RobotPilot> getOtherRobots(){
 		return otherRobots;
 	}
 	
@@ -414,7 +414,6 @@ public class Controller {
 	
 	public void playerJoined(int identifier){
 		//RobotPilot newRobot = new RobotPilot(identifier);
-		// TODO simrobot of btrobot aanmaken + hoe bepalen?
 		//otherRobots.put(identifier, newRobot);
 	}
 	

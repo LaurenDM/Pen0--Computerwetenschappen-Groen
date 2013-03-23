@@ -709,20 +709,20 @@ public class ContentPanel implements ActionListener {
 	}
 	
 	public void updateBalls(){
-//		System.out.println("updateBalls");
-		HashMap<Integer, RobotPilot> otherRobots = controller.getOtherRobots();
-	    Iterator<Entry<Integer, RobotPilot>> it = otherRobots.entrySet().iterator();
-		    while (it.hasNext()) {
-		        Map.Entry<Integer, RobotPilot> pairs = (Entry<Integer, RobotPilot>)it.next();
-//		        System.out.println(pairs.getKey() + " = " + pairs.getValue());
-		        Integer identifier = pairs.getKey();
-		        RobotPilot robot = pairs.getValue();
-		        if(!printedBalls.contains(identifier) && robot.hasBall()){
-		        	printedBalls.add(identifier);
-		        	writeToDebug("Robot "+identifier+" has found its ball");
-		        	System.out.println("FOUND BALL------------------------");
-		        }
-		    }
+////		System.out.println("updateBalls");
+//		HashMap<Integer, RobotPilot> otherRobots = controller.getOtherRobots();
+//	    Iterator<Entry<Integer, RobotPilot>> it = otherRobots.entrySet().iterator();
+//		    while (it.hasNext()) {
+//		        Map.Entry<Integer, RobotPilot> pairs = (Entry<Integer, RobotPilot>)it.next();
+////		        System.out.println(pairs.getKey() + " = " + pairs.getValue());
+//		        Integer identifier = pairs.getKey();
+//		        RobotPilot robot = pairs.getValue();
+//		        if(!printedBalls.contains(identifier) && robot.hasBall()){
+//		        	printedBalls.add(identifier);
+//		        	writeToDebug("Robot "+identifier+" has found its ball");
+//		        	System.out.println("FOUND BALL------------------------");
+//		        }
+//		    }
 		}
 	
 	

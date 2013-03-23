@@ -86,8 +86,12 @@ public class PlayerClient {
 	 */
 	private ScheduledExecutorService heartbeatExecutor;
 	private ScheduledFuture<?> heartbeatTask;
-
 	private static final ThreadFactory heartbeatFactory = new NamedThreadFactory("HTTTP-HeartBeat-%d");
+
+	/*
+	 * Seesaw
+	 */
+	private int seesawLock = 0;
 
 	/**
 	 * Create a game client.
@@ -711,7 +715,7 @@ public class PlayerClient {
 	 */
 
 	/**
-	 * Get the local player's number to identify its object.
+	 * Get the local player's number.
 	 * 
 	 * @throws IllegalStateException
 	 *             If not determined yet.
@@ -821,7 +825,7 @@ public class PlayerClient {
 			// Set as starting
 			setGameState(GameState.STARTING);
 			// Call handler
-			handler.gameRolled(getPlayerNumber());
+			handler.gameRolled(getPlayerNumber(), getObjectNumber());
 		}
 	}
 
@@ -833,7 +837,7 @@ public class PlayerClient {
 		// Generate player numbers
 		playerNumbers.clear();
 		for (int i = 0; i < nbPlayers; ++i) {
-			playerNumbers.put(rolls[i].getPlayerID(), i);
+			playerNumbers.put(rolls[i].getPlayerID(), i + 1);
 		}
 	}
 
@@ -885,8 +889,126 @@ public class PlayerClient {
 	}
 
 	/*
+	 * Seesaw
+	 */
+
+	/**
+	 * Check if the local player holds a lock on any seesaw.
+	 */
+	public boolean hasLockOnSeesaw() {
+		return seesawLock != 0;
+	}
+
+	/**
+	 * Check if the local player holds a lock on the given seesaw.
+	 * 
+	 * @param barcode
+	 *            The barcode at the player's side of the seesaw.
+	 */
+	public boolean hasLockOnSeesaw(int barcode) {
+		return seesawLock == barcode;
+	}
+
+	/**
+	 * Unlock a locked seesaw.
+	 * 
+	 * @throws IllegalStateException
+	 *             If the player has no lock on a seesaw.
+	 * @throws IOException
+	 */
+	public void unlockSeesaw() throws IllegalStateException, IOException {
+		if (!hasLockOnSeesaw()) {
+			throw new IllegalStateException("Cannot unlock seesaw when not holding any lock.");
+		}
+
+		// Remove lock
+		int unlockedBarcode = seesawLock;
+		seesawLock = 0;
+
+		// Publish unlock
+		Map<String, Object> message = newMessage();
+		message.put(Constants.PLAYER_NUMBER, getPlayerNumber());
+		message.put(Constants.SEESAW_BARCODE, unlockedBarcode);
+		publish(Constants.SEESAW_UNLOCK, message);
+	}
+
+	/**
+	 * Lock a seesaw.
+	 * 
+	 * <p>
+	 * A lock should be requested after the barcode in front of the seesaw has
+	 * been read and just before the player wants to traverse the seesaw.
+	 * </p>
+	 * 
+	 * <p>
+	 * The player is responsible for checking that:
+	 * <ul>
+	 * <li>the seesaw is open</li>
+	 * <li>no players are on the seesaw</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * <p>
+	 * The player must provide the barcode that has been read in front of the
+	 * seesaw. This is used by listening spectators to identify the seesaw and
+	 * the direction in which the seesaw will flip.
+	 * </p>
+	 * 
+	 * @param barcode
+	 *            The barcode at the player's side of the seesaw.
+	 * @throws IllegalStateException
+	 *             If not playing, or if still holding a lock on a different
+	 *             seesaw.
+	 * @throws IOException
+	 */
+	public void lockSeesaw(final int barcode) throws IllegalStateException, IOException {
+		if (!isPlaying()) {
+			throw new IllegalStateException("Cannot lock seesaw when not playing.");
+		}
+
+		// Ignore if lock already acquired
+		if (hasLockOnSeesaw(barcode)) {
+			return;
+		}
+
+		// Fail if player still holds a lock on another seesaw
+		if (hasLockOnSeesaw()) {
+			throw new IllegalStateException("Already holding a lock on a different seesaw.");
+		}
+
+		// Store lock
+		seesawLock = barcode;
+
+		// Publish lock
+		final Map<String, Object> message = newMessage();
+		message.put(Constants.PLAYER_NUMBER, getPlayerNumber());
+		message.put(Constants.SEESAW_BARCODE, barcode);
+		publish(Constants.SEESAW_LOCK, message);
+	}
+
+	/*
 	 * Object finding
 	 */
+
+	/**
+	 * Get the local player's object number to identify its object.
+	 * 
+	 * @throws IllegalStateException
+	 *             If not determined yet.
+	 */
+	public int getObjectNumber() throws IllegalStateException {
+		if (!hasObjectNumber()) {
+			throw new IllegalStateException("Object number not determined yet.");
+		}
+		return getPlayerNumber() - 1;
+	}
+
+	/**
+	 * Check if the object number has been determined.
+	 */
+	public boolean hasObjectNumber() {
+		return hasPlayerNumber();
+	}
 
 	/**
 	 * Check whether the local player has found their object.
@@ -1348,7 +1470,7 @@ public class PlayerClient {
 	 */
 
 	protected void publish(String routingKey, Map<String, Object> message, BasicProperties props) throws IOException {
-		channel.basicPublish(getGameID(), routingKey, props, prepareMessage(message));
+		channel.basicPublish(getGameID(), routingKey, props, serializeToJSON(message));
 	}
 
 	protected void publish(String routingKey, Map<String, Object> message) throws IOException {
@@ -1357,7 +1479,7 @@ public class PlayerClient {
 
 	protected void reply(BasicProperties requestProps, Map<String, Object> message) throws IOException {
 		BasicProperties props = defaultProps().correlationId(requestProps.getCorrelationId()).build();
-		channel.basicPublish("", requestProps.getReplyTo(), props, prepareMessage(message));
+		channel.basicPublish("", requestProps.getReplyTo(), props, serializeToJSON(message));
 	}
 
 	private AMQP.BasicProperties.Builder defaultProps() {
@@ -1373,7 +1495,7 @@ public class PlayerClient {
 		return message;
 	}
 
-	protected byte[] prepareMessage(Map<String, Object> message) {
+	protected byte[] serializeToJSON(Map<String, Object> message) {
 		// Default message
 		if (message == null) {
 			message = newMessage();
@@ -1398,7 +1520,7 @@ public class PlayerClient {
 		public void request(int timeout) throws IOException {
 			// Publish join with own player info
 			Map<String, Object> message = createMessage();
-			request(getGameID(), Constants.JOIN, prepareMessage(message), timeout);
+			request(getGameID(), Constants.JOIN, serializeToJSON(message), timeout);
 		}
 
 		@Override
@@ -1549,6 +1671,7 @@ public class PlayerClient {
 				// Heartbeat
 				heartbeatReceived(playerID);
 			}
+
 		}
 
 	}
@@ -1577,10 +1700,6 @@ public class PlayerClient {
 			} else if (topic.equals(Constants.TEAM_TILE)) {
 				// Tiles received
 				teamTilesReceived(message);
-			} else if (topic.equals(Constants.TEAM_MATCH)) {
-				// TODO Match
-			} else if (topic.equals(Constants.TEAM_MEET)) {
-				// TODO Meet
 			}
 
 		}
@@ -1596,7 +1715,7 @@ public class PlayerClient {
 		public void request(int timeout) throws IOException {
 			// Publish ping
 			Map<String, Object> message = newMessage();
-			request(getGameID(), toTeamTopic(Constants.TEAM_PING), prepareMessage(message), timeout);
+			request(getGameID(), toTeamTopic(Constants.TEAM_PING), serializeToJSON(message), timeout);
 		}
 
 		@Override

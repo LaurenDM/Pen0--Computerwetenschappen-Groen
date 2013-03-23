@@ -13,6 +13,14 @@ public interface Constants {
 	public static final String PLAYER_NUMBER = "playerNumber";
 
 	/*
+	 * Seesaw
+	 */
+	public static final String SEESAW_LOCK = "seesawLock";
+	public static final String SEESAW_UNLOCK = "seesawUnlock";
+
+	public static final String SEESAW_BARCODE = "barcode";
+
+	/*
 	 * Join
 	 */
 	public static final String JOIN = "join";
@@ -68,8 +76,6 @@ public interface Constants {
 	 */
 	public static final String TEAM_PING = "ping";
 	public static final String TEAM_TILE = "tile";
-	public static final String TEAM_MEET = "meet";
-	public static final String TEAM_MATCH = "match";
 
 	public static final String TILES = "tiles";
 

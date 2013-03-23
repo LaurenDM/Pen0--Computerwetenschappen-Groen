@@ -4,6 +4,10 @@ import gui.ContentPanel;
 import peno.htttp.DisconnectReason;
 
 public class GameHandler implements peno.htttp.GameHandler {
+	
+	
+	//In deze handler moet (momenteel) niets gebeuren
+	
 
 	@Override
 	public void playerReady(String playerID, boolean isReady) {

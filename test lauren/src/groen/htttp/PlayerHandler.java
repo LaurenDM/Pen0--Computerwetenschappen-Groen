@@ -23,47 +23,55 @@ public class PlayerHandler implements peno.htttp.PlayerHandler {
 	@Override
 	public void playerReady(String playerID, boolean isReady) {
 		printMessage("ph.playerReady: "+playerID+" is ready");
+		//moeten wij niets met doen
 	}
 	
 	@Override
 	public void playerJoining(String playerID) {
 		printMessage("ph.playerJoining: "+playerID+" is joining");
+		//moeten wij niets met doen
 	}
 	
 	@Override
 	public void playerJoined(String playerID) {
 		printMessage("ph.playerJoined: "+playerID+" joined");
+		//moeten wij niets met doen
 	}
 	
 	@Override
 	public void playerFoundObject(String playerID, int playerNumber) {
 		printMessage("ph.playerFoundObj: "+playerID+" number:"+playerNumber+" found object");
+		//moeten we zelf checken of dit teammate is?
 	}
 	
 	@Override
 	public void playerDisconnected(String playerID, DisconnectReason reason) {
 		printMessage("ph.playerdisc: "+playerID+" disconnected, reason: "+reason);				
+		//moeten wij niets met doen
 	}
 	
 	@Override
 	public void gameStopped() {
 		printMessage("ph.gameStopped");
+		htttpImplementation.getController().cancel();
 	}
 	
 	@Override
 	public void gameStarted() {
 		printMessage("ph.gameStarted, starting to send position");
-		htttpImplementation.startSendingPositionsThread();
+//		htttpImplementation.startSendingPositionsThread();
+		//verkenalgoritme starten, ik stel voor dit handmatig te doen
 	}
 	
 	@Override
 	public void gamePaused() {
 		printMessage("ph.gamePaused");
+		htttpImplementation.getController().cancel();
 	}
 	
 	@Override
-	public void gameRolled(int playerNumber) {
-		printMessage("ph.gameRolled: playerNumber:"+playerNumber);
+	public void gameRolled(int playerNumber, int objectNumber) {
+		printMessage("ph.gameRolled: playerNumber:"+playerNumber+" objectNumber:"+objectNumber);
 	}
 
 	@Override
@@ -80,6 +88,7 @@ public class PlayerHandler implements peno.htttp.PlayerHandler {
 		System.out.println(message);
 		ContentPanel.writeToDebug(message);
 	}
+
 	
 //	private void sendPositions(){
 //		PlayerClient client = htttpImplementation.getPlayerClient();

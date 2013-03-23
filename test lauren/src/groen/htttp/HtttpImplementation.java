@@ -3,6 +3,7 @@ package groen.htttp;
 import gui.ContentPanel;
 
 import java.io.IOException;
+import java.util.Set;
 
 import peno.htttp.Callback;
 import peno.htttp.PlayerClient;
@@ -13,6 +14,7 @@ import com.rabbitmq.client.ConnectionFactory;
 
 import controller.Controller;
 
+import domain.Position.Position;
 import domain.robots.RobotPilot;
 
 public class HtttpImplementation {
@@ -32,7 +34,7 @@ public class HtttpImplementation {
 		
 		playerHandler = new PlayerHandler(this);
 		gameHandler = new GameHandler();
-		spectatorHandler = new SpectatorHandler();
+		spectatorHandler = new SpectatorHandler(this);
 		
 		ConnectionFactory factory = new ConnectionFactory();
 		
@@ -53,6 +55,7 @@ public class HtttpImplementation {
 	    Connection connection = null;
 	    String gameID = "gameIDGroen";
 	    int random = (int) (Math.random()*1000000);
+//	    random =1;
 		String playerID = "playerIDGroen"+random;
 		try {
 			connection = factory.newConnection();
@@ -113,12 +116,29 @@ public class HtttpImplementation {
 		return spectatorClient;
 	}
 	
+	public void updateOtherPlayers(String newPlayerPlayerID){
+		System.out.println("updating other players");
+		Set<String> players = playerClient.getPlayers();
+		for(String player: players){
+			if(!player.equals(playerClient.getPlayerID())){
+			if(controller.getOtherRobots().containsKey(player)){
+				System.out.println("-----------Already contains key: "+player);
+			}
+			else{
+				//aangezien er volgens mij geen manier is om de beginpositie op te vragen zet ik hem op 20,20
+				controller.connectExternalSimRobot(0, new Position(20,20), player);
+				System.out.println("-----------Toegevoegd: "+player);
+			}
+			}
+		}
+	}
+	
 	private void sendPositions(){
 		PlayerClient playerClient = getPlayerClient();
 		RobotPilot robot = getController().getRobot();
 		try {
 			playerClient.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation());
-			System.out.println("Updated pos to "+robot.getPosition().getX()+" "+robot.getPosition().getY());
+//			System.out.println("Updated pos to "+robot.getPosition().getX()+" "+robot.getPosition().getY());
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -127,60 +147,34 @@ public class HtttpImplementation {
 	}
 	
 	public void startSendingPositionsThread(){
-		PlayerClient playerClient = getPlayerClient();
-		RobotPilot robot = getController().getRobot();
-		try {
-			playerClient.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation());
-		} catch (IllegalStateException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-//		Thread posThread = new Thread(){
-//		    @Override
-//			public void run(){
-//		    	while (true) {
-//					sendPositions();
-//					try {
-//						Thread.sleep(2000);
-//					} catch (InterruptedException e) {
-//						break;
-//					}
-//		    }
-//		  };
-//		};
-//		posThread.run();
-	}
-	
-//	private void sendPositions(){
+//		PlayerClient playerClient = getPlayerClient();
+//		RobotPilot robot = getController().getRobot();
 //		try {
-//			client.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation());
-//		} catch (IllegalStateException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
+//			playerClient.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation());
+//		} catch (IllegalStateException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
 //		}
-//	}
-//	
-//	private void startSendingPositions(){
-//		Thread posThread = new Thread(){
-//		    @Override
-//			public void run(){
-//		    	while (true) {
-//					sendPositions();
-//					try {
-//						Thread.sleep(100);
-//					} catch (InterruptedException e) {
-//						break;
-//					}
-//		    }
-//		  };
-//		};
-//		posThread.run();
-//	}
+
+		Thread posThread = new Thread(){
+		    @Override
+			public void run(){
+		    	while (true) {
+					sendPositions();
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						break;
+					}
+		    }
+		  };
+		};
+		posThread.run();
+	}
+
 }
 		
 
