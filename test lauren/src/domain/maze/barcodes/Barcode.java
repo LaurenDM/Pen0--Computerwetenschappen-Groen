@@ -55,6 +55,7 @@ public class Barcode extends MazeElement{
 	private static int ownBallNumber = 0;
 	private static int[] otherBallNumbers = new int[] {1,2,3};
 	private static int[] seesawNumbers = new int[] {11,13,15,17,19,21};
+	private static int[] checkPointNumbers = new int[]{55,47,43,39,37};
 	
 	public static void setBallNumber(int ballNumber) {
 		ownBallNumber = ballNumber;
@@ -67,6 +68,14 @@ public class Barcode extends MazeElement{
 	private static boolean isOtherBallNumber(int number){
 		for (int n : otherBallNumbers) {
 			if(n == number)
+				return true;
+		}
+		return false;
+	}
+	
+	private static boolean isCheckPointNumber(int number){
+		for (int n : checkPointNumbers){
+			if(n==number)
 				return true;
 		}
 		return false;
@@ -96,25 +105,16 @@ public class Barcode extends MazeElement{
 				return new FetchBallAction(1);
 			}
 		}
-		if(isOtherBallNumber(number))
+		if(isOtherBallNumber(number)){
 			return new DoNothingAction();
-		
+		}
 		else if(isSeesawNumber(number)){
 			Position pos = getCenterPosition().getNewPosition(getOrientation().getAngleToHorizontal(), 60);
 			return new SeesawAction(number, pos, getOrientation());
 		}
-			// TODO add actions for seesaw, ...
-			
-//			switch (number){
-//			case 5: return new TurnLeftAction();
-//			case 9: return new TurnRightAction();
-//			case 13: return new SetCheckPointAction();
-//			case 15: return new PlayTuneAction();
-//			case 19: return new Wait5Action();
-//			case 25: return new DriveSlowAction();
-//			case 37: return new DriveFastAction();
-//			case 55: return new SetFinishAction();
-//			default: return null;
+		else if(isCheckPointNumber(number)){
+			return new SetCheckPointAction();
+		}
 			return null;
 		
 	}
