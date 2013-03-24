@@ -54,13 +54,15 @@ public class PlayerHandler implements peno.htttp.PlayerHandler {
 	public void gameStopped() {
 		printMessage("ph.gameStopped");
 		htttpImplementation.getController().cancel();
+		//TODO: ik zou reset doen
 	}
 	
 	@Override
 	public void gameStarted() {
 		printMessage("ph.gameStarted, starting to send position");
 //		htttpImplementation.startSendingPositionsThread();
-		//verkenalgoritme starten, ik stel voor dit handmatig te doen
+		//TODO: verkenalgoritme starten, ik stel voor dit handmatig te doen
+		// waarom?
 	}
 	
 	@Override

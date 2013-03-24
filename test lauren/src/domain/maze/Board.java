@@ -199,13 +199,9 @@ public class Board {
 		}
 	}
 	
-	public void addFoundSeesaw(Position position, Orientation orientation, int nb){
-		Seesaw foundSeesaw;
-		if(seesaws.get(position) == null){
-			foundSeesaw = new Seesaw(position, orientation, nb);
-		}
-		else {
-			foundSeesaw = seesaws.get(position);
+	public void addFoundSeesaw(Seesaw foundSeesaw){
+		if(seesaws.get(foundSeesaw.getCenterPosition()) != null){
+			foundSeesaw = seesaws.get(foundSeesaw.getCenterPosition());
 		}
 		foundSeesaws.add(foundSeesaw);
 	}
@@ -240,6 +236,22 @@ public class Board {
 	
 	public List<Seesaw> getFoundSeesaws(){
 		return foundSeesaws;
+	}
+	
+	public void rollSeeSawWithBarcode(int barcodenb){
+		for(Seesaw s : getSeesaws()){
+			if(s.hasBarcodeNb(barcodenb)){
+				s.rollOver(barcodenb);
+			}
+		}
+	}
+	
+	public void unlockSeesawWithBarcode(int barcodenb){
+		for(Seesaw s : getSeesaws()){
+			if(s.hasBarcodeNb(barcodenb)){
+				s.unLock();
+			}
+		}
 	}
 
 	

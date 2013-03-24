@@ -1,5 +1,6 @@
 package groen.htttp;
 
+import domain.maze.Board;
 import domain.robots.RobotPilot;
 import gui.ContentPanel;
 import peno.htttp.DisconnectReason;
@@ -76,12 +77,16 @@ public class SpectatorHandler implements peno.htttp.SpectatorHandler {
 	
 	@Override
 	public void lockedSeesaw(String playerID, int playerNumber, int barcode) {
-		// TODO Auto-generated method stub
+		printMessage("sh.lockedSeesaw by player ID: " + playerID + " no: " + playerNumber);
+		Board board = htttpImplementation.getController().getRobot().getBoard();
+		board.rollSeeSawWithBarcode(barcode);
 	}
 
 	@Override
 	public void unlockedSeesaw(String playerID, int playerNumber, int barcode) {
-		// TODO Auto-generated method stub
+		printMessage("sh.unlockedSeesaw by player ID: " + playerID + " no: " + playerNumber);
+		Board board = htttpImplementation.getController().getRobot().getBoard();
+		board.unlockSeesawWithBarcode(barcode);
 	}
 	
 	private void printMessage(String message){
