@@ -436,8 +436,6 @@ public class Controller {
 		return currentRobot.detectInfrared();
 	}
 
-
-
 	public void setReady(boolean ready) {
 		htttpImplementation.setReady(ready);
 	}

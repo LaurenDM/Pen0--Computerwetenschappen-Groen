@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import domain.Position.InitialPosition;
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
 import domain.maze.barcodes.SeesawAction;
@@ -87,10 +88,17 @@ public class MazeInterpreter {
 		else if(commandSplit[0].equals("SeeSaw")){
 			createSeesaw(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
 		}
+		else if(commandSplit[0].equals("Closed")){
+			createClosed(XCoo, YCoo);
+		}
 		if(commandSplit.length>2){
 			if(commandSplit[2].equals("B")){
 				System.out.println("Ball");
 				createBall(XCoo, YCoo);
+			}
+			else if(commandSplit[2].contains("S")){
+				char[] args = commandSplit[2].toCharArray();
+				createInitialPosition(XCoo,YCoo,String.valueOf(args[2]),Integer.parseInt(String.valueOf(args[1])));
 			}
 			else if(!commandSplit[2].equals("00")){
 				createBarcode(commandSplit[2], XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
@@ -104,6 +112,22 @@ public class MazeInterpreter {
 		int yBall = YCoo*MAZECONSTANT+MAZECONSTANT/2;
 		Ball ball = new Ball(new Position(xBall, yBall));
 		board.addBall(ball);
+	}
+	
+	public void createInitialPosition(int XCoo, int YCoo, String orientString, int playernb){
+		int MAZECONSTANT = MazeElement.getMazeConstant();
+		XCoo = XCoo*MAZECONSTANT + MAZECONSTANT/2;
+		XCoo = YCoo*MAZECONSTANT + MAZECONSTANT/2;
+		Orientation orientation = Orientation.getOrientation(orientString);
+		InitialPosition pos = new InitialPosition(XCoo,YCoo,orientation);
+		board.addInitialPosition(pos, playernb);
+	}
+	
+	public void createClosed(int XCoo, int YCoo){
+		Position pos = new Position(XCoo, YCoo);
+		for(Orientation o : Orientation.values()){
+			makeWall(pos, o);
+		}
 	}
 
 
@@ -267,6 +291,7 @@ public class MazeInterpreter {
 		int MAZECONSTANT = MazeElement.getMazeConstant();
 		xCoo = xCoo*MAZECONSTANT+(MAZECONSTANT/2);
 		yCoo = yCoo*MAZECONSTANT+(MAZECONSTANT/2);
+		orientation = orientation.getBack();
 		Position pos = new Position(xCoo,yCoo);
 		Position pos2 = pos.getNewPosition(orientation.getAngleToHorizontal(), -MAZECONSTANT);
 		pos = pos.getNewPosition(orientation.getAngleToHorizontal(), MAZECONSTANT/2);

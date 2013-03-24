@@ -74,6 +74,8 @@ public class PlayerHandler implements peno.htttp.PlayerHandler {
 	@Override
 	public void gameRolled(int playerNumber, int objectNumber) {
 		printMessage("ph.gameRolled: playerNumber:"+playerNumber+" objectNumber:"+objectNumber);
+		htttpImplementation.getController().setPlayerNb(playerNumber);
+		htttpImplementation.getController().setBallNumber(objectNumber);
 	}
 
 	@Override
@@ -84,6 +86,7 @@ public class PlayerHandler implements peno.htttp.PlayerHandler {
 	@Override
 	public void teamTilesReceived(List<Tile> tiles) {
 		printMessage("ph.Tiles recieved 'List<Tile>");
+		//TODO info verwerken
 	}
 	
 	private void printMessage(String message){
