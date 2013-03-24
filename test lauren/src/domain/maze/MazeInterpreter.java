@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import peno.htttp.Tile;
+
 import domain.Position.InitialPosition;
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
@@ -38,9 +40,9 @@ public class MazeInterpreter {
 		  int lineCounter = 0;
 
 		  while ((strLine = br.readLine()) != null)   {
-//		  System.out.println (strLine);
-		  readline(strLine, lineCounter);
-		  lineCounter++;
+//		  	System.out.println (strLine);
+			  readline(strLine, lineCounter);
+			  lineCounter++;
 		  }
 		  in.close();
 		    }
@@ -69,6 +71,14 @@ public class MazeInterpreter {
 		}
 	}
 	
+	// tiles van links naar rechts, boven naar onder
+	public void readTiles(List<Tile> tiles){
+		for(Tile t : tiles){
+			String command = t.getToken();
+			// TODO
+		}
+	}
+	
 	public void readCommand(String command, int XCoo, int YCoo){
 		YCoo = YCoo - firstLine;
 		String[] commandSplit = command.split("\\.");
@@ -92,8 +102,8 @@ public class MazeInterpreter {
 			createClosed(XCoo, YCoo);
 		}
 		if(commandSplit.length>2){
-			if(commandSplit[2].equals("B")){
-				System.out.println("Ball");
+			if(commandSplit[2].equals("V")){
+				System.out.println("Object");
 				createBall(XCoo, YCoo);
 			}
 			else if(commandSplit[2].contains("S")){
