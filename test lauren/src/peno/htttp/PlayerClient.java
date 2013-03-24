@@ -25,6 +25,7 @@ import peno.htttp.impl.PlayerRoll;
 import peno.htttp.impl.PlayerState;
 import peno.htttp.impl.RequestProvider;
 import peno.htttp.impl.Requester;
+import peno.htttp.impl.VoteRequester;
 
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.AMQP.BasicProperties;
@@ -42,9 +43,9 @@ public class PlayerClient {
 	 * Constants
 	 */
 	public static final int nbPlayers = 4;
-	public static final int joinExpiration = 2000;
+	public static final int requestLifetime = 2000;
 	public static final int heartbeatFrequency = 2000;
-	public static final int heartbeatExpiration = 5000;
+	public static final int heartbeatLifetime = 5000;
 
 	/*
 	 * Communication
@@ -56,6 +57,11 @@ public class PlayerClient {
 	private Consumer joinConsumer;
 	private Consumer publicConsumer;
 	private Consumer teamConsumer;
+
+	/*
+	 * Team communication
+	 */
+	private String teamPartner = null;
 
 	/*
 	 * Identifiers
@@ -81,6 +87,11 @@ public class PlayerClient {
 	private ScheduledExecutorService heartbeatExecutor;
 	private ScheduledFuture<?> heartbeatTask;
 	private static final ThreadFactory heartbeatFactory = new NamedThreadFactory("HTTTP-HeartBeat-%d");
+
+	/*
+	 * Seesaw
+	 */
+	private int seesawLock = 0;
 
 	/**
 	 * Create a game client.
@@ -160,7 +171,22 @@ public class PlayerClient {
 	 */
 	public int getNbPlayers() {
 		synchronized (players) {
-			return players.getNbPlayers();
+			return players.getNbConfirmedPlayers();
+		}
+	}
+
+	/**
+	 * Get the number of players which may end up joining the game.
+	 * 
+	 * This consists of the number of confirmed players (as they are already in
+	 * the game) as well as the number of voted players (as they might succeed
+	 * in joining).
+	 * 
+	 * @return
+	 */
+	private int getNbVotedPlayers() {
+		synchronized (players) {
+			return players.getNbVotedPlayers();
 		}
 	}
 
@@ -311,7 +337,7 @@ public class PlayerClient {
 		heartbeatStart();
 
 		// Request to join
-		new JoinRequester(callback).request(joinExpiration);
+		new JoinRequester(callback).request(requestLifetime);
 	}
 
 	/**
@@ -322,22 +348,22 @@ public class PlayerClient {
 	 */
 	protected boolean canJoin(String clientID, String playerID) {
 		switch (getGameState()) {
-		case PLAYING:
-			// Nobody can join while playing
-			return false;
-		case PAUSED:
-			// Only missing players can join
-			return isMissingPlayer(playerID);
 		case JOINING:
 		case STARTING:
 		case WAITING:
 			// Reject duplicate players
 			if (!players.canJoin(clientID, playerID))
 				return false;
-			// Reject when full
-			if (isFull())
+			// Reject when might become full
+			if (getNbVotedPlayers() >= nbPlayers)
 				return false;
 			return true;
+		case PLAYING:
+			// Nobody can join while playing
+			return false;
+		case PAUSED:
+			// Only missing players can join
+			return isMissingPlayer(playerID);
 		default:
 		}
 		return false;
@@ -367,14 +393,14 @@ public class PlayerClient {
 
 		// Create and send reply
 		Map<String, Object> reply = newMessage();
-		reply.put("result", isAccepted);
+		reply.put(Constants.VOTE_RESULT, isAccepted);
 		// Add data if accepted
 		if (isAccepted) {
 			// Report own player state
 			PlayerState player = getLocalPlayer();
-			reply.put("clientID", player.getClientID());
-			reply.put("isReady", player.isReady());
-			reply.put("isJoined", isJoined());
+			reply.put(Constants.CLIENT_ID, player.getClientID());
+			reply.put(Constants.IS_READY, player.isReady());
+			reply.put(Constants.IS_JOINED, isJoined());
 			reply.putAll(player.write());
 			// Report game state
 			reply.putAll(gameState);
@@ -425,9 +451,9 @@ public class PlayerClient {
 			heartbeatStop();
 			// Publish leave
 			Map<String, Object> message = newMessage();
-			message.put("clientID", getClientID());
-			message.put("reason", reason.name());
-			publish("disconnect", message);
+			message.put(Constants.CLIENT_ID, getClientID());
+			message.put(Constants.DISCONNECT_REASON, reason.name());
+			publish(Constants.DISCONNECT, message);
 		} catch (IOException e) {
 			throw e;
 		} catch (ShutdownSignalException e) {
@@ -453,6 +479,10 @@ public class PlayerClient {
 		handler.playerDisconnected(playerID, reason);
 
 		switch (getGameState()) {
+		case JOINING:
+			// Remove player
+			removePlayer(clientID, playerID);
+			break;
 		case WAITING:
 		case STARTING:
 			// Revert to waiting
@@ -539,8 +569,8 @@ public class PlayerClient {
 		if (isReady != isReady()) {
 			// Publish updated state
 			Map<String, Object> message = newMessage();
-			message.put("isReady", isReady);
-			publish("ready", message);
+			message.put(Constants.IS_READY, isReady);
+			publish(Constants.READY, message);
 		}
 	}
 
@@ -582,7 +612,7 @@ public class PlayerClient {
 		}
 
 		// Publish
-		publish("start", null);
+		publish(Constants.START, null);
 	}
 
 	private void tryStart() throws IOException {
@@ -619,7 +649,7 @@ public class PlayerClient {
 		}
 
 		// Publish
-		publish("stop", null);
+		publish(Constants.STOP, null);
 	}
 
 	private synchronized void stopped() throws IOException {
@@ -685,7 +715,7 @@ public class PlayerClient {
 	 */
 
 	/**
-	 * Get the local player's number to identify its object.
+	 * Get the local player's number.
 	 * 
 	 * @throws IllegalStateException
 	 *             If not determined yet.
@@ -774,8 +804,8 @@ public class PlayerClient {
 		// Publish own roll
 		int roll = playerRolls.get(getPlayerID()).getRoll();
 		Map<String, Object> message = newMessage();
-		message.put("roll", roll);
-		publish("roll", message);
+		message.put(Constants.ROLL_NUMBER, roll);
+		publish(Constants.ROLL, message);
 	}
 
 	private void rollReceived(String playerID, int roll) throws IOException {
@@ -795,7 +825,7 @@ public class PlayerClient {
 			// Set as starting
 			setGameState(GameState.STARTING);
 			// Call handler
-			handler.gameRolled(getPlayerNumber());
+			handler.gameRolled(getPlayerNumber(), getObjectNumber());
 		}
 	}
 
@@ -807,7 +837,7 @@ public class PlayerClient {
 		// Generate player numbers
 		playerNumbers.clear();
 		for (int i = 0; i < nbPlayers; ++i) {
-			playerNumbers.put(rolls[i].getPlayerID(), i);
+			playerNumbers.put(rolls[i].getPlayerID(), i + 1);
 		}
 	}
 
@@ -831,7 +861,7 @@ public class PlayerClient {
 	 * <p>
 	 * The standard coordinate system has the X-axis running from left to right
 	 * and the Y-axis from bottom to top. The angle of orientation is measured
-	 * clockwise from the positive X-axis to the positive Y-axis.
+	 * counterclockwise from the positive X-axis to the positive Y-axis.
 	 * </p>
 	 * 
 	 * @param x
@@ -850,17 +880,135 @@ public class PlayerClient {
 		}
 
 		Map<String, Object> message = newMessage();
-		message.put("x", x);
-		message.put("y", y);
-		message.put("angle", angle);
-		message.put("playerNumber", getPlayerNumber());
-		message.put("foundObject", hasFoundObject());
-		publish("update", message);
+		message.put(Constants.PLAYER_NUMBER, getPlayerNumber());
+		message.put(Constants.UPDATE_X, x);
+		message.put(Constants.UPDATE_Y, y);
+		message.put(Constants.UPDATE_ANGLE, angle);
+		message.put(Constants.UPDATE_FOUND_OBJECT, hasFoundObject());
+		publish(Constants.UPDATE, message);
+	}
+
+	/*
+	 * Seesaw
+	 */
+
+	/**
+	 * Check if the local player holds a lock on any seesaw.
+	 */
+	public boolean hasLockOnSeesaw() {
+		return seesawLock != 0;
+	}
+
+	/**
+	 * Check if the local player holds a lock on the given seesaw.
+	 * 
+	 * @param barcode
+	 *            The barcode at the player's side of the seesaw.
+	 */
+	public boolean hasLockOnSeesaw(int barcode) {
+		return seesawLock == barcode;
+	}
+
+	/**
+	 * Unlock a locked seesaw.
+	 * 
+	 * @throws IllegalStateException
+	 *             If the player has no lock on a seesaw.
+	 * @throws IOException
+	 */
+	public void unlockSeesaw() throws IllegalStateException, IOException {
+		if (!hasLockOnSeesaw()) {
+			throw new IllegalStateException("Cannot unlock seesaw when not holding any lock.");
+		}
+
+		// Remove lock
+		int unlockedBarcode = seesawLock;
+		seesawLock = 0;
+
+		// Publish unlock
+		Map<String, Object> message = newMessage();
+		message.put(Constants.PLAYER_NUMBER, getPlayerNumber());
+		message.put(Constants.SEESAW_BARCODE, unlockedBarcode);
+		publish(Constants.SEESAW_UNLOCK, message);
+	}
+
+	/**
+	 * Lock a seesaw.
+	 * 
+	 * <p>
+	 * A lock should be requested after the barcode in front of the seesaw has
+	 * been read and just before the player wants to traverse the seesaw.
+	 * </p>
+	 * 
+	 * <p>
+	 * The player is responsible for checking that:
+	 * <ul>
+	 * <li>the seesaw is open</li>
+	 * <li>no players are on the seesaw</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * <p>
+	 * The player must provide the barcode that has been read in front of the
+	 * seesaw. This is used by listening spectators to identify the seesaw and
+	 * the direction in which the seesaw will flip.
+	 * </p>
+	 * 
+	 * @param barcode
+	 *            The barcode at the player's side of the seesaw.
+	 * @throws IllegalStateException
+	 *             If not playing, or if still holding a lock on a different
+	 *             seesaw.
+	 * @throws IOException
+	 */
+	public void lockSeesaw(final int barcode) throws IllegalStateException, IOException {
+		if (!isPlaying()) {
+			throw new IllegalStateException("Cannot lock seesaw when not playing.");
+		}
+
+		// Ignore if lock already acquired
+		if (hasLockOnSeesaw(barcode)) {
+			return;
+		}
+
+		// Fail if player still holds a lock on another seesaw
+		if (hasLockOnSeesaw()) {
+			throw new IllegalStateException("Already holding a lock on a different seesaw.");
+		}
+
+		// Store lock
+		seesawLock = barcode;
+
+		// Publish lock
+		final Map<String, Object> message = newMessage();
+		message.put(Constants.PLAYER_NUMBER, getPlayerNumber());
+		message.put(Constants.SEESAW_BARCODE, barcode);
+		publish(Constants.SEESAW_LOCK, message);
 	}
 
 	/*
 	 * Object finding
 	 */
+
+	/**
+	 * Get the local player's object number to identify its object.
+	 * 
+	 * @throws IllegalStateException
+	 *             If not determined yet.
+	 */
+	public int getObjectNumber() throws IllegalStateException {
+		if (!hasObjectNumber()) {
+			throw new IllegalStateException("Object number not determined yet.");
+		}
+		return getPlayerNumber() - 1;
+	}
+
+	/**
+	 * Check if the object number has been determined.
+	 */
+	public boolean hasObjectNumber() {
+		return hasPlayerNumber();
+	}
 
 	/**
 	 * Check whether the local player has found their object.
@@ -904,8 +1052,8 @@ public class PlayerClient {
 
 		// Publish
 		Map<String, Object> message = newMessage();
-		message.put("playerNumber", getPlayerNumber());
-		publish("found", message);
+		message.put(Constants.PLAYER_NUMBER, getPlayerNumber());
+		publish(Constants.FOUND_OBJECT, message);
 	}
 
 	private void playerFoundObject(String playerID) {
@@ -954,11 +1102,11 @@ public class PlayerClient {
 		getLocalPlayer().setLastHeartbeat(timestamp);
 
 		// Publish
-		publish("heartbeat", null);
+		publish(Constants.HEARTBEAT, null);
 	}
 
 	private void heartbeatCheck() throws IOException {
-		final long limit = System.currentTimeMillis() - heartbeatExpiration;
+		final long limit = System.currentTimeMillis() - heartbeatLifetime;
 		// Clone for safe iteration
 		final PlayerState[] confirmed = players.getConfirmed().toArray(new PlayerState[0]);
 		// Check all confirmed players
@@ -977,10 +1125,10 @@ public class PlayerClient {
 
 		// Publish leave for player
 		Map<String, Object> message = newMessage();
-		message.put("playerID", player.getPlayerID());
-		message.put("clientID", player.getClientID());
-		message.put("reason", DisconnectReason.TIMEOUT.name());
-		publish("disconnect", message);
+		message.put(Constants.PLAYER_ID, player.getPlayerID());
+		message.put(Constants.CLIENT_ID, player.getClientID());
+		message.put(Constants.DISCONNECT_REASON, DisconnectReason.TIMEOUT.name());
+		publish(Constants.DISCONNECT, message);
 	}
 
 	private void heartbeatReceived(String playerID) {
@@ -1014,6 +1162,9 @@ public class PlayerClient {
 
 	/**
 	 * Get the local player's team number.
+	 * 
+	 * @throws IllegalStateException
+	 *             If not in any team yet.
 	 */
 	public int getTeamNumber() {
 		if (!hasTeamNumber()) {
@@ -1031,29 +1182,169 @@ public class PlayerClient {
 	}
 
 	/**
+	 * Get the player identifier of the team partner.
+	 * 
+	 * @throws IllegalStateException
+	 *             If not in any team yet, or if partner still unknown.
+	 */
+	public String getTeamPartner() {
+		if (!hasTeamNumber()) {
+			throw new IllegalStateException("Not in any team yet.");
+		}
+		if (!hasTeamPartner()) {
+			throw new IllegalStateException("Partner still unknown.");
+		}
+		return teamPartner;
+	}
+
+	/**
+	 * Check if the team partner is known yet.
+	 */
+	public boolean hasTeamPartner() {
+		return teamPartner != null;
+	}
+
+	/**
 	 * Join the given team.
 	 * 
 	 * @param teamNumber
 	 *            The team number.
 	 * @throws IllegalStateException
-	 *             If not playing.
+	 *             If not playing or already in a team.
 	 * @throws IOException
 	 */
-	public void joinTeam(int teamNumber) throws IOException {
+	public void joinTeam(int teamNumber) throws IllegalStateException, IOException {
 		if (!isPlaying()) {
 			throw new IllegalStateException("Cannot join team when not playing.");
 		}
-		// TODO Check whether already in the team channel.
+		if (hasTeamNumber()) {
+			throw new IllegalStateException("Already joined a team.");
+		}
 
 		// Set team number
 		getLocalPlayer().setTeamNumber(teamNumber);
+
+		// Start listening
+		setupTeam(getTeamNumber());
+
 		/*
 		 * TODO Publish team number for others to store it in case this player
 		 * loses their connection and rejoins.
 		 */
 
-		// Setup team
-		setupTeam(teamNumber);
+		// Ping for partner
+		new TeamPingRequester(channel, requestProvider).request(requestLifetime);
+	}
+
+	/**
+	 * Called when a ping was received.
+	 * 
+	 * @param playerID
+	 * @throws IOException
+	 */
+	private void teamPingReceived(String playerID, BasicProperties props) throws IOException {
+		// Store team partner
+		this.teamPartner = playerID;
+
+		// Reply with a pong
+		reply(props, newMessage());
+
+		// Start communicating
+		handler.teamConnected(playerID);
+	}
+
+	/**
+	 * Called when a pong was received.
+	 * 
+	 * @param playerID
+	 */
+	private void teamPongReceived(String playerID) {
+		// Store team partner
+		this.teamPartner = playerID;
+
+		// Start communicating
+		handler.teamConnected(playerID);
+	}
+
+	/**
+	 * Called when the ping expired.
+	 */
+	private void teamPingNoResponse() {
+		// Already listening
+	}
+
+	/**
+	 * Send maze tiles to the team partner.
+	 * 
+	 * @param tiles
+	 *            The tiles to send.
+	 * @throws IllegalStateException
+	 *             If not in any team yet, or if partner still unknown.
+	 * @throws IOException
+	 */
+	public void sendTiles(Collection<Tile> tiles) throws IOException {
+		if (!hasTeamNumber()) {
+			throw new IllegalStateException("Not in any team yet.");
+		}
+		if (!hasTeamPartner()) {
+			throw new IllegalStateException("Partner still unknown.");
+		}
+
+		// Build raw tiles list
+		List<List<Object>> rawTiles = new ArrayList<List<Object>>(tiles.size());
+		for (Tile tile : tiles) {
+			rawTiles.add(tile.write());
+		}
+
+		// Send tiles
+		Map<String, Object> message = newMessage();
+		message.put(Constants.TILES, rawTiles);
+		publish(toTeamTopic(Constants.TEAM_TILE), message);
+	}
+
+	/**
+	 * Send maze tiles to the team partner.
+	 * 
+	 * @param tiles
+	 *            The tiles to send.
+	 * @throws IllegalStateException
+	 *             If not in any team yet, or if partner still unknown.
+	 * @throws IOException
+	 * @see {@link #sendTiles(Collection)}
+	 */
+	public void sendTiles(Tile... tiles) throws IOException {
+		sendTiles(Arrays.asList(tiles));
+	}
+
+	/**
+	 * Called when tiles have been received.
+	 * 
+	 * @param message
+	 */
+	private void teamTilesReceived(Map<String, Object> message) {
+		@SuppressWarnings("unchecked")
+		List<List<Object>> rawTiles = (List<List<Object>>) message.get(Constants.TILES);
+		// Build tile objects
+		List<Tile> tiles = new ArrayList<Tile>(rawTiles.size());
+		for (List<Object> rawTile : rawTiles) {
+			tiles.add(Tile.read(rawTile));
+		}
+		// Call handler
+		handler.teamTilesReceived(tiles);
+	}
+
+	protected String toTeamTopic(String topic) {
+		if (!hasTeamNumber()) {
+			throw new IllegalStateException("Not in any team yet.");
+		}
+		return "team." + getTeamNumber() + "." + topic;
+	}
+
+	protected String fromTeamTopic(String teamTopic) {
+		if (!hasTeamNumber()) {
+			throw new IllegalStateException("Not in any team yet.");
+		}
+		return teamTopic.substring(toTeamTopic("").length());
 	}
 
 	/*
@@ -1097,7 +1388,7 @@ public class PlayerClient {
 
 	private void setupTeam(int teamNumber) throws IOException {
 		teamConsumer = new TeamConsumer(channel);
-		teamConsumer.bind(getGameID(), "team." + teamNumber + ".*");
+		teamConsumer.bind(getGameID(), toTeamTopic("*"));
 	}
 
 	private void shutdownTeam() throws IOException {
@@ -1122,25 +1413,26 @@ public class PlayerClient {
 
 	private void readGameState(Map<String, Object> message) {
 		// Game state (if valid)
-		String gameState = (String) message.get("gameState");
+		String gameState = (String) message.get(Constants.GAME_STATE);
 		if (gameState != null) {
 			setGameState(GameState.valueOf(gameState));
 		}
 
 		// Player numbers (if valid)
 		@SuppressWarnings("unchecked")
-		Map<String, Integer> playerNumbers = (Map<String, Integer>) message.get("playerNumbers");
+		Map<String, Integer> playerNumbers = (Map<String, Integer>) message.get(Constants.PLAYER_NUMBERS);
 		if (playerNumbers != null) {
 			replacePlayerNumbers(playerNumbers);
 		}
 
 		// Missing players (if valid)
 		@SuppressWarnings("unchecked")
-		Iterable<Map<String, Object>> missingPlayers = (Iterable<Map<String, Object>>) message.get("missingPlayers");
+		Iterable<Map<String, Object>> missingPlayers = (Iterable<Map<String, Object>>) message
+				.get(Constants.MISSING_PLAYERS);
 		if (missingPlayers != null) {
 			for (Map<String, Object> playerData : missingPlayers) {
 				// Create missing player
-				String playerID = (String) playerData.get("playerID");
+				String playerID = (String) playerData.get(Constants.PLAYER_ID);
 				PlayerState missingPlayer = new PlayerState(null, playerID);
 				missingPlayer.read(playerData);
 				// Store as missing player
@@ -1155,11 +1447,11 @@ public class PlayerClient {
 		Map<String, Object> state = new HashMap<String, Object>();
 		// Game state
 		if (isJoined()) {
-			state.put("gameState", getGameState().name());
+			state.put(Constants.GAME_STATE, getGameState().name());
 		}
 		// Player numbers
 		if (hasPlayerNumber()) {
-			state.put("playerNumbers", playerNumbers);
+			state.put(Constants.PLAYER_NUMBERS, playerNumbers);
 		}
 		// Missing players
 		Collection<PlayerState> missingPlayers = getMissingPlayers();
@@ -1168,7 +1460,7 @@ public class PlayerClient {
 			for (PlayerState missingPlayer : missingPlayers) {
 				out.add(missingPlayer.write());
 			}
-			state.put("missingPlayers", out);
+			state.put(Constants.MISSING_PLAYERS, out);
 		}
 		return state;
 	}
@@ -1178,7 +1470,7 @@ public class PlayerClient {
 	 */
 
 	protected void publish(String routingKey, Map<String, Object> message, BasicProperties props) throws IOException {
-		channel.basicPublish(getGameID(), routingKey, props, prepareMessage(message));
+		channel.basicPublish(getGameID(), routingKey, props, serializeToJSON(message));
 	}
 
 	protected void publish(String routingKey, Map<String, Object> message) throws IOException {
@@ -1187,7 +1479,7 @@ public class PlayerClient {
 
 	protected void reply(BasicProperties requestProps, Map<String, Object> message) throws IOException {
 		BasicProperties props = defaultProps().correlationId(requestProps.getCorrelationId()).build();
-		channel.basicPublish("", requestProps.getReplyTo(), props, prepareMessage(message));
+		channel.basicPublish("", requestProps.getReplyTo(), props, serializeToJSON(message));
 	}
 
 	private AMQP.BasicProperties.Builder defaultProps() {
@@ -1198,12 +1490,12 @@ public class PlayerClient {
 		Map<String, Object> message = new HashMap<String, Object>();
 
 		// Add player ID to message
-		message.put("playerID", getPlayerID());
+		message.put(Constants.PLAYER_ID, getPlayerID());
 
 		return message;
 	}
 
-	protected byte[] prepareMessage(Map<String, Object> message) {
+	protected byte[] serializeToJSON(Map<String, Object> message) {
 		// Default message
 		if (message == null) {
 			message = newMessage();
@@ -1216,10 +1508,9 @@ public class PlayerClient {
 	/**
 	 * Requests a join and handles the responses.
 	 */
-	private class JoinRequester extends Requester {
+	private class JoinRequester extends VoteRequester {
 
 		private final Callback<Void> callback;
-		private volatile boolean isDone = false;
 
 		public JoinRequester(Callback<Void> callback) throws IOException {
 			super(channel, requestProvider);
@@ -1227,68 +1518,50 @@ public class PlayerClient {
 		}
 
 		public void request(int timeout) throws IOException {
-			// Mark as working
-			isDone = false;
-
 			// Publish join with own player info
 			Map<String, Object> message = createMessage();
-			request(getGameID(), "join", prepareMessage(message), timeout);
+			request(getGameID(), Constants.JOIN, serializeToJSON(message), timeout);
 		}
 
 		@Override
-		public void handleResponse(Map<String, Object> message, BasicProperties props) {
-			// Ignore when done
-			if (isDone)
-				return;
+		protected int getRequiredVotes() {
+			// Short-circuit when game is full and all other players accepted
+			return nbPlayers - 1;
+		}
 
-			boolean result = (Boolean) message.get("result");
-			if (result) {
-				// Accepted by peer
-				String clientID = (String) message.get("clientID");
-				String playerID = (String) message.get("playerID");
-				boolean isReady = (Boolean) message.get("isReady");
-				boolean isJoined = (Boolean) message.get("isJoined");
+		@Override
+		protected void onAccepted(Map<String, Object> message) {
+			// Accepted by peer
+			String clientID = (String) message.get(Constants.CLIENT_ID);
+			String playerID = (String) message.get(Constants.PLAYER_ID);
+			boolean isReady = (Boolean) message.get(Constants.IS_READY);
+			boolean isJoined = (Boolean) message.get(Constants.IS_JOINED);
 
-				// Store player
-				PlayerState player;
-				if (isJoined) {
-					player = confirmPlayer(clientID, playerID, isReady);
-				} else {
-					player = votePlayer(clientID, playerID);
-				}
-				// Read player state
-				player.read(message);
-				// Read game state
-				readGameState(message);
-
-				if (isFull()) {
-					// All players responded
-					// Short-circuit timeout
-					success();
-				}
+			// Store player
+			PlayerState player;
+			if (isJoined) {
+				player = confirmPlayer(clientID, playerID, isReady);
 			} else {
-				// Rejected by peer
-				failure();
+				player = votePlayer(clientID, playerID);
 			}
+			// Read player state
+			player.read(message);
+			// Read game state
+			readGameState(message);
 		}
 
 		@Override
-		public void handleTimeout() {
-			if (!isDone) {
-				// No response, first player in game
-				// Set game state if not set yet
-				if (!isJoined()) {
-					setGameState(GameState.WAITING);
-				}
-				// Join was successful
-				success();
-			}
+		protected void onRejected(Map<String, Object> message) {
 		}
 
-		private void success() {
+		@Override
+		protected void onSuccess() {
+			// No response, first player in game
+			// Set game state if not set yet
+			if (!isJoined()) {
+				setGameState(GameState.WAITING);
+			}
 			try {
-				// Cancel request
-				cancel();
 				// Publish joined
 				publish("joined", createMessage());
 				// Handle join
@@ -1300,10 +1573,9 @@ public class PlayerClient {
 			}
 		}
 
-		private void failure() {
+		@Override
+		protected void onFailure() {
 			try {
-				// Cancel request
-				cancel();
 				// Disconnect
 				disconnect(DisconnectReason.REJECT);
 			} catch (IOException e) {
@@ -1314,17 +1586,16 @@ public class PlayerClient {
 			callback.onFailure(new Exception("Join request rejected"));
 		}
 
-		private void cancel() throws IOException {
-			// Mark as done
-			isDone = true;
-			// Cancel request
-			cancelRequest();
+		@Override
+		protected void handleTimeout() {
+			// Join was successful
+			success();
 		}
 
 		private Map<String, Object> createMessage() {
 			PlayerState player = getLocalPlayer();
 			Map<String, Object> message = newMessage();
-			message.put("clientID", player.getClientID());
+			message.put(Constants.CLIENT_ID, player.getClientID());
 			return message;
 		}
 
@@ -1342,26 +1613,26 @@ public class PlayerClient {
 		@Override
 		public void handleMessage(String topic, Map<String, Object> message, BasicProperties props) throws IOException {
 			// Read player info
-			String clientID = (String) message.get("clientID");
-			String playerID = (String) message.get("playerID");
+			String clientID = (String) message.get(Constants.CLIENT_ID);
+			String playerID = (String) message.get(Constants.PLAYER_ID);
 
 			// Ignore local messages
 			if (getClientID().equals(clientID))
 				return;
 
-			if (topic.equals("join")) {
+			if (topic.equals(Constants.JOIN)) {
 				// Player joining
 				playerJoining(clientID, playerID, props);
-			} else if (topic.equals("joined")) {
+			} else if (topic.equals(Constants.JOINED)) {
 				// Player joined
 				playerJoined(clientID, playerID);
-			} else if (topic.equals("disconnect")) {
+			} else if (topic.equals(Constants.DISCONNECT)) {
 				// Player disconnected
-				DisconnectReason reason = DisconnectReason.valueOf((String) message.get("reason"));
+				DisconnectReason reason = DisconnectReason.valueOf((String) message.get(Constants.DISCONNECT_REASON));
 				playerDisconnected(clientID, playerID, reason);
-			} else if (topic.equals("roll")) {
+			} else if (topic.equals(Constants.ROLL)) {
 				// Player rolled their number
-				int roll = (Integer) message.get("roll");
+				int roll = (Integer) message.get(Constants.ROLL_NUMBER);
 				rollReceived(playerID, roll);
 			}
 		}
@@ -1379,27 +1650,28 @@ public class PlayerClient {
 
 		@Override
 		public void handleMessage(String topic, Map<String, Object> message, BasicProperties props) throws IOException {
-			String playerID = (String) message.get("playerID");
-			if (topic.equals("ready")) {
+			String playerID = (String) message.get(Constants.PLAYER_ID);
+			if (topic.equals(Constants.READY)) {
 				// Player ready
-				boolean isReady = (Boolean) message.get("isReady");
+				boolean isReady = (Boolean) message.get(Constants.IS_READY);
 				playerReady(playerID, isReady);
-			} else if (topic.equals("start")) {
+			} else if (topic.equals(Constants.START)) {
 				// Game started
 				started();
-			} else if (topic.equals("stop")) {
+			} else if (topic.equals(Constants.STOP)) {
 				// Game stopped
 				stopped();
-			} else if (topic.equals("pause")) {
+			} else if (topic.equals(Constants.PAUSE)) {
 				// Game paused
 				paused();
-			} else if (topic.equals("found")) {
+			} else if (topic.equals(Constants.FOUND_OBJECT)) {
 				// Player found their object
 				playerFoundObject(playerID);
-			} else if (topic.equals("heartbeat")) {
+			} else if (topic.equals(Constants.HEARTBEAT)) {
 				// Heartbeat
 				heartbeatReceived(playerID);
 			}
+
 		}
 
 	}
@@ -1415,8 +1687,48 @@ public class PlayerClient {
 
 		@Override
 		public void handleMessage(String topic, Map<String, Object> message, BasicProperties props) throws IOException {
-			// TODO Auto-generated method stub
+			String playerID = (String) message.get(Constants.PLAYER_ID);
+			topic = fromTeamTopic(topic);
 
+			// Ignore local messages
+			if (getPlayerID().equals(playerID))
+				return;
+
+			if (topic.equals(Constants.TEAM_PING)) {
+				// Partner connected
+				teamPingReceived(playerID, props);
+			} else if (topic.equals(Constants.TEAM_TILE)) {
+				// Tiles received
+				teamTilesReceived(message);
+			}
+
+		}
+
+	}
+
+	private class TeamPingRequester extends Requester {
+
+		public TeamPingRequester(Channel channel, RequestProvider provider) throws IOException {
+			super(channel, provider);
+		}
+
+		public void request(int timeout) throws IOException {
+			// Publish ping
+			Map<String, Object> message = newMessage();
+			request(getGameID(), toTeamTopic(Constants.TEAM_PING), serializeToJSON(message), timeout);
+		}
+
+		@Override
+		protected void handleResponse(Map<String, Object> message, BasicProperties props) {
+			// Partner responded
+			String playerID = (String) message.get(Constants.PLAYER_ID);
+			teamPongReceived(playerID);
+		}
+
+		@Override
+		protected void handleTimeout() {
+			// Partner did not respond
+			teamPingNoResponse();
 		}
 
 	}

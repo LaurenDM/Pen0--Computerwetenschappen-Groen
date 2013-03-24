@@ -39,12 +39,13 @@ public class ContentPanel implements ActionListener {
     static JFrame calibrationFrame = new JFrame("P&O - Groen - Lightsensor Calibration");
     static JFrame sensorOrientationFrame = new JFrame("P&O - Groen - Ultrasonicsensor Orientation");
     static JFrame barcodeFrame = new JFrame("P&O - Groen - Set the barcode values");
+    static JFrame connectionFrame = new JFrame("P&O - Groen - Connection through HTTTP");
     private static ControllerPoller controllerPoller;
     private JPanel titlePanel, buttonPanel, debugPanel, bottomButtonPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
     private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, infraredLabel, lineLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, 
-    calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton,
+    calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, connectionButton,
     rotateLittleLeft,rotateLittleRight,startButton, barcodeButton, finishButton, resumeButton, resetButton,setBarcodeButton;
     private static JTextArea debugText;
     final JPanel totalGUI = new JPanel();
@@ -213,8 +214,8 @@ public class ContentPanel implements ActionListener {
         setBarcodeButton = new JButton("SET BARCODE VALUES");
         fixButtonLayout(buttonPanel, setBarcodeButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 6*allButtonHeight);
         
-        sensorButton = new JButton("DISABLE TURN ERROR");
-        fixButtonLayout(buttonPanel, sensorButton, wideButtonWidth, allButtonHeight, 0, 6*allButtonHeight);
+        connectionButton = new JButton("OPEN CONNECTION PANEL");
+        fixButtonLayout(buttonPanel, connectionButton, wideButtonWidth, allButtonHeight, 0, 6*allButtonHeight);
         
         startButton = new JButton("Start");
 //        fixButtonLayout(buttonPanel, startButton, 20, 150, 0, 0);
@@ -277,8 +278,13 @@ public class ContentPanel implements ActionListener {
         barcodeFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         barcodeFrame.setSize(400,210);
         
+      //Creating connection panel
+        ConnectionPanel connectionPanel = new ConnectionPanel(connectionFrame, controller);
+        connectionFrame.setContentPane(connectionPanel.getContentPanel());
+        connectionFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        connectionFrame.setSize(400,400);
         
-    	
+            	
 	    //We create a controllerPoller that monitors debug info.
 	    controllerPoller = new ControllerPoller(controller, this);
 	    //We start the controllerPoller
@@ -531,12 +537,8 @@ public class ContentPanel implements ActionListener {
         	controller.findBlackLineAndCreateBarcode();
         	buttonPanel.requestFocusInWindow();
         }
-        else if(e.getSource() == sensorButton){
-//        	actionLabel.setText("Showing raw distance data");
-//        	showRawData = true;
-//        	buttonPanel.requestFocusInWindow();
-        	actionLabel.setText("Disabled error margin on turning");
-        	controller.disableError();
+        else if(e.getSource() == connectionButton){
+        	connectionFrame.setVisible(true);
         	buttonPanel.requestFocusInWindow();
         }
         else if(e.getSource() == rotateLittleRight){
@@ -707,20 +709,20 @@ public class ContentPanel implements ActionListener {
 	}
 	
 	public void updateBalls(){
-//		System.out.println("updateBalls");
-		HashMap<Integer, RobotPilot> otherRobots = controller.getOtherRobots();
-	    Iterator<Entry<Integer, RobotPilot>> it = otherRobots.entrySet().iterator();
-		    while (it.hasNext()) {
-		        Map.Entry<Integer, RobotPilot> pairs = (Entry<Integer, RobotPilot>)it.next();
-//		        System.out.println(pairs.getKey() + " = " + pairs.getValue());
-		        Integer identifier = pairs.getKey();
-		        RobotPilot robot = pairs.getValue();
-		        if(!printedBalls.contains(identifier) && robot.hasBall()){
-		        	printedBalls.add(identifier);
-		        	writeToDebug("Robot "+identifier+" has found its ball");
-		        	System.out.println("FOUND BALL------------------------");
-		        }
-		    }
+////		System.out.println("updateBalls");
+//		HashMap<Integer, RobotPilot> otherRobots = controller.getOtherRobots();
+//	    Iterator<Entry<Integer, RobotPilot>> it = otherRobots.entrySet().iterator();
+//		    while (it.hasNext()) {
+//		        Map.Entry<Integer, RobotPilot> pairs = (Entry<Integer, RobotPilot>)it.next();
+////		        System.out.println(pairs.getKey() + " = " + pairs.getValue());
+//		        Integer identifier = pairs.getKey();
+//		        RobotPilot robot = pairs.getValue();
+//		        if(!printedBalls.contains(identifier) && robot.hasBall()){
+//		        	printedBalls.add(identifier);
+//		        	writeToDebug("Robot "+identifier+" has found its ball");
+//		        	System.out.println("FOUND BALL------------------------");
+//		        }
+//		    }
 		}
 	
 	

@@ -18,8 +18,16 @@ public class SeesawAction implements Action {
 
 	@Override
 	public void run(RobotPilot robot) {
+<<<<<<< HEAD
 		robot.getBoard().addFoundSeesaw(center, orientation, barcodeNb);
 		robot.addSeesaw();
+=======
+		Seesaw foundSeesaw = new Seesaw(center, orientation, barcodeNb);
+		robot.getBoard().addFoundSeesaw(foundSeesaw);
+		if(!foundSeesaw.isLocked()){
+			robot.driveOverSeeSawIfPossible();
+		}
+>>>>>>> 4d7a7a476273068dea7fe731e145f63eea576b48
 	}
 
 }

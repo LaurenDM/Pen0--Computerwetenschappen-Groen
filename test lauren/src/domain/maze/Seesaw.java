@@ -7,7 +7,9 @@ public class Seesaw extends MazeElement {
 	private Position middlePosition;
 	private final int EDGE = 80; 
 	private int barcodeNb;
+	private int otherBarcodeNb;
 	private final Orientation ORIENTATION;
+	private boolean locked;
 	
 	private int infrared; 
 	
@@ -16,17 +18,25 @@ public class Seesaw extends MazeElement {
 		this.barcodeNb= barcodeNb;
 		initialize();
 		this.ORIENTATION = orientation;
+		this.locked = false;
 	}
 	
 	public void initialize(){
 		if(barcodeNb % 4 == 3){
 			//eerste barcode van een paar --> open
 			infrared = 1;
+			otherBarcodeNb = barcodeNb +2;
 		}
 		else{
 			infrared = 0;
+			otherBarcodeNb = barcodeNb;
+			barcodeNb = otherBarcodeNb -2;
 		}
 	}
+	
+	//Uitleg infrared
+	// 		infrared = 1 als kant van barcodeNb= open
+	//		infrared = 0 als kant van otherBarcodeNb = open
 	
 
 	@Override
@@ -57,6 +67,10 @@ public class Seesaw extends MazeElement {
 		return ORIENTATION;
 	}
 	
+	public boolean hasBarcodeNb(int nb){
+		return ((barcodeNb == nb) || (otherBarcodeNb ==nb));
+	}
+	
 	public Position getInfaredPosition(){
 		return getInfrareds()[infrared];
 	}
@@ -72,6 +86,26 @@ public class Seesaw extends MazeElement {
 	
 	public void rollOver(){
 		setInfrared((this.infrared + 1)%2);
+	}
+	
+	public void rollOver(int nb){
+		// nb = barcodenb read by robot that drives over seesaw
+		if(nb == barcodeNb){
+			setInfrared(1);
+		}
+		else if(nb == otherBarcodeNb){
+			setInfrared(0);
+		}
+		locked = true;
+	}
+	
+	public void unLock(){
+		locked = false;
+	}
+	
+	public boolean isLocked(){
+		return this.locked;
+		//TODO: hiervan gebruik maken
 	}
 	
 	

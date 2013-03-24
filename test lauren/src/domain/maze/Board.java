@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+import domain.Position.InitialPosition;
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
 import domain.robots.RobotPilot;
@@ -21,6 +22,7 @@ public class Board {
 	private List<RobotPilot> otherRobots;
 	private HashMap<Position, Seesaw> seesaws;
 	private List<Seesaw> foundSeesaws;
+	private HashMap<Integer,InitialPosition> initialPositions;
 	
 	
 	public Board(){
@@ -31,7 +33,16 @@ public class Board {
 		balls = new ArrayList<Ball>();
 		seesaws = new HashMap<Position, Seesaw>();
 		foundSeesaws = new ArrayList<Seesaw>();
-		}
+		initialPositions = new HashMap<Integer,InitialPosition>();
+	}
+	
+	public void addInitialPosition(InitialPosition pos, int nb){
+		initialPositions.put(nb, pos);
+	}
+	
+	public InitialPosition getInitialPositionFromPlayer(int nb){
+		return initialPositions.get(nb);
+	}
 	
 	public synchronized void addWall(Wall wall){
 		walls.put(wall.getCenterPosition(),wall);
@@ -199,13 +210,9 @@ public class Board {
 		}
 	}
 	
-	public void addFoundSeesaw(Position position, Orientation orientation, int nb){
-		Seesaw foundSeesaw;
-		if(seesaws.get(position) == null){
-			foundSeesaw = new Seesaw(position, orientation, nb);
-		}
-		else {
-			foundSeesaw = seesaws.get(position);
+	public void addFoundSeesaw(Seesaw foundSeesaw){
+		if(seesaws.get(foundSeesaw.getCenterPosition()) != null){
+			foundSeesaw = seesaws.get(foundSeesaw.getCenterPosition());
 		}
 		foundSeesaws.add(foundSeesaw);
 	}
@@ -240,6 +247,22 @@ public class Board {
 	
 	public List<Seesaw> getFoundSeesaws(){
 		return foundSeesaws;
+	}
+	
+	public void rollSeeSawWithBarcode(int barcodenb){
+		for(Seesaw s : getSeesaws()){
+			if(s.hasBarcodeNb(barcodenb)){
+				s.rollOver(barcodenb);
+			}
+		}
+	}
+	
+	public void unlockSeesawWithBarcode(int barcodenb){
+		for(Seesaw s : getSeesaws()){
+			if(s.hasBarcodeNb(barcodenb)){
+				s.unLock();
+			}
+		}
 	}
 
 	
