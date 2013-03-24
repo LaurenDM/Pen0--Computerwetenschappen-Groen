@@ -1,14 +1,8 @@
 package groen.htttp;
 
 import gui.ContentPanel;
-
-import java.io.IOException;
 import java.util.List;
-
-import domain.robots.RobotPilot;
-
 import peno.htttp.DisconnectReason;
-import peno.htttp.PlayerClient;
 import peno.htttp.Tile;
 
 public class PlayerHandler implements peno.htttp.PlayerHandler {
@@ -74,7 +68,7 @@ public class PlayerHandler implements peno.htttp.PlayerHandler {
 	@Override
 	public void gameRolled(int playerNumber, int objectNumber) {
 		printMessage("ph.gameRolled: playerNumber:"+playerNumber+" objectNumber:"+objectNumber);
-		htttpImplementation.getController().setPlayerNb(playerNumber);
+		htttpImplementation.getController().setInitialPosition(playerNumber);
 		htttpImplementation.getController().setBallNumber(objectNumber);
 	}
 

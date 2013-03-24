@@ -1,5 +1,6 @@
 package domain.robots;
 
+import domain.Position.InitialPosition;
 import domain.Position.Position;
 import domain.maze.Ball;
 import domain.maze.Board;
@@ -251,6 +252,11 @@ public abstract class RobotPilot {
 	public abstract int getInfraredValue();
 
 	public abstract void turnUltrasonicSensorTo(int angle);
+	
+	public void setInitialPosition(int playernb){
+		InitialPosition pos = getBoard().getInitialPositionFromPlayer(playernb);
+		setPose(pos.getOrientation().getAngleToHorizontal(), (int) pos.getX(), (int) pos.getY());
+	}
 
 
 	

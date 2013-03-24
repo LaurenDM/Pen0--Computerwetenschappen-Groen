@@ -439,4 +439,8 @@ public class Controller {
 	public void setReady(boolean ready) {
 		htttpImplementation.setReady(ready);
 	}
+	
+	public void setInitialPosition(int playerNb){
+		currentRobot.setInitialPosition(playerNb);
+	}
 }
