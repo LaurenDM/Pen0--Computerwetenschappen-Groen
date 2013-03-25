@@ -71,13 +71,18 @@ public class MazeInterpreter {
 		}
 	}
 	
-	// tiles van links naar rechts, boven naar onder
-	public void readTiles(List<Tile> tiles){
-		for(Tile t : tiles){
-			String command = t.getToken();
-			// TODO
-		}
-	}
+//	// tiles van links naar rechts, boven naar onder
+//	public void readTiles(List<Tile> tiles){
+//		int width = 4; //TODO aanpassen aan echte dimensie!
+//		int counter = 0;
+//		for(Tile t : tiles){
+//			int XCoo = counter%width;
+//			int YCoo = counter/width;
+//			String command = t.getToken();
+//			readCommand(command,XCoo,YCoo);
+//			counter++;
+//		}
+//	}
 	
 	public void readCommand(String command, int XCoo, int YCoo){
 		YCoo = YCoo - firstLine;

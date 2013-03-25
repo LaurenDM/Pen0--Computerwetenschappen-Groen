@@ -11,6 +11,9 @@ public class Seesaw extends MazeElement {
 	private final Orientation ORIENTATION;
 	private boolean locked;
 	
+	// barcodeNb --->orientatie--> otherBarcodeNb 
+	// of otherBarcodeNb <--orientatie<-- barcodeNb
+	
 	private int infrared; 
 	
 	public Seesaw(Position middlePosition, Orientation orientation, int barcodeNb){
@@ -82,6 +85,8 @@ public class Seesaw extends MazeElement {
 	public Position[] getInfrareds(){
 		return new Position[]{getCenterPosition().getNewPosition(getOrientation().getAngleToHorizontal(), 20),
 				getCenterPosition().getNewPosition(getOrientation().getAngleToHorizontal(), -20)};
+		// index 0 geeft positie langs de voorkant (volgens orientatie)
+		// index 1 geeft positie langs de achterkant (volgens orientatie)
 	}
 	
 	public void rollOver(){
@@ -105,7 +110,6 @@ public class Seesaw extends MazeElement {
 	
 	public boolean isLocked(){
 		return this.locked;
-		//TODO: hiervan gebruik maken
 	}
 	
 	
