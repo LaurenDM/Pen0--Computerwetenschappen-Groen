@@ -45,7 +45,7 @@ public class Barcode extends MazeElement{
 		}
 		this.pos = pos;
 		this.orientation = orientation;
-//		action = getAction(decimal);
+//		action = getAction(decimal); // This is not needed here because the actions are only used for found barcodes
 		System.out.println("Barcode created with value "+this.bits[5]+this.bits[4]+this.bits[3]+this.bits[2]+this.bits[1]+this.bits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
 	}
 	
