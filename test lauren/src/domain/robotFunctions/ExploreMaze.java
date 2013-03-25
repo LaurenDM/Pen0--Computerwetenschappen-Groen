@@ -359,7 +359,7 @@ public class ExploreMaze{
 		if(maze.getCurrentNode().isAccessible()){
 			maze.move();
 			maze.move();
-			maze.move();
+			//maze.move();
 		}
 	}
 }

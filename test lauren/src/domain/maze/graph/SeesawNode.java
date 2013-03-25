@@ -18,6 +18,7 @@ public class SeesawNode extends TileNode {
 	public SeesawNode(TileNode currentNode, Orientation orientationToCurrentNode) {
 		super(currentNode, orientationToCurrentNode);
 		pairedSeesawNode = new SeesawNode(this, orientationToCurrentNode);
+		setNodeAt(orientationToCurrentNode.getBack(), getPairedNode());
 
 	}
 

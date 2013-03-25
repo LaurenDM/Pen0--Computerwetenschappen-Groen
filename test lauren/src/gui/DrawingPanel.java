@@ -198,6 +198,13 @@ public class DrawingPanel extends JPanel {
 		}
 	}
 	
+	public void drawInfraredPositions(){
+		List<Seesaw> seesaws = controller.getRobot().getBoard().getSeesaws();
+		for(Seesaw s : seesaws){
+			drawSeesawInfrared(s);
+		}
+	}
+	
 	public void drawFoundSeesaws(){
 		List<Seesaw> seesaws = controller.getRobot().getBoard().getFoundSeesaws();
 		for(Seesaw s : seesaws){
@@ -236,9 +243,11 @@ public class DrawingPanel extends JPanel {
 		
 		
 		totalGui.repaint();
-		
-		posX = (int) (seesaw.getInfaredPosition().getX() + OFFSET);
-		posY = (int) (seesaw.getInfaredPosition().getY() + OFFSET);
+	}
+	
+	public void drawSeesawInfrared(Seesaw seesaw){
+		int posX = (int) (seesaw.getInfaredPosition().getX() + OFFSET);
+		int posY = (int) (seesaw.getInfaredPosition().getY() + OFFSET);
 		g.setColor(Color.red);
 		g.drawOval(posX, posY, 5, 5);
 		g.fillOval( posX, posY, 5, 5);
