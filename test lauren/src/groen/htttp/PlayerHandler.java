@@ -54,7 +54,7 @@ public class PlayerHandler implements peno.htttp.PlayerHandler {
 	@Override
 	public void gameStarted() {
 		printMessage("ph.gameStarted, starting to send position");
-//		htttpImplementation.startSendingPositionsThread();
+		htttpImplementation.startSendingPositionsThread();
 		//TODO: verkenalgoritme starten, ik stel voor dit handmatig te doen
 		// waarom?
 	}
@@ -86,6 +86,18 @@ public class PlayerHandler implements peno.htttp.PlayerHandler {
 	private void printMessage(String message){
 		System.out.println(message);
 		ContentPanel.writeToDebug(message);
+	}
+
+	@Override
+	public void gameWon(int teamNumber) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void teamPosition(double x, double y, double angle) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

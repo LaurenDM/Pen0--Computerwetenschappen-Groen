@@ -54,5 +54,11 @@ public class GameHandler implements peno.htttp.GameHandler {
 		System.out.println(message);
 		ContentPanel.writeToDebug(message);
 	}
+
+	@Override
+	public void gameWon(int teamNumber) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

@@ -93,5 +93,11 @@ public class SpectatorHandler implements peno.htttp.SpectatorHandler {
 		System.out.println(message);
 		ContentPanel.writeToDebug(message);
 	}
+
+	@Override
+	public void gameWon(int teamNumber) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

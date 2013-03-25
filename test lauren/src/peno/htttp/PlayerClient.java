@@ -1201,7 +1201,7 @@ public class PlayerClient {
 	 * Check if the team partner is known yet.
 	 */
 	public boolean hasTeamPartner() {
-		return teamPartner != null;
+		return hasTeamNumber() && teamPartner != null;
 	}
 
 	/**
@@ -1345,6 +1345,38 @@ public class PlayerClient {
 			throw new IllegalStateException("Not in any team yet.");
 		}
 		return teamTopic.substring(toTeamTopic("").length());
+	}
+
+	/*
+	 * Winning
+	 */
+
+	/**
+	 * Win the game.
+	 * 
+	 * @throws IllegalStateException
+	 *             If not playing, if not in any team yet or if partner still
+	 *             unknown.
+	 * @throws IOException
+	 */
+	public void win() throws IllegalStateException, IOException {
+		if (!isPlaying()) {
+			throw new IllegalStateException("Cannot win when not playing.");
+		}
+		if (!hasTeamNumber()) {
+			throw new IllegalStateException("Cannot win when not in a team yet.");
+		}
+		if (!hasTeamPartner()) {
+			throw new IllegalStateException("Cannot win when partner still unknown.");
+		}
+
+		// Publish win
+		Map<String, Object> message = newMessage();
+		message.put(Constants.TEAM_NUMBER, getTeamNumber());
+		publish(Constants.WIN, message);
+
+		// Stop the game
+		stop();
 	}
 
 	/*
@@ -1670,6 +1702,14 @@ public class PlayerClient {
 			} else if (topic.equals(Constants.HEARTBEAT)) {
 				// Heartbeat
 				heartbeatReceived(playerID);
+			} else if (topic.equals(Constants.UPDATE)) {
+				if (hasTeamPartner() && getTeamPartner().equals(playerID)) {
+					// Partner updated their position
+					double x = ((Number) message.get(Constants.UPDATE_X)).doubleValue();
+					double y = ((Number) message.get(Constants.UPDATE_Y)).doubleValue();
+					double angle = ((Number) message.get(Constants.UPDATE_ANGLE)).doubleValue();
+					handler.teamPosition(x, y, angle);
+				}
 			}
 
 		}
