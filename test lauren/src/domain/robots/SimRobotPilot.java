@@ -280,7 +280,7 @@ public class SimRobotPilot extends RobotPilot {
 					BarcodeGenerator bg = new BarcodeGenerator(this);
 					try {
 						bg.generateBarcode();
-						move(-DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
+//						move(-DISTANCE_BETWEEN_SENSOR_AND_WHEELS); //Francis heeft deze code gecommente omdat die nergens nuttig voor lijkt te zijn en problemen veroorzaakt
 					} catch(IllegalArgumentException e){
 						ContentPanel.writeToDebug("Could not read barcode, trying again");
 						setMovingSpeed(moveSpeed);

@@ -1,4 +1,5 @@
 package domain.robotFunctions;
+import domain.maze.Orientation;
 import domain.robots.CannotMoveException;
 import domain.robots.RobotPilot;
 import domain.robots.SimRobotPilot;
@@ -86,10 +87,25 @@ public class Straightener {
 		//TODO needs to be looked at.
 		//straightenOnLine();
 		robot.stop();
+		if(!white){
+		robot.turn(-robot.getOrientation()+snapTo(90,0,robot.getOrientation()));
+		}
 		robot.setTurningSpeed(turnSpeed);
 //		robot.setTurningSpeed(5);
 	}
+	
+	private int snapTo(int mod, int offset, double notSnapped) {
+		boolean positive=notSnapped>=0;
+		notSnapped*=(positive?1:-1);
 
+		int intNotSnapped=(int) notSnapped-offset;
+
+		int snappedNumber=(intNotSnapped/mod)*mod;
+		if(intNotSnapped-snappedNumber> mod/2){
+			snappedNumber+=mod;
+		}
+		return (positive?1:-1)*(snappedNumber+offset);
+	}
 	/**
 	 * Assumes that the robot is turned towards the left!
 	 * The robot also doesn't return to it's original orientation afterwards!
