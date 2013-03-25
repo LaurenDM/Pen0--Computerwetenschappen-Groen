@@ -44,7 +44,12 @@ public class Controller {
 		currentRobot=simRobot;
 		connectNewSimRobot(0, new Position(20,20), 0);
 		
-		htttpImplementation = new HtttpImplementation(this);
+		try{
+			htttpImplementation = new HtttpImplementation(this);
+		} catch(Exception e){
+			System.out.println("Couldn't connect to the remote server.");
+		}
+		
 		
 //		ep = new EventPusher();
 //		Thread epThread = new Thread(){
