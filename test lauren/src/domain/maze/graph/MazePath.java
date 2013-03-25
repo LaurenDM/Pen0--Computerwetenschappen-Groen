@@ -155,7 +155,7 @@ public class MazePath implements Comparable<MazePath>, Iterable<TileNode> {
 	 */
 	public Collection<MazePath> expand() {
 		ArrayList<MazePath> returnList = new ArrayList<MazePath>();
-		for(Orientation o:Orientation.values()){
+		for(Orientation o : Orientation.values()){
 			MazeNode neighbourNode = getCurrentEndTile().getNodeAt(o);
 			//If the node is a TileNode or a SeesawNode that is not up it is accessible.
 			//A tileNode is automatically added, if we know the node at the other side of the seesaw the entire seesaw and that node are added.
@@ -164,9 +164,10 @@ public class MazePath implements Comparable<MazePath>, Iterable<TileNode> {
 				if(neighbourNode.getClass().equals(SeesawNode.class) && !((SeesawNode)neighbourNode).isUp()){
 					SeesawNode pairedNode = ((SeesawNode)neighbourNode).getPairedNode();
 					MazePath extendedSeesaw = new MazePath(pathToAdd,pairedNode);
-					TileNode nodeAt = (TileNode)pairedNode.getNodeAt(o);
-					if(nodeAt!=null){
-						returnList.add(new MazePath(extendedSeesaw,nodeAt));
+					MazeNode nodeAt = ((TileNode)pairedNode).getNodeAt(o);
+					if(nodeAt!=null && !nodeAt.getClass().equals(WallNode.class)){
+						TileNode nA = (TileNode)nodeAt;
+						returnList.add(new MazePath(extendedSeesaw,nA));
 					}
 				} else {
 					returnList.add(pathToAdd);
