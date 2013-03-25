@@ -120,7 +120,7 @@ public class MazeGraph {
 	 */
 	public void move(){
 		MazeNode nextNode = getCurrentNode().getNodeAt(getCurrentRobotOrientation());
-		if(nextNode != null && nextNode.getClass().equals(TileNode.class)){
+		if(nextNode != null && (nextNode.getClass().equals(TileNode.class) || nextNode.getClass().equals(SeesawNode.class))){
 			setCurrentNode((TileNode) nextNode);
 		} else {
 //			throw new RuntimeException("There is no node there or it's a WallNode.");
@@ -530,6 +530,12 @@ public class MazeGraph {
 		
 	}
 
+	/**
+	 * Sets the tile in front of the robot to a Seesaw tile, creating the node that should be there if it doesn't exist yet.
+	 * The SeesawNode connected to that node is/was automatically created upon construction of the first node.
+	 * Walls are placed to the sides of the SeesawNodes and an additional node is generated at the far side of the seesaw.
+	 * @param isUpAtThisSide
+	 */
 	public void setNextTileToSeesaw(boolean isUpAtThisSide) {
 		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())==null){
 			generateSeesawNodeAt(Orientation.NORTH); //This is a relative orientation. In this case it just means in front of the robot.
@@ -538,7 +544,12 @@ public class MazeGraph {
 			SeesawNode seesaw1 = (SeesawNode)getCurrentNode().getNodeAt(getCurrentRobotOrientation());
 			generateWallNodeAt(seesaw1, getCurrentRobotOrientation().getRelativeOrientation(Orientation.WEST));
 			generateWallNodeAt(seesaw1, getCurrentRobotOrientation().getRelativeOrientation(Orientation.EAST));
-			
+			generateWallNodeAt(seesaw1.getPairedNode(), getCurrentRobotOrientation().getRelativeOrientation(Orientation.WEST));
+			generateWallNodeAt(seesaw1.getPairedNode(), getCurrentRobotOrientation().getRelativeOrientation(Orientation.EAST));
+			generateTileNodeAt(seesaw1.getPairedNode(), getCurrentRobotOrientation());
+			generateWallNodeAt((TileNode)seesaw1.getPairedNode().getNodeAt(getCurrentRobotOrientation()), getCurrentRobotOrientation().getRelativeOrientation(Orientation.WEST));
+			generateWallNodeAt((TileNode)seesaw1.getPairedNode().getNodeAt(getCurrentRobotOrientation()), getCurrentRobotOrientation().getRelativeOrientation(Orientation.EAST));
+			System.out.println(seesaw1+","+seesaw1.getPairedNode());
 		} else {
 			ContentPanel.writeToDebug("Couldn't create a seesaw at the position in front of the robot.");
 		}

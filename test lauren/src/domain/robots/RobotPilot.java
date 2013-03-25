@@ -254,9 +254,19 @@ public abstract class RobotPilot {
 
 	public abstract void turnUltrasonicSensorTo(int angle);
 	
-	public void setInitialPosition(int playernb){
-		InitialPosition pos = getBoard().getInitialPositionFromPlayer(playernb);
-		setPose(pos.getOrientation().getAngleToHorizontal(), (int) pos.getX(), (int) pos.getY());
+	
+	InitialPosition initialPosition;
+	int playerNb;
+	public void setInitialPositionNumber(int playernb){
+		this.playerNb = playernb;
+//		System.out.println("Setting initial pos to:"+initialPosition.getX()+" y:"+initialPosition.getY());
+//		setPose(pos.getOrientation().getAngleToHorizontal(), (int) pos.getX(), (int) pos.getY());
+	}
+	
+	public void teleportToStartPosition(){
+		initialPosition = getBoard().getInitialPositionFromPlayer(playerNb);
+		System.out.println("Setting initial pos to:"+initialPosition.getX()+" y:"+initialPosition.getY());
+		setPose(initialPosition.getOrientation().getAngleToHorizontal(), (int) initialPosition.getX(), (int) initialPosition.getY());
 	}
 	
 }

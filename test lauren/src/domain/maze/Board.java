@@ -37,10 +37,18 @@ public class Board {
 	}
 	
 	public void addInitialPosition(InitialPosition pos, int nb){
+		System.out.println("init pos added: x:"+pos.getX()+" y:"+pos.getY()+" nb:"+nb);
 		initialPositions.put(nb, pos);
 	}
 	
 	public InitialPosition getInitialPositionFromPlayer(int nb){
+		System.out.println("-----------------");
+		System.out.println("inpos");
+		for(int i =0; i<4; i++){
+			if(initialPositions.get(i)!=null)
+			System.out.println(initialPositions.get(i));			
+		}
+		System.out.println("-----------------");
 		return initialPositions.get(nb);
 	}
 	
