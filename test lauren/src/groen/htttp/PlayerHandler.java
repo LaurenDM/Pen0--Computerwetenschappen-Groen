@@ -68,8 +68,8 @@ public class PlayerHandler implements peno.htttp.PlayerHandler {
 	@Override
 	public void gameRolled(int playerNumber, int objectNumber) {
 		printMessage("ph.gameRolled: playerNumber:"+playerNumber+" objectNumber:"+objectNumber);
-		htttpImplementation.getController().setInitialPosition(playerNumber);
-		htttpImplementation.getController().setBallNumber(objectNumber);
+//		htttpImplementation.getController().setInitialPosition(playerNumber);
+//		htttpImplementation.getController().setBallNumber(objectNumber);
 	}
 
 	@Override

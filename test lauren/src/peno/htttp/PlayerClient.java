@@ -1106,6 +1106,7 @@ public class PlayerClient {
 	}
 
 	private void heartbeatCheck() throws IOException {
+//		System.err.println("check hearty");
 		final long limit = System.currentTimeMillis() - heartbeatLifetime;
 		// Clone for safe iteration
 		final PlayerState[] confirmed = players.getConfirmed().toArray(new PlayerState[0]);
