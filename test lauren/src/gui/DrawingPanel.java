@@ -211,6 +211,8 @@ public class DrawingPanel extends JPanel {
 		int posY = (int) (seesaw.getCenterPosition().getY() + OFFSET);
 		
 		int xRange,yRange;
+		System.out.println("aaaaaaaaaaaaaaaaa"+seesaw);
+		System.out.println("bbbbbbbbbbbbbbbbb"+seesaw.getOrientation());
 		if(seesaw.getOrientation().equals(Orientation.EAST) || seesaw.getOrientation().equals(Orientation.WEST)){
 			xRange = 40; yRange = 20;
 		}

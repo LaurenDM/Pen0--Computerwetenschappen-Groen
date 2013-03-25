@@ -356,7 +356,7 @@ public class ContentPanel implements ActionListener {
 				drawingPanel.drawFoundBarcodes();
 				drawingPanel.drawLineToFinish();
 				drawingPanel.drawBalls();
-				drawingPanel.drawFoundSeesaws();
+//				drawingPanel.drawFoundSeesaws();
 				for(int i=0; i<collection.size(); i++){
 					if(i==0){drawingPanel.reDrawMyPolygon(collection.get(i), Color.BLACK);}
 					if(i==1){drawingPanel.reDrawMyPolygon(collection.get(i), Color.BLUE);}

@@ -445,7 +445,11 @@ public class Controller {
 		htttpImplementation.setReady(ready);
 	}
 	
-	public void setInitialPosition(int playerNb){
-		currentRobot.setInitialPosition(playerNb);
+	public void setInitialPositionNumber(int playerNb){
+		currentRobot.setInitialPositionNumber(playerNb);
+	}
+
+	public void teleport() {
+		currentRobot.teleportToStartPosition();
 	}
 }
