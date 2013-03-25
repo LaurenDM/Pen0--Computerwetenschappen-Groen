@@ -18,6 +18,7 @@ import domain.maze.Ball;
 import domain.maze.Board;
 import domain.maze.MazeInterpreter;
 import domain.maze.RandomMazeGenerator;
+import domain.maze.Seesaw;
 import domain.maze.barcodes.Barcode;
 import domain.robots.BTRobotPilot;
 import domain.robots.CannotMoveException;
@@ -451,5 +452,18 @@ public class Controller {
 
 	public void teleport() {
 		currentRobot.teleportToStartPosition();
+	}
+	
+	public void foundBall(){
+		htttpImplementation.foundBall();
+	}
+
+	public void mousePressed(int x, int y) {
+		List<Seesaw> seesaws = currentRobot.getBoard().getSeesaws();
+		for(Seesaw s: seesaws){
+			if(s.hasPosition(new Position(x, y))){
+			s.rollOver();
+			}
+		}
 	}
 }

@@ -113,6 +113,7 @@ public class Barcode extends MazeElement{
 		else if(isSeesawNumber(number)){
 
 			Position pos = getCenterPosition().getNewPosition(Orientation.getOrientation(robot.getOrientation()).getAngleToHorizontal(), 60);
+			
 			return new SeesawAction(number, pos, getOrientation());
 		}
 		else if(isCheckPointNumber(number)){

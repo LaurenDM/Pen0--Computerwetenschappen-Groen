@@ -37,7 +37,7 @@ public class SpectatorHandler implements peno.htttp.SpectatorHandler {
 	
 	@Override
 	public void playerFoundObject(String playerID, int playerNumber) {
-		printMessage("sh.playerFoundObj");
+		printMessage("sh.playerFoundObj: player "+playerID+" found its ball");
 		//moeten wij niets met doen
 	}
 	
@@ -74,7 +74,7 @@ public class SpectatorHandler implements peno.htttp.SpectatorHandler {
 			System.out.println("NEW ROBOT ADDED "+playerID);
 		}
 				
-		printMessage("sh.updatedPlayer ID: "+playerID+" no:"+playerNumber+" x:"+x+" y:"+y);
+//		printMessage("sh.updatedPlayer ID: "+playerID+" no:"+playerNumber+" x:"+x+" y:"+y);
 		RobotPilot robot = htttpImplementation.getController().getOtherRobots().get(playerID);
 		if(robot!=null){
 			robot.setPose(angle, (int) x, (int) y);

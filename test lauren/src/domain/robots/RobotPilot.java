@@ -1,9 +1,12 @@
 package domain.robots;
 
+import java.util.List;
+
 import domain.Position.InitialPosition;
 import domain.Position.Position;
 import domain.maze.Ball;
 import domain.maze.Board;
+import domain.maze.Seesaw;
 import domain.maze.Wall;
 import domain.maze.graph.MazePath;
 import domain.polygons.RobotPolygon;
@@ -230,12 +233,18 @@ public abstract class RobotPilot {
 		return teamNumber;
 	}
 		
-	public void addSeesaw(){
+	public void addSeesaw(Position center){
 		boolean open = detectInfrared();
 		getMaze().setNextTileToSeesaw(open);
 		if(!open){
 			driveOverSeeSaw();
 			getMaze().driveOverSeesaw();
+			List<Seesaw> seesaws = getBoard().getSeesaws();
+			for(Seesaw s: seesaws){
+				if(s.hasPosition(center)){
+				s.rollOver();
+				}
+			}
 		}
 		else{
 			//Normally nothing...
