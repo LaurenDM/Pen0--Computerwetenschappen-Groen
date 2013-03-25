@@ -8,7 +8,7 @@ import domain.robots.SimRobotPilot;
  * @author Joren
  */
 public class Straightener {
-	private static final int DISTANCE_BETWEEN_SENSOR_AND_WHEELS = 8;
+	private static final int DISTANCE_BETWEEN_SENSOR_AND_WHEELS =9;
 	//The robot that needs to be straightened
 	private RobotPilot robot;
 
@@ -24,30 +24,32 @@ public class Straightener {
 	 * Position the robot perpendicular to a straight line using the light sensor.
 	 * This method assumes that the robot's light sensor is already at a white line.
 	 */
-	public void straighten(){
-		straighten(0);
+	public void straighten(boolean white){
+		straighten(0, white);
 
 	}
 	
-	public void findWhiteLine(){
+	public void findLine(boolean white){
 		boolean detected = false;
 		boolean lastDetection = false;
 		try {
-			robot.forward();
+			if(white){
+			robot.forward();}
+			else{
+				robot.backward();
+			}
 		} catch (CannotMoveException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		while(!detected){
-			if(robot.detectWhiteLine() && lastDetection){
-				detected = true;
+			if((white&&robot.detectWhiteLine())||(!white&&robot.detectBlackLine()) ){
 				lastDetection = true;
-			}
-			else if(robot.detectWhiteLine()) {
-				lastDetection = true;
-			}
+				if(lastDetection){
+					detected=true;
+					}
+				}
 			else{
-				detected = false;
 				lastDetection = false;
 			}
 		}
@@ -60,7 +62,7 @@ public class Straightener {
 		}
 	}
 	
-	private void turnUntil(boolean detect, boolean left, int wantedDetections) {
+	private void turnUntil(boolean white, boolean detect, boolean left, int wantedDetections) {
 		double turnSpeed = robot.getTurningSpeed();
 		robot.setTurningSpeed(1);
 		if(robot.getClass() == SimRobotPilot.class){
@@ -74,7 +76,7 @@ public class Straightener {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			if(robot.detectWhiteLine()){
+			if((white&&robot.detectWhiteLine())||(!white&&robot.detectBlackLine())){
 				consecutiveDetections++;
 
 			} else {
@@ -92,7 +94,7 @@ public class Straightener {
 	 * Assumes that the robot is turned towards the left!
 	 * The robot also doesn't return to it's original orientation afterwards!
 	 */
-	private void straightenOnLine(){
+	public void straightenOnLine(){
 		robot.turnSensorForward();
 		double dist = robot.readUltrasonicValue() % 40;
 		if(dist < 18 || dist > 22){
@@ -104,41 +106,42 @@ public class Straightener {
 		}
 	}
 
-	public void straighten(int angleCorrection) {
+	public void straighten(int angleCorrection, boolean white) {
 		boolean left = true;
 		boolean detect = true;
 		boolean wood = false;
 		boolean turnDirection;
 		double turnSpeed = robot.getTurningSpeed();
 		double moveSpeed = robot.getMovingSpeed();
-		findWhiteLine();
+		findLine(white);
 		try {
 			robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 		} catch (CannotMoveException e) {
-			turnDirection = getTurnDirection();
-			try {
-				robot.move(-((double)DISTANCE_BETWEEN_SENSOR_AND_WHEELS)*1.1);
-				//Nu staat de robot zeker terug achter de witte lijn.
-			} catch (CannotMoveException e1) {
-				//Should be impossible
-			}
-			if(turnDirection){
-				//links draaien
-				robot.turn(-20);
-			}
-			else { //rechts
-				robot.turn(20);
-			}
-			robot.findWhiteLine();
-			try { 
-				robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
-			}
-			catch (CannotMoveException e1) {
-				e.printStackTrace();
-			}
+//			turnDirection = getTurnDirection();
+//			try {
+//				robot.move(-((double)DISTANCE_BETWEEN_SENSOR_AND_WHEELS)*1.1);
+//				//Nu staat de robot zeker terug achter de witte lijn.
+//			} catch (CannotMoveException e1) {
+//				//Should be impossible
+//			}
+//			if(turnDirection){
+//				//links draaien
+//				robot.turn(-20);
+//			}
+//			else { //rechts
+//				robot.turn(20);
+//			}
+//			robot.findWhiteLine();
+//			try { 
+//				robot.move(DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
+//			}
+//			catch (CannotMoveException e1) {
+//				e.printStackTrace();
+//			}
+			e.printStackTrace();
 		}
 		turnDirection = getTurnDirection();
-		turnUntil(detect, turnDirection, 3);
+		turnUntil(white,detect, turnDirection, 3);
 		//Now the robot is aligned with the line
 		int turnAmount = 90;
 		turnAmount = (90-angleCorrection)*(turnDirection?1:-1);
@@ -149,6 +152,11 @@ public class Straightener {
 		robot.turn(turnAmount);
 		
 		//robot.setPose(0,20,0);
+	}
+
+	private void findBlackline() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	// Methode geeft true indien left

@@ -123,7 +123,7 @@ public class MazeGraph {
 		if(nextNode != null && nextNode.getClass().equals(TileNode.class)){
 			setCurrentNode((TileNode) nextNode);
 		} else {
-			throw new RuntimeException("There is no node there or it's a WallNode.");
+//			throw new RuntimeException("There is no node there or it's a WallNode.");
 		}
 	}
 	

@@ -151,7 +151,8 @@ public abstract class RobotPilot {
 	public abstract void turnSensorForward();
 	
 	public abstract boolean detectWhiteLine();
-	
+	public abstract void blackStraighten();
+
 	public abstract void straighten();
 	//Makes the robot make an arc of the specified angle. This method does not return immediately.
 	public abstract void steer(double angle);
@@ -242,7 +243,7 @@ public abstract class RobotPilot {
 	}
 
 	public  boolean detectInfrared(){
-		return getInfraredValue()>100; //TODO infrarood francis
+		return getInfraredValue()>60; //TODO infrarood francis
 	};
 
 

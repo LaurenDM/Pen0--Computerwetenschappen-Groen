@@ -508,6 +508,11 @@ public class BTRobotPilot extends RobotPilot  {
 	public void turnUltrasonicSensorTo(int angle) {
 		btComm.sendCommand(CMD.TURNSENSORTO,angle);
 	}
+
+	@Override
+	public void blackStraighten() {
+		// TODO Auto-generated method stub
+	}
 	
 
 }

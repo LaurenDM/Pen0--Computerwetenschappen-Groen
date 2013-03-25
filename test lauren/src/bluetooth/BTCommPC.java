@@ -160,7 +160,7 @@ public class BTCommPC  implements SpecialReplyCode {
 					return null;
 				}
 
-			}
+			}//TODO tot hier mss wegdoen
 
 			if (!sendingIsPossible()) {
 				if (command == CMD.GETPOSE || command == CMD.GETSENSORVALUES) {
@@ -203,13 +203,14 @@ public class BTCommPC  implements SpecialReplyCode {
 					throw new BluetoothStateException();
 				}
 			}
+			
 			int[] returnReply = new int[0];
 			int k = 2;
 			int numberOfSpecialReplies = 0;
 			if (reply != null && reply.length > 0 && reply[0] > 0) {
 				numberOfSpecialReplies = reply[0] - 1;
 
-				// reply[1] should containt the first ReplyLenght, and only the
+				// reply[1] should contain the first ReplyLenght, and only the
 				// first reply is an answer to this sendCommand call, the others
 				// are special replies
 				returnReply = new int[reply[1]];
