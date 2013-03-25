@@ -54,7 +54,8 @@ public class MazeInterpreter {
 	
 	public void readline(String strLine, int numberOfLine){
 		if((strLine.startsWith("DeadEnd") || strLine.startsWith("Corner")
-		|| strLine.startsWith("Straight") || strLine.startsWith("T.") || strLine.startsWith("SeeSaw"))){
+		|| strLine.startsWith("Straight") || strLine.startsWith("T.") || strLine.startsWith("Seesaw")
+		|| strLine.startsWith("Closed") || strLine.startsWith("Cross"))){
 			if(firstLine==-1){
 				firstLine = numberOfLine; 
 			}
@@ -100,7 +101,7 @@ public class MazeInterpreter {
 		else if(commandSplit[0].equals("Straight")){
 			createStraight(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
 		}
-		else if(commandSplit[0].equals("SeeSaw")){
+		else if(commandSplit[0].equals("Seesaw")){
 			createSeesaw(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
 		}
 		else if(commandSplit[0].equals("Closed")){
