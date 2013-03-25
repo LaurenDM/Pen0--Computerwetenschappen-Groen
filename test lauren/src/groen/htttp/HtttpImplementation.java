@@ -4,6 +4,9 @@ import gui.ContentPanel;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import peno.htttp.Callback;
 import peno.htttp.PlayerClient;
@@ -116,29 +119,28 @@ public class HtttpImplementation {
 		return spectatorClient;
 	}
 	
-	public void updateOtherPlayers(String newPlayerPlayerID){
-		System.out.println("updating other players");
-		Set<String> players = playerClient.getPlayers();
-		for(String player: players){
-			if(!player.equals(playerClient.getPlayerID())){
-			if(controller.getOtherRobots().containsKey(player)){
-				System.out.println("-----------Already contains key: "+player);
-			}
-			else{
-				//aangezien er volgens mij geen manier is om de beginpositie op te vragen zet ik hem op 20,20
-				controller.connectExternalSimRobot(0, new Position(20,20), player);
-				System.out.println("-----------Toegevoegd: "+player);
-			}
-			}
-		}
-	}
+//	public void updateOtherPlayers(String newPlayerPlayerID){
+//		System.out.println("updating other players");
+//		Set<String> players = playerClient.getPlayers();
+//		for(String player: players){
+//			if(!player.equals(playerClient.getPlayerID())){
+//			if(controller.getOtherRobots().containsKey(player)){
+//				System.out.println("-----------Already contains key: "+player);
+//			}
+//			else{
+//				//aangezien er volgens mij geen manier is om de beginpositie op te vragen zet ik hem op 20,20
+//				controller.connectExternalSimRobot(0, new Position(20,20), player);
+//				System.out.println("-----------Toegevoegd: "+player);
+//			}
+//			}
+//		}
+//	}
 	
 	private void sendPositions(){
 		PlayerClient playerClient = getPlayerClient();
 		RobotPilot robot = getController().getRobot();
 		try {
 			playerClient.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation());
-//			System.out.println("Updated pos to "+robot.getPosition().getX()+" "+robot.getPosition().getY());
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -147,32 +149,31 @@ public class HtttpImplementation {
 	}
 	
 	public void startSendingPositionsThread(){
-//		PlayerClient playerClient = getPlayerClient();
-//		RobotPilot robot = getController().getRobot();
-//		try {
-//			playerClient.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation());
-//		} catch (IllegalStateException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		} catch (IOException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
+		
+		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+		executor.scheduleAtFixedRate(new Runnable() {
 
-		Thread posThread = new Thread(){
-		    @Override
-			public void run(){
-		    	while (true) {
-					sendPositions();
-					try {
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						break;
-					}
-		    }
-		  };
-		};
-		posThread.run();
+			@Override
+			public void run() {
+				sendPositions();
+			}
+			
+		}, 0, 5, TimeUnit.SECONDS);
+
+//		Thread posThread = new Thread() {
+//		    @Override
+//			public void run(){
+//		    	while (true) {
+//					sendPositions();
+//					try {
+//						Thread.sleep(5000);
+//					} catch (InterruptedException e) {
+//						break;
+//					}
+//		    }
+//		  };
+//		};
+//		posThread.run();
 	}
 
 }

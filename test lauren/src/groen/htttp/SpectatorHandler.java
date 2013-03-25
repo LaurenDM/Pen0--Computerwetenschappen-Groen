@@ -1,5 +1,8 @@
 package groen.htttp;
 
+import java.util.HashMap;
+
+import domain.Position.Position;
 import domain.maze.Board;
 import domain.robots.RobotPilot;
 import gui.ContentPanel;
@@ -29,7 +32,7 @@ public class SpectatorHandler implements peno.htttp.SpectatorHandler {
 	@Override
 	public void playerJoined(String playerID) {
 		printMessage("sh.playerJoined");
-		htttpImplementation.updateOtherPlayers(playerID);
+//		htttpImplementation.updateOtherPlayers(playerID);
 	}
 	
 	@Override
@@ -64,6 +67,13 @@ public class SpectatorHandler implements peno.htttp.SpectatorHandler {
 	
 	@Override
 	public void playerUpdate(String playerID, int playerNumber, double x, double y, double angle, boolean foundObject) {
+		HashMap<String, RobotPilot> otherRobots = htttpImplementation.getController().getOtherRobots();
+		if(!otherRobots.containsKey(playerID) && !htttpImplementation.getPlayerClient().getPlayerID().equals(playerID)){
+			//ID not yet in system and not your own ID
+			htttpImplementation.getController().connectExternalSimRobot(angle, new Position(x,y), playerID);
+			System.out.println("NEW ROBOT ADDED "+playerID);
+		}
+				
 		printMessage("sh.updatedPlayer ID: "+playerID+" no:"+playerNumber+" x:"+x+" y:"+y);
 		RobotPilot robot = htttpImplementation.getController().getOtherRobots().get(playerID);
 		if(robot!=null){
