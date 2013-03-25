@@ -54,7 +54,8 @@ public class MazeInterpreter {
 	
 	public void readline(String strLine, int numberOfLine){
 		if((strLine.startsWith("DeadEnd") || strLine.startsWith("Corner")
-		|| strLine.startsWith("Straight") || strLine.startsWith("T.") || strLine.startsWith("SeeSaw"))){
+		|| strLine.startsWith("Straight") || strLine.startsWith("T.") || strLine.startsWith("Seesaw")
+		|| strLine.startsWith("Closed") || strLine.startsWith("Cross"))){
 			if(firstLine==-1){
 				firstLine = numberOfLine; 
 			}
@@ -176,6 +177,9 @@ public class MazeInterpreter {
 
 
 	public void createDeadEnd(int XCoo, int YCoo, Orientation orientation){
+		if(XCoo == 0 && YCoo == 6){
+			int a =0;
+		}
 		Position pos = new Position(XCoo, YCoo);
 		switch (orientation) {
         case NORTH: 
