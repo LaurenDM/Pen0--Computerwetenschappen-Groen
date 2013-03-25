@@ -101,7 +101,7 @@ public class MazeInterpreter {
 		else if(commandSplit[0].equals("Straight")){
 			createStraight(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
 		}
-		else if(commandSplit[0].equals("SeeSaw")){
+		else if(commandSplit[0].equals("Seesaw")){
 			Position pos = new Position((XCoo*40)+20,(YCoo*40)+20);
 			if(!board.hasSeesawAt(pos)){
 				int foundBarcodeNumber=0;
