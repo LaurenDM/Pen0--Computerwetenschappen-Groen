@@ -14,6 +14,7 @@ public class SeesawAction implements Action {
 	public SeesawAction(int barcodeNb, Position center, Orientation orientation){
 		this.barcodeNb = barcodeNb;
 		this.center = center;
+		this.orientation=orientation;
 	}
 
 	@Override

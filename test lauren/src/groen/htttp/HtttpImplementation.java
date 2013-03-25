@@ -45,12 +45,12 @@ public class HtttpImplementation {
 		// Comment the section below depending on your connection
 		
 		// SSH
-	    factory.setHost("localhost");
-	    factory.setPort(8888);
+//	    factory.setHost("localhost");
+//	    factory.setPort(8888);
 	    
 //	    //CAMPUSNET
-//	    factory.setHost("leuven.cs.kotnet.kuleuven.be");
-//	    factory.setPort(5672);
+	    factory.setHost("leuven.cs.kotnet.kuleuven.be");
+	    factory.setPort(5672);
 	    
 	    //*******************************************************
 	    	    

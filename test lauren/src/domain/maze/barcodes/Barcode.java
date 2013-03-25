@@ -1,5 +1,6 @@
 package domain.maze.barcodes;
 
+import java.awt.Robot;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,19 +10,20 @@ import domain.maze.Orientation;
 import domain.robots.RobotPilot;
 
 public class Barcode extends MazeElement{
-
+	
 	private Action action;
 	private Position pos; //centre of barcode ( == centre of square; ex "20,20", always multiple of 20)
 	private Orientation orientation;
 	private int[] bits;
 	private List<Integer> legalInts = new ArrayList<Integer>();
 	private boolean printed;
-	
-	public Barcode(int[] bits, Position pos, double angle){
+	private RobotPilot robot=null;
+	public Barcode(int[] bits, Position pos, double angle, RobotPilot robot){
 		fillLegals();
 		if(bits.length != 6){
 			throw new IllegalArgumentException();
 		}
+		this.robot=robot;
 		this.bits = bits;
 		this.pos = pos;
 		this.orientation = Orientation.getOrientation(angle);
@@ -43,7 +45,7 @@ public class Barcode extends MazeElement{
 		}
 		this.pos = pos;
 		this.orientation = orientation;
-		action = getAction(decimal);
+//		action = getAction(decimal);
 		System.out.println("Barcode created with value "+this.bits[5]+this.bits[4]+this.bits[3]+this.bits[2]+this.bits[1]+this.bits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
 	}
 	
@@ -109,7 +111,8 @@ public class Barcode extends MazeElement{
 			return new DoNothingAction();
 		}
 		else if(isSeesawNumber(number)){
-			Position pos = getCenterPosition().getNewPosition(getOrientation().getAngleToHorizontal(), 60);
+
+			Position pos = getCenterPosition().getNewPosition(Orientation.getOrientation(robot.getOrientation()).getAngleToHorizontal(), 60);
 			return new SeesawAction(number, pos, getOrientation());
 		}
 		else if(isCheckPointNumber(number)){
