@@ -116,6 +116,9 @@ public class MazeInterpreter {
 				char[] args = commandSplit[2].toCharArray();
 				createInitialPosition(XCoo,YCoo,String.valueOf(args[2]),Integer.parseInt(String.valueOf(args[1])));
 			}
+			else {
+				createBarcode(commandSplit[2], XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
+			}
 		}
 	}
 	
