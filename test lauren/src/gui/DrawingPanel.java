@@ -231,6 +231,16 @@ public class DrawingPanel extends JPanel {
 		}
 		g.drawPolygon(pol);
 		g.fillPolygon(pol);
+		
+		
+		totalGui.repaint();
+		
+		posX = (int) (seesaw.getInfaredPosition().getX() + OFFSET);
+		posY = (int) (seesaw.getInfaredPosition().getY() + OFFSET);
+		g.setColor(Color.red);
+		g.drawOval(posX, posY, 5, 5);
+		g.fillOval( posX, posY, 5, 5);
+		
 		totalGui.repaint();
 	}
 	

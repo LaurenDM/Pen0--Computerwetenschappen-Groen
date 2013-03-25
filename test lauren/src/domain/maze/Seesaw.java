@@ -27,19 +27,19 @@ public class Seesaw extends MazeElement {
 	public void initialize(){
 		if(barcodeNb % 4 == 3){
 			//eerste barcode van een paar --> open
-			infrared = 1;
+			infrared = 0;
 			otherBarcodeNb = barcodeNb +2;
 		}
 		else{
-			infrared = 0;
+			infrared = 1;
 			otherBarcodeNb = barcodeNb;
 			barcodeNb = otherBarcodeNb -2;
 		}
 	}
 	
 	//Uitleg infrared
-	// 		infrared = 1 als kant van barcodeNb= open
-	//		infrared = 0 als kant van otherBarcodeNb = open
+	// 		infrared = 0 als kant van barcodeNb= open
+	//		infrared = 1 als kant van otherBarcodeNb = open
 	
 
 	@Override
@@ -96,10 +96,10 @@ public class Seesaw extends MazeElement {
 	public void rollOver(int nb){
 		// nb = barcodenb read by robot that drives over seesaw
 		if(nb == barcodeNb){
-			setInfrared(1);
+			setInfrared(0);
 		}
 		else if(nb == otherBarcodeNb){
-			setInfrared(0);
+			setInfrared(1);
 		}
 		locked = true;
 	}
