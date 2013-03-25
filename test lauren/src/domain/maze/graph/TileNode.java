@@ -135,7 +135,7 @@ public class TileNode extends MazeNode {
 	}
 	
 	public boolean isAccessible() {
-		return this.isAccessible();
+		return true;
 	}
 	
 }

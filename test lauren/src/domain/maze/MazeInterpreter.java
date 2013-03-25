@@ -101,7 +101,36 @@ public class MazeInterpreter {
 			createStraight(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
 		}
 		else if(commandSplit[0].equals("SeeSaw")){
-			createSeesaw(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
+			Position pos = new Position((XCoo*40)+20,(YCoo*40)+20);
+			if(!board.hasSeesawAt(pos)){
+				int foundBarcodeNumber=0;
+				boolean found = false;
+				int dx = -1;
+				int dy = -1;
+				while(!found && dx<=1){
+					while(!found && dy<=1){
+						int x = ((XCoo+dx)*40)+20;
+						int y = ((YCoo+dy)*40)+20;
+						if(barcodePositions.containsKey(new Position(x,y))){
+							foundBarcodeNumber=barcodePositions.get(new Position(x,y));
+							found=true;
+						}
+						dy++;
+					}
+					dx++;
+				}
+				Orientation seesawOrientation = Orientation.getOrientation(commandSplit[1]);
+				int modFour = foundBarcodeNumber%4;
+				if(modFour==0){
+					System.out.println("Invalid seesaw, barcode number not found.");
+					seesawOrientation = null;
+				} else if(modFour==3) {
+					//Orientation is correct.
+				} else if(modFour==1) {
+					seesawOrientation = seesawOrientation.getBack();
+				}
+				createSeesaw(XCoo, YCoo, seesawOrientation);
+			}
 		}
 		else if(commandSplit[0].equals("Closed")){
 			createClosed(XCoo, YCoo);
@@ -306,10 +335,9 @@ public class MazeInterpreter {
 		int MAZECONSTANT = MazeElement.getMazeConstant();
 		xCoo = xCoo*MAZECONSTANT+(MAZECONSTANT/2);
 		yCoo = yCoo*MAZECONSTANT+(MAZECONSTANT/2);
-		orientation = orientation.getBack();
 		Position pos = new Position(xCoo,yCoo);
-		Position pos2 = pos.getNewPosition(orientation.getAngleToHorizontal(), -MAZECONSTANT);
-		pos = pos.getNewPosition(orientation.getAngleToHorizontal(), MAZECONSTANT/2);
+		Position pos2 = pos.getNewPosition(orientation.getAngleToHorizontal(), MAZECONSTANT);
+		pos = pos.getNewPosition(orientation.getAngleToHorizontal(), -MAZECONSTANT/2);
 		if(!board.hasSeesawAt(pos)){
 			int dec = barcodePositions.get(pos2);
 			board.putSeesaw(new Seesaw(pos, orientation,dec));
