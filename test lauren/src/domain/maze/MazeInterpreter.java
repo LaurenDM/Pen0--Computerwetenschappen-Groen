@@ -148,6 +148,9 @@ public class MazeInterpreter {
 
 
 	public void createDeadEnd(int XCoo, int YCoo, Orientation orientation){
+		if(XCoo == 0 && YCoo == 6){
+			int a =0;
+		}
 		Position pos = new Position(XCoo, YCoo);
 		switch (orientation) {
         case NORTH: 

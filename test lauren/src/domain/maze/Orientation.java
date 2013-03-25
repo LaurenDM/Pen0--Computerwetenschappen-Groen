@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Orientations represent the 4 different orientations a robot can have in the maze.
  */
 public enum Orientation {
-	NORTH(0,1,90,0), EAST(1,0,0,1), SOUTH(0,-1,-90,2), WEST(-1,0,180,-1);
+	NORTH(0,1,-90,0), EAST(1,0,0,1), SOUTH(0,-1, 90,2), WEST(-1,0,180,-1);
 
 	public static Orientation getOrientation(String str){
 		if(str.equals("N")){
