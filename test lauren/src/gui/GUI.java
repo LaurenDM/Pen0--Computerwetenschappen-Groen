@@ -16,7 +16,6 @@ public class GUI{
     //Definition of creation of new GUI.
     //Defines both variable and content panel.
     public static void createAndShowGUI() {
-
         JFrame.setDefaultLookAndFeelDecorated(true);
         contentPanel = new ContentPanel();
         frame.setContentPane(contentPanel.getTotalGuiPanel());
@@ -24,6 +23,7 @@ public class GUI{
         frame.setSize(totalXDimensions, totalYDimensions);
         frame.setVisible(true);
         contentPanel.setFocusButtons();
+
     }
     
     

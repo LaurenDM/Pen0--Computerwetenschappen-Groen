@@ -45,12 +45,12 @@ public class HtttpImplementation {
 		// Comment the section below depending on your connection
 		
 		// SSH
-//	    factory.setHost("localhost");
-//	    factory.setPort(8888);
+	    factory.setHost("localhost");
+	    factory.setPort(8888);
 	    
 //	    //CAMPUSNET
-	    factory.setHost("leuven.cs.kotnet.kuleuven.be");
-	    factory.setPort(5672);
+//	    factory.setHost("leuven.cs.kotnet.kuleuven.be");
+//	    factory.setPort(5672);
 	    
 	    //*******************************************************
 	    	    
@@ -158,7 +158,7 @@ public class HtttpImplementation {
 				sendPositions();
 			}
 			
-		}, 0, 5, TimeUnit.SECONDS);
+		}, 0, 200, TimeUnit.MILLISECONDS);
 
 //		Thread posThread = new Thread() {
 //		    @Override
@@ -174,6 +174,18 @@ public class HtttpImplementation {
 //		  };
 //		};
 //		posThread.run();
+	}
+	
+	public void foundBall(){
+		try {
+			playerClient.foundObject();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
