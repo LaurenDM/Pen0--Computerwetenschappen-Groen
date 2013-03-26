@@ -455,7 +455,12 @@ public class Controller {
 	}
 	
 	public void foundBall(){
-		htttpImplementation.foundBall();
+		try{
+		htttpImplementation.foundBall();}
+		catch(NullPointerException e){
+			System.out.println("Controller.foundBall()");
+			
+		}
 	}
 
 	public void mousePressed(int x, int y) {
