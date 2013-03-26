@@ -27,16 +27,16 @@ public class SeesawAction implements Action {
 		if(!foundSeesaw.isLocked()){
 			robot.handleSeesaw(barcodeNb);
 		}
-		Position barcodePos = center.getNewPosition(orientation.getAngleToHorizontal(), 60);
-		int newBarcodeNb;
-		if(barcodeNb % 4 == 3){
-			newBarcodeNb = foundSeesaw.getOtherBarcodeNb();
-		}
-		else{
-			newBarcodeNb = foundSeesaw.getBarcodeNb();
-		}
-		Barcode barcode = new Barcode(newBarcodeNb, barcodePos, orientation);
-		robot.getBoard().addFoundBarcode(barcode);	
+//		Position barcodePos = center.getNewPosition(orientation.getAngleToHorizontal(), 60);
+//		int newBarcodeNb;
+//		if(barcodeNb % 4 == 3){
+//			newBarcodeNb = foundSeesaw.getOtherBarcodeNb();
+//		}
+//		else{
+//			newBarcodeNb = foundSeesaw.getBarcodeNb();
+//		}
+//		Barcode barcode = new Barcode(newBarcodeNb, barcodePos, orientation);
+//		robot.getBoard().addFoundBarcode(barcode);	
 	}
 
 }

@@ -343,9 +343,9 @@ public class Barcode extends MazeElement{
 	public boolean hasPosition(Position position) {
 		return containsPosition(position);
 	}
-	
-
 	public boolean sameFirstReadOrientation() {
-		return Orientation.snapAngle(90,0,robot.getOrientation())==firstReadRobotOrientation;
+			int orientationNow=Orientation.snapAngle(90,0,robot.getOrientation());
+
+		return orientationNow==firstReadRobotOrientation;
 	}
 }

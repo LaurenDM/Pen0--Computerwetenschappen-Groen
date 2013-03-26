@@ -10,6 +10,8 @@ public class Seesaw extends MazeElement {
 	private final int EDGE = 80; 
 	private int barcodeNb;
 	private int otherBarcodeNb;
+	
+	private final int makeBarcode;
 	private final Orientation ORIENTATION;
 	private boolean locked;
 	
@@ -19,6 +21,7 @@ public class Seesaw extends MazeElement {
 	private int infrared; 
 	
 	public Seesaw(Position middlePosition, Orientation orientation, int barcodeNb){
+		this.makeBarcode=barcodeNb;
 		this.middlePosition = middlePosition;
 		this.barcodeNb= barcodeNb;
 		initialize();
@@ -127,9 +130,12 @@ public class Seesaw extends MazeElement {
 		if(oppositeOrientation>180){
 			oppositeOrientation-=360;
 		}
-		return new Barcode(otherBarcodeNb, middlePosition.getNewPosition(Orientation.snapAngle(90,0,robotOrientation), 60), Orientation.getOrientation(robotOrientation), oppositeOrientation, action);
+		return new Barcode(getOtherBarcode(), middlePosition.getNewPosition(Orientation.snapAngle(90,0,robotOrientation), 60), Orientation.getOrientation(robotOrientation), oppositeOrientation, action);
 	}
-	
+	int getOtherBarcode(){
+		return otherBarcodeNb==makeBarcode?barcodeNb:otherBarcodeNb;
+		
+	}
 	
 	
 
