@@ -286,9 +286,9 @@ public class SimRobotPilot extends RobotPilot {
 				if(isScanningBarcode){
 					int i=0; //for debug
 				}
-				if (!isScanningBarcode) {
+				if (!isScanningBarcode  &&!ignoreBarcodes&&!isDrivingOverSeesaw) {
 
-					// &&!ignoreBarcodes&&!isDrivingOverSeesaw
+					
 
 					Position pos = getPosition().getNewPosition(
 							getOrientation(),
