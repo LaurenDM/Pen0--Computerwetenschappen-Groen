@@ -11,6 +11,7 @@ import domain.maze.Orientation;
 import domain.maze.Wall;
 import domain.maze.graph.MazeGraph;
 import domain.maze.graph.MazePath;
+import domain.maze.graph.SeesawNode;
 import domain.robots.CannotMoveException;
 import domain.robots.RobotPilot;
 
@@ -145,13 +146,13 @@ public class ExploreMaze{
 		double orientation = robot.getOrientation();
 		double[] x = new double[2];
 		double[] y = new double[2];
-		x[0] = robot.getPosition().getX()+Math.cos(orientation/180*Math.PI)*MAZECONSTANT;
-		y[0] = robot.getPosition().getY()+Math.sin(orientation/180*Math.PI)*MAZECONSTANT;
-		x[1] = robot.getPosition().getX()+Math.cos(orientation/180*Math.PI)*2*MAZECONSTANT;
-		y[1] = robot.getPosition().getY()+Math.sin(orientation/180*Math.PI)*2*MAZECONSTANT;
+		x[0] = robot.getPosition().getNewPosition(orientation, MAZECONSTANT).getX();
+		y[0] = robot.getPosition().getNewPosition(orientation, MAZECONSTANT).getY();
+		x[1] = robot.getPosition().getNewPosition(orientation, MAZECONSTANT*2).getX();
+		y[1] = robot.getPosition().getNewPosition(orientation, MAZECONSTANT*2).getY();
 		for(int i=0; i==1; i++){
 			for(Direction d : Direction.values()){
-				if(!d.equals(Direction.BACKWARD)&&!d.equals(Direction.FORWARD)){
+				if(d.equals(Direction.LEFT)||d.equals(Direction.RIGHT)){
 					calculateWall(x[i], y[i], orientation, d);
 				}
 			}
@@ -356,10 +357,12 @@ public class ExploreMaze{
 	}
 
 	public void driveOverSeesaw() {
-		if(maze.getCurrentNode().isAccessible()){
+		if(maze.getCurrentNode().getNodeAt(maze.getCurrentRobotOrientation()).isAccessible()){
 			maze.move();
 			maze.move();
-			//maze.move();
+			maze.move();
+			((SeesawNode)maze.getCurrentNode().getNodeAt(maze.getCurrentRobotOrientation().getBack())).setUp(false);
+			System.out.println("The node after the seesaw is "+maze.getCurrentNode());
 		}
 	}
 }

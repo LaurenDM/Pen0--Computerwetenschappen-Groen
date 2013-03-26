@@ -30,6 +30,11 @@ public class WallNode extends MazeNode {
 	public String toShortString() {
 		return "Wall";
 	}
+
+	@Override
+	public boolean isAccessible() {
+		return false;
+	}
 	
 	
 }

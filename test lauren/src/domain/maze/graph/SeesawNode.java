@@ -19,7 +19,6 @@ public class SeesawNode extends TileNode {
 		super(currentNode, orientationToCurrentNode);
 		pairedSeesawNode = new SeesawNode(this, orientationToCurrentNode);
 		setNodeAt(orientationToCurrentNode.getBack(), getPairedNode());
-
 	}
 
 	/**
@@ -77,6 +76,15 @@ public class SeesawNode extends TileNode {
 	
 	public SeesawNode getPairedNode(){
 		return pairedSeesawNode;
+	}
+	
+	@Override
+	public void setNodeAt(Orientation orientation, MazeNode mazeNode){
+		if(getNodeAt(orientation)!=null && getNodeAt(orientation).getClass().equals(WallNode.class)){
+			//Do nothing, because walls can't be removed once set
+		} else {
+			super.setNodeAt(orientation, mazeNode);
+		}
 	}
 
 }

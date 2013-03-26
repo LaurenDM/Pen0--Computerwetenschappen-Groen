@@ -138,6 +138,9 @@ public class MazeGraph {
 	 * @return
 	 */
 	public Orientation getNextMoveOrientation(){
+		if(getCurrentNode().getClass().equals(SeesawNode.class)){
+			return Orientation.NORTH;
+		}
 		ArrayList<TileNode> unexpanded = new ArrayList<TileNode>();
 		for(TileNode node : tileNodes){
 			if(!node.isFullyExpanded()){
@@ -274,7 +277,6 @@ public class MazeGraph {
 	}
 	
 	private void generateSeesawNodeAt(Orientation orientation) {
-		//TODO test if this works!!!
 		Orientation absoluteOrientation = getCurrentRobotOrientation().getRelativeOrientation(orientation);
 		Orientation orientationToCurrent = absoluteOrientation.getBack();
 		SeesawNode newNode = new SeesawNode(getCurrentNode(),orientationToCurrent);
@@ -302,6 +304,7 @@ public class MazeGraph {
 		if(!thisNodeAlreadyExists){
 			getCurrentNode().setNodeAt(absoluteOrientation, newNode);
 			tileNodes.add(newNode);
+			tileNodes.add(newNode.getPairedNode());
 		}
 	}
 
@@ -437,7 +440,6 @@ public class MazeGraph {
 		SortedPathSet searchSet = new SortedPathSet(new MazePath(startNode,getCurrentRobotOrientation(),finishNode));
 		while(!searchSet.isEmpty() && !searchSet.firstPathReachesGoal()){
 			searchSet.expand();
-			//System.out.println("Expansion number "+e+" current queue: "+(searchSet.isEmpty()?"none":searchSet.toString()));
 		}
 		if(searchSet.isEmpty()){
 			System.out.println("No path found...");
