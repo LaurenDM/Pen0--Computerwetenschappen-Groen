@@ -180,10 +180,36 @@ public class HtttpImplementation {
 		try {
 			playerClient.foundObject();
 		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
+			//  Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			//  Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	//TODO: lock en unlock aanroepen als we over wip rijden
+	
+	public void lockSeesaw(int barcodeNb){
+		try {
+			playerClient.lockSeesaw(barcodeNb);
+		} catch (IllegalStateException e) {
+			//  Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			//  Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void unlockSeesaw(){
+		try {
+			playerClient.unlockSeesaw();
+		} catch (IllegalStateException e) {
+			//  Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			//  Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

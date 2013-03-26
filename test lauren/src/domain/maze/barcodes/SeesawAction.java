@@ -1,6 +1,5 @@
 package domain.maze.barcodes;
 
-import java.util.List;
 
 import domain.Position.Position;
 import domain.maze.Orientation;
@@ -35,8 +34,7 @@ public class SeesawAction implements Action {
 			newBarcodeNb = foundSeesaw.getBarcodeNb();
 		}
 		Barcode barcode = new Barcode(newBarcodeNb, barcodePos, orientation);
-		robot.getBoard().addFoundBarcode(barcode);
-		
+		robot.getBoard().addFoundBarcode(barcode);	
 	}
 
 }
