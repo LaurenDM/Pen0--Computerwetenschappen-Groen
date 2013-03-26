@@ -281,9 +281,7 @@ public class SimRobotPilot extends RobotPilot {
 		double moveSpeed = getMovingSpeed();
 		while (running && !Thread.interrupted()) {
 			double currDistance = getPosition().getDistance(pos1);
-//			System.out.println("blacklinecheck " + getPosition().getX()+" "+ getPosition().getY()+" ");
 			if (detectBlackLine()) {
-//				System.out.println("blacklinedetected");
 
 				if(isScanningBarcode){
 					int i=0; //for debug
@@ -296,6 +294,8 @@ public class SimRobotPilot extends RobotPilot {
 							getOrientation(),
 							DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 					if (!getBoard().detectBarcodeAt(pos)) {
+						System.out.println("blacklinedetected but already barcode");
+
 						isScanningBarcode = true;
 						BarcodeGenerator bg = new BarcodeGenerator(this);
 						try {
@@ -324,6 +324,7 @@ public class SimRobotPilot extends RobotPilot {
 							stop();
 							getBoard().getBarcodeAt(pos).runAction(this);
 						} else {
+
 							int i = 0;// For debug
 						}
 					}

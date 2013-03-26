@@ -22,7 +22,7 @@ public class SeesawAction implements Action {
 	public void run(RobotPilot robot) {
 		Seesaw foundSeesaw = new Seesaw(center, orientation, barcodeNb);
 		foundSeesaw = robot.getBoard().addFoundSeesaw(foundSeesaw);
-		robot.getBoard().addFoundBarcode(foundSeesaw.getBarcode((int) robot.getOrientation(), this));
+		robot.getBoard().addFoundBarcode(foundSeesaw.getBarcode((int) robot.getOrientation(), this, robot));
 
 		if(!foundSeesaw.isLocked()){
 			robot.handleSeesaw(barcodeNb);
