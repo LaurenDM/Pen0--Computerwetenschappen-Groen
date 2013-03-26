@@ -10,12 +10,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import peno.htttp.Tile;
 
 import domain.Position.InitialPosition;
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
-import domain.maze.barcodes.SeesawAction;
 
 public class MazeInterpreter {
 	
