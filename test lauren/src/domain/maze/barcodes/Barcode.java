@@ -18,6 +18,7 @@ public class Barcode extends MazeElement{
 	private List<Integer> legalInts = new ArrayList<Integer>();
 	private boolean printed;
 	private RobotPilot robot=null;
+	private int decimal;
 	public Barcode(int[] bits, Position pos, double angle, RobotPilot robot){
 		fillLegals();
 		if(bits.length != 6){
@@ -27,7 +28,7 @@ public class Barcode extends MazeElement{
 		this.bits = bits;
 		this.pos = pos;
 		this.orientation = Orientation.getOrientation(angle);
-		int decimal = getDecimal(bits);
+		decimal = getDecimal(bits);
 		if(!legalInts.contains(decimal)){
 			mirrorBits();
 			decimal = getDecimal(this.bits);
@@ -111,9 +112,7 @@ public class Barcode extends MazeElement{
 			return new DoNothingAction();
 		}
 		else if(isSeesawNumber(number)){
-
 			Position pos = getCenterPosition().getNewPosition(Orientation.getOrientation(robot.getOrientation()).getAngleToHorizontal(), 60);
-			
 			return new SeesawAction(number, pos, getOrientation());
 		}
 		else if(isCheckPointNumber(number)){
@@ -130,6 +129,9 @@ public class Barcode extends MazeElement{
 	
 	public void runAction(RobotPilot robot){
 		if(action != null){
+			if(isSeesawNumber(decimal)){
+				robot.getBoard().removeFoundBarcode(this);
+			}
 			action.run(robot);
 		}
 	}

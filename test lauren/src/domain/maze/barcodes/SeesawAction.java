@@ -23,7 +23,8 @@ public class SeesawAction implements Action {
 	public void run(RobotPilot robot) {
 		Seesaw foundSeesaw = new Seesaw(center, orientation, barcodeNb);
 		robot.getBoard().addFoundSeesaw(foundSeesaw);
-		robot.addSeesaw(center);
+		robot.handleSeesaw(foundSeesaw);
+		
 		//TODO Francis S2D2 zorgen dat barcode toegevoegd word op einde
 		
 	}

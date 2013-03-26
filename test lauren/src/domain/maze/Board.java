@@ -87,6 +87,9 @@ public class Board {
 	public synchronized void addFoundBarcode(Barcode barcode){
 		foundBarcodes.add(barcode);
 	}
+	public synchronized void removeFoundBarcode(Barcode barcode){
+		foundBarcodes.remove(barcode);
+	}
 	public synchronized void addSimulatedBarcode(Barcode barcode){
 		simulatedBarcodes.add(barcode);
 	}

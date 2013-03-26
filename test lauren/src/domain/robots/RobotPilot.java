@@ -233,18 +233,13 @@ public abstract class RobotPilot {
 		return teamNumber;
 	}
 		
-	public void addSeesaw(Position center){
+	public void handleSeesaw(Seesaw seesaw){
 		boolean open = detectInfrared();
 		getMaze().setNextTileToSeesaw(open);
 		if(!open){
 			driveOverSeeSaw();
 			getMaze().driveOverSeesaw();
-			List<Seesaw> seesaws = getBoard().getSeesaws();
-			for(Seesaw s: seesaws){
-				if(s.hasPosition(center)){
-				s.rollOver();
-				}
-			}
+			seesaw.rollOver();
 		}
 		else{
 			//Normally nothing...
