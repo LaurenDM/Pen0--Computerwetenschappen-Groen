@@ -294,7 +294,6 @@ public class SimRobotPilot extends RobotPilot {
 							getOrientation(),
 							DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 					if (!getBoard().detectBarcodeAt(pos)) {
-						System.out.println("blacklinedetected but already barcode");
 
 						isScanningBarcode = true;
 						BarcodeGenerator bg = new BarcodeGenerator(this);
