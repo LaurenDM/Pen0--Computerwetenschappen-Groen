@@ -3,6 +3,7 @@ package domain.maze;
 import domain.Position.Position;
 import domain.maze.barcodes.Action;
 import domain.maze.barcodes.Barcode;
+import domain.robots.RobotPilot;
 
 public class Seesaw extends MazeElement {
 	
@@ -10,6 +11,8 @@ public class Seesaw extends MazeElement {
 	private final int EDGE = 80; 
 	private int barcodeNb;
 	private int otherBarcodeNb;
+	
+	private final int makeBarcode;
 	private final Orientation ORIENTATION;
 	private boolean locked;
 	
@@ -19,6 +22,7 @@ public class Seesaw extends MazeElement {
 	private int infrared; 
 	
 	public Seesaw(Position middlePosition, Orientation orientation, int barcodeNb){
+		this.makeBarcode=barcodeNb;
 		this.middlePosition = middlePosition;
 		this.barcodeNb= barcodeNb;
 		initialize();
@@ -122,14 +126,17 @@ public class Seesaw extends MazeElement {
 		return this.locked;
 	}
 
-	public Barcode getBarcode(int robotOrientation, Action action) {
+	public Barcode getBarcode(int robotOrientation, Action action,RobotPilot robot) {
 		int oppositeOrientation=robotOrientation+180;
 		if(oppositeOrientation>180){
 			oppositeOrientation-=360;
 		}
-		return new Barcode(otherBarcodeNb, middlePosition.getNewPosition(Orientation.snapAngle(90,0,robotOrientation), 60), Orientation.getOrientation(robotOrientation), oppositeOrientation, action);
+		return new Barcode(getOtherBarcode(), middlePosition.getNewPosition(Orientation.snapAngle(90,0,robotOrientation), 60), Orientation.getOrientation(robotOrientation), oppositeOrientation, action, robot);
 	}
-	
+	int getOtherBarcode(){
+		return otherBarcodeNb==makeBarcode?barcodeNb:otherBarcodeNb;
+		
+	}
 	
 	
 

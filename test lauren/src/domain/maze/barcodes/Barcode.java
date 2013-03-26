@@ -20,9 +20,11 @@ public class Barcode extends MazeElement{
 	private RobotPilot robot=null;
 	private int decimal;
 	private final int firstReadRobotOrientation;
-	public Barcode(int decimal, Position pos, Orientation orientation, int firstReadRobotOrientation, Action action){
+	public Barcode(int decimal, Position pos, Orientation orientation, int firstReadRobotOrientation, Action action, RobotPilot robot){
 		fillLegals();
+		this.robot=robot;
 		bits = getBinary(decimal);
+		this.decimal=decimal;
 		if(!legalInts.contains(decimal)){
 			mirrorBits();
 			decimal = getDecimal(this.bits);
@@ -53,7 +55,7 @@ public class Barcode extends MazeElement{
 	}
 	
 	public Barcode(int decimal, Position pos, Orientation orientation){
-		this( decimal,  pos,  orientation, 999, null);
+		this( decimal,  pos,  orientation, 999, null, null);
 	}
 	
 	public Barcode(int decimal, Position pos, double angle){
@@ -343,9 +345,9 @@ public class Barcode extends MazeElement{
 	public boolean hasPosition(Position position) {
 		return containsPosition(position);
 	}
-	
-
 	public boolean sameFirstReadOrientation() {
-		return Orientation.snapAngle(90,0,robot.getOrientation())==firstReadRobotOrientation;
+			int orientationNow=Orientation.snapAngle(90,0,robot.getOrientation());
+
+		return orientationNow==firstReadRobotOrientation;
 	}
 }

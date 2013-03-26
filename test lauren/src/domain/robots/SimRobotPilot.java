@@ -244,7 +244,9 @@ public class SimRobotPilot extends RobotPilot {
 	public synchronized void move(double wantedDistance) throws CannotMoveException {
 		move(wantedDistance,false);
 	}
-	public synchronized void move(double wantedDistance, boolean ignoreBarcodes) throws CannotMoveException {
+
+	public synchronized void move(double wantedDistance, boolean ignoreBarcodes)
+			throws CannotMoveException {
 		if (wantedDistance > 0)
 			setMovement(MoveType.FORWARD);
 		else if (wantedDistance < 0)
@@ -252,18 +254,19 @@ public class SimRobotPilot extends RobotPilot {
 		Position pos1 = getPosition().clone();
 		boolean running = true;
 		if (wantedDistance > 0) {
-			if(wantedDistance <1){
+			if (wantedDistance < 1) {
 				this.getPosition().move(getOrientation(), wantedDistance);
 				try {
-					//deze gaf altijd 1 waardoor robot over barcode vloog (de 50 was 1)
+					// deze gaf altijd 1 waardoor robot over barcode vloog (de
+					// 50 was 1)
 					double offset = 50;
-					if(getMovingSpeed()>getDefaultMovingSpeed()){
+					if (getMovingSpeed() > getDefaultMovingSpeed()) {
 						offset = 25;
-					}
-					else if(getMovingSpeed()<getDefaultMovingSpeed()){
+					} else if (getMovingSpeed() < getDefaultMovingSpeed()) {
 						offset = 75;
 					}
-					Thread.sleep(Double.valueOf(wantedDistance/getMovingSpeed()).intValue()+50);
+					Thread.sleep(Double.valueOf(
+							wantedDistance / getMovingSpeed()).intValue() + 50);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -276,39 +279,58 @@ public class SimRobotPilot extends RobotPilot {
 		}
 		double turnSpeed = getTurningSpeed();
 		double moveSpeed = getMovingSpeed();
-		while(running && !Thread.interrupted()){
-			double currDistance=getPosition().getDistance(pos1);
-			if(detectBlackLine() && !isScanningBarcode&&!ignoreBarcodes&&!isDrivingOverSeesaw){
-				Position pos = getPosition().getNewPosition(getOrientation(), DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
-				if(!getBoard().detectBarcodeAt(pos)){
-					isScanningBarcode = true;
-					BarcodeGenerator bg = new BarcodeGenerator(this);
-					try {
-						bg.generateBarcode();
-//						move(-DISTANCE_BETWEEN_SENSOR_AND_WHEELS); //Francis heeft deze code gecommente omdat die nergens nuttig voor lijkt te zijn en problemen veroorzaakt
-					} catch(IllegalArgumentException e){
-						ContentPanel.writeToDebug("Could not read barcode, trying again");
-						setMovingSpeed(moveSpeed);
-						setTurningSpeed(turnSpeed);
-						move(-40);
-						//turn(180);
-						findWhiteLine();
-						straighten();
-						//turn(180);
-						isScanningBarcode = false;
-					}
-					
-				} else if (getBoard().getBarcodeAt(pos).isSeesawBC()) {
-					
-					if (getBoard().getBarcodeAt(pos).sameFirstReadOrientation()) {
-						stop();
-						getBoard().getBarcodeAt(pos).runAction(this);
-					} else {
-						int i=0;//For debug
-					}
+		while (running && !Thread.interrupted()) {
+			double currDistance = getPosition().getDistance(pos1);
+			if (detectBlackLine()) {
+
+				if(isScanningBarcode){
+					int i=0; //for debug
 				}
-				forward();
-				isScanningBarcode = false;
+				if (!isScanningBarcode) {
+
+					// &&!ignoreBarcodes&&!isDrivingOverSeesaw
+
+					Position pos = getPosition().getNewPosition(
+							getOrientation(),
+							DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
+					if (!getBoard().detectBarcodeAt(pos)) {
+						System.out.println("blacklinedetected but already barcode");
+
+						isScanningBarcode = true;
+						BarcodeGenerator bg = new BarcodeGenerator(this);
+						try {
+							bg.generateBarcode();
+							// move(-DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
+							// //Francis heeft deze code gecommente omdat die
+							// nergens nuttig voor lijkt te zijn en problemen
+							// veroorzaakt
+						} catch (IllegalArgumentException e) {
+							ContentPanel
+									.writeToDebug("Could not read barcode, trying again");
+							setMovingSpeed(moveSpeed);
+							setTurningSpeed(turnSpeed);
+							move(-40);
+							// turn(180);
+							findWhiteLine();
+							straighten();
+							// turn(180);
+							isScanningBarcode = false;
+						}
+
+					} else if (getBoard().getBarcodeAt(pos).isSeesawBC()) {
+
+						if (getBoard().getBarcodeAt(pos)
+								.sameFirstReadOrientation()) {
+							stop();
+							getBoard().getBarcodeAt(pos).runAction(this);
+						} else {
+
+							int i = 0;// For debug
+						}
+					}
+					forward();
+					isScanningBarcode = false;
+				}
 			}
 			if(currDistance>=Math.abs(wantedDistance)  || !canMove()){
 				running= false;
