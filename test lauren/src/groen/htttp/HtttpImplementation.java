@@ -158,7 +158,7 @@ public class HtttpImplementation {
 				sendPositions();
 			}
 			
-		}, 0, 5, TimeUnit.SECONDS);
+		}, 0, 200, TimeUnit.MILLISECONDS);
 
 //		Thread posThread = new Thread() {
 //		    @Override
@@ -174,6 +174,18 @@ public class HtttpImplementation {
 //		  };
 //		};
 //		posThread.run();
+	}
+	
+	public void foundBall(){
+		try {
+			playerClient.foundObject();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

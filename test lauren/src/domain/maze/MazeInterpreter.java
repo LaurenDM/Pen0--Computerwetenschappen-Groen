@@ -129,10 +129,12 @@ public class MazeInterpreter {
 	}
 	
 	public void createInitialPosition(int XCoo, int YCoo, String orientString, int playernb){
+		System.out.println("1 Xcoo "+XCoo+" YCoo"+YCoo);
 		int MAZECONSTANT = MazeElement.getMazeConstant();
 		XCoo = XCoo*MAZECONSTANT + MAZECONSTANT/2;
-		XCoo = YCoo*MAZECONSTANT + MAZECONSTANT/2;
+		YCoo = YCoo*MAZECONSTANT + MAZECONSTANT/2;
 		Orientation orientation = Orientation.getOrientation(orientString);
+		System.out.println("1 Xcoo "+XCoo+" YCoo"+YCoo);
 		InitialPosition pos = new InitialPosition(XCoo,YCoo,orientation);
 		board.addInitialPosition(pos, playernb);
 	}

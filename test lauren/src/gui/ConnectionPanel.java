@@ -19,7 +19,7 @@ public class ConnectionPanel implements ActionListener{
 	JFrame surroundingFrame;
 	static int totalXDimensions = 400;
 	static int totalYDimensions = 400;
-	private JButton connectButton, okButton;
+	private JButton connectButton, okButton, teleportButton;
 //	forwardButton, leftButton, rightButton, catapultButton;
 	private Controller controller;
 
@@ -48,6 +48,11 @@ public class ConnectionPanel implements ActionListener{
 		connectButton.setBounds(20, 20, 200, 30);
 		titlePanel.add(connectButton);
 		connectButton.addActionListener(this);
+		
+		teleportButton = new JButton("Teleport to starting position");
+		teleportButton.setBounds(20, 80, 200, 30);
+		titlePanel.add(teleportButton);
+		teleportButton.addActionListener(this);
 
 //		leftButton = new JButton("Look Left");
 //		leftButton.setBounds(20, 80, 200, 30);
@@ -87,6 +92,10 @@ public class ConnectionPanel implements ActionListener{
 		if (e.getSource() == connectButton){
 			connectButton.setSelected(false);
 			controller.setReady(true);
+		}
+		if (e.getSource() == teleportButton){
+			connectButton.setSelected(false);
+			controller.teleport();
 		}
 //		if (e.getSource() == leftButton){
 //			leftButton.setSelected(false);

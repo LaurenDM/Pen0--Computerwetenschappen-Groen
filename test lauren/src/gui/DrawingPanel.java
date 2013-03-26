@@ -3,6 +3,8 @@ package gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Polygon;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,6 +41,24 @@ public class DrawingPanel extends JPanel {
 		previousPolygons = new HashMap<ColorPolygon, Polygon>();
 		drawWhiteLines();
 //		drawWalls();
+		
+		addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				int x = e.getX()-OFFSET;
+				int y = e.getY()-OFFSET;
+				controller.mousePressed(x,y);
+//				System.out.println(x+" "+y);
+			}
+			
+			public void mouseReleased(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseClicked(MouseEvent e) {}
+		});
+		
+			
 	}
 
 	public static final int IMG_WIDTH = 700;
@@ -54,6 +74,8 @@ public class DrawingPanel extends JPanel {
 			g.drawImage(image, 0, 0, null);
 		}
 	}
+	
+	
 
 	public void drawMyLine(int x1, int y1, int x2, int y2, Color color) {
 		g.setColor(color);

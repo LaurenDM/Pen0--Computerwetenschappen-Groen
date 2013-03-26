@@ -499,14 +499,19 @@ public class BTRobotPilot extends RobotPilot  {
 	}
 	
 	@Override
-	public void driveOverSeeSaw() {
+	public void driveOverSeeSaw(int barcodeNb) {
 		btComm.sendCommand(CMD.SEESAWACTION);
-		
+		getBoard().rollSeeSawWithBarcode(barcodeNb);
 	}
 
 	@Override
 	public void turnUltrasonicSensorTo(int angle) {
 		btComm.sendCommand(CMD.TURNSENSORTO,angle);
+	}
+
+	@Override
+	public void blackStraighten() {
+		// TODO Auto-generated method stub
 	}
 	
 

@@ -1,9 +1,12 @@
 package domain.robots;
 
+import java.util.List;
+
 import domain.Position.InitialPosition;
 import domain.Position.Position;
 import domain.maze.Ball;
 import domain.maze.Board;
+import domain.maze.Seesaw;
 import domain.maze.Wall;
 import domain.maze.graph.MazePath;
 import domain.polygons.RobotPolygon;
@@ -151,7 +154,8 @@ public abstract class RobotPilot {
 	public abstract void turnSensorForward();
 	
 	public abstract boolean detectWhiteLine();
-	
+	public abstract void blackStraighten();
+
 	public abstract void straighten();
 	//Makes the robot make an arc of the specified angle. This method does not return immediately.
 	public abstract void steer(double angle);
@@ -229,11 +233,11 @@ public abstract class RobotPilot {
 		return teamNumber;
 	}
 		
-	public void addSeesaw(){
+	public void handleSeesaw(int barcodeNb){
 		boolean open = detectInfrared();
 		getMaze().setNextTileToSeesaw(open);
 		if(!open){
-			driveOverSeeSaw();
+			driveOverSeeSaw(barcodeNb);
 			getMaze().driveOverSeesaw();
 		}
 		else{
@@ -242,20 +246,30 @@ public abstract class RobotPilot {
 	}
 
 	public  boolean detectInfrared(){
-		return getInfraredValue()>100; //TODO infrarood francis
+		return getInfraredValue()>60; //TODO infrarood francis
 	};
 
 
-	public abstract void driveOverSeeSaw();
+	public abstract void driveOverSeeSaw(int barcodeNb);
 	// de check van infrarood is reeds gebeurd als deze methode wordt aangeroepen!
 
 	public abstract int getInfraredValue();
 
 	public abstract void turnUltrasonicSensorTo(int angle);
 	
-	public void setInitialPosition(int playernb){
-		InitialPosition pos = getBoard().getInitialPositionFromPlayer(playernb);
-		setPose(pos.getOrientation().getAngleToHorizontal(), (int) pos.getX(), (int) pos.getY());
+	
+	InitialPosition initialPosition;
+	int playerNb;
+	public void setInitialPositionNumber(int playernb){
+		this.playerNb = playernb;
+//		System.out.println("Setting initial pos to:"+initialPosition.getX()+" y:"+initialPosition.getY());
+//		setPose(pos.getOrientation().getAngleToHorizontal(), (int) pos.getX(), (int) pos.getY());
+	}
+	
+	public void teleportToStartPosition(){
+		initialPosition = getBoard().getInitialPositionFromPlayer(playerNb);
+		System.out.println("Setting initial pos to:"+initialPosition.getX()+" y:"+initialPosition.getY());
+		setPose(initialPosition.getOrientation().getAngleToHorizontal(), (int) initialPosition.getX(), (int) initialPosition.getY());
 	}
 	
 }
