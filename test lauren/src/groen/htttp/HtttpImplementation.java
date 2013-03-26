@@ -51,6 +51,9 @@ public class HtttpImplementation {
 //	    //CAMPUSNET
 	    factory.setHost("leuven.cs.kotnet.kuleuven.be");
 	    factory.setPort(5672);
+	    //CAMPUSNET
+//	    factory.setHost("leuven.cs.kotnet.kuleuven.be");
+//	    factory.setPort(5672);
 	    
 	    //*******************************************************
 	    	    
