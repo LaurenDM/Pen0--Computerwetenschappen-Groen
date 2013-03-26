@@ -46,8 +46,8 @@ public class BTRobotPilot extends RobotPilot  {
 	private long lastSensorUpdateTime;
 
 	
-	public BTRobotPilot(int number){
-		super(number);
+	public BTRobotPilot(String playerID){
+		super(playerID);
 		try {
 			btComm = (new BTCommPC(this));
 			btComm.open(null,bluetoothAdress );
@@ -63,10 +63,6 @@ public class BTRobotPilot extends RobotPilot  {
 
 		}
 		board = new Board();
-	}
-	
-	public BTRobotPilot(){
-		this(0);
 	}
 	
 	@Override

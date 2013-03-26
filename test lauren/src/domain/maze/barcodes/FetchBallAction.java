@@ -10,7 +10,8 @@ public class FetchBallAction implements Action {
 	@Override
 	public void run(RobotPilot robot) {
 		robot.setTeamNumber(getTeamNumber());
-		robot.fetchBall(); 
+		robot.fetchBall();
+		robot.foundBall();
 		Controller.setStopped(true);
 	}
 	
