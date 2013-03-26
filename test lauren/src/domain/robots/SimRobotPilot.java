@@ -11,6 +11,7 @@ import javax.sound.sampled.Clip;
 
 import domain.Position.Position;
 import domain.maze.Board;
+import domain.maze.Orientation;
 import domain.maze.Wall;
 import domain.maze.graph.MazePath;
 import domain.robotFunctions.BarcodeGenerator;
@@ -43,6 +44,7 @@ public class SimRobotPilot extends RobotPilot {
 	private final int defaultTurningSpeed=200;
 	
 	private double lastDistance = 0;
+	private boolean isDrivingOverSeesaw;
 
 	/**
 	 * Assenstelsel wordt geinitialiseerd met oorsprong waar de robot begint
@@ -240,6 +242,9 @@ public class SimRobotPilot extends RobotPilot {
 
 	@Override
 	public synchronized void move(double wantedDistance) throws CannotMoveException {
+		move(wantedDistance,false);
+	}
+	public synchronized void move(double wantedDistance, boolean ignoreBarcodes) throws CannotMoveException {
 		if (wantedDistance > 0)
 			setMovement(MoveType.FORWARD);
 		else if (wantedDistance < 0)
@@ -273,7 +278,7 @@ public class SimRobotPilot extends RobotPilot {
 		double moveSpeed = getMovingSpeed();
 		while(running && !Thread.interrupted()){
 			double currDistance=getPosition().getDistance(pos1);
-			if(detectBlackLine() && !isScanningBarcode){
+			if(detectBlackLine() && !isScanningBarcode&&!ignoreBarcodes&&!isDrivingOverSeesaw){
 				Position pos = getPosition().getNewPosition(getOrientation(), DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 				if(!getBoard().detectBarcodeAt(pos)){
 					isScanningBarcode = true;
@@ -293,6 +298,14 @@ public class SimRobotPilot extends RobotPilot {
 						isScanningBarcode = false;
 					}
 					
+				} else if (getBoard().getBarcodeAt(pos).isSeesawBC()) {
+					
+					if (getBoard().getBarcodeAt(pos).sameFirstReadOrientation()) {
+						stop();
+						getBoard().getBarcodeAt(pos).runAction(this);
+					} else {
+						int i=0;//For debug
+					}
 				}
 				forward();
 				isScanningBarcode = false;
@@ -690,21 +703,23 @@ public class SimRobotPilot extends RobotPilot {
 	}
 
 	@Override
-	public void driveOverSeeSaw(int barcodeNb) {
+	public synchronized void driveOverSeeSaw(int barcodeNb) {
+		isDrivingOverSeesaw=true;
 		try {
-		
 			blackStraighten();
 //			addSeesawBarcodePositions(); //This is to avoid detecting a barcode when driving on a seesaw // WERKT niet
-			move(65);
+			move(65,true);
 			getBoard().rollSeeSawWithBarcode(barcodeNb);
-			move(55);
+			move(55,true);
 			blackStraighten();
-//			move(-4);
+			move(-6,true);
 			//TODO values of infrared needs to be taken into consideration !
 		} catch (CannotMoveException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		isDrivingOverSeesaw=false;
+
 	}
 	@Override
 	public void blackStraighten() {

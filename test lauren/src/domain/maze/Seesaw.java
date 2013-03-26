@@ -1,6 +1,8 @@
 package domain.maze;
 
 import domain.Position.Position;
+import domain.maze.barcodes.Action;
+import domain.maze.barcodes.Barcode;
 
 public class Seesaw extends MazeElement {
 	
@@ -118,6 +120,14 @@ public class Seesaw extends MazeElement {
 	
 	public boolean isLocked(){
 		return this.locked;
+	}
+
+	public Barcode getBarcode(int robotOrientation, Action action) {
+		int oppositeOrientation=robotOrientation+180;
+		if(oppositeOrientation>180){
+			oppositeOrientation-=360;
+		}
+		return new Barcode(otherBarcodeNb, middlePosition.getNewPosition(Orientation.snapAngle(90,0,robotOrientation), 60), Orientation.getOrientation(robotOrientation), oppositeOrientation, action);
 	}
 	
 	

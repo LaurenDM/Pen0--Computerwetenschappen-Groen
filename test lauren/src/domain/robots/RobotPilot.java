@@ -241,7 +241,7 @@ public abstract class RobotPilot {
 			getMaze().driveOverSeesaw();
 		}
 		else{
-			//Normally nothing...
+			doNothing();
 		}
 	}
 

@@ -87,9 +87,9 @@ public class Board {
 	public synchronized void addFoundBarcode(Barcode barcode){
 		foundBarcodes.add(barcode);
 	}
-	public synchronized void removeFoundBarcode(Barcode barcode){
-		foundBarcodes.remove(barcode);
-	}
+//	public synchronized void removeFoundBarcode(Barcode barcode){
+//		foundBarcodes.remove(barcode);
+//	}
 	public synchronized void addSimulatedBarcode(Barcode barcode){
 		simulatedBarcodes.add(barcode);
 	}
@@ -230,7 +230,7 @@ public class Board {
 	}
 	
 	public boolean checkForOpenSeesawFrom(RobotPilot robot){
-		final int DISTANCE = 50;
+		final int DISTANCE = 80;
 		for(Seesaw seesaw : seesaws.values()){
 			if(seesaw.getInfaredPosition().getDistance(robot.getPosition())<DISTANCE){
 				return true;

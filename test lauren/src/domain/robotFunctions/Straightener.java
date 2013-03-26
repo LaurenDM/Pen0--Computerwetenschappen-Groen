@@ -35,8 +35,14 @@ public class Straightener {
 		boolean lastDetection = false;
 		try {
 			if(white){
-			robot.forward();}
-			else{
+				robot.forward();
+			} else {
+				if (robot.detectBlackLine() || robot.detectWhiteLine()) {
+					robot.forward();
+					while (robot.detectBlackLine() || robot.detectWhiteLine())
+						;
+				}
+				robot.stop();
 				robot.backward();
 			}
 		} catch (CannotMoveException e1) {
@@ -105,7 +111,7 @@ public class Straightener {
 			snappedNumber+=mod;
 		}
 		return (positive?1:-1)*(snappedNumber+offset);
-	}
+	} //TODO duplicatie in Barcode wegwerken
 	/**
 	 * Assumes that the robot is turned towards the left!
 	 * The robot also doesn't return to it's original orientation afterwards!

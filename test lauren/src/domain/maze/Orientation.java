@@ -105,5 +105,19 @@ public enum Orientation {
 	}
 
 
+		public static int snapAngle(int mod, int offset, double notSnapped) {
+			boolean positive=notSnapped>=0;
+			notSnapped*=(positive?1:-1);
+
+			int intNotSnapped=(int) notSnapped-offset;
+
+			int snappedNumber=(intNotSnapped/mod)*mod;
+			if(intNotSnapped-snappedNumber> mod/2){
+				snappedNumber+=mod;
+			}
+			return (positive?1:-1)*(snappedNumber+offset);
+	}
+
+
 }
 
