@@ -239,7 +239,6 @@ public abstract class RobotPilot {
 		if(!open){
 			driveOverSeeSaw(barcodeNb);
 			getMaze().driveOverSeesaw();
-			getBoard().rollSeeSawWithBarcode(barcodeNb);
 		}
 		else{
 			//Normally nothing...
