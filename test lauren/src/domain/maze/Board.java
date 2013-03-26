@@ -221,11 +221,12 @@ public class Board {
 		}
 	}
 	
-	public void addFoundSeesaw(Seesaw foundSeesaw){
+	public Seesaw addFoundSeesaw(Seesaw foundSeesaw){
 		if(seesaws.get(foundSeesaw.getCenterPosition()) != null){
 			foundSeesaw = seesaws.get(foundSeesaw.getCenterPosition());
 		}
 		foundSeesaws.add(foundSeesaw);
+		return foundSeesaw;
 	}
 	
 	public boolean checkForOpenSeesawFrom(RobotPilot robot){

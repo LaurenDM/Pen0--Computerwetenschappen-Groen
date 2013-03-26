@@ -22,10 +22,20 @@ public class SeesawAction implements Action {
 	@Override
 	public void run(RobotPilot robot) {
 		Seesaw foundSeesaw = new Seesaw(center, orientation, barcodeNb);
-		robot.getBoard().addFoundSeesaw(foundSeesaw);
-		robot.handleSeesaw(barcodeNb);
-		
-		//TODO Francis S2D2 zorgen dat barcode toegevoegd word op einde
+		foundSeesaw = robot.getBoard().addFoundSeesaw(foundSeesaw);
+		if(!foundSeesaw.isLocked()){
+			robot.handleSeesaw(barcodeNb);
+		}
+		Position barcodePos = center.getNewPosition(orientation.getAngleToHorizontal(), 60);
+		int newBarcodeNb;
+		if(barcodeNb % 4 == 3){
+			newBarcodeNb = foundSeesaw.getOtherBarcodeNb();
+		}
+		else{
+			newBarcodeNb = foundSeesaw.getBarcodeNb();
+		}
+		Barcode barcode = new Barcode(newBarcodeNb, barcodePos, orientation);
+		robot.getBoard().addFoundBarcode(barcode);
 		
 	}
 

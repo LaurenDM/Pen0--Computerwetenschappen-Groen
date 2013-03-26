@@ -65,6 +65,14 @@ public class Seesaw extends MazeElement {
 	public Position getCenterPosition() {
 		return middlePosition;
 	}
+	
+	public int getBarcodeNb(){
+		return barcodeNb;
+	}
+	
+	public int getOtherBarcodeNb(){
+		return otherBarcodeNb;
+	}
 
 	public Orientation getOrientation() {
 		return ORIENTATION;
