@@ -29,7 +29,7 @@ public enum Orientation {
 	
 	
 	public static Orientation getOrientation(double angle){
-		final int MARGE = 10;
+		final int MARGE = 20;
 		if(Math.abs(angle-0)<MARGE) return EAST;
 		else if(Math.abs(angle-90) <MARGE) return SOUTH;
 		else if(Math.abs(angle-180) <MARGE || Math.abs(angle+180)<MARGE) return WEST;

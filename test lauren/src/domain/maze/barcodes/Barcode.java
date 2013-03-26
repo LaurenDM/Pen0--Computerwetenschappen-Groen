@@ -18,23 +18,32 @@ public class Barcode extends MazeElement{
 	private List<Integer> legalInts = new ArrayList<Integer>();
 	private boolean printed;
 	private RobotPilot robot=null;
-	private int decimal;
+	private final int decimal;
 	private final int firstReadRobotOrientation;
+	
 	public Barcode(int decimal, Position pos, Orientation orientation, int firstReadRobotOrientation, Action action, RobotPilot robot){
 		fillLegals();
 		this.robot=robot;
 		bits = getBinary(decimal);
-		this.decimal=decimal;
 		if(!legalInts.contains(decimal)){
 			mirrorBits();
-			decimal = getDecimal(this.bits);
+			this.decimal = getDecimal(this.bits);
+		}else{
+			this.decimal=decimal;
 		}
 		this.pos = pos;
 		this.orientation = orientation;
 		this.firstReadRobotOrientation=Orientation.snapAngle(90,0,firstReadRobotOrientation);
-		this.action = action; // This is not needed here because the actions are only used for found barcodes
+		if (action == null && robot != null) {
+			this.action = getAction(decimal);
+		} else {
+			this.action = action; // This is not needed here because the actions
+									// are only used for found barcodes
+		}
 		System.out.println("Barcode created with value "+this.bits[5]+this.bits[4]+this.bits[3]+this.bits[2]+this.bits[1]+this.bits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
 	}
+	
+	
 	public Barcode(int[] bits, Position pos, double angle, RobotPilot robot){
 		fillLegals();
 		if(bits.length != 6){
@@ -45,10 +54,12 @@ public class Barcode extends MazeElement{
 		this.bits = bits;
 		this.pos = pos;
 		this.orientation = Orientation.getOrientation(angle);
-		decimal = getDecimal(bits);
-		if(!legalInts.contains(decimal)){
+		int calculatedDecimal=getDecimal(bits);
+		if(!legalInts.contains(calculatedDecimal)){
 			mirrorBits();
 			decimal = getDecimal(this.bits);
+		}else{
+			decimal = calculatedDecimal;
 		}
 		action = getAction(decimal);
 		System.out.println("Barcode created with value "+this.bits[5]+this.bits[4]+this.bits[3]+this.bits[2]+this.bits[1]+this.bits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
@@ -58,8 +69,8 @@ public class Barcode extends MazeElement{
 		this( decimal,  pos,  orientation, 999, null, null);
 	}
 	
-	public Barcode(int decimal, Position pos, double angle){
-		this(decimal, pos, Orientation.getOrientation(angle));
+	public Barcode(int decimal, Position pos, double angle, RobotPilot robot){
+		this(decimal, pos, Orientation.getOrientation(angle),(int)robot.getOrientation(),null, robot);
 	}
 	
 
