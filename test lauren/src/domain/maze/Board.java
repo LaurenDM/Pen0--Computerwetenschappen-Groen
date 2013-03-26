@@ -263,7 +263,7 @@ public class Board {
 	public void rollSeeSawWithBarcode(int barcodenb){
 		for(Seesaw s : getSeesaws()){
 			if(s.hasBarcodeNb(barcodenb)){
-				s.rollOver(barcodenb);
+				s.rollOver();
 			}
 		}
 	}
