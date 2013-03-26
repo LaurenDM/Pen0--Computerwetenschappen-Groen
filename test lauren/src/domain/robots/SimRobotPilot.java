@@ -690,12 +690,13 @@ public class SimRobotPilot extends RobotPilot {
 	}
 
 	@Override
-	public void driveOverSeeSaw() {
+	public void driveOverSeeSaw(int barcodeNb) {
 		try {
 		
 			blackStraighten();
 //			addSeesawBarcodePositions(); //This is to avoid detecting a barcode when driving on a seesaw // WERKT niet
 			move(120);
+			getBoard().rollSeeSawWithBarcode(barcodeNb);
 			blackStraighten();
 //			move(-4);
 			//TODO values of infrared needs to be taken into consideration !

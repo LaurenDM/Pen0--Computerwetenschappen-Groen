@@ -233,13 +233,13 @@ public abstract class RobotPilot {
 		return teamNumber;
 	}
 		
-	public void handleSeesaw(Seesaw seesaw){
+	public void handleSeesaw(int barcodeNb){
 		boolean open = detectInfrared();
 		getMaze().setNextTileToSeesaw(open);
 		if(!open){
-			driveOverSeeSaw();
+			driveOverSeeSaw(barcodeNb);
 			getMaze().driveOverSeesaw();
-			seesaw.rollOver();
+			getBoard().rollSeeSawWithBarcode(barcodeNb);
 		}
 		else{
 			//Normally nothing...
@@ -251,7 +251,7 @@ public abstract class RobotPilot {
 	};
 
 
-	public abstract void driveOverSeeSaw();
+	public abstract void driveOverSeeSaw(int barcodeNb);
 	// de check van infrarood is reeds gebeurd als deze methode wordt aangeroepen!
 
 	public abstract int getInfraredValue();

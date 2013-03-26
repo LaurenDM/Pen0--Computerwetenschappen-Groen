@@ -499,9 +499,8 @@ public class BTRobotPilot extends RobotPilot  {
 	}
 	
 	@Override
-	public void driveOverSeeSaw() {
+	public void driveOverSeeSaw(int barcodeNb) {
 		btComm.sendCommand(CMD.SEESAWACTION);
-		
 	}
 
 	@Override
