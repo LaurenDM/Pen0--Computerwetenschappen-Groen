@@ -50,16 +50,17 @@ public class Controller {
 		this.playerID = "playerIDGroen"+random;
 		
 		
+		
+		
+		connectNewSimRobot(0, new Position(20,20), playerID);
+		
 		try{
 			htttpImplementation = new HtttpImplementation(this);
 		} catch(Exception e){
 			System.out.println("Couldn't connect to the remote server.");
 		}
 		
-		connectNewSimRobot(0, new Position(20,20), playerID);
-		
-		worldSimulator = new WorldSimulator(currentRobot);
-		
+		setPlayerClient();
 		
 	}
 
@@ -71,7 +72,6 @@ public class Controller {
 		worldSimulator = new WorldSimulator(btRobot);
 		currentRobot=btRobot;
 		currentRobot.setBoard(new Board());
-		currentRobot.setPlayerClient(htttpImplementation.getPlayerClient());
 
 	}
 	
@@ -81,6 +81,9 @@ public class Controller {
 		worldSimulator = new WorldSimulator(simRobot); 
 		currentRobot = simRobot ;
 		currentRobot.setBoard(new Board());
+	}
+	
+	public void setPlayerClient(){
 		currentRobot.setPlayerClient(htttpImplementation.getPlayerClient());
 	}
 	

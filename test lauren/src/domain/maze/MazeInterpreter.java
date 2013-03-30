@@ -316,7 +316,7 @@ public class MazeInterpreter {
 		pos = pos.getNewPosition(orientation.getAngleToHorizontal(), MAZECONSTANT/2);
 		if(!simulator.hasSeesawAt(pos)){
 			int dec = barcodePositions.get(pos2);
-			simulator.putSeesaw(new Seesaw(pos, orientation,dec));
+			simulator.addSeesaw(new Seesaw(pos, orientation,dec));
 		}
 		//else wip staat er al
 	}

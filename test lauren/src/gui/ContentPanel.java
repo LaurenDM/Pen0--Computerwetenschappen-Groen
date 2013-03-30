@@ -486,10 +486,12 @@ public class ContentPanel implements ActionListener {
         		drawingPanel.updateUI();
         		setConnected(false);
         		controller.connectNewSimRobot(0, new Position(20,20), controller.getPlayerID());
+        		controller.setPlayerClient();
         	}
         	else{
         		try{
         		controller.connectNewBtRobot();
+        		controller.setPlayerClient();
         		connectButton.setText("Disconnect from brobot");
         		setConnected(true);
         		drawingPanel.clear();
@@ -730,7 +732,7 @@ public class ContentPanel implements ActionListener {
 	
 	//barcodes
 	public void updateInfoPanel(){
-		for(Barcode b :controller.getRobot().getBoard().getFoundBarcodes()){
+		for(Barcode b :controller.getRobot().getBoard().getBarcodes()){
 			if(!b.getPrinted()){
 				b.setPrinted(true);
 				writeToDebug("Barcode "+b.getBits()[0]+b.getBits()[1]+b.getBits()[2]+b.getBits()[3]+b.getBits()[4]+b.getBits()[5]+" with value "+b.getPossibleDecimal()+" added.");

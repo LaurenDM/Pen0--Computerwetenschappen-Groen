@@ -624,7 +624,7 @@ public class SimRobotPilot extends RobotPilot {
 
 	@Override
 	public void addFoundWall(Wall wall){
-		getBoard().foundNewWall(wall);
+		getBoard().addWall(wall);
 	}
 
 	@Override

@@ -59,7 +59,7 @@ public class BarcodeGenerator {
 		int lowx = (int) (Math.floor((pos.getX())/MAZECONSTANT))*MAZECONSTANT;
 		int lowy = (int) (Math.floor((pos.getY())/MAZECONSTANT))*MAZECONSTANT;
 		Barcode barcode = new Barcode(convertBits(bits), new Position(lowx+20, lowy+20), robot.getOrientation(),robot); 
-		robot.getBoard().addFoundBarcode(barcode);
+		robot.getBoard().addBarcode(barcode);
 //		robot.setMovingSpeed(robot.getDefaultMovingSpeed());
 		robot.setMovingSpeed(moveSpeed);
 		robot.setTurningSpeed(turnSpeed);

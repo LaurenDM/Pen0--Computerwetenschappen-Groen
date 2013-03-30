@@ -15,57 +15,56 @@ public class Board {
 	private static final int MAZECONSTANT = 40;
 	
 	
-	private List<Wall> foundWalls;
-	private List<Barcode> foundBarcodes;
-	private List<Seesaw> foundSeesaws;
+	private HashMap<Position, Wall> walls;
+	private List<Barcode> barcodes;
+	private HashMap<Position, Seesaw> seesaws;
 	
 	
 	
 	public Board(){
-		
-		
-		foundBarcodes = new ArrayList<Barcode>();
-		foundWalls = new ArrayList<Wall>();
-		foundSeesaws = new ArrayList<Seesaw>();
+		barcodes = new ArrayList<Barcode>();
+		walls = new HashMap<Position,Wall>();
+		seesaws = new HashMap<Position, Seesaw>();
+	}
+	
+	public synchronized void addWall(Wall wall){
+		walls.put(wall.getCenterPosition(), wall);
+	}
+	
+	public List<Wall> getWalls(){
+		return new ArrayList<Wall>(walls.values());
+	}
+	
+	public boolean findWallAt(Position middlePosition, Position position){
+		Wall wall = walls.get(middlePosition);
+		if(wall == null) {
+			return false;
 			}
-	
-	
-	
-	
-	
-	
-	
-	public synchronized void foundNewWall(Wall wall){
-		foundWalls.add(wall);
+		else {
+			return wall.hasPosition(position);
+		}
 	}
 	
-	public List<Wall> getFoundWalls(){
-		return foundWalls;
-	}
-	public synchronized void addFoundBarcode(Barcode barcode){
-		foundBarcodes.add(barcode);
+	public synchronized void addBarcode(Barcode barcode){
+		barcodes.add(barcode);
 	}
 //	public synchronized void removeFoundBarcode(Barcode barcode){
 //		foundBarcodes.remove(barcode);
 //	}
 	
-	
-	
-	
-	
-	public List<Barcode> getFoundBarcodes(){
-		return foundBarcodes;
+	public List<Barcode> getBarcodes(){
+		return barcodes;
 	}
 	
 	public synchronized boolean detectBarcodeAt(Position position){
-		for(Barcode barcode : foundBarcodes){
+		for(Barcode barcode : barcodes){
 			if(barcode.containsPosition(position)) return true;
 		}
 		return false;
 	}
 	
 	public Barcode getBarcodeAt(Position pos){
-		for(Barcode barcode : foundBarcodes){
+		for(Barcode barcode : barcodes){
 			if(barcode.containsPosition(pos)) return barcode;
 		}
 		return null;
@@ -73,28 +72,23 @@ public class Board {
 	
 	
 	public void rollSeeSawWithBarcode(int barcodenb){
-		for(Seesaw s : foundSeesaws){
+		for(Seesaw s : getSeesaws()){
 			if(s.hasBarcodeNb(barcodenb)){
 				s.rollOver();
 			}
 		}
 	}
 	
-	
-	
-	
-	
-	
-	public void addFoundSeesaw(Seesaw foundSeesaw){
-		foundSeesaws.add(foundSeesaw);
+	public void addSeesaw(Seesaw foundSeesaw){
+		seesaws.put(foundSeesaw.getCenterPosition(), foundSeesaw);
 	}
 	
+	public List<Seesaw> getSeesaws(){
+		return new ArrayList<Seesaw>(seesaws.values());
+	}
 	
-	
-	
-	
-	public List<Seesaw> getFoundSeesaws(){
-		return foundSeesaws;
+	public Seesaw getSeesaw(Position pos){
+		return seesaws.get(pos);
 	}
 	
 	

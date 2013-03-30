@@ -402,7 +402,7 @@ public class BTRobotPilot extends RobotPilot  {
 
 	@Override
 	public void addFoundWall(Wall wall) {
-		board.foundNewWall(wall);
+		board.addWall(wall);
 	}
 
 	@Override
@@ -438,7 +438,7 @@ public class BTRobotPilot extends RobotPilot  {
 	public void makeBarcode(int[] data) {
 		Barcode barcode = new Barcode(data[2], new Position(data[0], data[1]),
 				data[3]);
-		getBoard().addFoundBarcode(barcode);
+		getBoard().addBarcode(barcode);
 		Action action = barcode.getAction();
 		if(action != null) action.run(this);
 	}
