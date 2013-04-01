@@ -487,6 +487,7 @@ public class DrawingPanel extends JPanel {
 	public void clear() {
 		g.setColor(Color.white);
 		g.fillRect(0, 0, IMG_WIDTH, IMG_HEIGHT);
+		previousPolygons.clear();
 		totalGui.repaint();
 	}
 
