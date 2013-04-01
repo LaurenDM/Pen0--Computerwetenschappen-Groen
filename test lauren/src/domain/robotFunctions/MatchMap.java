@@ -6,7 +6,7 @@ import peno.htttp.Tile;
 public class MatchMap {
 	
 	public static void main(String[] args) {
-		Tile tile1 = new Tile(0, 0, "Straight.3");
+		Tile tile1 = new Tile(0, 0, "Straight.N.3");
 		Tile tile2 = new Tile(0, 1, "Seesaw.S");
 		Tile tile3 = new Tile(0, 2, "Seesaw.N");
 		Tile tile4 = new Tile(0, 3, "Straight.N.4");
@@ -31,16 +31,7 @@ public class MatchMap {
 		_tileList[3] = _tile4;
 		_tileList[4] = _tile5;
 		_tileList[5] = _tile6;
-		setOurMaze2(tileList);
-		String[][] string = ourMaze;
-		for (int i = 0; i < string.length; i++) {
-			for (int j = 0; j < string[0].length; j++) {
-				System.out.println(string[i][j]);
-			}
-		}
-		matrixToString(ourMaze);
-		System.out.println("qsdfqsdf");
-		matrixToString(degrees_90);
+		setOurMazeTiles(tileList);
 		setOriginalTiles(_tileList);
 		merge();
 		
@@ -59,6 +50,24 @@ public class MatchMap {
 	private static int ourMergePointY = 0;
 	private static int otherMergePointX = 0;
 	private static int otherMergePointY = 0;
+	
+	private static ArrayList<Integer> ourBarcodes = new ArrayList<Integer>();
+	
+	private static void setOurBarcodes(){
+		String[][] Str = getOurMaze();
+		for (int i = 0; i < Str.length; i++) {
+			for (int j = 0; j < Str[0].length; j++) {
+				String[] string = Str[i][j].split(regex);
+				if(string[0].equals("Seesaw")){
+					ourBarcodes.add(getSeeSawNumber(Str, i, j, string[1]));
+				}
+			}
+		}
+	}
+	
+	private static boolean ourHasGivenBarcode(int barcode){
+		return ourBarcodes.contains(barcode);
+	}
 	
 	/**
 	 * Method that gets the getDirection
@@ -93,8 +102,9 @@ public class MatchMap {
 	 */
 	public static void setOurMaze(String[][] newMaze) {
 		ourMaze = newMaze;
+		setOurBarcodes();
 	}
-	public static void setOurMaze2(Tile[] tiles){
+	public static void setOurMazeTiles(Tile[] tiles){
 		int maxX = 0;
 		int maxY = 0;
 		for (Tile tile : tiles) {
@@ -171,8 +181,8 @@ public class MatchMap {
 	 *
 	 * @param resultMap the resultMap to set
 	 */
-	public void setResultMap(String[][] resultMap) {
-		resultMap = resultMap;
+	public void setResultMap(String[][] resultMap1) {
+		resultMap = resultMap1;
 	}
 	/**
 	 * Method that sets the transpose
@@ -203,8 +213,8 @@ public class MatchMap {
 	 *
 	 * @param original the original to set
 	 */
-	public void setOriginal(String[][] original) {
-		original = original;
+	public void setOriginal(String[][] original1) {
+		original = original1;
 	}
 	
 	//___________________________________________
@@ -229,6 +239,7 @@ public class MatchMap {
 				originalList[i][j] = "          ";
 			}
 		}
+		matrixToString(originalList);
 		for (Tile tile : tiles) {
 			originalList[(int) tile.getX()][(int) tile.getY()] = tile.getToken();
 		}
@@ -283,16 +294,23 @@ public class MatchMap {
 			}
 		}
 		return printout;
+		
 	}
 	
 	private static boolean hasMutualSeeSaw(){
 		String[][] tmpList = getOriginal();
+		if(hasMutualSeeSawPermutationChecker(tmpList))
+			return true;
+		return false;
+	}
+
+	private static boolean hasMutualSeeSawPermutationChecker(String[][] tmpList) {
 		for (int i = 0; i < tmpList.length; i++) {
 			for (int j = 0; j < tmpList[0].length; j++) {
 				String[] string = tmpList[i][j].split(regex);
 				if(string[0].equals("Seesaw")){
-					int number = getSeeSawNumber(getOurMaze(),i,j,string[0]);
-					if(ourSeeSawNumbers().contains(number)){
+					int number = getSeeSawNumber(tmpList,i,j,string[1]);
+					if(ourHasGivenBarcode(number)){
 						return true;
 					}
 				}
@@ -302,6 +320,7 @@ public class MatchMap {
 	}
 	
 	
+	@SuppressWarnings("unused")
 	private static boolean hasMutualBarcode(){
 		String[][] tmpList = getOriginal();
 		for (int i = 0; i < tmpList.length; i++) {
@@ -321,19 +340,6 @@ public class MatchMap {
 	//___________________________________________
 	//OUR BARCODE/SEESAW CHECKERS
 	//___________________________________________
-	
-	private static ArrayList<Integer> ourSeeSawNumbers(){
-		ArrayList<Integer> numbers = new ArrayList<Integer>();
- 		for (int i = 0; i < getOurMaze().length; i++) {
-			for (int j = 0; j < getOurMaze()[0].length; j++) {
-				String[] string = getOurMaze()[i][j].split(regex);
-				if(string[0].equals("Seesaw")){
-					numbers.add(getSeeSawNumber(getOurMaze(),i,j,string[0]));
-				}
-			}
-		}
- 		return numbers;
-	}
 	
 	private static ArrayList<Integer> ourBarcodeNumbers(){
 		ArrayList<Integer> numbers = new ArrayList<Integer>();
@@ -356,6 +362,7 @@ public class MatchMap {
 	//___________________________________________
 	
 	public static void merge(){
+		//TODO debug
 		if(hasMutualSeeSaw()){
 			permutationBySeeSaw();
 			mergeMapsSeesaw(mergeMaps(getPermutatedDirection()));
@@ -370,8 +377,9 @@ public class MatchMap {
 		mergeMaps(getPermutatedDirection());
 	}
 	
+	@SuppressWarnings("unused")
 	private static void mergeMapsBarcode(String[][] mergeMaps) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 	private static void mergeMapsSeesaw(String[][] mergeMaps) {
@@ -380,19 +388,25 @@ public class MatchMap {
 		String[][] resultList = new String[originList.length * 2][originList[0].length * 2];
 		for (int i = 0; i < resultList.length; i++) {
 			for (int j = 0; j < resultList[0].length; j++) {
-				resultList[i][j] = "";
+				resultList[i][j] = "dummy     ";
 			}
 		}
 		
 		//Fills the grid with our found elements 
+		System.out.println("totalx : "+resultList.length+" totaly : "+resultList[0].length);
 		for (int i = 0; i < resultList.length; i++) {
 			for (int j = 0; j < resultList[0].length; j++) {
-				resultList[i][j] = originList[i][j];
+				System.out.println("x: "+i+"   y: "+j);
+				try {
+					resultList[i][j] = originList[i][j];
+				} catch (Exception e) {}
 			}
 		}
+		System.out.println(matrixToString(resultList));
 		mergeRightUp(resultList,permList);
 		mergeRightDown(resultList,permList);
 		mergeLeftUp(resultList,permList);
+		System.out.println(matrixToString(resultList));
 		mergeLeftDown(resultList,permList);
 	}
 	
@@ -454,7 +468,6 @@ public class MatchMap {
 	}
 	
 	private static String[][] mergeMaps(Permutation permutatedDirection) {
-		System.out.println("permutatedDirection    :"+permutatedDirection);
 		switch (permutatedDirection) {
 		case DEGREES_90:
 			return get90Degree();
@@ -474,6 +487,7 @@ public class MatchMap {
 	//PERMUTATION DIRECTION IS BEING CHECKED
 	//___________________________________________
 	
+	@SuppressWarnings("unused")
 	private static void permutationByBarcode() {
 		for (int i = 0; i < getOurMaze().length; i++) {
 			for (int j = 0; j < getOurMaze()[0].length; j++) {
@@ -571,10 +585,8 @@ public class MatchMap {
 		for (int i = 0; i < getOurMaze().length; i++) {
 			for (int j = 0; j < getOurMaze()[0].length; j++) {
 				String[] str = getOurMaze()[i][j].split(regex);
-				matrixToString(getOurMaze());
 				if(str[0].equals("Seesaw")){
-					if(checkForSeesawMatches(str[1],getSeeSawNumber(getOurMaze(), i, j, str[1]))){
-						System.out.println("test");
+					if(checkForSeesawMatches(str[1])){
 						ourMergePointX = i;
 						ourMergePointY = j;
 					}
@@ -582,39 +594,35 @@ public class MatchMap {
 			}
 		}
 	}
-	private static boolean checkForSeesawMatches(String string,int number) {
+	private static boolean checkForSeesawMatches(String string) {
 		for (Permutation dir : Permutation.values()) {
 			switch (dir) {
 				case DEGREES_180:
-					if(checkForSeesawPermutation(get180Degree(),string,number)){
+					if(checkForSeesawPermutation(get180Degree(),string)){
 						setPermutatedDirection(Permutation.DEGREES_180);
-						System.out.println("set");
 						return true;
 					}
 					break;
 				case DEGREES_270:
-					if(checkForSeesawPermutation(get270Degree(),string,number)){
+					if(checkForSeesawPermutation(get270Degree(),string)){
 						setPermutatedDirection(Permutation.DEGREES_270);
-						System.out.println("set");
 						return true;
 					}
 					break;
 				case DEGREES_90:
-					if(checkForSeesawPermutation(get90Degree(),string,number)){
+					if(checkForSeesawPermutation(get90Degree(),string)){
 						setPermutatedDirection(Permutation.DEGREES_90);
-						System.out.println("set");
 						return true;
 					}
 					break;
 				case ORIGINAL:
-					if(checkForSeesawPermutation(getOriginal(),string,number)){
+					if(checkForSeesawPermutation(getOriginal(),string)){
 						setPermutatedDirection(Permutation.ORIGINAL);
-						System.out.println("set");
 						return true;
 					}
 					break;
 				default:
-					System.out.println(dir);
+					System.out.println("never called locally");
 					return false;
 				
 			}
@@ -622,14 +630,17 @@ public class MatchMap {
 		return false;
 	}
 	
-	private static boolean checkForSeesawPermutation(String[][] maze, String string,int number) {
+	private static boolean checkForSeesawPermutation(String[][] maze, String string) {
 		for (int i = 0; i < maze.length; i++) {
 			for (int j = 0; j < maze[0].length; j++) {
 				String[] str = maze[i][j].split(regex);
-				if (maze[i][j].equals("Seesaw") && getSeeSawNumber(maze, i, j, str[1]) == number) {
+				if (str[0].equals("Seesaw")){
+					if(ourHasGivenBarcode(getSeeSawNumber(maze, i, j, str[1]))) {
 					otherMergePointX = i;
 					otherMergePointY = j;
 					return true;
+				}
+					
 				}
 			}
 		}
@@ -648,17 +659,14 @@ public class MatchMap {
 	//BASIC UTILS
 	//___________________________________________
 	private static int getSeeSawNumber(String[][] ourMaze2, int i, int j,String string) {
-		//matrixToString(ourMaze2);
-		//System.out.println(string);
-		//System.out.println("i   :"+i+" j:  "+j);
 		if(string.equals("N")){
-			return getBarcodeValue(ourMaze2[i][j-1]);
+			return getBarcodeValue(ourMaze2[i][j+1]);
 		}
 		else if(string.equals("E")){
 			return getBarcodeValue(ourMaze2[i+1][j]);
 		}
 		else if(string.equals("S")){
-			return getBarcodeValue(ourMaze2[i][j+1]);
+			return getBarcodeValue(ourMaze2[i][j-1]);
 		}
 		else if(string.equals("W")){
 			return getBarcodeValue(ourMaze2[i-1][j]);
