@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import peno.htttp.Tile;
+
 import domain.maze.Orientation;
 import domain.robots.RobotPilot;
 
@@ -555,5 +557,9 @@ public class MazeGraph {
 		} else {
 			ContentPanel.writeToDebug("Couldn't create a seesaw at the position in front of the robot.");
 		}
+	}
+
+	public ArrayList<TileNode> getFoundTilesList() {
+		return tileNodes;
 	}
 }

@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import peno.htttp.Tile;
+
 import rabbitMQ.EventPusher;
 import rabbitMQ.SubscribeMonitor;
 
@@ -316,6 +318,9 @@ public class Controller {
 	}
 
 	public void driveToFinish() {
+		for(peno.htttp.Tile t : getFoundTilesList()){
+			System.out.println("Tile "+t.getX()+", "+t.getY()+" "+t.getToken());
+		}
 		STOPPED = true;
 		while(explorer.isAlive()){}
 		STOPPED = false;
@@ -470,5 +475,16 @@ public class Controller {
 			s.rollOver();
 			}
 		}
+	}
+	
+	public ArrayList<peno.htttp.Tile> getFoundTilesList(){
+		ArrayList<domain.maze.graph.TileNode> foundTiles = currentRobot.getFoundTilesList();
+		ArrayList<peno.htttp.Tile> returnList = new ArrayList<peno.htttp.Tile>();
+		for(domain.maze.graph.TileNode node : foundTiles){
+			if(node.isFullyExpanded()){
+				returnList.add(new Tile(node.getX(), node.getY(), node.getToken()));
+			}
+		}
+		return returnList;
 	}
 }

@@ -3,6 +3,7 @@ package domain.maze.graph;
 import java.util.HashMap;
 
 import domain.maze.Orientation;
+import domain.maze.Token;
 
 public class TileNode extends MazeNode {
 	private HashMap<Orientation,MazeNode> connectedNodes;
@@ -136,6 +137,10 @@ public class TileNode extends MazeNode {
 	
 	public boolean isAccessible() {
 		return true;
+	}
+
+	public String getToken() {
+		return Token.match(this);
 	}
 	
 }

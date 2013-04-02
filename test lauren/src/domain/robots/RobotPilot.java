@@ -1,6 +1,9 @@
 package domain.robots;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import peno.htttp.Tile;
 
 import domain.Position.InitialPosition;
 import domain.Position.Position;
@@ -270,6 +273,10 @@ public abstract class RobotPilot {
 		initialPosition = getBoard().getInitialPositionFromPlayer(playerNb);
 		System.out.println("Setting initial pos to:"+initialPosition.getX()+" y:"+initialPosition.getY());
 		setPose(initialPosition.getOrientation().getAngleToHorizontal(), (int) initialPosition.getX(), (int) initialPosition.getY());
+	}
+
+	public ArrayList<domain.maze.graph.TileNode> getFoundTilesList() {
+		return getMaze().getFoundTilesList();
 	}
 	
 }
