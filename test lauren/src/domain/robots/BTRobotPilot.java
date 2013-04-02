@@ -38,9 +38,7 @@ public class BTRobotPilot extends RobotPilot  {
 	private int prevIRValue;
 	private int prevSensorAngle;
 	private String bluetoothAdress="00:16:53:05:40:4c";
-	private final BTCommPC btComm;
-	private ExploreMaze maze;
-	
+	private final BTCommPC btComm;	
 
 
 	private long lastSensorUpdateTime;
@@ -79,10 +77,6 @@ public class BTRobotPilot extends RobotPilot  {
 		return board;
 	}
 	
-	@Override
-	public ExploreMaze getMaze(){
-		return this.maze;
-	}
 
 	@Override
 	public void turn(double amount) {
@@ -389,11 +383,7 @@ public class BTRobotPilot extends RobotPilot  {
 		pilot.setPose(orientation, x, y);		
 	}
 
-	@Override
-	public void startExplore() {
-		maze = new ExploreMaze(this);
-		maze.start();
-	}
+	
 
 	@Override
 	public boolean detectBlackLine() {
@@ -434,37 +424,13 @@ public class BTRobotPilot extends RobotPilot  {
 		makeBarcode(results);
 	}
 
-	@Override
-	public void setCheckpoint() {
-		maze.setCurrentTileToCheckpoint();
-	}
 
 	public void makeBarcode(int[] data) {
 		Barcode barcode = new Barcode(data[2], new Position(data[0], data[1]),
 				data[3], this);
-		getBoard().addFoundBarcode(barcode);
 		Action action = barcode.getAction();
+		getBoard().addFoundBarcode(barcode);
 		if(action != null) action.run(this);
-	}
-
-	@Override
-	public void resumeExplore() {
-		if(maze!=null){
-			maze.resumeExplore(0, 0, null);
-		} else {
-			ContentPanel.writeToDebug("You haven't started exploring yet!");
-		}
-		
-	}
-
-	@Override
-	public void driveToFinish() {
-		if(maze!=null){
-			maze.stopExploring();
-			maze.driveToFinish();
-		} else {
-			ContentPanel.writeToDebug("You haven't started exploring yet!");
-		}		
 	}
 
 	@Override
@@ -476,10 +442,7 @@ public class BTRobotPilot extends RobotPilot  {
 	public void autoCalibrateLight() {
 		btComm.sendCommand(CMD.AUTOCALIBRATELS,8);
 	}
-	@Override
-	public MazePath getPathToFinish() {
-		return maze.getPathToFinish();
-	}
+	
 
 	@Override
 	public void setDriveToFinishSpeed() {
@@ -488,20 +451,15 @@ public class BTRobotPilot extends RobotPilot  {
 
 	@Override
 	public void fetchBall() {
+		maze.setNextTileToDeadEnd();
 		btComm.sendCommand(CMD.FETCHBALL);
 		setBall(new Ball());
-		maze.setNextTileToDeadEnd();
-	}
-
-	@Override
-	public void doNothing() {
-		maze.setNextTileToDeadEnd();
 	}
 	
 	@Override
 	public void driveOverSeeSaw(int barcodeNb) {
 		btComm.sendCommand(CMD.SEESAWACTION);
-		getBoard().rollSeeSawWithBarcode(barcodeNb);
+		getBoard().rollSeeSawFromBarcode(barcodeNb);
 	}
 
 	@Override

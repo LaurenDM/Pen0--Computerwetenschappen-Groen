@@ -734,7 +734,7 @@ public class ContentPanel implements ActionListener {
 		for(Barcode b :controller.getRobot().getBoard().getFoundBarcodes()){
 			if(!b.getPrinted()){
 				b.setPrinted(true);
-				writeToDebug("Barcode "+b.getBits()[0]+b.getBits()[1]+b.getBits()[2]+b.getBits()[3]+b.getBits()[4]+b.getBits()[5]+" with value "+b.getPossibleDecimal()+" added.");
+				writeToDebug("Barcode "+b.getReadBits()[0]+b.getReadBits()[1]+b.getReadBits()[2]+b.getReadBits()[3]+b.getReadBits()[4]+b.getReadBits()[5]+" with value "+b.getPossibleDecimal()+" added.");
 				if(b.getAction()!=null){
 				writeToDebug("Action: "+b.getAction().toString());
 				}

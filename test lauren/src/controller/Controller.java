@@ -46,7 +46,7 @@ public class Controller {
 		connectNewSimRobot(0, new Position(20,20), 0);
 		
 		try{
-			htttpImplementation = new HtttpImplementation(this);
+//			htttpImplementation = new HtttpImplementation(this);
 		} catch(Exception e){
 			System.out.println("Couldn't connect to the remote server.");
 		}
@@ -464,7 +464,7 @@ public class Controller {
 	}
 
 	public void mousePressed(int x, int y) {
-		List<Seesaw> seesaws = currentRobot.getBoard().getSeesaws();
+		List<Seesaw> seesaws = currentRobot.getBoard().getAllSeesaws();
 		for(Seesaw s: seesaws){
 			if(s.hasPosition(new Position(x, y))){
 			s.rollOver();

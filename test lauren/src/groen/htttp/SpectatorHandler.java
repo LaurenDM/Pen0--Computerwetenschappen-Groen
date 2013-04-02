@@ -89,14 +89,16 @@ public class SpectatorHandler implements peno.htttp.SpectatorHandler {
 	public void lockedSeesaw(String playerID, int playerNumber, int barcode) {
 		printMessage("sh.lockedSeesaw by player ID: " + playerID + " no: " + playerNumber);
 		Board board = htttpImplementation.getController().getRobot().getBoard();
-		board.rollSeeSawWithBarcode(barcode);
+		board.setLockForSeesawWithBarcode(barcode, true);
+		//When someOne locks the seesaw, we assume he drives over it.
+		board.rollSeeSawFromBarcode(barcode);		
 	}
 
 	@Override
 	public void unlockedSeesaw(String playerID, int playerNumber, int barcode) {
 		printMessage("sh.unlockedSeesaw by player ID: " + playerID + " no: " + playerNumber);
 		Board board = htttpImplementation.getController().getRobot().getBoard();
-		board.unlockSeesawWithBarcode(barcode);
+		board.setLockForSeesawWithBarcode(barcode, false);
 	}
 	
 	private void printMessage(String message){

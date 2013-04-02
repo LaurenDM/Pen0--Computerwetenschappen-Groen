@@ -1,5 +1,7 @@
 package domain.robots;
 
+import gui.ContentPanel;
+
 import java.util.List;
 
 import domain.Position.InitialPosition;
@@ -17,11 +19,10 @@ public abstract class RobotPilot {
 	
 	RobotPolygon robotPolygon;
 	private MoveType movement;
-	private Position finish;
 	private int number; //0-3
 	
 	private Board board;
-	
+	protected ExploreMaze maze;
 	private Ball ball;
 	private int teamNumber;
 	
@@ -174,8 +175,10 @@ public abstract class RobotPilot {
 
 	public abstract void setPose(double orientation, int x, int y);
 
-	public abstract void startExplore();
-	
+	public void startExplore() {
+		maze = new ExploreMaze(this);
+		maze.start();
+	}	
 	public abstract void addFoundWall(Wall wall);
 
 	public abstract boolean detectBlackLine();
@@ -184,30 +187,50 @@ public abstract class RobotPilot {
 
 	public abstract void scanBarcode();
 
-	public abstract void setCheckpoint();
+	public final void setCheckpoint() {
+		maze.setCurrentTileToCheckpoint();
+	}
 	
-	public abstract ExploreMaze getMaze();
-
-	public void setFinish(){
-		this.finish = getPosition();
-		getMaze().setCurrentTileToFinish();
+	public ExploreMaze getMaze(){
+		return maze;
 	}
 
-	public abstract void resumeExplore();
+	public final void setFinish(){
+		maze.setCurrentTileToFinish();
+	}
+	
+	public final void resumeExplore() {
+		if(maze!=null){
+			maze.resumeExplore(0, 0, null);
+		} else {
+			ContentPanel.writeToDebug("You haven't started exploring yet!");
+		}
+	}
 
-	public abstract void driveToFinish();
-
+	public final void driveToFinish() {
+		if(maze!=null){
+			maze.stopExploring();
+			maze.driveToFinish();
+		} else {
+			ContentPanel.writeToDebug("You haven't started exploring yet!");
+		}		
+	}
+	
 	public abstract void wait5Seconds();
 
 	public abstract void autoCalibrateLight();
 	
-	public abstract MazePath getPathToFinish();
-
+	
+	public final MazePath getPathToFinish() {
+		return maze.getPathToFinish();
+	}
 	public abstract void setDriveToFinishSpeed();
 
 	public abstract void fetchBall();
 	
-	public abstract void doNothing();
+	public void indicateDeadEnd() {
+		getMaze().setNextTileToDeadEnd();
+	}
 
 	public Ball getBall(){
 		return this.ball;
@@ -233,20 +256,27 @@ public abstract class RobotPilot {
 		return teamNumber;
 	}
 		
-	public void handleSeesaw(int barcodeNb){
-		boolean open = detectInfrared();
-		getMaze().setNextTileToSeesaw(open);
-		if(!open){
-			driveOverSeeSaw(barcodeNb);
-			getMaze().driveOverSeesaw();
+	public void handleSeesaw(int barcodeNb,Seesaw foundSeesaw){
+		boolean upAtThisSide = detectInfrared();
+		for (Seesaw s : getBoard().getAllSeesawsAt(
+				foundSeesaw.getCenterPosition())) {
+			System.out.println("We change the seesaw based on infrared detection, barcodeNb: "+ barcodeNb+ " upats: " + upAtThisSide);
+			s.setUpAt(barcodeNb, upAtThisSide);
 		}
-		else{
-			doNothing();
+
+		getMaze().setNextTileToSeesaw(upAtThisSide || foundSeesaw.isLocked());
+		
+		if (!foundSeesaw.isLocked() && !upAtThisSide) {
+				driveOverSeeSaw(barcodeNb);
+				getMaze().driveOverSeesaw();
 		}
+//		else{
+//		turn(180);
+//		}
 	}
 
 	public  boolean detectInfrared(){
-		return getInfraredValue()>60; //TODO infrarood francis
+		return getInfraredValue()>20; //TODO infrarood francis
 	};
 
 
@@ -254,7 +284,7 @@ public abstract class RobotPilot {
 	// de check van infrarood is reeds gebeurd als deze methode wordt aangeroepen!
 
 	public abstract int getInfraredValue();
-
+	
 	public abstract void turnUltrasonicSensorTo(int angle);
 	
 	

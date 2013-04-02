@@ -11,7 +11,6 @@ public class SeesawAction implements Action {
 	private int barcodeNb;
 	private Position center;
 	private Orientation orientation;
-	
 	public SeesawAction(int barcodeNb, Position center, Orientation orientation){
 		this.barcodeNb = barcodeNb;
 		this.center = center;
@@ -20,16 +19,22 @@ public class SeesawAction implements Action {
 
 	@Override
 	public void run(RobotPilot robot) {
-		Seesaw foundSeesaw = new Seesaw(center, orientation, barcodeNb);
-		foundSeesaw = robot.getBoard().addFoundSeesaw(foundSeesaw);
-		Barcode newBarcode= foundSeesaw.getBarcode((int) robot.getOrientation(), this, robot);
-		if(!robot.getBoard().detectBarcodeAt(newBarcode.getCenterPosition()))
-		{
+		final Seesaw foundSeesaw;
+		if(robot.getBoard().getFoundSeesawAt(center)==null){
+		foundSeesaw = new Seesaw(center, orientation, barcodeNb,false);
+		robot.getBoard().addFoundSeesaw(foundSeesaw);
+		Barcode newBarcode= foundSeesaw.getBarcode((int) robot.getOrientation(), new SeesawAction(foundSeesaw.getOtherBarcode(),center,orientation ), robot);
 		robot.getBoard().addFoundBarcode(newBarcode);
+		System.out.println("We are going to handle a newly found seesaw");
 		}
-		if(!foundSeesaw.isLocked()){
-			robot.handleSeesaw(barcodeNb);
+		else{
+			System.out.println("We are going to handle an already found seesaw");
+			foundSeesaw=robot.getBoard().getFoundSeesawAt(center);
 		}
+			
+			//Note that in the handleSeesaw, we take into account whether the seesaw is locked or not.
+		robot.handleSeesaw(barcodeNb, foundSeesaw);
+	
 //		Position barcodePos = center.getNewPosition(orientation.getAngleToHorizontal(), 60);
 //		int newBarcodeNb;
 //		if(barcodeNb % 4 == 3){

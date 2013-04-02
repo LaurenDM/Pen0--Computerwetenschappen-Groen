@@ -9,6 +9,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
+import lejos.nxt.addon.AngleSensor;
+
 import domain.Position.Position;
 import domain.maze.Board;
 import domain.maze.Orientation;
@@ -26,7 +28,6 @@ public class SimRobotPilot extends RobotPilot {
 	private double orientation; // Degrees to horizontal
 	private Position position;
 	private boolean isScanningBarcode;
-	private ExploreMaze maze;
 	private boolean turningError = true;
 	
 	
@@ -44,7 +45,7 @@ public class SimRobotPilot extends RobotPilot {
 	private final int defaultTurningSpeed=200;
 	
 	private double lastDistance = 0;
-	private boolean isDrivingOverSeesaw;
+	private boolean processingSeesawBarcode;
 
 	/**
 	 * Assenstelsel wordt geinitialiseerd met oorsprong waar de robot begint
@@ -286,7 +287,7 @@ public class SimRobotPilot extends RobotPilot {
 				if(isScanningBarcode){
 					int i=0; //for debug
 				}
-				if (!isScanningBarcode  &&!ignoreBarcodes&&!isDrivingOverSeesaw) {
+				if (!isScanningBarcode  &&!ignoreBarcodes&&!processingSeesawBarcode) {
 
 					
 
@@ -300,9 +301,10 @@ public class SimRobotPilot extends RobotPilot {
 						try {
 							bg.generateBarcode();
 							// move(-DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
-							// //Francis heeft deze code gecommente omdat die
+							// //Francis heeft deze code gecomment omdat die
 							// nergens nuttig voor lijkt te zijn en problemen
 							// veroorzaakt
+							isScanningBarcode = false;
 						} catch (IllegalArgumentException e) {
 							ContentPanel
 									.writeToDebug("Could not read barcode, trying again");
@@ -316,19 +318,21 @@ public class SimRobotPilot extends RobotPilot {
 							isScanningBarcode = false;
 						}
 
-					} else if (getBoard().getBarcodeAt(pos).isSeesawBC()) {
-
-						if (getBoard().getBarcodeAt(pos)
+					} else if (getBoard().getFoundBarcodeAt(pos)!=null &&getBoard().getFoundBarcodeAt(pos).isSeesawBC()&&wantedDistance>0) {
+						processingSeesawBarcode=true;
+						if (getBoard().getFoundBarcodeAt(pos)
 								.sameFirstReadOrientation()) {
 							stop();
-							getBoard().getBarcodeAt(pos).runAction(this);
+							System.out.println("going to run action");
+							getBoard().getFoundBarcodeAt(pos).runAction(this);
 						} else {
-
+							System.out.println("Not same firstReadOrientation");
 							int i = 0;// For debug
 						}
+						processingSeesawBarcode=false;
+
 					}
 					forward();
-					isScanningBarcode = false;
 				}
 			}
 			if(currDistance>=Math.abs(wantedDistance)  || !canMove()){
@@ -619,11 +623,6 @@ public class SimRobotPilot extends RobotPilot {
 		this.position=new Position(x,y);
 	}
 
-	@Override
-	public void startExplore() {
-		maze = new ExploreMaze(this);
-		maze.start();
-	}
 
 	@Override
 	public void addFoundWall(Wall wall){
@@ -639,35 +638,6 @@ public class SimRobotPilot extends RobotPilot {
 		BarcodeGenerator bg = new BarcodeGenerator(this);
 		bg.generateBarcode();
 	}
-
-	@Override
-	public void setCheckpoint() {
-		maze.setCurrentTileToCheckpoint();
-
-	}
-	@Override
-	public void setFinish() {
-		maze.setCurrentTileToFinish();		
-	}
-	@Override
-	public void resumeExplore() {
-		if(maze!=null){
-			maze.resumeExplore(0, 0, null);
-		} else {
-			ContentPanel.writeToDebug("You haven't started exploring yet!");
-		}
-
-	}
-	@Override
-	public void driveToFinish() {
-		if(maze!=null){
-			maze.stopExploring();
-			maze.driveToFinish();
-		} else {
-			ContentPanel.writeToDebug("You haven't started exploring yet!");
-		}
-	}
-
 
 
 	private double randomDouble(double max){
@@ -694,10 +664,7 @@ public class SimRobotPilot extends RobotPilot {
 	public void disableError() {
 			turningError = false;
 	}
-	@Override
-	public MazePath getPathToFinish() {
-		return maze.getPathToFinish();
-	}
+	
 	@Override
 	public void setDriveToFinishSpeed() {
 		setMovingSpeed(150);
@@ -719,18 +686,17 @@ public class SimRobotPilot extends RobotPilot {
 	}
 	
 	@Override
-	public void doNothing() {
+	public void indicateDeadEnd() {
 		maze.setNextTileToDeadEnd();
 	}
 
 	@Override
 	public synchronized void driveOverSeeSaw(int barcodeNb) {
-		isDrivingOverSeesaw=true;
 		try {
 			blackStraighten();
 //			addSeesawBarcodePositions(); //This is to avoid detecting a barcode when driving on a seesaw // WERKT niet
 			move(65,true);
-			getBoard().rollSeeSawWithBarcode(barcodeNb);
+			getBoard().rollSeeSawFromBarcode(barcodeNb);
 			move(55,true);
 			blackStraighten();
 			move(-6,true);
@@ -739,7 +705,6 @@ public class SimRobotPilot extends RobotPilot {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		isDrivingOverSeesaw=false;
 
 	}
 	@Override
@@ -749,7 +714,7 @@ public class SimRobotPilot extends RobotPilot {
 
 	@Override
 	public int getInfraredValue() {
-			return getBoard().detectRobotFrom(this) || getBoard().checkForOpenSeesawFrom(this)?150:0;
+			return getBoard().detectRobotFrom(this) || getBoard().checkForOpenSeesawFrom(this)?70:0;
 	}
 
 	@Override

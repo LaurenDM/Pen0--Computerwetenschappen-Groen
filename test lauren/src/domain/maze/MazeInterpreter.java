@@ -306,17 +306,53 @@ public class MazeInterpreter {
 		}
 	}
 	
+	/**
+	 * Opbouw mazefile: straight.Or.barcodenr seesaw.Or seesaw.Or
+	 * straight.Or.barcodenr
+	 * metr Or voor orientatie
+	 * Uit voorzorg gebruiken we de zin die meegegeven is bij de seesaw niet, wel de richting.
+	 *Voor infrarood-instellingsredenen willen we dat de orientatie zo is: lage barcode, seesaw, hoge barcode.
+	 *Vb: orientatie West: links: hoge barcode, midden: seesaw, rechts: lage barcode
+	 */
+	
 	private void createSeesaw(int xCoo, int yCoo, Orientation orientation){
 		int MAZECONSTANT = MazeElement.getMazeConstant();
 		xCoo = xCoo*MAZECONSTANT+(MAZECONSTANT/2);
 		yCoo = yCoo*MAZECONSTANT+(MAZECONSTANT/2);
-		Position pos = new Position(xCoo,yCoo);
-		orientation = orientation.getBack();
-		Position pos2 = pos.getNewPosition(orientation.getAngleToHorizontal(), -MAZECONSTANT);
-		pos = pos.getNewPosition(orientation.getAngleToHorizontal(), MAZECONSTANT/2);
-		if(!board.hasSeesawAt(pos)){
-			int dec = barcodePositions.get(pos2);
-			board.putSeesaw(new Seesaw(pos, orientation,dec));
+		Position posSeesawPart = new Position(xCoo,yCoo);
+		
+		// We bepalen eerst aan welke kant van dit seesaw-stuk dat er een
+		// barcode ligt en zetten de orientatie er naartoe gericht (wordt later
+		// nog veranderd)
+		Position posBarcodeTry1 = posSeesawPart.getNewPosition(
+				orientation.getAngleToHorizontal(), MAZECONSTANT);
+		Position posBarcodeTry2 = posSeesawPart.getNewPosition(
+				orientation.getAngleToHorizontal(), -MAZECONSTANT);
+		
+		if(board.hasAnySeesawAt(posBarcodeTry1)||board.hasAnySeesawAt(posBarcodeTry2)){
+			return;
+		}
+		Orientation towardsBarcodeOrientation = null;
+		int barcodeNb;
+		if (barcodePositions.get(posBarcodeTry1) != null) {
+			towardsBarcodeOrientation = orientation;
+			barcodeNb = barcodePositions.get(posBarcodeTry1);
+		} else if (barcodePositions.get(posBarcodeTry2) != null) {
+			towardsBarcodeOrientation = orientation.getBack();
+			barcodeNb = barcodePositions.get(posBarcodeTry2);
+
+		} else {
+			throw new IllegalStateException("De mazefile klopt niet, er zou voor of na een seesawstuk een barcode te vinden moeten zijn");
+		}	
+		// Als er een lage barcode voor het te verwerken wipstuk staat tov
+		// towardsBarcodeOrientation, dan moet de orientatie andersom zijn tov
+		// towardsBarcodeOrientation.
+		Orientation finalSeesawOrientation = Seesaw.isALowBcNb(barcodeNb) ? towardsBarcodeOrientation
+				.getBack() : towardsBarcodeOrientation;
+		Position posSeesawCenter = posSeesawPart.getNewPosition(
+				towardsBarcodeOrientation.getBack().getAngleToHorizontal(), MAZECONSTANT / 2);
+		if(!board.hasAnySeesawAt(posSeesawCenter)){
+			board.putSeesaw(new Seesaw(posSeesawCenter, finalSeesawOrientation,barcodeNb, true));
 		}
 		//else wip staat er al
 	}
