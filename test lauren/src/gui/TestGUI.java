@@ -348,6 +348,7 @@ public class TestGUI {
 	        		connectButton.setText("Disconnect from robot");
 	        		setConnected(true);
 	        		testController.getRobotController().connectNewBtRobot();
+	        		testController.getRobotController().setPlayerClient();
 	        	}
 	        		
 	        	

@@ -49,21 +49,19 @@ public class SimRobotPilot extends RobotPilot {
 	/**
 	 * Assenstelsel wordt geinitialiseerd met oorsprong waar de robot begint
 	 */
-	public SimRobotPilot(int number){
-		this(0, new Position(20,20),number);
+	public SimRobotPilot(String playerID){
+		this(0, new Position(20,20),playerID);
 	}
 	
-	public SimRobotPilot(){
-		this(0);
-	}
+	
 	
 	@Override
 	public ExploreMaze getMaze(){
 		return this.maze;
 	}
 	
-	public SimRobotPilot(double orientation, Position position, int number){
-		super(number);
+	public SimRobotPilot(double orientation, Position position, String playerID){
+		super(playerID);
 		setOrientation(orientation);
 		this.position=position;
 		this.setMovingSpeed(defaultMovingSpeed);
@@ -72,9 +70,7 @@ public class SimRobotPilot extends RobotPilot {
 		setBoard(new Board());
 	}
 	
-	public SimRobotPilot(double orientation, Position position){
-		this(orientation, position, 0);
-	}
+	
 
 	void setOrientation(double orientation) {
 		if(Math.abs(orientation)>180){
@@ -294,7 +290,6 @@ public class SimRobotPilot extends RobotPilot {
 							getOrientation(),
 							DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 					if (!getBoard().detectBarcodeAt(pos)) {
-						System.out.println("blacklinedetected but already barcode");
 
 						isScanningBarcode = true;
 						BarcodeGenerator bg = new BarcodeGenerator(this);
@@ -396,10 +391,10 @@ public class SimRobotPilot extends RobotPilot {
 	
 	private boolean isTouching() {
 		if(moveThread == null || moveThread.getMovement().equals(MoveType.FORWARD)){
-			return getBoard().detectWallAt(getPosition().getNewPosition(getOrientation(), 14));
+			return getWorldSimulator().detectWallAt(getPosition().getNewPosition(getOrientation(), 14));
 		}
 		else{
-			return getBoard().detectWallAt(getPosition().getNewPosition(getOrientation()+180, 5));
+			return getWorldSimulator().detectWallAt(getPosition().getNewPosition(getOrientation()+180, 5));
 		}
 
 	}
@@ -422,7 +417,7 @@ public class SimRobotPilot extends RobotPilot {
 		for(int i = 1; i<MAX_VALUE; i++){
 			for(int j = -15; j<15; j++){
 				Position pos = getPosition().getNewPosition(getOrientation()+ getSensorAngle()+j, i);
-				foundWall = getBoard().detectWallAt(pos);
+				foundWall = getWorldSimulator().detectWallAt(pos);
 				if(foundWall){
 					if(getPosition().getDistance(pos)<shortestDistance){
 						shortestDistance = getPosition().getDistance(pos);
@@ -472,19 +467,19 @@ public class SimRobotPilot extends RobotPilot {
 
 	@Override
 	public boolean detectWhiteLine() {
-		return getBoard().detectWhiteLineAt(getPosition().getNewPosition(getOrientation(), DISTANCE_BETWEEN_SENSOR_AND_WHEELS));
+		return getWorldSimulator().detectWhiteLineAt(getPosition().getNewPosition(getOrientation(), DISTANCE_BETWEEN_SENSOR_AND_WHEELS));
 	}
 	
 	public double detectWhiteLineGradient() {
 		Position checkPosition = getPosition().getNewPosition(getOrientation(), DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 		double aggregate = 0;
-		boolean center = getBoard().detectWhiteLineAt(checkPosition);
+		boolean center = getWorldSimulator().detectWhiteLineAt(checkPosition);
 		for(domain.maze.Orientation o: domain.maze.Orientation.values()){
-			boolean out = getBoard().detectWhiteLineAt(new Position(checkPosition.getX()+o.getXValue()*0.5,checkPosition.getY()+o.getYValue()*0.5));
+			boolean out = getWorldSimulator().detectWhiteLineAt(new Position(checkPosition.getX()+o.getXValue()*0.5,checkPosition.getY()+o.getYValue()*0.5));
 			if(center==out){
 				aggregate+=(center?0.25:0);
 			} else {
-				boolean outCenter = getBoard().detectWhiteLineAt(new Position(checkPosition.getX()+o.getXValue()*0.25,checkPosition.getY()+o.getYValue()*0.25));
+				boolean outCenter = getWorldSimulator().detectWhiteLineAt(new Position(checkPosition.getX()+o.getXValue()*0.25,checkPosition.getY()+o.getYValue()*0.25));
 				aggregate+=0.25*((center?0.5:0)+(outCenter?0.25:0)+(out?0.25:0));
 			}
 		}
@@ -494,13 +489,13 @@ public class SimRobotPilot extends RobotPilot {
 	public double detectBlackLineGradient() {
 		Position checkPosition = getPosition().getNewPosition(getOrientation(), DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 		double aggregate = 0;
-		boolean center = getBoard().detectBlackLineAt(checkPosition);
+		boolean center = getWorldSimulator().detectBlackLineAt(checkPosition);
 		for(domain.maze.Orientation o: domain.maze.Orientation.values()){
-			boolean out = getBoard().detectBlackLineAt(new Position(checkPosition.getX()+o.getXValue()*0.5,checkPosition.getY()+o.getYValue()*0.5));
+			boolean out = getWorldSimulator().detectBlackLineAt(new Position(checkPosition.getX()+o.getXValue()*0.5,checkPosition.getY()+o.getYValue()*0.5));
 			if(center==out){
 				aggregate+=(center?0.25:0);
 			} else {
-				boolean outCenter = getBoard().detectBlackLineAt(new Position(checkPosition.getX()+o.getXValue()*0.25,checkPosition.getY()+o.getYValue()*0.25));
+				boolean outCenter = getWorldSimulator().detectBlackLineAt(new Position(checkPosition.getX()+o.getXValue()*0.25,checkPosition.getY()+o.getYValue()*0.25));
 				aggregate+=0.25*((center?0.5:0)+(outCenter?0.25:0)+(out?0.25:0));
 			}
 		}
@@ -628,12 +623,12 @@ public class SimRobotPilot extends RobotPilot {
 
 	@Override
 	public void addFoundWall(Wall wall){
-		getBoard().foundNewWall(wall);
+		getBoard().addWall(wall);
 	}
 
 	@Override
 	public boolean detectBlackLine() {
-		return getBoard().detectBlackLineAt(getPosition().getNewPosition(getOrientation(), DISTANCE_BETWEEN_SENSOR_AND_WHEELS));
+		return getWorldSimulator().detectBlackLineAt(getPosition().getNewPosition(getOrientation(), DISTANCE_BETWEEN_SENSOR_AND_WHEELS));
 	}
 	@Override
 	public void scanBarcode() {
@@ -711,7 +706,7 @@ public class SimRobotPilot extends RobotPilot {
 		} catch (CannotMoveException e) {
 			e.printStackTrace();
 		}
-		setBall(getBoard().removeBall(getPosition()));
+		setBall(getWorldSimulator().removeBall(getPosition()));
 		try {
 			move(-40);
 		} catch (CannotMoveException e) {
@@ -731,7 +726,8 @@ public class SimRobotPilot extends RobotPilot {
 			blackStraighten();
 //			addSeesawBarcodePositions(); //This is to avoid detecting a barcode when driving on a seesaw // WERKT niet
 			move(65,true);
-			getBoard().rollSeeSawWithBarcode(barcodeNb);
+			getWorldSimulator().rollSeeSawWithBarcode(barcodeNb);
+			//getBoard().rollSeeSawWithBarcode(barcodeNb);
 			move(55,true);
 			blackStraighten();
 			move(-6,true);
@@ -743,6 +739,7 @@ public class SimRobotPilot extends RobotPilot {
 		isDrivingOverSeesaw=false;
 
 	}
+	
 	@Override
 	public void blackStraighten() {
 		(new Straightener(this)).straighten(0, false);
@@ -750,7 +747,7 @@ public class SimRobotPilot extends RobotPilot {
 
 	@Override
 	public int getInfraredValue() {
-			return getBoard().detectRobotFrom(this) || getBoard().checkForOpenSeesawFrom(this)?150:0;
+			return getWorldSimulator().detectRobotFrom(this) || getWorldSimulator().checkForOpenSeesawFrom(this)?150:0;
 	}
 
 	@Override

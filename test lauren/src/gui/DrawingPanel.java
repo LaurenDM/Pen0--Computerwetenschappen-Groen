@@ -94,7 +94,7 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	public void drawSimulatedWalls(){
-		List<Wall> walls = controller.getRobot().getBoard().getWalls();
+		List<Wall> walls = controller.getRobot().getWorldSimulator().getWalls();
 		for(Wall w: walls){
 			drawWall(w, true);
 		}
@@ -103,7 +103,7 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	public void drawFoundWalls(){
-		List<Wall> walls = controller.getRobot().getBoard().getFoundWalls();
+		List<Wall> walls = controller.getRobot().getBoard().getWalls();
 		try {
 			for(Wall w: walls){
 			drawWall(w, false);
@@ -139,7 +139,7 @@ public class DrawingPanel extends JPanel {
 		}
 		else{
 			boolean goodWall = false;
-			List<Wall> simWalls = controller.getRobot().getBoard().getWalls();
+			List<Wall> simWalls = controller.getRobot().getWorldSimulator().getWalls();
 			if(simWalls.size()>0){
 				for(Wall w: simWalls){
 					if(w.hasPosition(wall.getCenterPosition())){
@@ -163,14 +163,14 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	public void drawSimulatedBarcodes(){
-		List<Barcode> barcodes = controller.getRobot().getBoard().getSimulatedBarcodes();
+		List<Barcode> barcodes = controller.getRobot().getWorldSimulator().getSimulatedBarcodes();
 		for(Barcode b: barcodes){
 			drawBarcode(b, true);
 		}
 	}
 	
 	public void drawFoundBarcodes(){
-		List<Barcode> barcodes = controller.getRobot().getBoard().getFoundBarcodes();
+		List<Barcode> barcodes = controller.getRobot().getBoard().getBarcodes();
 		for(Barcode b: barcodes){
 			drawBarcode(b, false);
 		}
@@ -214,21 +214,21 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	public void drawSeesaws(){
-		List<Seesaw> seesaws = controller.getRobot().getBoard().getSeesaws();
+		List<Seesaw> seesaws = controller.getRobot().getWorldSimulator().getSeesaws();
 		for(Seesaw s : seesaws){
 			drawSeesaw(s,true);
 		}
 	}
 	
 	public void drawInfraredPositions(){
-		List<Seesaw> seesaws = controller.getRobot().getBoard().getSeesaws();
+		List<Seesaw> seesaws = controller.getRobot().getWorldSimulator().getSeesaws();
 		for(Seesaw s : seesaws){
 			drawSeesawInfrared(s);
 		}
 	}
 	
 	public void drawFoundSeesaws(){
-		List<Seesaw> seesaws = controller.getRobot().getBoard().getFoundSeesaws();
+		List<Seesaw> seesaws = controller.getRobot().getBoard().getSeesaws();
 		for(Seesaw s : seesaws){
 			drawSeesaw(s,false);
 		}
@@ -463,7 +463,7 @@ public class DrawingPanel extends JPanel {
 	
 	
 	public void drawBalls(){
-		List<Ball> balls = controller.getRobot().getBoard().getBalls();
+		List<Ball> balls = controller.getRobot().getWorldSimulator().getBalls();
 		for(Ball b: balls){
 			drawBall(b);
 		}
@@ -487,6 +487,7 @@ public class DrawingPanel extends JPanel {
 	public void clear() {
 		g.setColor(Color.white);
 		g.fillRect(0, 0, IMG_WIDTH, IMG_HEIGHT);
+		previousPolygons.clear();
 		totalGui.repaint();
 	}
 

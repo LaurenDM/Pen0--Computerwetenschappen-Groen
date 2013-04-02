@@ -11,7 +11,7 @@ public class BarcodesTester {
 	private static RobotPilot robot;
 	
 	public static void main(String[] args) throws CannotMoveException{
-		robot = new BTRobotPilot();
+		robot = new BTRobotPilot("blabla");
 		
 		
 		robot.forward();

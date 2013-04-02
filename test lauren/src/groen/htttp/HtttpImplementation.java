@@ -25,7 +25,6 @@ public class HtttpImplementation {
 	
 	PlayerHandler playerHandler;
 	GameHandler gameHandler;
-	SpectatorHandler spectatorHandler;
 	
 	PlayerClient playerClient;
 	SpectatorClient spectatorClient;
@@ -35,9 +34,7 @@ public class HtttpImplementation {
 		
 		this.controller = controller;
 		
-		playerHandler = new PlayerHandler(this);
 		gameHandler = new GameHandler();
-		spectatorHandler = new SpectatorHandler(this);
 		
 		ConnectionFactory factory = new ConnectionFactory();
 		
@@ -48,22 +45,21 @@ public class HtttpImplementation {
 	    factory.setHost("localhost");
 	    factory.setPort(8888);
 	    
+//	    
 	    //CAMPUSNET
-//	    factory.setHost("leuven.cs.kotnet.kuleuven.be");
-//	    factory.setPort(5672);
+	    //factory.setHost("leuven.cs.kotnet.kuleuven.be");
+	    //factory.setPort(5672);
 	    
 	    //*******************************************************
 	    	    
 	    
 	    Connection connection = null;
 	    String gameID = "gameIDGroen";
-	    int random = (int) (Math.random()*1000000);
-//	    random =1;
-		String playerID = "playerIDGroen"+random;
+	    String playerID = controller.getPlayerID();
 		try {
 			connection = factory.newConnection();
 			playerClient = new PlayerClient(connection, playerHandler, gameID, playerID);
-			spectatorClient = new SpectatorClient(connection, spectatorHandler, gameID);
+			spectatorClient = new SpectatorClient(connection, controller.getWorldSimulator(), gameID);
 			spectatorClient.start();
 			
 		} catch (IOException e) {
@@ -98,14 +94,10 @@ public class HtttpImplementation {
 			e.printStackTrace();
 		}
 	}
+	
+	
 
-	public void setReady(boolean ready) {
-		try {
-			playerClient.setReady(ready);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}		
-	}
+	
 	
 	public Controller getController(){
 		return controller;
@@ -119,22 +111,7 @@ public class HtttpImplementation {
 		return spectatorClient;
 	}
 	
-//	public void updateOtherPlayers(String newPlayerPlayerID){
-//		System.out.println("updating other players");
-//		Set<String> players = playerClient.getPlayers();
-//		for(String player: players){
-//			if(!player.equals(playerClient.getPlayerID())){
-//			if(controller.getOtherRobots().containsKey(player)){
-//				System.out.println("-----------Already contains key: "+player);
-//			}
-//			else{
-//				//aangezien er volgens mij geen manier is om de beginpositie op te vragen zet ik hem op 20,20
-//				controller.connectExternalSimRobot(0, new Position(20,20), player);
-//				System.out.println("-----------Toegevoegd: "+player);
-//			}
-//			}
-//		}
-//	}
+
 	
 	private void sendPositions(){
 		PlayerClient playerClient = getPlayerClient();
@@ -160,59 +137,9 @@ public class HtttpImplementation {
 			
 		}, 0, 1000, TimeUnit.MILLISECONDS);
 
-//		Thread posThread = new Thread() {
-//		    @Override
-//			public void run(){
-//		    	while (true) {
-//					sendPositions();
-//					try {
-//						Thread.sleep(5000);
-//					} catch (InterruptedException e) {
-//						break;
-//					}
-//		    }
-//		  };
-//		};
-//		posThread.run();
 	}
 	
-	public void foundBall(){
-		try {
-			playerClient.foundObject();
-		} catch (IllegalStateException e) {
-			//  Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			//  Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	
-	//TODO: lock en unlock aanroepen als we over wip rijden
-	
-	public void lockSeesaw(int barcodeNb){
-		try {
-			playerClient.lockSeesaw(barcodeNb);
-		} catch (IllegalStateException e) {
-			//  Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			//  Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public void unlockSeesaw(){
-		try {
-			playerClient.unlockSeesaw();
-		} catch (IllegalStateException e) {
-			//  Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			//  Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 
 }
 		
