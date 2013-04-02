@@ -14,7 +14,7 @@ public class SimRobotTest {
 	
 	@Before
 	public void setUp(){
-		this.simRobotpilot=new SimRobotPilot();
+		this.simRobotpilot=new SimRobotPilot("blabla");
 	}
 
 	@Test

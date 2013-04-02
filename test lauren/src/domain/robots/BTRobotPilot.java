@@ -44,8 +44,8 @@ public class BTRobotPilot extends RobotPilot  {
 	private long lastSensorUpdateTime;
 
 	
-	public BTRobotPilot(int number){
-		super(number);
+	public BTRobotPilot(String playerID){
+		super(playerID);
 		try {
 			btComm = (new BTCommPC(this));
 			btComm.open(null,bluetoothAdress );
@@ -61,10 +61,6 @@ public class BTRobotPilot extends RobotPilot  {
 
 		}
 		board = new Board();
-	}
-	
-	public BTRobotPilot(){
-		this(0);
 	}
 	
 	@Override
@@ -396,7 +392,7 @@ public class BTRobotPilot extends RobotPilot  {
 
 	@Override
 	public void addFoundWall(Wall wall) {
-		board.foundNewWall(wall);
+		board.addWall(wall);
 	}
 
 	@Override
@@ -428,8 +424,8 @@ public class BTRobotPilot extends RobotPilot  {
 	public void makeBarcode(int[] data) {
 		Barcode barcode = new Barcode(data[2], new Position(data[0], data[1]),
 				data[3], this);
+		getBoard().addBarcode(barcode);
 		Action action = barcode.getAction();
-		getBoard().addFoundBarcode(barcode);
 		if(action != null) action.run(this);
 	}
 
@@ -459,7 +455,7 @@ public class BTRobotPilot extends RobotPilot  {
 	@Override
 	public void driveOverSeeSaw(int barcodeNb) {
 		btComm.sendCommand(CMD.SEESAWACTION);
-		getBoard().rollSeeSawFromBarcode(barcodeNb);
+		getBoard().rollSeeSawWithBarcode(barcodeNb);
 	}
 
 	@Override

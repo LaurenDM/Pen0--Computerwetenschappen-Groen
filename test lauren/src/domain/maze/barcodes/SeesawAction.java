@@ -19,17 +19,17 @@ public class SeesawAction implements Action {
 
 	@Override
 	public void run(RobotPilot robot) {
-		final Seesaw foundSeesaw;
-		if(robot.getBoard().getFoundSeesawAt(center)==null){
+		Seesaw foundSeesaw=robot.getWorldSimulator().getSeesaw(center);
+		if(foundSeesaw==null){
 		foundSeesaw = new Seesaw(center, orientation, barcodeNb,false);
-		robot.getBoard().addFoundSeesaw(foundSeesaw);
+		robot.getBoard().addSeesaw(foundSeesaw);
 		Barcode newBarcode= foundSeesaw.getBarcode((int) robot.getOrientation(), new SeesawAction(foundSeesaw.getOtherBarcode(),center,orientation ), robot);
-		robot.getBoard().addFoundBarcode(newBarcode);
+		robot.getBoard().addBarcode(newBarcode);
 		System.out.println("We are going to handle a newly found seesaw");
+
 		}
 		else{
 			System.out.println("We are going to handle an already found seesaw");
-			foundSeesaw=robot.getBoard().getFoundSeesawAt(center);
 		}
 			
 			//Note that in the handleSeesaw, we take into account whether the seesaw is locked or not.

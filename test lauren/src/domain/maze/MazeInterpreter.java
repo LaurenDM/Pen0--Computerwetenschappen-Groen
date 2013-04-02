@@ -17,14 +17,14 @@ import domain.maze.barcodes.Barcode;
 
 public class MazeInterpreter {
 	
-	private Board board;
+	private WorldSimulator simulator;
 	private int firstLine; //number of line with first command
 	
 	private HashMap<Position,Integer> barcodePositions;
 	
 	
-	public MazeInterpreter(Board board){
-		this.board = board;
+	public MazeInterpreter(WorldSimulator simulator){
+		this.simulator = simulator;
 		barcodePositions = new HashMap<Position,Integer>();
 	}
 	
@@ -125,7 +125,7 @@ public class MazeInterpreter {
 		int xBall = XCoo*MAZECONSTANT+MAZECONSTANT/2;
 		int yBall = YCoo*MAZECONSTANT+MAZECONSTANT/2;
 		Ball ball = new Ball(new Position(xBall, yBall));
-		board.addBall(ball);
+		simulator.addBall(ball);
 	}
 	
 	public void createInitialPosition(int XCoo, int YCoo, String orientString, int playernb){
@@ -136,7 +136,7 @@ public class MazeInterpreter {
 		Orientation orientation = Orientation.getOrientation(orientString);
 		System.out.println("1 Xcoo "+XCoo+" YCoo"+YCoo);
 		InitialPosition pos = new InitialPosition(XCoo,YCoo,orientation);
-		board.addInitialPosition(pos, playernb);
+		simulator.addInitialPosition(pos, playernb);
 	}
 	
 	public void createClosed(int XCoo, int YCoo){
@@ -285,8 +285,8 @@ public class MazeInterpreter {
 	             break;
 			}
 			if(posConflict!=null){
-				if(board.detectWallAt(posConflict)==false){
-					board.addWall(new Wall(position1, position2));
+				if(simulator.detectWallAt(posConflict)==false){
+					simulator.addWall(new Wall(position1, position2));
 				}
 			}
 	}
@@ -297,8 +297,8 @@ public class MazeInterpreter {
 		xCoo = xCoo*MAZECONSTANT+(MAZECONSTANT/2);
 		yCoo = yCoo*MAZECONSTANT+(MAZECONSTANT/2);
 		Position pos = new Position(xCoo,yCoo);
-		if(!board.detectBarcodeAt(pos)){
-			board.addSimulatedBarcode(new Barcode(dec, pos, orientation));
+		if(!simulator.detectBarcodeAt(pos)){
+			simulator.addSimulatedBarcode(new Barcode(dec, pos, orientation));
 		}
 		if((dec>10) && (dec<22) && (dec%2==1)){
 			// barcode is voor wip
@@ -329,7 +329,7 @@ public class MazeInterpreter {
 		Position posBarcodeTry2 = posSeesawPart.getNewPosition(
 				orientation.getAngleToHorizontal(), -MAZECONSTANT);
 		
-		if(board.hasAnySeesawAt(posBarcodeTry1)||board.hasAnySeesawAt(posBarcodeTry2)){
+		if(simulator.hasSeesawAt(posBarcodeTry1)||simulator.hasSeesawAt(posBarcodeTry2)){
 			return;
 		}
 		Orientation towardsBarcodeOrientation = null;
@@ -351,8 +351,8 @@ public class MazeInterpreter {
 				.getBack() : towardsBarcodeOrientation;
 		Position posSeesawCenter = posSeesawPart.getNewPosition(
 				towardsBarcodeOrientation.getBack().getAngleToHorizontal(), MAZECONSTANT / 2);
-		if(!board.hasAnySeesawAt(posSeesawCenter)){
-			board.putSeesaw(new Seesaw(posSeesawCenter, finalSeesawOrientation,barcodeNb, true));
+		if(!simulator.hasSeesawAt(posSeesawCenter)){
+			simulator.addSeesaw(new Seesaw(posSeesawCenter, finalSeesawOrientation,barcodeNb, true));
 		}
 		//else wip staat er al
 	}

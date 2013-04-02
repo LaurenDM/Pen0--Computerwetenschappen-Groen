@@ -1,5 +1,6 @@
 package domain.maze;
 
+
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -10,324 +11,92 @@ import domain.maze.barcodes.Barcode;
 import domain.robots.RobotPilot;
 
 public class Board {
-
+	
 	private static final int MAZECONSTANT = 40;
-
+	
+	
 	private HashMap<Position, Wall> walls;
-	private List<Wall> foundWalls;
-	private List<Ball> balls;
-	private List<Barcode> simulatedBarcodes;
-	private List<Barcode> foundBarcodes;
-	private List<RobotPilot> otherRobots;
-	private HashMap<Position, Seesaw> simWorldseesaws;
-	private List<Seesaw> foundSeesaws;
-	private HashMap<Integer, InitialPosition> initialPositions;
-
-	public Board() {
-		walls = new HashMap<Position, Wall>();
-		simulatedBarcodes = new ArrayList<Barcode>();
-		foundBarcodes = new ArrayList<Barcode>();
-		foundWalls = new ArrayList<Wall>();
-		balls = new ArrayList<Ball>();
-		simWorldseesaws = new HashMap<Position, Seesaw>();
-		foundSeesaws = new ArrayList<Seesaw>();
-		initialPositions = new HashMap<Integer, InitialPosition>();
+	private List<Barcode> barcodes;
+	private HashMap<Position, Seesaw> seesaws;
+	
+	
+	
+	public Board(){
+		barcodes = new ArrayList<Barcode>();
+		walls = new HashMap<Position,Wall>();
+		seesaws = new HashMap<Position, Seesaw>();
 	}
-
-	public void addInitialPosition(InitialPosition pos, int nb) {
-		System.out.println("init pos added: x:" + pos.getX() + " y:"
-				+ pos.getY() + " nb:" + nb);
-		initialPositions.put(nb, pos);
-	}
-
-	public InitialPosition getInitialPositionFromPlayer(int nb) {
-		System.out.println("-----------------");
-		System.out.println("inpos");
-		for (int i = 0; i < 4; i++) {
-			if (initialPositions.get(i) != null)
-				System.out.println(initialPositions.get(i));
-		}
-		System.out.println("-----------------");
-		return initialPositions.get(nb);
-	}
-
-	public synchronized void addWall(Wall wall) {
+	
+	public synchronized void addWall(Wall wall){
 		walls.put(wall.getCenterPosition(), wall);
 	}
-
-	public synchronized void addBall(Ball ball) {
-		balls.add(ball);
-	}
-
-	public synchronized void addRobot(RobotPilot robot) {
-		otherRobots.add(robot);
-	}
-
-	public Ball removeBall(Position position) {
-		Ball ball2remove = null;
-		for (Ball ball : balls) {
-			if (ball.getPosition().getDistance(position) < 10) {
-				ball2remove = ball;
-			}
-		}
-		if (ball2remove != null) {
-			balls.remove(ball2remove);
-		}
-		return ball2remove;
-	}
-
-	public synchronized void foundNewWall(Wall wall) {
-		foundWalls.add(wall);
-	}
-
-	public List<Wall> getFoundWalls() {
-		return foundWalls;
-	}
-
-	public synchronized void addFoundBarcode(Barcode barcode) {
-		foundBarcodes.add(barcode);
-	}
-
-	// public synchronized void removeFoundBarcode(Barcode barcode){
-	// foundBarcodes.remove(barcode);
-	// }
-	public synchronized void addSimulatedBarcode(Barcode barcode) {
-		simulatedBarcodes.add(barcode);
-	}
-
-	public List<Wall> getWalls() {
+	
+	public List<Wall> getWalls(){
 		return new ArrayList<Wall>(walls.values());
 	}
-
-	public List<Barcode> getSimulatedBarcodes() {
-		return simulatedBarcodes;
-	}
-
-	public List<Barcode> getFoundBarcodes() {
-		return foundBarcodes;
-	}
-
-	public List<Ball> getBalls() {
-		return balls;
-	}
-
-	public synchronized boolean detectWallAt(Position position) {
-		int x = (int) (Math.round((position.getX()) / MAZECONSTANT))
-				* MAZECONSTANT;
-		int y = (int) (Math.round((position.getY()) / MAZECONSTANT))
-				* MAZECONSTANT;
-		final int MARGE = 1;
-		if (!(position.getX() % MAZECONSTANT < MARGE || position.getX()
-				% MAZECONSTANT > (MAZECONSTANT - MARGE))
-				&& !(position.getY() % MAZECONSTANT < MARGE || position.getY()
-						% MAZECONSTANT > (MAZECONSTANT - MARGE))) {
-			// positie is op een vakje
-			return false;
-		} else if ((position.getX() % MAZECONSTANT < MARGE || position.getX()
-				% MAZECONSTANT > (MAZECONSTANT - MARGE))
-				&& !(position.getY() % MAZECONSTANT < MARGE || position.getY()
-						% MAZECONSTANT > (MAZECONSTANT - MARGE))) {
-			// verticale muren
-			y = (int) Math.floor((position.getY()) / MAZECONSTANT)
-					* MAZECONSTANT;
-			return findWallAt(new Position(x, y + 20), position);
-		} else if (!(position.getX() % MAZECONSTANT < MARGE || position.getX()
-				% MAZECONSTANT > (MAZECONSTANT - MARGE))
-				&& (position.getY() % MAZECONSTANT < MARGE || position.getY()
-						% MAZECONSTANT > (MAZECONSTANT - MARGE))) {
-			// horizontale muren
-			x = (int) Math.floor((position.getX()) / MAZECONSTANT)
-					* MAZECONSTANT;
-			return findWallAt(new Position(x + 20, y), position);
-		} else {
-			for (Orientation orientation : Orientation.values()) {
-				if (findWallAt(new Position(x + 20 * orientation.getXValue(), y
-						+ 20 * orientation.getYValue()), position)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	private boolean findWallAt(Position middlePosition, Position position) {
+	
+	public boolean findWallAt(Position middlePosition, Position position){
 		Wall wall = walls.get(middlePosition);
-		if (wall == null) {
+		if(wall == null) {
 			return false;
-		} else {
+			}
+		else {
 			return wall.hasPosition(position);
 		}
 	}
-
-	public synchronized boolean detectBarcodeAt(Position position) {
-		for (Barcode barcode : foundBarcodes) {
-			if (barcode.containsPosition(position))
-				return true;
-		}
-		return false;
+	
+	public synchronized void addBarcode(Barcode barcode){
+		barcodes.add(barcode);
 	}
-
-	public Barcode getFoundBarcodeAt(Position pos) {
-		for (Barcode barcode : foundBarcodes) {
-			if (barcode.containsPosition(pos))
-				return barcode;
-		}
-		return null;
-	}
-
-	public synchronized boolean detectWhiteLineAt(Position position) {
-		final int MARGE = 1; // TODO: hangt af van dikte lijnen
-		double x_mod = Math.abs(position.getX() % MAZECONSTANT);
-		if (Math.min(x_mod, MAZECONSTANT - x_mod) < MARGE)
-			return true;
-		double y_mod = Math.abs(position.getY() % MAZECONSTANT);
-		if (Math.min(y_mod, MAZECONSTANT - y_mod) < MARGE)
-			return true;
-		for (Barcode barcode : simulatedBarcodes) {
-			if (barcode.isWhiteAt(position)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public synchronized boolean detectBlackLineAt(Position position) {
-		for (Barcode barcode : simulatedBarcodes) {
-			if (barcode.isBlackAt(position)) {
-				// System.out.println("blackline");
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public synchronized boolean detectRobotFrom(RobotPilot robot) {
-		final int DISTANCE = 50; // TODO experimenteel bepalen van bereik van
-									// IRsensor
-		if (otherRobots != null) {
-			for (RobotPilot robot2 : otherRobots) {
-				if (robot2.getPosition().getDistance(robot.getPosition()) < DISTANCE) {
-					double distance = robot2.getPosition().getDistance(
-							robot.getPosition());
-					double angle = Math.abs(robot.getOrientation()
-							- robot.getPosition().getAngleTo(
-									robot2.getPosition()));
-					if (angle < 135) {
-						// andere robot in gezichtsveld van robot
-						robot.turnUltrasonicSensor((int) angle);
-						if (robot.readUltrasonicValue() >= distance) {
-							// geen muur tussen robots
-							return true;
-						}
-						// wel muur tussen robots
-					}
-					// robot ziet andere robot niet
-				}
-				// buiten bereik
-			}
-		}
-		return false;
-	}
-
-	public void putSeesaw(Seesaw seesaw) {
-		if (simWorldseesaws.get(seesaw.getCenterPosition()) == null) {
-			simWorldseesaws.put(seesaw.getCenterPosition(), seesaw);
-		}
-	}
-
-	public void addFoundSeesaw(Seesaw foundSeesaw) {
-//		if (simWorldseesaws.get(foundSeesaw.getCenterPosition()) != null) {
-//			foundSeesaw = simWorldseesaws.get(foundSeesaw.getCenterPosition());
-//		}
-		if(foundSeesaw.isFromTXTfile){
-			throw new RuntimeException("You are trying to add a seesaw made from a TXT file to the found Seesaws");
-		}
-		foundSeesaws.add(foundSeesaw);
-		
-//		return foundSeesaw;
-	}
-
-	public boolean checkForOpenSeesawFrom(RobotPilot robot) {
-		final int DISTANCE = 80;
-		for (Seesaw seesaw : simWorldseesaws.values()) {
-			if (seesaw.getInfaredPosition().getDistance(robot.getPosition()) < DISTANCE) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean hasAnySeesawAt(Position pos) {
-		if (simWorldseesaws.get(pos) != null) {
-			return true;
-		} else {
-			for (Seesaw s : getAllSeesaws()) {
-				if (s.hasPosition(pos)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	public Seesaw getFoundSeesawAt(Position pos) {
-
-			for (Seesaw s : getFoundSeesaws()) {
-				if (s.hasPosition(pos)) {
-					return s;
-				}
-			}
-		return null;
-	}
-	public List<Seesaw> getAllSeesawsAt(Position pos) {
-		List<Seesaw> seesaws= new ArrayList<Seesaw>();
-		for (Seesaw s : getAllSeesaws()) {
-			if (s.hasPosition(pos)) {
-				seesaws.add(s);
-			}
-		}
-	return seesaws;
-}
-	public List<Seesaw> getAllSeesaws() {
-		List<Seesaw> allSeesaws = new ArrayList<Seesaw>();
-		allSeesaws.addAll(foundSeesaws);
-		allSeesaws.addAll(simWorldseesaws.values()); 	
-		return allSeesaws;
+//	public synchronized void removeFoundBarcode(Barcode barcode){
+//		foundBarcodes.remove(barcode);
+//	}
+	
+	public List<Barcode> getBarcodes(){
+		return barcodes;
 	}
 	
-	// These are the seesaws which are on top, the simulated world seesaws are
-		// below the foundSeesaws, so they should not ge given if there is a
-		// foundSeesaw on the same Place.
-		public List<Seesaw> getTopSeesaws() {
-			List<Seesaw> topSeesaws = new ArrayList<Seesaw>();
-			topSeesaws.addAll(foundSeesaws);
-			for (Seesaw simWorldSeesaw : simWorldseesaws.values()) {
-				boolean dontAdd = false;
-				for (Seesaw foundSeesaw : simWorldseesaws.values()) {
-					if (simWorldSeesaw.hasPosition(foundSeesaw.getCenterPosition())) {
-						dontAdd = true;
-					}
-				}
-				if (!dontAdd) {
-					topSeesaws.add(simWorldSeesaw);
-				}
-			}
-			return topSeesaws;
+	public synchronized boolean detectBarcodeAt(Position position){
+		for(Barcode barcode : barcodes){
+			if(barcode.containsPosition(position)) return true;
 		}
-
-	public List<Seesaw> getFoundSeesaws() {
-		return new ArrayList<Seesaw>(foundSeesaws);
+		return false;
 	}
-
-	public void rollSeeSawFromBarcode(int barcodenb) {
-		for (Seesaw s : getAllSeesaws()) {
-			if (s.hasBarcodeNb(barcodenb)) {
-				s.rollOver(barcodenb);
+	
+	public Barcode getBarcodeAt(Position pos){
+		for(Barcode barcode : barcodes){
+			if(barcode.containsPosition(pos)) return barcode;
+		}
+		return null;
+	}
+	
+	
+	public void rollSeeSawWithBarcode(int barcodenb){
+		for(Seesaw s : getSeesaws()){
+			if(s.hasBarcodeNb(barcodenb)){
+				s.rollOver();
 			}
 		}
 	}
 
+	// TODO checken of het wel goed is dat als er een seesaw wordt toegevoegd
+	// die al op dezelfde positie bestaat, dat die dan de andere vervangt
+	public void addSeesaw(Seesaw foundSeesaw){
+		seesaws.put(foundSeesaw.getCenterPosition(), foundSeesaw);
+	}
+	
+	public List<Seesaw> getSeesaws(){
+		return new ArrayList<Seesaw>(seesaws.values());
+	}
+	
+	public Seesaw getSeesaw(Position pos){
+		return seesaws.get(pos);
+	}
+	
+	
+	//TODO Francis laten gebruiken
 	public void setLockForSeesawWithBarcode(int barcodenb, boolean lock) {
-		for (Seesaw s : getAllSeesaws()) {
+		for (Seesaw s : getSeesaws()) {
 			if (s.hasBarcodeNb(barcodenb)) {
 				if(lock){
 				s.lock();
@@ -340,3 +109,6 @@ public class Board {
 	}
 
 }
+
+
+

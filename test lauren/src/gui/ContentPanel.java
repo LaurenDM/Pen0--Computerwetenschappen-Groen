@@ -428,7 +428,6 @@ public class ContentPanel implements ActionListener {
 	public void ballAlert(){
 		debugText.append("Robot picked up ball" + "\n");
 		drawingPanel.removeBall(controller.getBall());
-		controller.foundBall();
 	}
 	
 
@@ -486,11 +485,13 @@ public class ContentPanel implements ActionListener {
         		drawingPanel.drawWhiteLines();
         		drawingPanel.updateUI();
         		setConnected(false);
-        		controller.connectNewSimRobot(0, new Position(20,20), 0);
+        		controller.connectNewSimRobot(0, new Position(20,20), controller.getPlayerID());
+        		controller.setPlayerClient();
         	}
         	else{
         		try{
         		controller.connectNewBtRobot();
+        		controller.setPlayerClient();
         		connectButton.setText("Disconnect from brobot");
         		setConnected(true);
         		drawingPanel.clear();
@@ -731,7 +732,7 @@ public class ContentPanel implements ActionListener {
 	
 	//barcodes
 	public void updateInfoPanel(){
-		for(Barcode b :controller.getRobot().getBoard().getFoundBarcodes()){
+		for(Barcode b :controller.getRobot().getBoard().getBarcodes()){
 			if(!b.getPrinted()){
 				b.setPrinted(true);
 				writeToDebug("Barcode "+b.getReadBits()[0]+b.getReadBits()[1]+b.getReadBits()[2]+b.getReadBits()[3]+b.getReadBits()[4]+b.getReadBits()[5]+" with value "+b.getPossibleDecimal()+" added.");

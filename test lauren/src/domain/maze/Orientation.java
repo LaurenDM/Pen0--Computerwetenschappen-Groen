@@ -53,7 +53,7 @@ public enum Orientation {
 		return this.getOffset(-2);
 	}
 
-	private Orientation getOffset(int offset){
+	public Orientation getOffset(int offset){
 		if(Math.abs(offset)>2) {
 			throw new IllegalArgumentException("Cannot return the orientation at this offset.");
 		} else {

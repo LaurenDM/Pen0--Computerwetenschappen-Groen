@@ -4,6 +4,8 @@ import gui.ContentPanel;
 
 import java.util.ArrayList;
 
+import peno.htttp.Tile;
+
 import controller.Controller;
 
 import domain.Position.Position;
@@ -361,8 +363,12 @@ public class ExploreMaze{
 			maze.move();
 			maze.move();
 			maze.move();
-//			((SeesawNode)maze.getCurrentNode().getNodeAt(maze.getCurrentRobotOrientation().getBack())).setUp(false);
+			((SeesawNode)maze.getCurrentNode().getNodeAt(maze.getCurrentRobotOrientation().getBack())).setUp(false);
 			System.out.println("The node after the seesaw is "+maze.getCurrentNode());
 		}
+	}
+
+	public ArrayList<domain.maze.graph.TileNode> getFoundTilesList() {
+		return maze.getFoundTilesList();
 	}
 }
