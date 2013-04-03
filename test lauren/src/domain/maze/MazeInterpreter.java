@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.crypto.spec.PSource;
+
 
 import domain.Position.InitialPosition;
 import domain.Position.Position;
@@ -319,16 +321,19 @@ public class MazeInterpreter {
 		int MAZECONSTANT = MazeElement.getMazeConstant();
 		xCoo = xCoo*MAZECONSTANT+(MAZECONSTANT/2);
 		yCoo = yCoo*MAZECONSTANT+(MAZECONSTANT/2);
-		Position posSeesawPart = new Position(xCoo,yCoo);
+		final Position posSeesawPart = new Position(xCoo,yCoo);
 		
 		// We bepalen eerst aan welke kant van dit seesaw-stuk dat er een
 		// barcode ligt en zetten de orientatie er naartoe gericht (wordt later
 		// nog veranderd)
 		Position posBarcodeTry1 = posSeesawPart.getNewPosition(
 				orientation.getAngleToHorizontal(), MAZECONSTANT);
+				//We snap to tile center because the getNewPosition Method can give none-rounded results
+		posBarcodeTry1.snapTo(MAZECONSTANT,MAZECONSTANT/2, MAZECONSTANT/2);
 		Position posBarcodeTry2 = posSeesawPart.getNewPosition(
 				orientation.getAngleToHorizontal(), -MAZECONSTANT);
-		
+		posBarcodeTry2.snapTo(MAZECONSTANT,MAZECONSTANT/2, MAZECONSTANT/2);
+
 		if(simulator.hasSeesawAt(posBarcodeTry1)||simulator.hasSeesawAt(posBarcodeTry2)){
 			return;
 		}
@@ -349,7 +354,7 @@ public class MazeInterpreter {
 		// towardsBarcodeOrientation.
 		Orientation finalSeesawOrientation = Seesaw.isALowBcNb(barcodeNb) ? towardsBarcodeOrientation
 				.getBack() : towardsBarcodeOrientation;
-		Position posSeesawCenter = posSeesawPart.getNewPosition(
+		final Position posSeesawCenter = posSeesawPart.getNewRoundedPosition(
 				towardsBarcodeOrientation.getBack().getAngleToHorizontal(), MAZECONSTANT / 2);
 		if(!simulator.hasSeesawAt(posSeesawCenter)){
 			simulator.addSeesaw(new Seesaw(posSeesawCenter, finalSeesawOrientation,barcodeNb, true));

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.LocatorEx.Snapshot;
 import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 import domain.Position.Position;
@@ -20,13 +21,10 @@ public class Barcode extends MazeElement{
 	private int[] readBits;
 	private List<Integer> legalInts = new ArrayList<Integer>();
 	private boolean printed;
-	private RobotPilot robot=null;
 	private final int decimal;
-	private final int firstReadRobotOrientation;
 	
-	public Barcode(int decimal, Position pos, Orientation orientation, int firstReadRobotOrientation, Action action, RobotPilot robot){
+	public Barcode(int decimal, Position pos, Orientation orientation){
 		fillLegals();
-		this.robot=robot;
 		readBits = getBinary(decimal);
 		if(!legalInts.contains(decimal)){
 			this.decimal = getDecimal(this.readBits);
@@ -35,44 +33,33 @@ public class Barcode extends MazeElement{
 		}
 		this.pos = pos;
 		this.orientation = orientation;
-		this.firstReadRobotOrientation=Orientation.snapAngle(90,0,firstReadRobotOrientation);
-		if (action == null && robot != null) {
-			this.action = getAction(decimal);
-		} else {
-			this.action = action; // This is not needed here because the actions
-									// are only used for found barcodes
-		}
+		this.action = getAction(decimal);
+		
 		System.out.println("Barcode created with value "+this.readBits[5]+this.readBits[4]+this.readBits[3]+this.readBits[2]+this.readBits[1]+this.readBits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
 	}
 	
 	
-	public Barcode(int[] bits, Position pos, double angle, RobotPilot robot){
+	public Barcode(int[] bits, Position pos, double angle){
 		fillLegals();
 		if(bits.length != 6){
 			throw new IllegalArgumentException();
 		}
-		this.robot=robot;
-		this.firstReadRobotOrientation=Orientation.snapAngle(90,0,robot.getOrientation());
-		this.readBits = bits;
-		this.pos = pos;
-		this.orientation = Orientation.getOrientation(angle);
 		int calculatedDecimal=getDecimal(bits);
 		if(!legalInts.contains(calculatedDecimal)){
 			decimal = getDecimal(getmirroredBits());
 		}else{
 			decimal = calculatedDecimal;
 		}
+		this.readBits = bits;
+		this.pos = pos;
+		this.orientation = Orientation.getOrientation(angle);
+		
 		action = getAction(decimal);
 		System.out.println("Barcode created with value "+this.readBits[5]+this.readBits[4]+this.readBits[3]+this.readBits[2]+this.readBits[1]+this.readBits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
 	}
 	
-	public Barcode(int decimal, Position pos, Orientation orientation){
-		this( decimal,  pos,  orientation, 999, null, null);
-	}
 	
-	public Barcode(int decimal, Position pos, double angle, RobotPilot robot){
-		this(decimal, pos, Orientation.getOrientation(angle),(int)robot.getOrientation(),null, robot);
-	}
+
 	
 
 	private static int ownBallNumber = 0;
@@ -132,7 +119,7 @@ public class Barcode extends MazeElement{
 			return new DoNothingAction();
 		}
 		else if(isSeesawBC()){
-			Position pos = getCenterPosition().getNewPosition(Orientation.getOrientation(robot.getOrientation()).getAngleToHorizontal(), 60);
+			Position pos = getCenterPosition().getNewPosition(getOrientation().getAngleToHorizontal(), 60);
 			return new SeesawAction(number, pos, getOrientation());
 		}
 		else if(isCheckPointNumber(number)){
@@ -346,9 +333,7 @@ public class Barcode extends MazeElement{
 	public boolean hasPosition(Position position) {
 		return containsPosition(position);
 	}
-	public boolean sameFirstReadOrientation() {
-			int orientationNow=Orientation.snapAngle(90,0,robot.getOrientation());
-
-		return orientationNow==firstReadRobotOrientation;
+	public boolean sameFirstReadOrientation(double robotOrientationToCompare) {
+			return(Orientation.getOrientation(robotOrientationToCompare).equals(getOrientation()));
 	}
 }

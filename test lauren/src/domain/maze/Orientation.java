@@ -116,7 +116,11 @@ public enum Orientation {
 		}
 		return (positive ? 1 : -1) * (snappedNumber + offset);
 	}
-
-
+	
+	
+	public boolean equals(Orientation otherOrientation){
+		if(otherOrientation==null) return false;
+		return this.getAngleToHorizontal()==otherOrientation.getAngleToHorizontal();
+	}
 }
 

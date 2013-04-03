@@ -4,6 +4,8 @@ import java.lang.Math;
 import lejos.geom.Point;
 
 public class Position implements Cloneable {
+	private static final int MAZECONSTANT = 40;
+
 	// TODO waarom final in formele parameter?
 	public Position(final double x, final double y){
 		setX(x);
@@ -33,6 +35,13 @@ public class Position implements Cloneable {
 		return new Position(x,y);
 	}
 	
+	//geeft een positie die sowieso in het midden van een tile staat.
+	public Position getNewRoundedPosition(double orientation, double distance){
+		double x = Math.round( getX()+Math.cos(Math.toRadians(orientation))*distance);
+		double y = Math.round(getY()+Math.sin(Math.toRadians(orientation))*distance);
+		return new Position(x,y);
+	}
+
 	public void setX(double x){
 		this.x= x;
 	}
@@ -45,6 +54,26 @@ public class Position implements Cloneable {
 		return new Position(this.x, this.y);
 		
 	}
+	
+	public void snapTo(int mod, int xOffset, int yOffset){
+		setX(snapDoubleTo(mod, xOffset, this.x));
+		setY(snapDoubleTo(mod, yOffset, this.y));
+	}
+	
+	private int snapDoubleTo(int mod, int offset, double notSnapped) {
+		boolean positive=notSnapped>=0;
+		notSnapped*=(positive?1:-1);
+
+		int intNotSnapped=(int) notSnapped-offset;
+
+		int snappedNumber=(intNotSnapped/mod)*mod;
+		if(intNotSnapped-snappedNumber> mod/2){
+			snappedNumber+=mod;
+		}
+		return (positive?1:-1)*(snappedNumber+offset);
+	}
+
+	
 	
 	public double getDistance(Position other){
 		return Math.sqrt(Math.pow(other.getX()-getX(),2) + Math.pow(other.getY()-getY(),2));

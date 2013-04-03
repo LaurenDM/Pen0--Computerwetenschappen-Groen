@@ -145,9 +145,9 @@ public class Seesaw extends MazeElement {
 
 	public Position[] getInfrareds() {
 		return new Position[] {
-				getCenterPosition().getNewPosition(
+				getCenterPosition().getNewRoundedPosition(
 						getOrientation().getAngleToHorizontal(), -20),
-				getCenterPosition().getNewPosition(
+				getCenterPosition().getNewRoundedPosition(
 						getOrientation().getAngleToHorizontal(), 20) };
 		// index 0 geeft positie langs de kant met de kleine barcode
 		// index 1 geeft positie langs de kant met de grote barcode
@@ -179,14 +179,7 @@ public class Seesaw extends MazeElement {
 		return this.locked;
 	}
 	
-	//return the barcode at the other side of the see
-	public Barcode getBarcode(int robotOrientation, Action action,RobotPilot robot) {
-		int oppositeOrientation=robotOrientation+180;
-		if(oppositeOrientation>180){
-			oppositeOrientation-=360;
-		}
-		return new Barcode(getOtherBarcode(), middlePosition.getNewPosition(Orientation.snapAngle(90,0,robotOrientation), 60), Orientation.getOrientation(robotOrientation), oppositeOrientation, action, robot);
-	}
+
 	public int getOtherBarcode(){
 		return highBarcodeNb==makeBarcode?lowBarcodeNb:highBarcodeNb;
 		

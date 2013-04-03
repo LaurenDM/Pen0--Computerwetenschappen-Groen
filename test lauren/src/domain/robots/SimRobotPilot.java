@@ -45,7 +45,6 @@ public class SimRobotPilot extends RobotPilot {
 	private final int defaultTurningSpeed=200;
 	
 	private double lastDistance = 0;
-	private boolean processingSeesawBarcode;
 
 	/**
 	 * Assenstelsel wordt geinitialiseerd met oorsprong waar de robot begint
@@ -283,7 +282,7 @@ public class SimRobotPilot extends RobotPilot {
 				if(isScanningBarcode){
 					int i=0; //for debug
 				}
-				if (!isScanningBarcode  &&!ignoreBarcodes&&!processingSeesawBarcode) {
+				if (!isScanningBarcode  &&!ignoreBarcodes) {
 
 					
 
@@ -314,16 +313,16 @@ public class SimRobotPilot extends RobotPilot {
 							isScanningBarcode = false;
 						}
 					} else if (getFoundBoard().getBarcodeAt(pos)!=null &&getFoundBoard().getBarcodeAt(pos).isSeesawBC()&&wantedDistance>0) {
-						processingSeesawBarcode=true;
-						if (getFoundBoard().getBarcodeAt(pos)
-								.sameFirstReadOrientation()) {
+						if (getFoundBoard().getBarcodeAt(pos).sameFirstReadOrientation(this.getOrientation())) {
+							isScanningBarcode = true;
+
 							stop();
 							System.out.println("going to run action");
 							getFoundBoard().getBarcodeAt(pos).runAction(this);
+							isScanningBarcode = false;
 						} else {
 							System.out.println("Not same firstReadOrientation");
 						}
-						processingSeesawBarcode=false;
 
 					}
 					forward();

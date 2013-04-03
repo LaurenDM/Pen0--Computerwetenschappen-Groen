@@ -6,6 +6,7 @@ import bluetooth.CMD;
 import domain.Position.Position;
 import domain.maze.Ball;
 import domain.maze.Board;
+import domain.maze.Orientation;
 import domain.maze.Wall;
 import domain.maze.barcodes.Action;
 import domain.maze.barcodes.Barcode;
@@ -423,7 +424,7 @@ public class BTRobotPilot extends RobotPilot  {
 
 	public void makeBarcode(int[] data) {
 		Barcode barcode = new Barcode(data[2], new Position(data[0], data[1]),
-				data[3], this);
+				Orientation.getOrientation(data[3]));
 		getFoundBoard().addBarcode(barcode);
 		Action action = barcode.getAction();
 		if(action != null) action.run(this);
