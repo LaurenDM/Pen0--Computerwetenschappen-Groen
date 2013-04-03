@@ -290,7 +290,7 @@ public class SimRobotPilot extends RobotPilot {
 					Position pos = getPosition().getNewPosition(
 							getOrientation(),
 							DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
-					if (!getBoard().detectBarcodeAt(pos)) {
+					if (!getFoundBoard().detectBarcodeAt(pos)) {
 
 						isScanningBarcode = true;
 						BarcodeGenerator bg = new BarcodeGenerator(this);
@@ -313,14 +313,13 @@ public class SimRobotPilot extends RobotPilot {
 							// turn(180);
 							isScanningBarcode = false;
 						}
-						//TODO francis checken of getBarcodeAt  niet terug veranderd moet worden naar gevonden barcodes getFoundBarcodeAt
-					} else if (getBoard().getBarcodeAt(pos)!=null &&getBoard().getBarcodeAt(pos).isSeesawBC()&&wantedDistance>0) {
+					} else if (getFoundBoard().getBarcodeAt(pos)!=null &&getFoundBoard().getBarcodeAt(pos).isSeesawBC()&&wantedDistance>0) {
 						processingSeesawBarcode=true;
-						if (getBoard().getBarcodeAt(pos)
+						if (getFoundBoard().getBarcodeAt(pos)
 								.sameFirstReadOrientation()) {
 							stop();
 							System.out.println("going to run action");
-							getBoard().getBarcodeAt(pos).runAction(this);
+							getFoundBoard().getBarcodeAt(pos).runAction(this);
 						} else {
 							System.out.println("Not same firstReadOrientation");
 						}
@@ -621,7 +620,7 @@ public class SimRobotPilot extends RobotPilot {
 
 	@Override
 	public void addFoundWall(Wall wall){
-		getBoard().addWall(wall);
+		getFoundBoard().addWall(wall);
 	}
 
 	@Override

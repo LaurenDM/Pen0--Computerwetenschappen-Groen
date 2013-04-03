@@ -732,7 +732,7 @@ public class ContentPanel implements ActionListener {
 	
 	//barcodes
 	public void updateInfoPanel(){
-		for(Barcode b :controller.getRobot().getBoard().getBarcodes()){
+		for(Barcode b :controller.getRobot().getFoundBoard().getBarcodes()){
 			if(!b.getPrinted()){
 				b.setPrinted(true);
 				writeToDebug("Barcode "+b.getReadBits()[0]+b.getReadBits()[1]+b.getReadBits()[2]+b.getReadBits()[3]+b.getReadBits()[4]+b.getReadBits()[5]+" with value "+b.getPossibleDecimal()+" added.");

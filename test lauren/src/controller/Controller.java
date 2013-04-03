@@ -2,6 +2,7 @@ package controller;
 
 import groen.htttp.HtttpImplementation;
 
+import java.awt.Robot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -456,9 +457,17 @@ public class Controller {
 
 
 	public void mousePressed(int x, int y) {
-		//TODO Francis checken of de hashmap niet gewoon gebruikt moet worden
-		List<Seesaw> seesaws = worldSimulator.getSeesaws();
-		for(Seesaw s: seesaws){
+		// De getSeasaw(Position) kan hier niet gebruikt worden omdat de muis
+		// niet ingedrukt word op precies het midden)
+		List<Seesaw> simWorldSeesaws = worldSimulator.getSeesaws();
+		for(Seesaw s: simWorldSeesaws){
+			if(s.hasPosition(new Position(x, y))){
+			s.rollOver();
+			}
+		}
+		
+		List<Seesaw> foundSeesaws = currentRobot.getFoundBoard().getSeesaws();
+		for(Seesaw s: foundSeesaws){
 			if(s.hasPosition(new Position(x, y))){
 			s.rollOver();
 			}

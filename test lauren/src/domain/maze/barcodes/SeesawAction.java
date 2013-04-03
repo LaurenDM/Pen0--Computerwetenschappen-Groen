@@ -19,12 +19,12 @@ public class SeesawAction implements Action {
 
 	@Override
 	public void run(RobotPilot robot) {
-		Seesaw foundSeesaw=robot.getBoard().getSeesaw(center);
+		Seesaw foundSeesaw=robot.getFoundBoard().getSeesaw(center);
 		if(foundSeesaw==null){
 		foundSeesaw = new Seesaw(center, orientation, barcodeNb,false);
-		robot.getBoard().addSeesaw(foundSeesaw);
+		robot.getFoundBoard().addSeesaw(foundSeesaw);
 		Barcode newBarcode= foundSeesaw.getBarcode((int) robot.getOrientation(), new SeesawAction(foundSeesaw.getOtherBarcode(),center,orientation ), robot);
-		robot.getBoard().addBarcode(newBarcode);
+		robot.getFoundBoard().addBarcode(newBarcode);
 		System.out.println("We are going to handle a newly found seesaw");
 
 		}

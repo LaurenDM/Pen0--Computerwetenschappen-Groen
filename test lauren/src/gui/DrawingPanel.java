@@ -103,7 +103,7 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	public void drawFoundWalls(){
-		List<Wall> walls = controller.getRobot().getBoard().getWalls();
+		List<Wall> walls = controller.getRobot().getFoundBoard().getWalls();
 		try {
 			for(Wall w: walls){
 			drawWall(w, false);
@@ -170,7 +170,7 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	public void drawFoundBarcodes(){
-		List<Barcode> barcodes = controller.getRobot().getBoard().getBarcodes();
+		List<Barcode> barcodes = controller.getRobot().getFoundBoard().getBarcodes();
 		for(Barcode b: barcodes){
 			drawBarcode(b, false);
 		}
@@ -230,7 +230,7 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	public void drawFoundSeesaws(){
-		List<Seesaw> seesaws = controller.getRobot().getBoard().getSeesaws();
+		List<Seesaw> seesaws = controller.getRobot().getFoundBoard().getSeesaws();
 		for(Seesaw s : seesaws){
 			drawSeesaw(s,false);
 		}

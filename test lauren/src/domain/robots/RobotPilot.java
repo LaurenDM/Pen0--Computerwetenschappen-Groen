@@ -106,7 +106,7 @@ public abstract class RobotPilot implements PlayerHandler{
 		this.board = board;
 	}
 	
-	public Board getBoard(){
+	public Board getFoundBoard(){
 		return this.board;
 	}
 	
