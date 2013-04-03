@@ -15,8 +15,12 @@ public class SeesawAction implements Action {
 	public SeesawAction(int barcodeNb, Position center, Orientation orientation){
 		this.barcodeNb = barcodeNb;
 		this.center = center;
-		center.snapTo(MAZECONSTANT, 0, MAZECONSTANT/2);
 		this.orientation=orientation;
+		if(orientation.equals(Orientation.NORTH)||orientation.equals(Orientation.SOUTH)){
+		center.snapTo(MAZECONSTANT, MAZECONSTANT/2, 0);
+		}else{
+			center.snapTo(MAZECONSTANT, 0, MAZECONSTANT/2);
+		}
 	}
 
 	@Override

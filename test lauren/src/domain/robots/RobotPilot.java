@@ -278,6 +278,9 @@ public abstract class RobotPilot implements PlayerHandler{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		catch(NullPointerException e){
+			//voor wanneer er geen htttp gebruikt wordt
+		}
 	}
 
 //>>>>>>> branch 'master' of https://github.com/LaurenDM/Pen0--Computerwetenschappen-Groen.git

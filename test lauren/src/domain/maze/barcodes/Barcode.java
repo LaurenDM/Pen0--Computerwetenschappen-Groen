@@ -40,6 +40,7 @@ public class Barcode extends MazeElement{
 	
 	
 	public Barcode(int[] bits, Position pos, double angle){
+		this.readBits = bits;
 		fillLegals();
 		if(bits.length != 6){
 			throw new IllegalArgumentException();
@@ -50,7 +51,6 @@ public class Barcode extends MazeElement{
 		}else{
 			decimal = calculatedDecimal;
 		}
-		this.readBits = bits;
 		this.pos = pos;
 		this.orientation = Orientation.getOrientation(angle);
 		
