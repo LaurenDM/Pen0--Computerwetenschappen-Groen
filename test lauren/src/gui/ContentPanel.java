@@ -356,7 +356,7 @@ public class ContentPanel implements ActionListener {
 				drawingPanel.drawFoundBarcodes();
 				drawingPanel.drawLineToFinish();
 				drawingPanel.drawBalls();
-				drawingPanel.drawSeesaws();
+				drawingPanel.drawSimWorldSeesaws();
 				drawingPanel.drawFoundSeesaws();
 				drawingPanel.drawInfraredPositions();
 				for(int i=0; i<collection.size(); i++){

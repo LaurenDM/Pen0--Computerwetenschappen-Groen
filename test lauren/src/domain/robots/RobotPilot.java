@@ -322,6 +322,8 @@ public abstract class RobotPilot implements PlayerHandler{
 			} catch (IOException e) {
 				// Auto-generated catch block
 				e.printStackTrace();
+			}catch(NullPointerException e){
+				//Dit wil wss zeggen dat we niet met htttp werken 
 			}
 			driveOverSeeSaw(barcodeNb);
 			getMaze().driveOverSeesaw();
@@ -333,6 +335,8 @@ public abstract class RobotPilot implements PlayerHandler{
 			} catch (IOException e) {
 				// Auto-generated catch block
 				e.printStackTrace();
+			}catch(NullPointerException e){
+				//Dit wil wss zeggen dat we niet met htttp werken 
 			}
 		}
 //		else{

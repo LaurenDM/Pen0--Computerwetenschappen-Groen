@@ -99,7 +99,7 @@ public class DrawingPanel extends JPanel {
 			drawWall(w, true);
 		}
 		drawSimulatedBarcodes();
-		drawSeesaws();
+		drawSimWorldSeesaws();
 	}
 	
 	public void drawFoundWalls(){
@@ -213,7 +213,7 @@ public class DrawingPanel extends JPanel {
 		}
 	}
 	
-	public void drawSeesaws(){
+	public void drawSimWorldSeesaws(){
 
 		List<Seesaw> seesaws = controller.getRobot().getWorldSimulator().getSeesaws();
 		for(Seesaw s : seesaws){
