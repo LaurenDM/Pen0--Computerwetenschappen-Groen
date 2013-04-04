@@ -278,10 +278,11 @@ public class MazeGraph {
 		}
 	}
 	
-	private void generateSeesawNodeAt(Orientation orientation) {
+	private void generateSeesawNodeAt(Orientation orientation, boolean isUpAtThisSide) {
 		Orientation absoluteOrientation = getCurrentRobotOrientation().getRelativeOrientation(orientation);
 		Orientation orientationToCurrent = absoluteOrientation.getBack();
 		SeesawNode newNode = new SeesawNode(getCurrentNode(),orientationToCurrent);
+		newNode.setUp(isUpAtThisSide);
 		boolean thisNodeAlreadyExists = false;
 		
 		for(TileNode node:tileNodes){
@@ -542,7 +543,7 @@ public class MazeGraph {
 	 */
 	public void setNextTileToSeesaw(boolean isUpAtThisSide) {
 		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())==null){
-			generateSeesawNodeAt(Orientation.NORTH); //This is a relative orientation. In this case it just means in front of the robot.
+			generateSeesawNodeAt(Orientation.NORTH,isUpAtThisSide); //This is a relative orientation. In this case it just means in front of the robot.
 		}
 		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())!=null && getCurrentNode().getNodeAt(getCurrentRobotOrientation()).getClass().equals(SeesawNode.class)){
 			SeesawNode seesaw1 = (SeesawNode)getCurrentNode().getNodeAt(getCurrentRobotOrientation());
