@@ -318,7 +318,6 @@ public class SimRobotPilot extends RobotPilot {
 							isScanningBarcode = true;
 
 							stop();
-							move(BARCODE_LENGTH,true);
 							System.out.println("going to run action");
 							getFoundBoard().getBarcodeAt(pos).runAction(this);
 							isScanningBarcode = false;

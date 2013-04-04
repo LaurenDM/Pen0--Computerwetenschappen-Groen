@@ -10,6 +10,9 @@ import domain.robots.SimRobotPilot;
  */
 public class Straightener {
 	private static final int DISTANCE_BETWEEN_SENSOR_AND_WHEELS =9;
+	private static final double UPPERWOODVALUE = 60;
+	private static final double LOWERWOODVALUE = -60;
+
 	//The robot that needs to be straightened
 	private RobotPilot robot;
 
@@ -37,10 +40,9 @@ public class Straightener {
 			if(white){
 				robot.forward();
 			} else {
-				if (robot.detectBlackLine() || robot.detectWhiteLine()) {
+				if (robot.readLightValue()>UPPERWOODVALUE || robot.readLightValue()<LOWERWOODVALUE) {
 					robot.forward();
-					while (robot.detectBlackLine() || robot.detectWhiteLine())
-						;
+					while (!detectWood(100));
 				}
 				robot.stop();
 				robot.backward();
@@ -69,6 +71,14 @@ public class Straightener {
 		}
 	}
 	
+	private boolean detectWood(int timesWood) {
+		for(int i=0;i<timesWood;i++){
+			if (robot.readLightValue()>UPPERWOODVALUE || robot.readLightValue()<LOWERWOODVALUE){
+				return false;}
+			}
+		return true;
+	}
+
 	private void turnUntil(boolean white, boolean detect, boolean left, int wantedDetections) {
 		double turnSpeed = robot.getTurningSpeed();
 		robot.setTurningSpeed(1);
