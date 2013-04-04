@@ -13,6 +13,8 @@ public class TileNode extends MazeNode {
 	private int y;
 	private boolean checkpoint = false;
 	private boolean visited = false;
+	private int barcodeNumber = -1;
+	private boolean hasBarcode = false;
 	
 	public TileNode(TileNode currentNode, Orientation orientationToCurrentNode){
 		connectedNodes = new HashMap<Orientation,MazeNode>();
@@ -141,6 +143,27 @@ public class TileNode extends MazeNode {
 
 	public String getToken() {
 		return Token.match(this);
+	}
+
+	public void setBarcode(int barcodeNumber) {
+		setHasBarcode(true);
+		setBarcodeNumber(barcodeNumber);
+	}
+
+	private void setHasBarcode(boolean b) {
+		this.hasBarcode=b;
+	}
+	
+	public boolean hasBarcode(){
+		return this.hasBarcode;
+	}
+
+	private void setBarcodeNumber(int barcodeNumber) {
+		this.barcodeNumber = barcodeNumber;
+	}
+	
+	public int getBarcodeNumber() {
+		return this.barcodeNumber;
 	}
 	
 }

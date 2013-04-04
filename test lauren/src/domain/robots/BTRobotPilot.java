@@ -418,17 +418,18 @@ public class BTRobotPilot extends RobotPilot  {
 	@Override
 	public void scanBarcode() {
 		int[] results = btComm.sendCommand(CMD.SCANBARCODE);
-		makeBarcode(results);
-		getMaze().atBarcode();
+		Barcode barcode = makeBarcode(results);
+		getMaze().atBarcode(barcode.getPossibleDecimal());
 	}
 
 
-	public void makeBarcode(int[] data) {
+	public Barcode makeBarcode(int[] data) {
 		Barcode barcode = new Barcode(data[2], new Position(data[0], data[1]),
 				Orientation.getOrientation(data[3]));
 		getFoundBoard().addBarcode(barcode);
 		Action action = barcode.getAction();
 		if(action != null) action.run(this);
+		return barcode;
 	}
 
 	@Override

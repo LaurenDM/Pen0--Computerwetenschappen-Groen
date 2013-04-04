@@ -20,6 +20,7 @@ public enum Token {
 	}
 	
 	/**
+	 * Returns a mazefile-specification token for the given TileNode.
 	 * Returns null if the node has unexplored tiles or if something went wrong.
 	 * @param tile
 	 * @return
@@ -53,7 +54,7 @@ public enum Token {
 				for(Token t : Token.values()){
 					Token token = getToken(walls[0],walls[1],walls[2],walls[3]);
 					if(token!=null && token.equals(t) && !t.equals(SEESAW)){
-						return t.getString()+"."+Orientation.NORTH.getOffset(offset).toString().substring(0, 1); //That's right, getString, not toString.
+						return t.getString()+"."+Orientation.NORTH.getOffset(offset).toString().substring(0, 1)+(tile.hasBarcode()?"."+tile.getBarcodeNumber():""); //That's right, getString, not toString.
 					}
 				}
 				walls=rotate(walls,1);

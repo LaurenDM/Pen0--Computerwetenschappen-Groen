@@ -572,4 +572,12 @@ public class MazeGraph {
 	public ArrayList<TileNode> getFoundTilesList() {
 		return tileNodes;
 	}
+
+	public void setCurrentTileBarcode(int barcodeNumber) {
+		setTileBarcode(getCurrentNode(),barcodeNumber);
+	}
+	
+	private void setTileBarcode(TileNode tile, int barcodeNumber) {
+		tile.setBarcode(barcodeNumber);
+	}
 }

@@ -374,12 +374,11 @@ public class ExploreMaze{
 		return maze.getFoundTilesList();
 	}
 	
-	public void atBarcode(){
+	public void atBarcode(int barcodeNumber){
 		maze.generateWallNodeAt(Orientation.EAST);
 		maze.generateWallNodeAt(Orientation.WEST);
 		calculateWall(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation(), Direction.RIGHT);
 		calculateWall(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation(), Direction.LEFT);
-		
-		//TODO: Joren, misschien hiervan gebruik maken om een barcode-tile toe te voegen
+		maze.setCurrentTileBarcode(barcodeNumber);
 	}
 }
