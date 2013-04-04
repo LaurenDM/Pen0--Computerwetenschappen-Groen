@@ -51,6 +51,9 @@ public class MazeGraph {
 						nextOrientation = o;
 					}
 				}
+				if(nextOrientation==null){
+					throw new IllegalStateException();
+				}
 				turnToNextOrientation(robotPilot, getCurrentRobotOrientation(), nextOrientation);
 				try {
 					if(tileCounter%2==0){
@@ -79,6 +82,12 @@ public class MazeGraph {
 	}
 	
 	private void turnToNextOrientation(RobotPilot robotPilot, Orientation currentOrientation, Orientation nextOrientation) {
+		if(currentOrientation==null){
+			throw new IllegalArgumentException();
+		}
+		if(nextOrientation==null){
+			throw new IllegalArgumentException();
+		}
 		if(currentOrientation.equals(nextOrientation)){
 			//Don't turn
 		} else if(nextOrientation.equals(currentOrientation.getLeft())){

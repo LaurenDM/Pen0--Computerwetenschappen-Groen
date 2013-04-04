@@ -78,7 +78,9 @@ public class Board {
 			}
 		}
 	}
-	
+
+	// TODO checken of het wel goed is dat als er een seesaw wordt toegevoegd
+	// die al op dezelfde positie bestaat, dat die dan de andere vervangt
 	public void addSeesaw(Seesaw foundSeesaw){
 		seesaws.put(foundSeesaw.getCenterPosition(), foundSeesaw);
 	}
@@ -92,10 +94,21 @@ public class Board {
 	}
 	
 	
-
-	
+	//TODO Francis laten gebruiken
+	public void setLockForSeesawWithBarcode(int barcodenb, boolean lock) {
+		for (Seesaw s : getSeesaws()) {
+			if (s.hasBarcodeNb(barcodenb)) {
+				if(lock){
+				s.lock();
+				}
+				else{
+				s.unLock();
+				}
+			}
+		}
+	}
 
 }
 
-	
+
 

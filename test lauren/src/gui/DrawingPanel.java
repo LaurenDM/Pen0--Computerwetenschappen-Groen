@@ -99,11 +99,11 @@ public class DrawingPanel extends JPanel {
 			drawWall(w, true);
 		}
 		drawSimulatedBarcodes();
-		drawSeesaws();
+		drawSimWorldSeesaws();
 	}
 	
 	public void drawFoundWalls(){
-		List<Wall> walls = controller.getRobot().getBoard().getWalls();
+		List<Wall> walls = controller.getRobot().getFoundBoard().getWalls();
 		try {
 			for(Wall w: walls){
 			drawWall(w, false);
@@ -170,7 +170,7 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	public void drawFoundBarcodes(){
-		List<Barcode> barcodes = controller.getRobot().getBoard().getBarcodes();
+		List<Barcode> barcodes = controller.getRobot().getFoundBoard().getBarcodes();
 		for(Barcode b: barcodes){
 			drawBarcode(b, false);
 		}
@@ -213,7 +213,8 @@ public class DrawingPanel extends JPanel {
 		}
 	}
 	
-	public void drawSeesaws(){
+	public void drawSimWorldSeesaws(){
+
 		List<Seesaw> seesaws = controller.getRobot().getWorldSimulator().getSeesaws();
 		for(Seesaw s : seesaws){
 			drawSeesaw(s,true);
@@ -221,6 +222,7 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	public void drawInfraredPositions(){
+
 		List<Seesaw> seesaws = controller.getRobot().getWorldSimulator().getSeesaws();
 		for(Seesaw s : seesaws){
 			drawSeesawInfrared(s);
@@ -228,7 +230,7 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	public void drawFoundSeesaws(){
-		List<Seesaw> seesaws = controller.getRobot().getBoard().getSeesaws();
+		List<Seesaw> seesaws = controller.getRobot().getFoundBoard().getSeesaws();
 		for(Seesaw s : seesaws){
 			drawSeesaw(s,false);
 		}
@@ -280,7 +282,7 @@ public class DrawingPanel extends JPanel {
 		Orientation orientation = barcode.getOrientation();
 		int posXLowestLine = (int)barcode.getPos().getX()+OFFSET; 
 		int posYLowestLine = (int)barcode.getPos().getY()+OFFSET+6; //lowest line NOT including the outer black lines
-		int[] bits = barcode.getBits();
+		int[] bits = barcode.getReadBits();
 
 		if(orientation == Orientation.NORTH){
 			for(int i=0; i<bits.length; i++){
@@ -303,7 +305,7 @@ public class DrawingPanel extends JPanel {
 		Orientation orientation = barcode.getOrientation();
 		int posXLowestLine = (int)barcode.getPos().getX()+OFFSET-6; 
 		int posYLowestLine = (int)barcode.getPos().getY()+OFFSET; //lowest line NOT including the outer black lines
-		int[] bits = barcode.getBits();
+		int[] bits = barcode.getReadBits();
 
 		if(orientation == Orientation.EAST){
 			for(int i=0; i<bits.length; i++){

@@ -19,7 +19,7 @@ public class BarcodeGenerator {
 	public void generateBarcode(){
 		double turnSpeed = robot.getTurningSpeed();
 		double moveSpeed = robot.getMovingSpeed();
-		if(robot.getBoard().detectBarcodeAt(robot.getPosition())){
+		if(robot.getFoundBoard().detectBarcodeAt(robot.getPosition())){
 			try {
 				System.out.println("ROBOT MOVES 8; BARCODE FOUND");
 				robot.move(8);
@@ -58,8 +58,9 @@ public class BarcodeGenerator {
 		
 		int lowx = (int) (Math.floor((pos.getX())/MAZECONSTANT))*MAZECONSTANT;
 		int lowy = (int) (Math.floor((pos.getY())/MAZECONSTANT))*MAZECONSTANT;
-		Barcode barcode = new Barcode(convertBits(bits), new Position(lowx+20, lowy+20), robot.getOrientation(),robot); 
-		robot.getBoard().addBarcode(barcode);
+		Barcode barcode = new Barcode(convertBits(bits), new Position(lowx+20, lowy+20), robot.getOrientation()); 
+		robot.getFoundBoard().addBarcode(barcode);
+		robot.getMaze().atBarcode();
 //		robot.setMovingSpeed(robot.getDefaultMovingSpeed());
 		robot.setMovingSpeed(moveSpeed);
 		robot.setTurningSpeed(turnSpeed);
