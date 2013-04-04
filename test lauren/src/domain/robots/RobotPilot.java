@@ -342,6 +342,7 @@ public abstract class RobotPilot implements PlayerHandler{
 				//Dit wil wss zeggen dat we niet met htttp werken 
 			}
 		}
+		getMaze().atBarcode();
 //		else{
 //		turn(180);
 //		}

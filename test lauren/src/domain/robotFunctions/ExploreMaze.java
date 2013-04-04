@@ -101,6 +101,8 @@ public class ExploreMaze{
 		}
 	}
 	
+
+	
 	private boolean checkStraigthen(double[] distances){
 		for (int i = 0; i < distances.length; i++) {
 			if(distances[i]!=255 &&(distances[i] < 17 || distances[i]%40 > 23)) {
@@ -370,5 +372,14 @@ public class ExploreMaze{
 
 	public ArrayList<domain.maze.graph.TileNode> getFoundTilesList() {
 		return maze.getFoundTilesList();
+	}
+	
+	public void atBarcode(){
+		maze.generateWallNodeAt(Orientation.EAST);
+		maze.generateWallNodeAt(Orientation.WEST);
+		calculateWall(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation(), Direction.RIGHT);
+		calculateWall(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation(), Direction.LEFT);
+		
+		//TODO: Joren, misschien hiervan gebruik maken om een barcode-tile toe te voegen
 	}
 }

@@ -419,6 +419,7 @@ public class BTRobotPilot extends RobotPilot  {
 	public void scanBarcode() {
 		int[] results = btComm.sendCommand(CMD.SCANBARCODE);
 		makeBarcode(results);
+		getMaze().atBarcode();
 	}
 
 
