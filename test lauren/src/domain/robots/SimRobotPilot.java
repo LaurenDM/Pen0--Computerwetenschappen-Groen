@@ -24,6 +24,7 @@ import domain.util.TimeStamp;
 
 public class SimRobotPilot extends RobotPilot {
 	private static final double DISTANCE_BETWEEN_SENSOR_AND_WHEELS = 9;
+	private static final double BARCODE_LENGTH = 8;
 	private MoveThread moveThread;
 	private double orientation; // Degrees to horizontal
 	private Position position;
@@ -317,6 +318,7 @@ public class SimRobotPilot extends RobotPilot {
 							isScanningBarcode = true;
 
 							stop();
+							move(BARCODE_LENGTH,true);
 							System.out.println("going to run action");
 							getFoundBoard().getBarcodeAt(pos).runAction(this);
 							isScanningBarcode = false;
