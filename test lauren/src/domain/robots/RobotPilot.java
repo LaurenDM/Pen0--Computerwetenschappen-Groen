@@ -2,6 +2,11 @@ package domain.robots;
 
 import gui.ContentPanel;
 
+import java.util.ArrayList;
+
+import java.util.List;
+import gui.ContentPanel;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -27,10 +32,10 @@ public abstract class RobotPilot implements PlayerHandler{
 	
 	RobotPolygon robotPolygon;
 	private MoveType movement;
-	private Position finish;
 	private int number; //0-3
 	
 	private Board board;
+	protected ExploreMaze maze;
 	private WorldSimulator worldSimulator;
 	
 	private Ball ball;
@@ -101,7 +106,7 @@ public abstract class RobotPilot implements PlayerHandler{
 		this.board = board;
 	}
 	
-	public Board getBoard(){
+	public Board getFoundBoard(){
 		return this.board;
 	}
 	
@@ -207,8 +212,10 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	public abstract void setPose(double orientation, int x, int y);
 
-	public abstract void startExplore();
-	
+	public void startExplore() {
+		maze = new ExploreMaze(this);
+		maze.start();
+	}	
 	public abstract void addFoundWall(Wall wall);
 
 	public abstract boolean detectBlackLine();
@@ -217,29 +224,50 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	public abstract void scanBarcode();
 
-	public abstract void setCheckpoint();
+	public final void setCheckpoint() {
+		maze.setCurrentTileToCheckpoint();
+	}
 	
-	public abstract ExploreMaze getMaze();
-
-	public void setFinish(){
-		this.finish = getPosition();
-		getMaze().setCurrentTileToFinish();
+	public ExploreMaze getMaze(){
+		return maze;
 	}
 
-	public abstract void resumeExplore();
+	public final void setFinish(){
+		maze.setCurrentTileToFinish();
+	}
+	
+	public final void resumeExplore() {
+		if(maze!=null){
+			maze.resumeExplore(0, 0, null);
+		} else {
+			ContentPanel.writeToDebug("You haven't started exploring yet!");
+		}
+	}
 
-	public abstract void driveToFinish();
-
+	public final void driveToFinish() {
+		if(maze!=null){
+			maze.stopExploring();
+			maze.driveToFinish();
+		} else {
+			ContentPanel.writeToDebug("You haven't started exploring yet!");
+		}		
+	}
+	
 	public abstract void wait5Seconds();
 
 	public abstract void autoCalibrateLight();
 	
-	public abstract MazePath getPathToFinish();
-
+	
+	public final MazePath getPathToFinish() {
+		return maze.getPathToFinish();
+	}
 	public abstract void setDriveToFinishSpeed();
 
 	public abstract void fetchBall();
 	
+	public void indicateDeadEnd() {
+		getMaze().setNextTileToDeadEnd();
+	}
 	public void foundBall(){
 		try {
 			playerClient.foundObject();
@@ -250,9 +278,12 @@ public abstract class RobotPilot implements PlayerHandler{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		catch(NullPointerException e){
+			//voor wanneer er geen htttp gebruikt wordt
+		}
 	}
-	
-	public abstract void doNothing();
+
+//>>>>>>> branch 'master' of https://github.com/LaurenDM/Pen0--Computerwetenschappen-Groen.git
 
 	public Ball getBall(){
 		return this.ball;
@@ -278,38 +309,47 @@ public abstract class RobotPilot implements PlayerHandler{
 		return teamNumber;
 	}
 		
-	public void handleSeesaw(int barcodeNb){
-		boolean open = detectInfrared();
-		getMaze().setNextTileToSeesaw(open);
-		if(!open){
+	public void handleSeesaw(int barcodeNb,Seesaw foundSeesaw){
+		boolean upAtThisSide = detectInfrared();
+			System.out.println("We change the seesaw based on infrared detection, barcodeNb: "+ barcodeNb+ " upats: " + upAtThisSide);
+			foundSeesaw.setUpAt(barcodeNb, upAtThisSide);
+		
+		getMaze().setNextTileToSeesaw(upAtThisSide || foundSeesaw.isLocked());
+		
+		if (!foundSeesaw.isLocked() && !upAtThisSide) {
 			try {
 				playerClient.lockSeesaw(barcodeNb);
 			} catch (IllegalStateException e) {
-				//  Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				//  Auto-generated catch block
+				// Auto-generated catch block
 				e.printStackTrace();
+			}catch(NullPointerException e){
+				//Dit wil wss zeggen dat we niet met htttp werken 
 			}
 			driveOverSeeSaw(barcodeNb);
 			getMaze().driveOverSeesaw();
+			try {
+				playerClient.unlockSeesaw();
+			} catch (IllegalStateException e) {
+				// Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// Auto-generated catch block
+				e.printStackTrace();
+			}catch(NullPointerException e){
+				//Dit wil wss zeggen dat we niet met htttp werken 
+			}
 		}
-		else{
-			doNothing();
-		}
-		try {
-			playerClient.unlockSeesaw();
-		} catch (IllegalStateException e) {
-			//  Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			//  Auto-generated catch block
-			e.printStackTrace();
-		}
+		getMaze().atBarcode(barcodeNb);
+//		else{
+//		turn(180);
+//		}
 	}
 
 	public  boolean detectInfrared(){
-		return getInfraredValue()>60; //TODO infrarood francis
+		return getInfraredValue()>20; //TODO infrarood francis
 	};
 
 
@@ -317,7 +357,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	// de check van infrarood is reeds gebeurd als deze methode wordt aangeroepen!
 
 	public abstract int getInfraredValue();
-
+	
 	public abstract void turnUltrasonicSensorTo(int angle);
 	
 	
@@ -333,6 +373,10 @@ public abstract class RobotPilot implements PlayerHandler{
 		initialPosition = getWorldSimulator().getInitialPositionFromPlayer(playerNb);
 		System.out.println("Setting initial pos to:"+initialPosition.getX()+" y:"+initialPosition.getY());
 		setPose(initialPosition.getOrientation().getAngleToHorizontal(), (int) initialPosition.getX(), (int) initialPosition.getY());
+	}
+
+	public ArrayList<domain.maze.graph.TileNode> getFoundTilesList() {
+		return getMaze().getFoundTilesList();
 	}
 	
 	

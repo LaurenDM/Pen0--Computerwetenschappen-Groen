@@ -1,6 +1,5 @@
 package domain.maze.barcodes;
 
-import java.awt.Robot;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,65 +12,49 @@ public class Barcode extends MazeElement{
 	
 	private final Action action;
 	private Position pos; //centre of barcode ( == centre of square; ex "20,20", always multiple of 20)
-	private Orientation orientation;
-	private int[] bits;
+	private final Orientation orientation;
+	private int[] readBits;
 	private List<Integer> legalInts = new ArrayList<Integer>();
 	private boolean printed;
-	private RobotPilot robot=null;
 	private final int decimal;
-	private final int firstReadRobotOrientation;
 	
-	public Barcode(int decimal, Position pos, Orientation orientation, int firstReadRobotOrientation, Action action, RobotPilot robot){
+	public Barcode(int decimal, Position pos, Orientation orientation){
 		fillLegals();
-		this.robot=robot;
-		bits = getBinary(decimal);
+		readBits = getBinary(decimal);
 		if(!legalInts.contains(decimal)){
-			mirrorBits();
-			this.decimal = getDecimal(this.bits);
+			this.decimal = getDecimal(this.readBits);
 		}else{
 			this.decimal=decimal;
 		}
 		this.pos = pos;
 		this.orientation = orientation;
-		this.firstReadRobotOrientation=Orientation.snapAngle(90,0,firstReadRobotOrientation);
-		if (action == null && robot != null) {
-			this.action = getAction(decimal);
-		} else {
-			this.action = action; // This is not needed here because the actions
-									// are only used for found barcodes
-		}
-		System.out.println("Barcode created with value "+this.bits[5]+this.bits[4]+this.bits[3]+this.bits[2]+this.bits[1]+this.bits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
+		this.action = getAction(decimal);
+		
+		System.out.println("Barcode created with value "+this.readBits[5]+this.readBits[4]+this.readBits[3]+this.readBits[2]+this.readBits[1]+this.readBits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
 	}
 	
 	
-	public Barcode(int[] bits, Position pos, double angle, RobotPilot robot){
+	public Barcode(int[] bits, Position pos, double angle){
+		this.readBits = bits;
 		fillLegals();
 		if(bits.length != 6){
 			throw new IllegalArgumentException();
 		}
-		this.robot=robot;
-		this.firstReadRobotOrientation=Orientation.snapAngle(90,0,robot.getOrientation());
-		this.bits = bits;
-		this.pos = pos;
-		this.orientation = Orientation.getOrientation(angle);
 		int calculatedDecimal=getDecimal(bits);
 		if(!legalInts.contains(calculatedDecimal)){
-			mirrorBits();
-			decimal = getDecimal(this.bits);
+			decimal = getDecimal(getmirroredBits());
 		}else{
 			decimal = calculatedDecimal;
 		}
+		this.pos = pos;
+		this.orientation = Orientation.getOrientation(angle);
+		
 		action = getAction(decimal);
-		System.out.println("Barcode created with value "+this.bits[5]+this.bits[4]+this.bits[3]+this.bits[2]+this.bits[1]+this.bits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
+		System.out.println("Barcode created with value "+this.readBits[5]+this.readBits[4]+this.readBits[3]+this.readBits[2]+this.readBits[1]+this.readBits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
 	}
 	
-	public Barcode(int decimal, Position pos, Orientation orientation){
-		this( decimal,  pos,  orientation, 999, null, null);
-	}
 	
-	public Barcode(int decimal, Position pos, double angle, RobotPilot robot){
-		this(decimal, pos, Orientation.getOrientation(angle),(int)robot.getOrientation(),null, robot);
-	}
+
 	
 
 	private static int ownBallNumber = 0;
@@ -131,7 +114,7 @@ public class Barcode extends MazeElement{
 			return new DoNothingAction();
 		}
 		else if(isSeesawBC()){
-			Position pos = getCenterPosition().getNewPosition(Orientation.getOrientation(robot.getOrientation()).getAngleToHorizontal(), 60);
+			Position pos = getCenterPosition().getNewPosition(getOrientation().getAngleToHorizontal(), 60);
 			return new SeesawAction(number, pos, getOrientation());
 		}
 		else if(isCheckPointNumber(number)){
@@ -149,16 +132,20 @@ public class Barcode extends MazeElement{
 	public void runAction(RobotPilot robot){
 		if(action != null){
 			action.run(robot);
+		}else{
+			System.out.println("We tried to run a barcode-action that was null");
+			
 		}
 	}
 
-	
+	//The orientation of the robot when he was reading the bits
 	public Orientation getOrientation(){
 		return orientation;
 	}
 	
-	public int[] getBits(){
-		return bits;
+	//Return the bits in the order they were read.
+	public int[] getReadBits(){
+		return readBits;
 	}
 
 	
@@ -193,7 +180,7 @@ public class Barcode extends MazeElement{
 			 return 0;
 		}
 		else
-			 bit = bits[distance/2-1];
+			 bit = readBits[distance/2-1];
 		return bit;	
 	}
 	
@@ -216,7 +203,7 @@ public class Barcode extends MazeElement{
 			 return 0;
 		}
 		else
-			 bit = bits[distance/2-1];
+			 bit = readBits[distance/2-1];
 		return bit;	
 	}
 	
@@ -259,26 +246,14 @@ public class Barcode extends MazeElement{
 	}
 	
 	
-	private void mirrorBits(){
-		for(int i = 0; i<3; i++){
-			int temp = bits[i];
-			bits[i] = bits[5-i];
-			bits[5-i] = temp;
+	private int[] getmirroredBits(){
+		int[] mirroredBits=new int[6];
+		for(int i = 0; i<6; i++){
+			mirroredBits[i] = readBits[5-i];
 		}
-		if(orientation==Orientation.NORTH){
-			orientation = Orientation.SOUTH;
-		}
-		else if(orientation==Orientation.SOUTH){
-			orientation = Orientation.NORTH;
-		}
-		else if(orientation==Orientation.WEST){
-			orientation = Orientation.EAST;
-		}
-		else if(orientation==Orientation.EAST){
-			orientation = Orientation.WEST;
-		}
+		return mirroredBits;
 	}
-	
+
 	private int getDecimal(int[] bits){
 		int result = 0;
 		for(int i = 0; i< 6; i++){
@@ -341,10 +316,7 @@ public class Barcode extends MazeElement{
 	}
 	
 	public int getPossibleDecimal(){
-		if(!legalInts.contains(getDecimal(this.bits))){
-			mirrorBits();
-		}
-		return getDecimal(this.bits);
+		return decimal;
 	}
 
 	@Override
@@ -356,9 +328,7 @@ public class Barcode extends MazeElement{
 	public boolean hasPosition(Position position) {
 		return containsPosition(position);
 	}
-	public boolean sameFirstReadOrientation() {
-			int orientationNow=Orientation.snapAngle(90,0,robot.getOrientation());
-
-		return orientationNow==firstReadRobotOrientation;
+	public boolean sameFirstReadOrientation(double robotOrientationToCompare) {
+			return(Orientation.getOrientation(robotOrientationToCompare).equals(getOrientation()));
 	}
 }

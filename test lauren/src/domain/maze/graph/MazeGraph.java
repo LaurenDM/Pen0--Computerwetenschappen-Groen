@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import peno.htttp.Tile;
+
 import domain.maze.Orientation;
 import domain.robots.RobotPilot;
 
@@ -49,6 +51,9 @@ public class MazeGraph {
 						nextOrientation = o;
 					}
 				}
+				if(nextOrientation==null){
+					throw new IllegalStateException();
+				}
 				turnToNextOrientation(robotPilot, getCurrentRobotOrientation(), nextOrientation);
 				try {
 					if(tileCounter%2==0){
@@ -77,6 +82,12 @@ public class MazeGraph {
 	}
 	
 	private void turnToNextOrientation(RobotPilot robotPilot, Orientation currentOrientation, Orientation nextOrientation) {
+		if(currentOrientation==null){
+			throw new IllegalArgumentException();
+		}
+		if(nextOrientation==null){
+			throw new IllegalArgumentException();
+		}
 		if(currentOrientation.equals(nextOrientation)){
 			//Don't turn
 		} else if(nextOrientation.equals(currentOrientation.getLeft())){
@@ -276,10 +287,11 @@ public class MazeGraph {
 		}
 	}
 	
-	private void generateSeesawNodeAt(Orientation orientation) {
+	private void generateSeesawNodeAt(Orientation orientation, boolean isUpAtThisSide) {
 		Orientation absoluteOrientation = getCurrentRobotOrientation().getRelativeOrientation(orientation);
 		Orientation orientationToCurrent = absoluteOrientation.getBack();
 		SeesawNode newNode = new SeesawNode(getCurrentNode(),orientationToCurrent);
+		newNode.setUp(isUpAtThisSide);
 		boolean thisNodeAlreadyExists = false;
 		
 		for(TileNode node:tileNodes){
@@ -540,7 +552,7 @@ public class MazeGraph {
 	 */
 	public void setNextTileToSeesaw(boolean isUpAtThisSide) {
 		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())==null){
-			generateSeesawNodeAt(Orientation.NORTH); //This is a relative orientation. In this case it just means in front of the robot.
+			generateSeesawNodeAt(Orientation.NORTH,isUpAtThisSide); //This is a relative orientation. In this case it just means in front of the robot.
 		}
 		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())!=null && getCurrentNode().getNodeAt(getCurrentRobotOrientation()).getClass().equals(SeesawNode.class)){
 			SeesawNode seesaw1 = (SeesawNode)getCurrentNode().getNodeAt(getCurrentRobotOrientation());
@@ -555,5 +567,17 @@ public class MazeGraph {
 		} else {
 			ContentPanel.writeToDebug("Couldn't create a seesaw at the position in front of the robot.");
 		}
+	}
+
+	public ArrayList<TileNode> getFoundTilesList() {
+		return tileNodes;
+	}
+
+	public void setCurrentTileBarcode(int barcodeNumber) {
+		setTileBarcode(getCurrentNode(),barcodeNumber);
+	}
+	
+	private void setTileBarcode(TileNode tile, int barcodeNumber) {
+		tile.setBarcode(barcodeNumber);
 	}
 }

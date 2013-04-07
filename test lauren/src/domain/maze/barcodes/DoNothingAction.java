@@ -5,7 +5,7 @@ import domain.robots.RobotPilot;
 public class DoNothingAction implements Action{
 	@Override
 	public void run(RobotPilot robot) {
-		robot.doNothing();
+		robot.indicateDeadEnd();
 	}
 
 //	@Override

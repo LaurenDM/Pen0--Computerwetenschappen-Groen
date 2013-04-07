@@ -4,6 +4,8 @@ import gui.ContentPanel;
 
 import java.util.ArrayList;
 
+import peno.htttp.Tile;
+
 import controller.Controller;
 
 import domain.Position.Position;
@@ -99,6 +101,8 @@ public class ExploreMaze{
 		}
 	}
 	
+
+	
 	private boolean checkStraigthen(double[] distances){
 		for (int i = 0; i < distances.length; i++) {
 			if(distances[i]!=255 &&(distances[i] < 17 || distances[i]%40 > 23)) {
@@ -146,10 +150,10 @@ public class ExploreMaze{
 		double orientation = robot.getOrientation();
 		double[] x = new double[2];
 		double[] y = new double[2];
-		x[0] = robot.getPosition().getNewPosition(orientation, MAZECONSTANT).getX();
-		y[0] = robot.getPosition().getNewPosition(orientation, MAZECONSTANT).getY();
-		x[1] = robot.getPosition().getNewPosition(orientation, MAZECONSTANT*2).getX();
-		y[1] = robot.getPosition().getNewPosition(orientation, MAZECONSTANT*2).getY();
+		x[0] = robot.getPosition().getNewRoundedPosition(orientation, MAZECONSTANT).getX();
+		y[0] = robot.getPosition().getNewRoundedPosition(orientation, MAZECONSTANT).getY();
+		x[1] = robot.getPosition().getNewRoundedPosition(orientation, MAZECONSTANT*2).getX();
+		y[1] = robot.getPosition().getNewRoundedPosition(orientation, MAZECONSTANT*2).getY();
 		for(int i=0; i==1; i++){
 			for(Direction d : Direction.values()){
 				if(d.equals(Direction.LEFT)||d.equals(Direction.RIGHT)){
@@ -364,5 +368,17 @@ public class ExploreMaze{
 			((SeesawNode)maze.getCurrentNode().getNodeAt(maze.getCurrentRobotOrientation().getBack())).setUp(false);
 			System.out.println("The node after the seesaw is "+maze.getCurrentNode());
 		}
+	}
+
+	public ArrayList<domain.maze.graph.TileNode> getFoundTilesList() {
+		return maze.getFoundTilesList();
+	}
+	
+	public void atBarcode(int barcodeNumber){
+		maze.generateWallNodeAt(Orientation.EAST);
+		maze.generateWallNodeAt(Orientation.WEST);
+		calculateWall(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation(), Direction.RIGHT);
+		calculateWall(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation(), Direction.LEFT);
+		maze.setCurrentTileBarcode(barcodeNumber);
 	}
 }

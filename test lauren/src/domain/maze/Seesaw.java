@@ -9,45 +9,87 @@ public class Seesaw extends MazeElement {
 	
 	private Position middlePosition;
 	private final int EDGE = 80; 
-	private int barcodeNb;
-	private int otherBarcodeNb;
-	
+	private final int lowBarcodeNb;
+	private final int highBarcodeNb;
+	public final boolean isFromTXTfile; 
 	private final int makeBarcode;
 	private final Orientation ORIENTATION;
 	private boolean locked;
 	
-	// barcodeNb --->orientatie--> otherBarcodeNb 
-	// of otherBarcodeNb <--orientatie<-- barcodeNb
+	// lowBarcodeNb --->orientatie--> highBarcodeNb 
+	// of highBarcodeNb <--orientatie<-- lowBarcodeNb
 	
-	private int infrared; 
+	private int infrared=0; 
 	
-	public Seesaw(Position middlePosition, Orientation orientation, int barcodeNb){
+	/**
+	 * Belangrijk de meegeven orientatie is niet per se de ORIENTATION van de
+	 * wip, behalve als isFromTXTfile true is. Deze kan veranderd worden om te
+	 * zorgen dat de lage barcode
+	 * Belangrijk de meegeven orientatie is niet per se de ORIENTATION van de
+	 * wip, behalve als isFromTXTfile true is. Deze kan veranderd worden om te
+	 * zorgen dat de lage barcode voor de wip staat. Voor de wip betekent een positie terug t.o.v. de orientatie.
+	 * 
+	 * @param orientation
+	 *            De orientatie van de robot wanneer hij de barcode vindt die
+	 *            meegegeven wordt.
+	 * @param barcodeNb
+	 *            de barcode die tot de ontdekking van de seesaw leidt of gewoon 1 van de twee barcodes als het van een TXTfile komt.
+	 */
+	public Seesaw(Position middlePosition, Orientation orientation, int barcodeNb, boolean isFromTXTfile){
+		this.isFromTXTfile=isFromTXTfile;
 		this.makeBarcode=barcodeNb;
 		this.middlePosition = middlePosition;
-		this.barcodeNb= barcodeNb;
-		initialize();
-		this.ORIENTATION = orientation;
-		this.locked = false;
-	}
-	
-	public void initialize(){
-		if(barcodeNb % 4 == 3){
-			//eerste barcode van een paar --> open
-			infrared = 0;
-			otherBarcodeNb = barcodeNb +2;
+		
+		//Initialize barcodes
+		if(isALowBcNb(barcodeNb)){
+			lowBarcodeNb=makeBarcode;
+			highBarcodeNb = makeBarcode +2;
+			this.ORIENTATION = orientation;
 		}
 		else{
-			infrared = 1;
-			otherBarcodeNb = barcodeNb;
-			barcodeNb = otherBarcodeNb -2;
+			highBarcodeNb = makeBarcode;
+			lowBarcodeNb = makeBarcode - 2;
+			if (isFromTXTfile) {
+				this.ORIENTATION = orientation;
+			} else {
+				this.ORIENTATION = orientation.getBack();
+			}
 		}
+		
+		this.locked = false;//TODO kijken of die wel weg mag
+		System.out.println("We have created a " + !isFromTXTfile  + " Seesaw with orientation " +  ORIENTATION);
 	}
+	
+	
+	
 	
 	//Uitleg infrared
 	// 		infrared = 0 als kant van barcodeNb= open
 	//		infrared = 1 als kant van otherBarcodeNb = open
 	
-
+	public void setUpAt(int barcodeNb, boolean upAtGivenBarcodeSide){
+		if(barcodeNb==getHighBarcodeNb()){
+			if(upAtGivenBarcodeSide){
+				setInfrared(1);
+			}
+			else{
+			setInfrared(0);
+			}
+		}
+		else if(barcodeNb==getLowBarcodeNb()){
+		
+			if(upAtGivenBarcodeSide){
+				setInfrared(0);
+			}
+			else{
+			setInfrared(1);
+			}
+		}
+		else{
+			System.out.println("Men heeft de wip proberen instellen met een verkeerde barcode");
+			throw new RuntimeException();
+		}
+	}
 	@Override
 	public boolean hasPosition(Position position) {
 		int xRange, yRange;
@@ -72,12 +114,12 @@ public class Seesaw extends MazeElement {
 		return middlePosition;
 	}
 	
-	public int getBarcodeNb(){
-		return barcodeNb;
+	public int getLowBarcodeNb(){
+		return lowBarcodeNb;
 	}
 	
-	public int getOtherBarcodeNb(){
-		return otherBarcodeNb;
+	public int getHighBarcodeNb(){
+		return highBarcodeNb;
 	}
 
 	public Orientation getOrientation() {
@@ -85,7 +127,7 @@ public class Seesaw extends MazeElement {
 	}
 	
 	public boolean hasBarcodeNb(int nb){
-		return ((barcodeNb == nb) || (otherBarcodeNb ==nb));
+		return ((lowBarcodeNb == nb) || (highBarcodeNb ==nb));
 	}
 	
 	public Position getInfaredPosition(){
@@ -93,31 +135,42 @@ public class Seesaw extends MazeElement {
 	}
 	
 	public void setInfrared(int infrared){
+		try{
+		System.out.println("We are setting a " + !isFromTXTfile  + " Seesaw's infrared-position from " + getInfrareds()[this.infrared] + " To" + getInfrareds()[infrared]);
+		}catch(NullPointerException n){
+//			this means the setInfrared happens in the constructor
+		}
 		this.infrared = infrared;
 	}
-	
-	public Position[] getInfrareds(){
-		return new Position[]{getCenterPosition().getNewPosition(getOrientation().getAngleToHorizontal(), 20),
-				getCenterPosition().getNewPosition(getOrientation().getAngleToHorizontal(), -20)};
-		// index 0 geeft positie langs de voorkant (volgens orientatie)
-		// index 1 geeft positie langs de achterkant (volgens orientatie)
+
+	public Position[] getInfrareds() {
+		return new Position[] {
+				getCenterPosition().getNewRoundedPosition(
+						getOrientation().getAngleToHorizontal(), -20),
+				getCenterPosition().getNewRoundedPosition(
+						getOrientation().getAngleToHorizontal(), 20) };
+		// index 0 geeft positie langs de kant met de kleine barcode
+		// index 1 geeft positie langs de kant met de grote barcode
 	}
 	
 	public void rollOver(){
 		setInfrared((this.infrared + 1)%2);
 	}
-	
+	//TODO de lock hieruit halen zodat het duidelijk is wat deze methode doet en in de plaats lock gebruiken in playerhandler om te locken. 
 	public void rollOver(int nb){
-		// nb = barcodenb read by robot that drives over seesaw
-		if(nb == barcodeNb){
+		 //nb is barcodenb read by robot that drives over seesaw
+		if(nb == lowBarcodeNb){
 			setInfrared(0);
 		}
-		else if(nb == otherBarcodeNb){
+		else if(nb == highBarcodeNb){
 			setInfrared(1);
 		}
-		locked = true;
+//		locked=true;
 	}
 	
+	public void lock(){
+		locked = true;
+	}
 	public void unLock(){
 		locked = false;
 	}
@@ -125,17 +178,18 @@ public class Seesaw extends MazeElement {
 	public boolean isLocked(){
 		return this.locked;
 	}
+	
 
-	public Barcode getBarcode(int robotOrientation, Action action,RobotPilot robot) {
-		int oppositeOrientation=robotOrientation+180;
-		if(oppositeOrientation>180){
-			oppositeOrientation-=360;
-		}
-		return new Barcode(getOtherBarcode(), middlePosition.getNewPosition(Orientation.snapAngle(90,0,robotOrientation), 60), Orientation.getOrientation(robotOrientation), oppositeOrientation, action, robot);
-	}
-	int getOtherBarcode(){
-		return otherBarcodeNb==makeBarcode?barcodeNb:otherBarcodeNb;
+	public int getOtherBarcode(){
+		return highBarcodeNb==makeBarcode?lowBarcodeNb:highBarcodeNb;
 		
+	}
+
+
+
+
+	public static boolean isALowBcNb(int barcodeNb) {
+		return barcodeNb%4==3;
 	}
 	
 	

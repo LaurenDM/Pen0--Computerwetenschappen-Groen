@@ -2,12 +2,15 @@ package controller;
 
 import groen.htttp.HtttpImplementation;
 
+import java.awt.Robot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import peno.htttp.Tile;
 
 import rabbitMQ.EventPusher;
 import rabbitMQ.SubscribeMonitor;
@@ -56,11 +59,11 @@ public class Controller {
 		
 		try{
 			htttpImplementation = new HtttpImplementation(this);
+			setPlayerClient();
 		} catch(Exception e){
 			System.out.println("Couldn't connect to the remote server.");
 		}
 		
-		setPlayerClient();
 		
 	}
 
@@ -313,6 +316,9 @@ public class Controller {
 	}
 
 	public void driveToFinish() {
+		for(peno.htttp.Tile t : getFoundTilesList()){
+			System.out.println("Tile "+t.getX()+", "+t.getY()+" "+t.getToken());
+		}
 		STOPPED = true;
 		while(explorer.isAlive()){}
 		STOPPED = false;
@@ -451,11 +457,31 @@ public class Controller {
 
 
 	public void mousePressed(int x, int y) {
-		List<Seesaw> seesaws = worldSimulator.getSeesaws();
-		for(Seesaw s: seesaws){
+		// De getSeasaw(Position) kan hier niet gebruikt worden omdat de muis
+		// niet ingedrukt word op precies het midden)
+		List<Seesaw> simWorldSeesaws = worldSimulator.getSeesaws();
+		for(Seesaw s: simWorldSeesaws){
 			if(s.hasPosition(new Position(x, y))){
 			s.rollOver();
 			}
 		}
+		
+		List<Seesaw> foundSeesaws = currentRobot.getFoundBoard().getSeesaws();
+		for(Seesaw s: foundSeesaws){
+			if(s.hasPosition(new Position(x, y))){
+			s.rollOver();
+			}
+		}
+	}
+	
+	public ArrayList<peno.htttp.Tile> getFoundTilesList(){
+		ArrayList<domain.maze.graph.TileNode> foundTiles = currentRobot.getFoundTilesList();
+		ArrayList<peno.htttp.Tile> returnList = new ArrayList<peno.htttp.Tile>();
+		for(domain.maze.graph.TileNode node : foundTiles){
+			if(node.isFullyExpanded()){
+				returnList.add(new Tile(node.getX(), node.getY(), node.getToken()));
+			}
+		}
+		return returnList;
 	}
 }

@@ -53,7 +53,7 @@ public enum Orientation {
 		return this.getOffset(-2);
 	}
 
-	private Orientation getOffset(int offset){
+	public Orientation getOffset(int offset){
 		if(Math.abs(offset)>2) {
 			throw new IllegalArgumentException("Cannot return the orientation at this offset.");
 		} else {
@@ -104,20 +104,23 @@ public enum Orientation {
 		return relativeOffset;
 	}
 
+	public static int snapAngle(int mod, int offset, double notSnapped) {
+		boolean positive = notSnapped >= 0;
+		notSnapped *= (positive ? 1 : -1);
 
-		public static int snapAngle(int mod, int offset, double notSnapped) {
-			boolean positive=notSnapped>=0;
-			notSnapped*=(positive?1:-1);
+		int intNotSnapped = (int) notSnapped - offset;
 
-			int intNotSnapped=(int) notSnapped-offset;
-
-			int snappedNumber=(intNotSnapped/mod)*mod;
-			if(intNotSnapped-snappedNumber> mod/2){
-				snappedNumber+=mod;
-			}
-			return (positive?1:-1)*(snappedNumber+offset);
+		int snappedNumber = (intNotSnapped / mod) * mod;
+		if (intNotSnapped - snappedNumber > mod / 2) {
+			snappedNumber += mod;
+		}
+		return (positive ? 1 : -1) * (snappedNumber + offset);
 	}
-
-
+	
+	
+	public boolean equals(Orientation otherOrientation){
+		if(otherOrientation==null) return false;
+		return this.getAngleToHorizontal()==otherOrientation.getAngleToHorizontal();
+	}
 }
 
