@@ -246,7 +246,7 @@ public class Controller {
 	}
 
 	public void readMazeFromFile(String fileLocation) {
-		MazeInterpreter MI = new MazeInterpreter(worldSimulator);
+		MazeInterpreter MI = new MazeInterpreter(worldSimulator.getBoard());
 		if(fileLocation.equals("nullnull")){
 		RandomMazeGenerator RMG = new RandomMazeGenerator(MI);
 		}

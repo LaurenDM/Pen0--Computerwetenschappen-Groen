@@ -19,6 +19,7 @@ import domain.Position.InitialPosition;
 import domain.Position.Position;
 import domain.maze.Ball;
 import domain.maze.Board;
+import domain.maze.MazeInterpreter;
 import domain.maze.Seesaw;
 import domain.maze.Wall;
 import domain.maze.WorldSimulator;
@@ -26,6 +27,7 @@ import domain.maze.barcodes.Barcode;
 import domain.maze.graph.MazePath;
 import domain.polygons.RobotPolygon;
 import domain.robotFunctions.ExploreMaze;
+import domain.robotFunctions.MatchMap;
 import domain.util.TimeStamp;
 
 public abstract class RobotPilot implements PlayerHandler{
@@ -454,6 +456,15 @@ public abstract class RobotPilot implements PlayerHandler{
 	public void teamTilesReceived(List<Tile> tiles) {
 		printMessage("ph.Tiles recieved 'List<Tile>");
 		//TODO info verwerken en naar teammate rijden tenzij mismatch, verder exploren
+		MatchMap matcher = new MatchMap();
+		// TODO: Joren: methode nodig om onze tiles aan te roepen
+		List<Tile> ourTiles = new ArrayList<Tile>(); //dummy list
+		// TODO: koen, methodes in MatchMap niet meer static maken
+		matcher.setOurMazeTiles(ourTiles.toArray(new Tile[ourTiles.size()]));
+		matcher.setOriginalTiles(tiles.toArray(new Tile[tiles.size()]));
+		matcher.merge();
+		MazeInterpreter MI = new MazeInterpreter(board);
+		MI.readMap(matcher.getResultMap());
 	}
 	
 	private void printMessage(String message){
