@@ -376,9 +376,16 @@ public abstract class RobotPilot implements PlayerHandler{
 		System.out.println("Setting initial pos to:"+initialPosition.getX()+" y:"+initialPosition.getY());
 		setPose(initialPosition.getOrientation().getAngleToHorizontal(), (int) initialPosition.getX(), (int) initialPosition.getY());
 	}
-
-	public ArrayList<domain.maze.graph.TileNode> getFoundTilesList() {
-		return getMaze().getFoundTilesList();
+	
+	public ArrayList<peno.htttp.Tile> getFoundTilesList(){
+		ArrayList<domain.maze.graph.TileNode> foundTiles = getMaze().getFoundTilesList();
+		ArrayList<peno.htttp.Tile> returnList = new ArrayList<peno.htttp.Tile>();
+		for(domain.maze.graph.TileNode node : foundTiles){
+			if(node.isFullyExpanded()){
+				returnList.add(new Tile(node.getX(), node.getY(), node.getToken()));
+			}
+		}
+		return returnList;
 	}
 	
 	
@@ -457,8 +464,7 @@ public abstract class RobotPilot implements PlayerHandler{
 		printMessage("ph.Tiles recieved 'List<Tile>");
 		//TODO info verwerken en naar teammate rijden tenzij mismatch, verder exploren
 		MatchMap matcher = new MatchMap();
-		// TODO: Joren: methode nodig om onze tiles aan te roepen
-		List<Tile> ourTiles = new ArrayList<Tile>(); //dummy list
+		List<Tile> ourTiles = getFoundTilesList();
 		// TODO: koen, methodes in MatchMap niet meer static maken
 		matcher.setOurMazeTiles(ourTiles.toArray(new Tile[ourTiles.size()]));
 		matcher.setOriginalTiles(tiles.toArray(new Tile[tiles.size()]));
