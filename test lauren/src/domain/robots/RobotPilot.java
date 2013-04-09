@@ -345,9 +345,6 @@ public abstract class RobotPilot implements PlayerHandler{
 			}
 		}
 		getMaze().atBarcode(barcodeNb);
-//		else{
-//		turn(180);
-//		}
 	}
 
 	public  boolean detectInfrared(){
