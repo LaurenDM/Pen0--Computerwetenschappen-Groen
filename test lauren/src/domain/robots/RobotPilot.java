@@ -453,7 +453,12 @@ public abstract class RobotPilot implements PlayerHandler{
 	@Override
 	public void teamConnected(String partnerID) {
 		printMessage("ph.teamconnected: "+partnerID);
-		//TODO start sending maze to teammember
+		try {
+			playerClient.sendTiles(getFoundTilesList());
+		} catch (IOException e) {
+			// Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
