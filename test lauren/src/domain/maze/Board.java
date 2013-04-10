@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import domain.Position.InitialPosition;
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
+import domain.maze.infrared.InfraredBeamer;
 import domain.robots.RobotPilot;
 
 public class Board {
@@ -192,6 +193,11 @@ public class Board {
 				}
 			}
 		}
+	}
+
+	public List<InfraredBeamer> getInfraredBeamers() {
+		// TODO infrared
+		return null;
 	}
 
 }
