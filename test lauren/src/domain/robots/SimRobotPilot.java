@@ -19,6 +19,7 @@ import domain.maze.graph.MazePath;
 import domain.robotFunctions.BarcodeGenerator;
 import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.Straightener;
+import domain.util.Angles;
 import domain.util.TimeStamp;
 
 
@@ -378,13 +379,8 @@ public class SimRobotPilot extends RobotPilot {
 	}
 
 	double calcNewOrientation(double turnAmount) {
-		double newOrientation = getOrientation()+turnAmount;
-		while (newOrientation < -179) {
-			newOrientation += 360;
-		}
-		while (newOrientation > 180) {
-			newOrientation -= 360;
-		}
+		double newOrientation = Angles.moderateTo180(getOrientation()+turnAmount);
+		
 		return newOrientation;
 	}
 

@@ -12,8 +12,15 @@ public class SeesawIBeamer extends InfraredBeamer{
 	}
 	@Override
 	public double getOrientation() {
-		// TODO infrared
-		return 0;
+		//De orientatie van een seesaw is altijd zo dat de lage barcode ervoor staat, dwz een positie terug tov het midden en de orientatie.
+		if(seesaw.isUpAtLowBCSide()){
+		return seesaw.getOrientation().getBack().getAngleToHorizontal();
+		}
+		else{
+			return seesaw.getOrientation().getAngleToHorizontal();
+
+		}
+		
 	}
 
 	@Override
