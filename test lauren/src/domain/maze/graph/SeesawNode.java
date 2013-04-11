@@ -48,6 +48,11 @@ public class SeesawNode extends TileNode {
 		if(pairedSeesawNode.isUp()==this.isUp()){
 			pairedSeesawNode.setUp(!up);
 		}
+		if(up){
+			setBlockNavigationCount(5);
+		} else {
+			setBlockNavigationCount(0);
+		}
 	}
 
 	/**
@@ -67,11 +72,11 @@ public class SeesawNode extends TileNode {
 	}
 
 	/**
-	 * ==!isUp()
+	 * If getBlockNavigationCount()==0 assume it's accessible (because we're too far away to know for sure in what state it is)
 	 */
 	@Override
 	public boolean isAccessible() {
-		return !isUp();
+		return !isUp()||getBlockNavigationCount()==0;
 	}
 	
 	public SeesawNode getPairedNode(){

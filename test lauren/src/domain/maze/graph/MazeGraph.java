@@ -133,11 +133,18 @@ public class MazeGraph {
 		MazeNode nextNode = getCurrentNode().getNodeAt(getCurrentRobotOrientation());
 		if(nextNode != null && (nextNode.getClass().equals(TileNode.class) || nextNode.getClass().equals(SeesawNode.class))){
 			setCurrentNode((TileNode) nextNode);
+			decreaseAllBlockNavigationCounts(); //Eventually unblocks blocked tiles.
 		} else {
 //			throw new RuntimeException("There is no node there or it's a WallNode.");
 		}
 	}
 	
+	private void decreaseAllBlockNavigationCounts() {
+		for(TileNode t : tileNodes){
+			t.decreaseBlockNavigationCount();
+		}
+	}
+
 	/**
 	 * Returns the orientation to move in to continue exploring. 
 	 * This is accomplished by calculating the shortest path to the next unexplored node and 
@@ -299,7 +306,13 @@ public class MazeGraph {
 			if((node).getX()==newNode.getX() && (node).getY()==newNode.getY()){
 				getCurrentNode().setNodeAt(absoluteOrientation, node);
 				node.setNodeAt(orientationToCurrent, getCurrentNode());
-				thisNodeAlreadyExists = true;
+				if(node.getClass().equals(SeesawNode.class)) {
+					((SeesawNode)node).setUp(isUpAtThisSide);
+					thisNodeAlreadyExists = true;
+				} else {
+					tileNodes.remove(node);
+					System.out.println("A TileNode was replaced by a SeesawNode... Was this wanted behaviour?");
+				}
 				break;
 			}
 			//Wallinfo check
@@ -553,8 +566,6 @@ public class MazeGraph {
 	public void setNextTileToSeesaw(boolean isUpAtThisSide) {
 		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())==null){
 			generateSeesawNodeAt(Orientation.NORTH,isUpAtThisSide); //This is a relative orientation. In this case it just means in front of the robot.
-		}
-		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())!=null && getCurrentNode().getNodeAt(getCurrentRobotOrientation()).getClass().equals(SeesawNode.class)){
 			SeesawNode seesaw1 = (SeesawNode)getCurrentNode().getNodeAt(getCurrentRobotOrientation());
 			generateWallNodeAt(seesaw1, getCurrentRobotOrientation().getRelativeOrientation(Orientation.WEST));
 			generateWallNodeAt(seesaw1, getCurrentRobotOrientation().getRelativeOrientation(Orientation.EAST));
@@ -564,6 +575,10 @@ public class MazeGraph {
 			generateWallNodeAt((TileNode)seesaw1.getPairedNode().getNodeAt(getCurrentRobotOrientation()), getCurrentRobotOrientation().getRelativeOrientation(Orientation.WEST));
 			generateWallNodeAt((TileNode)seesaw1.getPairedNode().getNodeAt(getCurrentRobotOrientation()), getCurrentRobotOrientation().getRelativeOrientation(Orientation.EAST));
 			System.out.println(seesaw1+","+seesaw1.getPairedNode());
+		}
+		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())!=null && getCurrentNode().getNodeAt(getCurrentRobotOrientation()).getClass().equals(SeesawNode.class)){
+			SeesawNode seesaw1 = (SeesawNode)getCurrentNode().getNodeAt(getCurrentRobotOrientation());
+			seesaw1.setUp(isUpAtThisSide);
 		} else {
 			ContentPanel.writeToDebug("Couldn't create a seesaw at the position in front of the robot.");
 		}

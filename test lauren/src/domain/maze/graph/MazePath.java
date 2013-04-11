@@ -157,9 +157,9 @@ public class MazePath implements Comparable<MazePath>, Iterable<TileNode> {
 		ArrayList<MazePath> returnList = new ArrayList<MazePath>();
 		for(Orientation o : Orientation.values()){
 			MazeNode neighbourNode = getCurrentEndTile().getNodeAt(o);
-			//If the node is a TileNode or a SeesawNode that is not up it is accessible.
-			//A tileNode is automatically added, if we know the node at the other side of the seesaw the entire seesaw and that node are added.
-			if(neighbourNode!=null && (neighbourNode.getClass().equals(TileNode.class) || (neighbourNode.getClass().equals(SeesawNode.class) && !((SeesawNode)neighbourNode).isUp())) && !this.contains(neighbourNode)){
+			//A tileNode is added if it was not blocked less than a certain number of tiles ago 
+			//If we know the node at the other side of the seesaw and the closest seesawnode is accessible the entire seesaw and that node are added.
+			if(neighbourNode!=null && neighbourNode.isAccessible() && !this.contains(neighbourNode)){
 				MazePath pathToAdd = new MazePath(this,(TileNode) neighbourNode);
 				if(neighbourNode.getClass().equals(SeesawNode.class) && !((SeesawNode)neighbourNode).isUp()){
 					SeesawNode pairedNode = ((SeesawNode)neighbourNode).getPairedNode();
