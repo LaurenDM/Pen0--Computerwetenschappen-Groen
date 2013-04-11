@@ -136,7 +136,7 @@ public class MazePath implements Comparable<MazePath>, Iterable<TileNode> {
 	 * @return
 	 */
 	public boolean contains(MazeNode node){
-		return node.getClass().equals(TileNode.class)?nodeList.contains(node):false;
+		return TileNode.class.isAssignableFrom(node.getClass())?nodeList.contains(node):false;
 	}
 
 	@Override
@@ -161,10 +161,10 @@ public class MazePath implements Comparable<MazePath>, Iterable<TileNode> {
 			//If we know the node at the other side of the seesaw and the closest seesawnode is accessible the entire seesaw and that node are added.
 			if(neighbourNode!=null && neighbourNode.isAccessible() && !this.contains(neighbourNode)){
 				MazePath pathToAdd = new MazePath(this,(TileNode) neighbourNode);
-				if(neighbourNode.getClass().equals(SeesawNode.class) && !((SeesawNode)neighbourNode).isUp()){
+				if(neighbourNode.getClass().equals(SeesawNode.class)){
 					SeesawNode pairedNode = ((SeesawNode)neighbourNode).getPairedNode();
 					MazePath extendedSeesaw = new MazePath(pathToAdd,pairedNode);
-					MazeNode nodeAt = ((TileNode)pairedNode).getNodeAt(o);
+					MazeNode nodeAt = pairedNode.getNodeAt(o);
 					if(nodeAt!=null && !nodeAt.getClass().equals(WallNode.class)){
 						TileNode nA = (TileNode)nodeAt;
 						returnList.add(new MazePath(extendedSeesaw,nA));

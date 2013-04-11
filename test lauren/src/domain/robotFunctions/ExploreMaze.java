@@ -154,7 +154,7 @@ public class ExploreMaze{
 		y[0] = robot.getPosition().getNewRoundedPosition(orientation, MAZECONSTANT).getY();
 		x[1] = robot.getPosition().getNewRoundedPosition(orientation, MAZECONSTANT*2).getX();
 		y[1] = robot.getPosition().getNewRoundedPosition(orientation, MAZECONSTANT*2).getY();
-		for(int i=0; i==1; i++){
+		for(int i=0; i<=1; i++){
 			for(Direction d : Direction.values()){
 				if(d.equals(Direction.LEFT)||d.equals(Direction.RIGHT)){
 					calculateWall(x[i], y[i], orientation, d);

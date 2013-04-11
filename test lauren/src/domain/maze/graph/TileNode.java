@@ -189,4 +189,18 @@ public class TileNode extends MazeNode {
 		return this.barcodeNumber;
 	}
 	
+	@Override
+	public boolean equals(Object o){
+		if(o==null){
+			return false;
+		} else {
+			if(this.getClass().isAssignableFrom(o.getClass())){
+				if((((TileNode) o).getX())==getX() && (((TileNode)o).getY())==getY()){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 }
