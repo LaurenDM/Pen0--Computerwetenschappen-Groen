@@ -20,11 +20,10 @@ public class WorldSimulator implements SpectatorHandler {
 	
 	private Board simulatorBoard;
 	private HashMap<String,RobotPilot> otherRobots;
-	private RobotPilot robot;
+	private final RobotPilot robot;
 	
 	public WorldSimulator(RobotPilot robot){
-		robot.setWorldSimulator(this);
-		simulatorBoard = new Board();
+		simulatorBoard = new Board();		
 		otherRobots = new HashMap<String, RobotPilot>();
 		this.robot = robot;
 	}
@@ -71,15 +70,15 @@ public class WorldSimulator implements SpectatorHandler {
 		}
 	}
 	
-	public boolean checkForOpenSeesawFrom(RobotPilot robot){
-		final int DISTANCE = 80;
-		for(Seesaw seesaw : getSeesaws()){
-			if(seesaw.getInfaredPosition().getDistance(robot.getPosition())<DISTANCE){
-				return true;
-			}
-		}
-		return false;
-	}
+//	public boolean checkForOpenSeesawFrom(RobotPilot robot){
+//		final int DISTANCE = 80;
+//		for(Seesaw seesaw : getSeesaws()){
+//			if(seesaw.getInfaredPosition().getDistance(robot.getPosition())<DISTANCE){
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 	
 	public boolean hasSeesawAt(Position pos){
 		return simulatorBoard.hasSeesawAt(pos);
@@ -148,30 +147,30 @@ public class WorldSimulator implements SpectatorHandler {
 		return false;
 	}
 	
-	public synchronized boolean detectRobotFrom(RobotPilot robot){
-		final int DISTANCE = 50; //TODO experimenteel bepalen van bereik van IRsensor
-		if(otherRobots!=null){
-			for(RobotPilot robot2 : otherRobots.values()){
-				if(robot2.getPosition().getDistance(robot.getPosition())<DISTANCE){
-					double distance = robot2.getPosition().getDistance(robot.getPosition());
-					double angle = Math.abs(robot.getOrientation()-robot.getPosition().getAngleTo(robot2.getPosition()));
-					if(angle<135){
-						// andere robot in gezichtsveld van robot
-						robot.turnUltrasonicSensor((int) angle);
-						if(robot.readUltrasonicValue() >= distance){
-							// geen muur tussen robots
-							return true;
-						}
-						//wel muur tussen robots
-					}
-					//robot ziet andere robot niet
-				}
-				// buiten bereik
-			}
-		}
-		return false;
-	}
-	
+//	public synchronized boolean detectRobotFrom(RobotPilot robot){
+//		final int DISTANCE = 50; //TODO experimenteel bepalen van bereik van IRsensor
+//		if(otherRobots!=null){
+//			for(RobotPilot robot2 : otherRobots.values()){
+//				if(robot2.getPosition().getDistance(robot.getPosition())<DISTANCE){
+//					double distance = robot2.getPosition().getDistance(robot.getPosition());
+//					double angle = Math.abs(robot.getOrientation()-robot.getPosition().getAngleTo(robot2.getPosition()));
+//					if(angle<135){
+//						// andere robot in gezichtsveld van robot
+//						robot.turnUltrasonicSensor((int) angle);
+//						if(robot.readUltrasonicValue() >= distance){
+//							// geen muur tussen robots
+//							return true;
+//						}
+//						//wel muur tussen robots
+//					}
+//					//robot ziet andere robot niet
+//				}
+//				// buiten bereik
+//			}
+//		}
+//		return false;
+//	}
+//	
 	public Seesaw getSeesaw(Position pos){
 		return simulatorBoard.getSeesaw(pos);
 	}

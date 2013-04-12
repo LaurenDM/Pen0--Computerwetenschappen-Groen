@@ -8,13 +8,13 @@ import domain.robots.SimRobotPilot;
 import domain.util.Geometrics;
 
 public class InfraredDetector {
-private SimRobotPilot simRobot;
-private Board simWorldBoard;
+private final SimRobotPilot simRobot;
+private final Board simWorldBoard;
 private final int viewAngle=180;
 
-public InfraredDetector(Board simWorldBoard, SimRobotPilot simRobot){
+public InfraredDetector(SimRobotPilot simRobot){
 	this.simRobot=simRobot;
-	this.simWorldBoard=simWorldBoard;
+	this.simWorldBoard=simRobot.getWorldSimulator().getBoard();
 }
 //We gaan voor alle infraroodzenders af of wij er zelf naartoe kijken en dan hoeveel infrarood van hun tot bij deze detector geraakt.
 public int getInfraredValue(){
@@ -24,18 +24,19 @@ public int getInfraredValue(){
 			sumOfInfrared+=iBeamer.getBeamedInfraredAt(getPosition());
 		}
 	}
-	return sumOfInfrared; //TODO infrared
+	return sumOfInfrared;
 }
 //Bepaalt of de positie, kijkhoek en orientatie toelaten om een bepaalde positie te zien (houdt geen rekening met muren)
 private boolean coversPosition(Position toCheckPos){
-	Geometrics.fallsInCoveredArea(toCheckPos,this.getPosition(),getOrientation(), this.viewAngle );
-	return false; //TODO infrared
+	
+	return Geometrics.fallsInCoveredArea(toCheckPos,this.getPosition(),getOrientation(), this.viewAngle );
 }
 
 public Position getPosition(){
-	return simRobot.getPosition().clone();
+	return simRobot.getPosition().getNewRoundPosition(simRobot.getOrientation(), 8);
 }
 
+//De detector zit vast op de robot en heeft dezelfde orientatie
 public double getOrientation(){
 	return simRobot.getOrientation();
 }

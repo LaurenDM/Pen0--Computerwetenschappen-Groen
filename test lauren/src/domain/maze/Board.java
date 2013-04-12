@@ -21,6 +21,7 @@ public class Board {
 	private HashMap<Position, Seesaw> seesaws;
 	private List<Ball> balls;
 	private HashMap<Integer,InitialPosition> initialPositions;
+	private final List<InfraredBeamer> infraBeamers;
 	
 	
 	
@@ -30,6 +31,7 @@ public class Board {
 		seesaws = new HashMap<Position, Seesaw>();
 		balls = new ArrayList<Ball>();
 		initialPositions = new HashMap<Integer,InitialPosition>();
+		infraBeamers= new ArrayList<InfraredBeamer>();
 	}
 	
 	public void addInitialPosition(InitialPosition pos, int nb){
@@ -196,8 +198,11 @@ public class Board {
 	}
 
 	public List<InfraredBeamer> getInfraredBeamers() {
-		// TODO infrared
-		return null;
+		return infraBeamers;
+	}
+
+	public void addInfraBeamer(InfraredBeamer infraredBeamer) {
+		infraBeamers.add(infraredBeamer);
 	}
 
 }

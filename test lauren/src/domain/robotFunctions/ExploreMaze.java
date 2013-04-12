@@ -150,10 +150,10 @@ public class ExploreMaze{
 		double orientation = robot.getOrientation();
 		double[] x = new double[2];
 		double[] y = new double[2];
-		x[0] = robot.getPosition().getNewRoundedPosition(orientation, MAZECONSTANT).getX();
-		y[0] = robot.getPosition().getNewRoundedPosition(orientation, MAZECONSTANT).getY();
-		x[1] = robot.getPosition().getNewRoundedPosition(orientation, MAZECONSTANT*2).getX();
-		y[1] = robot.getPosition().getNewRoundedPosition(orientation, MAZECONSTANT*2).getY();
+		x[0] = robot.getPosition().getNewRoundPosition(orientation, MAZECONSTANT).getX();
+		y[0] = robot.getPosition().getNewRoundPosition(orientation, MAZECONSTANT).getY();
+		x[1] = robot.getPosition().getNewRoundPosition(orientation, MAZECONSTANT*2).getX();
+		y[1] = robot.getPosition().getNewRoundPosition(orientation, MAZECONSTANT*2).getY();
 		for(int i=0; i==1; i++){
 			for(Direction d : Direction.values()){
 				if(d.equals(Direction.LEFT)||d.equals(Direction.RIGHT)){

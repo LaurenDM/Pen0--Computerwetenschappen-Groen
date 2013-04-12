@@ -25,6 +25,8 @@ import domain.maze.Wall;
 import domain.maze.WorldSimulator;
 import domain.maze.barcodes.Barcode;
 import domain.maze.graph.MazePath;
+import domain.maze.infrared.InfraredBeamer;
+import domain.maze.infrared.RobotIBeamer;
 import domain.polygons.RobotPolygon;
 import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.MatchMap;
@@ -46,8 +48,8 @@ public abstract class RobotPilot implements PlayerHandler{
 	
 	private PlayerClient playerClient;
 	
-	
 	public RobotPilot(String playerID){
+		this.worldSimulator=new WorldSimulator(this);
 		this.movement=MoveType.STOPPED;
 		this.robotPolygon=new RobotPolygon(this);
 		this.playerID = playerID;
@@ -348,7 +350,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	}
 
 	public  boolean detectInfrared(){
-		return getInfraredValue()>20; //TODO infrarood francis
+		return getInfraredValue()>30; //TODO infrarood francis
 	};
 
 

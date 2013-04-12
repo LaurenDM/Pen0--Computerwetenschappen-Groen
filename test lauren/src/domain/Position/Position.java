@@ -1,6 +1,9 @@
 package domain.Position;
 import java.lang.Math;
 
+import domain.util.Angles;
+import domain.util.Geometrics;
+
 import lejos.geom.Point;
 
 public class Position implements Cloneable {
@@ -36,7 +39,7 @@ public class Position implements Cloneable {
 	}
 	
 	//geeft een positie die sowieso in het midden van een tile staat.
-	public Position getNewRoundedPosition(double orientation, double distance){
+	public Position getNewRoundPosition(double orientation, double distance){
 		double x = Math.round( getX()+Math.cos(Math.toRadians(orientation))*distance);
 		double y = Math.round(getY()+Math.sin(Math.toRadians(orientation))*distance);
 		return new Position(x,y);
@@ -94,11 +97,34 @@ public class Position implements Cloneable {
 		return 35*(int)getX() + 73*(int)getY() + 184*(int)getX()*(int)getY(); 
 	}
 	
-	public double getAngleTo(Position other){
-		int delta_x = (int) Math.abs(getX()-other.getX());
-		int delta_y = (int) Math.abs(getY()-other.getY());
-		return Math.atan(delta_y/delta_x);
-	}
+	public double getAngleTo(Position toCheckPos){
+		double toCheckYDiff = toCheckPos.getY() - this.getY();
+		double toCheckXDiff = toCheckPos.getX() - this.getX();
+
+		double tanToCheck = (toCheckYDiff) / (toCheckXDiff);
+		final double checkPosAngleinRad;
+		if(tanToCheck==0){
+			if(toCheckXDiff>0){
+				checkPosAngleinRad = Math.atan(tanToCheck);
+			} else {
+				checkPosAngleinRad = Math.atan(tanToCheck) + Math.PI;
+			}
+		}
+		else if (tanToCheck < 0) {
+			if (toCheckYDiff < 0) {
+				checkPosAngleinRad = Math.atan(tanToCheck);
+			} else {
+				checkPosAngleinRad = Math.atan(tanToCheck) + Math.PI;
+			}
+		} else {// tanToCheck>0
+			if (toCheckYDiff > 0) {
+				checkPosAngleinRad = Math.atan(tanToCheck);
+			} else {
+				checkPosAngleinRad = Math.atan(tanToCheck) - Math.PI;
+			}
+		}
+		return -checkPosAngleinRad*180/Math.PI;//De min is omdat het coordinatenstelsel linksBOVEN begint ipv linksonder
+		}
 	
 	
 }

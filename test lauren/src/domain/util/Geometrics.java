@@ -29,37 +29,10 @@ public class Geometrics {
 			return true;
 		}
 		
-		final double toCheckAngle = calcAngle(toCheckPos, viewPos);
+		final double toCheckAngle = viewPos.getAngleTo(toCheckPos);
 		return Math.abs(Angles.moderateTo180(toCheckAngle-orientation))<viewAngle/2;
 	}
 
-	static double calcAngle(Position toCheckPos, Position viewPos) {
-		double toCheckYDiff = toCheckPos.getY() - viewPos.getY();
-		double toCheckXDiff = toCheckPos.getX() - viewPos.getX();
-
-		double tanToCheck = (toCheckYDiff) / (toCheckXDiff);
-		final double checkPosAngleinRad;
-		if(tanToCheck==0){
-			if(toCheckXDiff>0){
-				checkPosAngleinRad = Math.atan(tanToCheck);
-			} else {
-				checkPosAngleinRad = Math.atan(tanToCheck) + Math.PI;
-			}
-		}
-		else if (tanToCheck < 0) {
-			if (toCheckYDiff < 0) {
-				checkPosAngleinRad = Math.atan(tanToCheck);
-			} else {
-				checkPosAngleinRad = Math.atan(tanToCheck) + Math.PI;
-			}
-		} else {// tanToCheck>0
-			if (toCheckYDiff > 0) {
-				checkPosAngleinRad = Math.atan(tanToCheck);
-			} else {
-				checkPosAngleinRad = Math.atan(tanToCheck) - Math.PI;
-			}
-		}
-		return -checkPosAngleinRad*180/Math.PI;//De min is omdat het coordinatenstelsel linksBOVEN begint ipv linksonder
-	}
+	
 
 }

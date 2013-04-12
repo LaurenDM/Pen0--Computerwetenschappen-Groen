@@ -363,10 +363,10 @@ public class MazeInterpreter {
 		// towardsBarcodeOrientation.
 		Orientation finalSeesawOrientation = Seesaw.isALowBcNb(barcodeNb) ? towardsBarcodeOrientation
 				.getBack() : towardsBarcodeOrientation;
-		final Position posSeesawCenter = posSeesawPart.getNewRoundedPosition(
+		final Position posSeesawCenter = posSeesawPart.getNewRoundPosition(
 				towardsBarcodeOrientation.getBack().getAngleToHorizontal(), MAZECONSTANT / 2);
 		if(!board.hasSeesawAt(posSeesawCenter)){
-			board.addSeesaw(new Seesaw(posSeesawCenter, finalSeesawOrientation,barcodeNb, true));
+			board.addSeesaw(new Seesaw(posSeesawCenter, finalSeesawOrientation,barcodeNb, true,board));
 		}
 		//else wip staat er al
 	}

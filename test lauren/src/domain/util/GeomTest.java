@@ -37,7 +37,7 @@ public class GeomTest extends JPanel {
 
 			System.out.print(i + " cp:" + checkPos + " sp:" + viewPos + " o:"
 					+ orientation + " va:" + viewAngle + " ca:"
-					+ (int) Geometrics.calcAngle(checkPos, viewPos));
+					+ (int) viewPos.getAngleTo(checkPos));
 
 			System.out.println(" exp:"
 					+ arc2DPie.contains(checkPoint2D)
