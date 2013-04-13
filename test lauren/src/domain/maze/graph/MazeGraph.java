@@ -208,7 +208,7 @@ public class MazeGraph {
 			}
 		}
 		MazeNode frontNode = getCurrentNode().getNodeAt(getCurrentRobotOrientation());
-		return frontNode!=null?(frontNode.getClass()!=WallNode.class?Orientation.NORTH:Orientation.SOUTH):null;
+		return frontNode!=null?(frontNode.isAccessible()?Orientation.NORTH:Orientation.SOUTH):null;
 	}
 	
 	/**
