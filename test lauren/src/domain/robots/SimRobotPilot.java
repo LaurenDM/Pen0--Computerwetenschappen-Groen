@@ -286,6 +286,7 @@ public class SimRobotPilot extends RobotPilot {
 		double turnSpeed = getTurningSpeed();
 		double moveSpeed = getMovingSpeed();
 		while (running && !Thread.interrupted()) {
+
 			double currDistance = getPosition().getDistance(pos1);
 			if (detectBlackLine()) {
 
