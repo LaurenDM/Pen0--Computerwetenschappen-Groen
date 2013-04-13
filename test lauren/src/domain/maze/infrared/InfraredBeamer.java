@@ -25,7 +25,7 @@ public abstract class InfraredBeamer extends MazeElement{
 		return standardBeamAngle;
 	}
 	public abstract double getOrientation();
-	
+
 	//kijkt of de infraroodstralen van deze beamer een bepaalde positie kunnen bereiken, rekening houdend met muren en al de rest
 	private boolean beamsAt(Position checkPos){
 		//eerst checken we de reach
@@ -47,10 +47,10 @@ public abstract class InfraredBeamer extends MazeElement{
 		if(isBlockedByAnySeesawMid(checkPos)){
 			return false;
 		}
-	
-		
+
+
 		return true;
-		
+
 	}
 	//Berekent of er een seesawmidden of paneel is die het signaal blokkeert
 	protected abstract boolean isBlockedByAnySeesawMid(Position checkPos);
@@ -61,7 +61,7 @@ public abstract class InfraredBeamer extends MazeElement{
 
 	@Override
 	public abstract Position getCenterPosition();
-	
+
 	//return how many infrared is beamed from this infrared-beamer at a certain position, taking walls and seesaws into account.
 	public int getBeamedInfraredAt(Position checkPos) {
 		if(!beamsAt(checkPos)){
@@ -71,7 +71,7 @@ public abstract class InfraredBeamer extends MazeElement{
 		return (int) Math.max(0,(getMaxIrValue()-getMaxIrValue()*distance/getReach()));
 	}
 	protected abstract double getMaxIrValue();
-	
+
 	protected boolean isBlockedBySeesawMiddle(Position checkPos, Seesaw seesaw) {
 		Position middlePivotPos1=seesaw.getCenterPosition().getNewRoundPosition(seesaw.getOrientation().getLeft().getAngleToHorizontal(), MAZECONSTANT/2);
 		Position middlePivotPos2=seesaw.getCenterPosition().getNewRoundPosition(seesaw.getOrientation().getRight().getAngleToHorizontal(), MAZECONSTANT/2);

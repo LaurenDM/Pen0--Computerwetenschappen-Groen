@@ -77,21 +77,15 @@ public class ExploreMaze{
 			distances = checkDistances();
 			makeWall(distances);
 			if(!maze.isComplete()){
-				if(! atDeadEnd){
 				//robot.setMovingSpeed(robot.getDefaultMovingSpeed());
-					Direction direction = getNextDirection(distances);
-					if(checkStraigthen(distances)){
-						moveWithStraighten(direction);
-					}
-					else{
-						move(direction);
-						System.out.println("Now at "+maze.getCurrentNode().getX()+" "+maze.getCurrentNode().getY());
-					}
+				Direction direction = getNextDirection(distances);
+				if(checkStraighten(distances)){
+					moveWithStraighten(direction);
 				}
 				else{
-					this.atDeadEnd = false;
-					moveWithStraighten(Direction.BACKWARD);
+					move(direction);
 				}
+				//System.out.println("Now at "+maze.getCurrentNode().getX()+" "+maze.getCurrentNode().getY());
 			}
 		}
 		if(Controller.isStopped()==false){
@@ -101,9 +95,13 @@ public class ExploreMaze{
 		}
 	}
 	
+	private boolean nextTileIsSeesaw(){
+		return maze.nextTileIsSeesaw();
+	}
+	
 
 	
-	private boolean checkStraigthen(double[] distances){
+	private boolean checkStraighten(double[] distances){
 		for (int i = 0; i < distances.length; i++) {
 			if(distances[i]!=255 &&(distances[i] < 17 || distances[i]%40 > 23)) {
 				return true;

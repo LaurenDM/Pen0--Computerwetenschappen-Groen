@@ -22,12 +22,16 @@ public class Seesaw extends MazeElement {
 	// lowBarcodeNb --->orientatie--> highBarcodeNb 
 	// of highBarcodeNb <--orientatie<-- lowBarcodeNb
 	
-	private int infrared=0; 
+	private int infrared=1; 
 	
 	/**
 	 * Belangrijk de meegeven orientatie is niet per se de ORIENTATION van de
 	 * wip, behalve als isFromTXTfile true is. Deze kan veranderd worden om te
+<<<<<<< HEAD
+	 * zorgen dat de lage barcode voor de wip staat. Voor de wip betekent een positie terug t.o.v. de orientatie.
+=======
 	 * zorgen dat de lage barcode voor de wip staat. Voor de wip betekent dat een positie terug t.o.v. de orientatie.
+>>>>>>> master
 	 * 
 	 * @param orientation
 	 *            De orientatie van de robot wanneer hij de barcode vindt die
@@ -54,6 +58,8 @@ public class Seesaw extends MazeElement {
 				this.ORIENTATION = orientation.getBack();
 			}
 		}
+		
+		// als --> = orientatie van de wip dan: laag nr --> hoog nr
 		
 		this.locked = false;//TODO kijken of die wel weg mag
 		this.infraBeamer=new SeesawIBeamer(this, board);

@@ -312,14 +312,14 @@ public abstract class RobotPilot implements PlayerHandler{
 	public int getTeamNumber(){
 		return teamNumber;
 	}
-		
+	
+	
 	public void handleSeesaw(int barcodeNb,Seesaw foundSeesaw){
 		boolean upAtThisSide = detectInfrared();
-			System.out.println("We change the seesaw based on infrared detection, barcodeNb: "+ barcodeNb+ " upats: " + upAtThisSide);
-			foundSeesaw.setUpAt(barcodeNb, upAtThisSide);
+		System.out.println("We change the seesaw based on infrared detection, barcodeNb: "+ barcodeNb+ " upats: " + upAtThisSide);
+		foundSeesaw.setUpAt(barcodeNb, upAtThisSide);
 		
 		getMaze().setNextTileToSeesaw(upAtThisSide || foundSeesaw.isLocked());
-		
 		if (!foundSeesaw.isLocked() && !upAtThisSide) {
 			try {
 				playerClient.lockSeesaw(barcodeNb);
