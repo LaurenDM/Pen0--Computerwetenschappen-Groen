@@ -587,6 +587,10 @@ public class MazeGraph {
 			ContentPanel.writeToDebug("Couldn't create a seesaw at the position in front of the robot.");
 		}
 	}
+	
+	public boolean nextTileIsSeesaw(){
+		return getCurrentNode().getNodeAt(getCurrentRobotOrientation()).getClass().equals(SeesawNode.class);
+	}
 
 	public ArrayList<TileNode> getFoundTilesList() {
 		return tileNodes;

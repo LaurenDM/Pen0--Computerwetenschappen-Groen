@@ -77,7 +77,7 @@ public class ExploreMaze{
 			distances = checkDistances();
 			makeWall(distances);
 			if(!maze.isComplete()){
-				if(! atDeadEnd){
+				if(! atDeadEnd && !nextTileIsSeesaw()){
 				//robot.setMovingSpeed(robot.getDefaultMovingSpeed());
 					Direction direction = getNextDirection(distances);
 					if(checkStraigthen(distances)){
@@ -99,6 +99,10 @@ public class ExploreMaze{
 			robot.setDriveToFinishSpeed();
 			maze.driveToFinish(robot);
 		}
+	}
+	
+	private boolean nextTileIsSeesaw(){
+		return maze.nextTileIsSeesaw();
 	}
 	
 
