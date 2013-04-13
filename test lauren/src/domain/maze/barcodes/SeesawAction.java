@@ -28,7 +28,7 @@ public class SeesawAction implements Action {
 		Seesaw foundSeesaw=robot.getFoundBoard().getSeesaw(center);
 		
 		if (foundSeesaw == null) {
-			foundSeesaw = new Seesaw(center, orientation, barcodeNb, false);
+			foundSeesaw = new Seesaw(center, orientation, barcodeNb, false, robot.getFoundBoard());
 			robot.getFoundBoard().addSeesaw(foundSeesaw);
 			int snappedOrientation = Orientation.snapAngle(90, 0,
 					robot.getOrientation());

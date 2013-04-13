@@ -4,7 +4,7 @@ import domain.Position.Position;
 
 public abstract class MazeElement {
 	
-	private static final int MAZECONSTANT = 40; //zijdelengte van de rastervensters
+	protected static final int MAZECONSTANT = 40; //zijdelengte van de rastervensters
 	private Position position1;
 	private Position position2;
 	

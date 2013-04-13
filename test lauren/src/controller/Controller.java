@@ -38,7 +38,6 @@ public class Controller {
 	private RobotPilot btRobot;
 	private RobotPilot simRobot;
 	private Thread explorer;
-	private WorldSimulator worldSimulator;
 //	private final EventPusher ep;
 //	private SimRobotPilot simRobotPilot ;
 	private HtttpImplementation htttpImplementation;
@@ -72,7 +71,6 @@ public class Controller {
 	public void connectNewBtRobot() {
 		if(btRobot==null)
 		btRobot = new BTRobotPilot(this.playerID);
-		worldSimulator = new WorldSimulator(btRobot);
 		currentRobot=btRobot;
 		currentRobot.setBoard(new Board());
 
@@ -81,7 +79,6 @@ public class Controller {
 	//This is used to set the robot controlled by this GUI
 	public void connectNewSimRobot(double orientation, Position position, String playerID) {
 		simRobot = new SimRobotPilot(orientation, position,playerID);
-		worldSimulator = new WorldSimulator(simRobot); 
 		currentRobot = simRobot ;
 		currentRobot.setBoard(new Board());
 	}
@@ -91,7 +88,7 @@ public class Controller {
 	}
 	
 	public WorldSimulator getWorldSimulator(){
-		return this.worldSimulator;
+		return currentRobot.getWorldSimulator();
 	}
 
 	
@@ -166,7 +163,7 @@ public class Controller {
 	public List<ColorPolygon> getColorPolygons(){
 		List<ColorPolygon> colPolyList=new ArrayList<ColorPolygon>();
 		colPolyList.add(currentRobot.getRobotPolygon());
-		Iterator<RobotPilot> it = worldSimulator.getOtherRobots().iterator();
+		Iterator<RobotPilot> it = getWorldSimulator().getOtherRobots().iterator();
 	    while (it.hasNext()) {
 	        RobotPilot robot = it.next();
 	        colPolyList.add(robot.getRobotPolygon());
@@ -246,7 +243,7 @@ public class Controller {
 	}
 
 	public void readMazeFromFile(String fileLocation) {
-		MazeInterpreter MI = new MazeInterpreter(worldSimulator);
+		MazeInterpreter MI = new MazeInterpreter(getWorldSimulator().getBoard());
 		if(fileLocation.equals("nullnull")){
 		RandomMazeGenerator RMG = new RandomMazeGenerator(MI);
 		}
@@ -316,9 +313,6 @@ public class Controller {
 	}
 
 	public void driveToFinish() {
-		for(peno.htttp.Tile t : getFoundTilesList()){
-			System.out.println("Tile "+t.getX()+", "+t.getY()+" "+t.getToken());
-		}
 		STOPPED = true;
 		while(explorer.isAlive()){}
 		STOPPED = false;
@@ -459,7 +453,7 @@ public class Controller {
 	public void mousePressed(int x, int y) {
 		// De getSeasaw(Position) kan hier niet gebruikt worden omdat de muis
 		// niet ingedrukt word op precies het midden)
-		List<Seesaw> simWorldSeesaws = worldSimulator.getSeesaws();
+		List<Seesaw> simWorldSeesaws = getWorldSimulator().getSeesaws();
 		for(Seesaw s: simWorldSeesaws){
 			if(s.hasPosition(new Position(x, y))){
 			s.rollOver();
@@ -474,14 +468,4 @@ public class Controller {
 		}
 	}
 	
-	public ArrayList<peno.htttp.Tile> getFoundTilesList(){
-		ArrayList<domain.maze.graph.TileNode> foundTiles = currentRobot.getFoundTilesList();
-		ArrayList<peno.htttp.Tile> returnList = new ArrayList<peno.htttp.Tile>();
-		for(domain.maze.graph.TileNode node : foundTiles){
-			if(node.isFullyExpanded()){
-				returnList.add(new Tile(node.getX(), node.getY(), node.getToken()));
-			}
-		}
-		return returnList;
-	}
 }

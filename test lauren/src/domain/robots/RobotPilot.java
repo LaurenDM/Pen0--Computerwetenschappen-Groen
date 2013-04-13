@@ -19,13 +19,17 @@ import domain.Position.InitialPosition;
 import domain.Position.Position;
 import domain.maze.Ball;
 import domain.maze.Board;
+import domain.maze.MazeInterpreter;
 import domain.maze.Seesaw;
 import domain.maze.Wall;
 import domain.maze.WorldSimulator;
 import domain.maze.barcodes.Barcode;
 import domain.maze.graph.MazePath;
+import domain.maze.infrared.InfraredBeamer;
+import domain.maze.infrared.RobotIBeamer;
 import domain.polygons.RobotPolygon;
 import domain.robotFunctions.ExploreMaze;
+import domain.robotFunctions.MatchMap;
 import domain.util.TimeStamp;
 
 public abstract class RobotPilot implements PlayerHandler{
@@ -44,8 +48,8 @@ public abstract class RobotPilot implements PlayerHandler{
 	
 	private PlayerClient playerClient;
 	
-	
 	public RobotPilot(String playerID){
+		this.worldSimulator=new WorldSimulator(this);
 		this.movement=MoveType.STOPPED;
 		this.robotPolygon=new RobotPolygon(this);
 		this.playerID = playerID;
@@ -343,13 +347,10 @@ public abstract class RobotPilot implements PlayerHandler{
 			}
 		}
 		getMaze().atBarcode(barcodeNb);
-//		else{
-//		turn(180);
-//		}
 	}
 
 	public  boolean detectInfrared(){
-		return getInfraredValue()>20; //TODO infrarood francis
+		return getInfraredValue()>30; //TODO infrarood francis
 	};
 
 
@@ -374,9 +375,16 @@ public abstract class RobotPilot implements PlayerHandler{
 		System.out.println("Setting initial pos to:"+initialPosition.getX()+" y:"+initialPosition.getY());
 		setPose(initialPosition.getOrientation().getAngleToHorizontal(), (int) initialPosition.getX(), (int) initialPosition.getY());
 	}
-
-	public ArrayList<domain.maze.graph.TileNode> getFoundTilesList() {
-		return getMaze().getFoundTilesList();
+	
+	public ArrayList<peno.htttp.Tile> getFoundTilesList(){
+		ArrayList<domain.maze.graph.TileNode> foundTiles = getMaze().getFoundTilesList();
+		ArrayList<peno.htttp.Tile> returnList = new ArrayList<peno.htttp.Tile>();
+		for(domain.maze.graph.TileNode node : foundTiles){
+			if(node.isFullyExpanded()){
+				returnList.add(new Tile(node.getX(), node.getY(), node.getToken()));
+			}
+		}
+		return returnList;
 	}
 	
 	
@@ -447,13 +455,26 @@ public abstract class RobotPilot implements PlayerHandler{
 	@Override
 	public void teamConnected(String partnerID) {
 		printMessage("ph.teamconnected: "+partnerID);
-		//TODO start sending maze to teammember
+		try {
+			playerClient.sendTiles(getFoundTilesList());
+		} catch (IOException e) {
+			// Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void teamTilesReceived(List<Tile> tiles) {
 		printMessage("ph.Tiles recieved 'List<Tile>");
 		//TODO info verwerken en naar teammate rijden tenzij mismatch, verder exploren
+		MatchMap matcher = new MatchMap();
+		List<Tile> ourTiles = getFoundTilesList();
+		// TODO: koen, methodes in MatchMap niet meer static maken
+		matcher.setOurMazeTiles(ourTiles.toArray(new Tile[ourTiles.size()]));
+		matcher.setOriginalTiles(tiles.toArray(new Tile[tiles.size()]));
+		matcher.merge();
+		MazeInterpreter MI = new MazeInterpreter(board);
+		MI.readMap(matcher.getResultMap());
 	}
 	
 	private void printMessage(String message){

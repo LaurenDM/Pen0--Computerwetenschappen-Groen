@@ -3,6 +3,8 @@ package domain.maze;
 import domain.Position.Position;
 import domain.maze.barcodes.Action;
 import domain.maze.barcodes.Barcode;
+import domain.maze.infrared.InfraredBeamer;
+import domain.maze.infrared.SeesawIBeamer;
 import domain.robots.RobotPilot;
 
 public class Seesaw extends MazeElement {
@@ -15,6 +17,7 @@ public class Seesaw extends MazeElement {
 	private final int makeBarcode;
 	private final Orientation ORIENTATION;
 	private boolean locked;
+	private final SeesawIBeamer infraBeamer;
 	
 	// lowBarcodeNb --->orientatie--> highBarcodeNb 
 	// of highBarcodeNb <--orientatie<-- lowBarcodeNb
@@ -24,7 +27,11 @@ public class Seesaw extends MazeElement {
 	/**
 	 * Belangrijk de meegeven orientatie is niet per se de ORIENTATION van de
 	 * wip, behalve als isFromTXTfile true is. Deze kan veranderd worden om te
+<<<<<<< HEAD
 	 * zorgen dat de lage barcode voor de wip staat. Voor de wip betekent een positie terug t.o.v. de orientatie.
+=======
+	 * zorgen dat de lage barcode voor de wip staat. Voor de wip betekent dat een positie terug t.o.v. de orientatie.
+>>>>>>> master
 	 * 
 	 * @param orientation
 	 *            De orientatie van de robot wanneer hij de barcode vindt die
@@ -32,11 +39,10 @@ public class Seesaw extends MazeElement {
 	 * @param barcodeNb
 	 *            de barcode die tot de ontdekking van de seesaw leidt of gewoon 1 van de twee barcodes als het van een TXTfile komt.
 	 */
-	public Seesaw(Position middlePosition, Orientation orientation, int barcodeNb, boolean isFromTXTfile){
+	public Seesaw(Position middlePosition, Orientation orientation, int barcodeNb, boolean isFromTXTfile, Board board){
 		this.isFromTXTfile=isFromTXTfile;
 		this.makeBarcode=barcodeNb;
 		this.middlePosition = middlePosition;
-		
 		//Initialize barcodes
 		if(isALowBcNb(barcodeNb)){
 			lowBarcodeNb=makeBarcode;
@@ -56,7 +62,9 @@ public class Seesaw extends MazeElement {
 		// als --> = orientatie van de wip dan: laag nr --> hoog nr
 		
 		this.locked = false;//TODO kijken of die wel weg mag
+		this.infraBeamer=new SeesawIBeamer(this, board);
 		System.out.println("We have created a " + !isFromTXTfile  + " Seesaw with orientation " +  ORIENTATION);
+
 	}
 	
 	
@@ -141,12 +149,13 @@ public class Seesaw extends MazeElement {
 		}
 		this.infrared = infrared;
 	}
-
+	
+	//TODO infrared checken of dit nog nodig is
 	public Position[] getInfrareds() {
 		return new Position[] {
-				getCenterPosition().getNewRoundedPosition(
+				getCenterPosition().getNewRoundPosition(
 						getOrientation().getAngleToHorizontal(), -20),
-				getCenterPosition().getNewRoundedPosition(
+				getCenterPosition().getNewRoundPosition(
 						getOrientation().getAngleToHorizontal(), 20) };
 		// index 0 geeft positie langs de kant met de kleine barcode
 		// index 1 geeft positie langs de kant met de grote barcode
@@ -190,7 +199,17 @@ public class Seesaw extends MazeElement {
 	public static boolean isALowBcNb(int barcodeNb) {
 		return barcodeNb%4==3;
 	}
+
+
+
+
+	public boolean isUpAtLowBCSide() {
+		return this.infrared==0;
+	}
 	
+	public boolean equals(Seesaw otherSeesaw){
+		return otherSeesaw.getOrientation().equals(this.getOrientation())&&otherSeesaw.getCenterPosition().equals(this.getCenterPosition());
+	}
 	
 
 }

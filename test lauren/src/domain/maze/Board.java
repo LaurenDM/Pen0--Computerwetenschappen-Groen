@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import domain.Position.InitialPosition;
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
+import domain.maze.infrared.InfraredBeamer;
 import domain.robots.RobotPilot;
 
 public class Board {
@@ -18,6 +19,9 @@ public class Board {
 	private HashMap<Position, Wall> walls;
 	private List<Barcode> barcodes;
 	private HashMap<Position, Seesaw> seesaws;
+	private List<Ball> balls;
+	private HashMap<Integer,InitialPosition> initialPositions;
+	private final List<InfraredBeamer> infraBeamers;
 	
 	
 	
@@ -25,6 +29,46 @@ public class Board {
 		barcodes = new ArrayList<Barcode>();
 		walls = new HashMap<Position,Wall>();
 		seesaws = new HashMap<Position, Seesaw>();
+		balls = new ArrayList<Ball>();
+		initialPositions = new HashMap<Integer,InitialPosition>();
+		infraBeamers= new ArrayList<InfraredBeamer>();
+	}
+	
+	public void addInitialPosition(InitialPosition pos, int nb){
+		System.out.println("init pos added: x:"+pos.getX()+" y:"+pos.getY()+" nb:"+nb);
+		initialPositions.put(nb, pos);
+	}
+	
+	public InitialPosition getInitialPositionFromPlayer(int nb){
+		System.out.println("-----------------");
+		System.out.println("inpos");
+		for(int i =0; i<4; i++){
+			if(initialPositions.get(i)!=null)
+			System.out.println(initialPositions.get(i));			
+		}
+		System.out.println("-----------------");
+		return initialPositions.get(nb);
+	}
+	
+	public synchronized void addBall(Ball ball){
+		balls.add(ball);
+	}
+	
+	public Ball removeBall(Position position) {
+		Ball ball2remove = null;
+		for(Ball ball : balls){
+			if(ball.getPosition().getDistance(position)<10){
+				ball2remove = ball;
+			}
+		}
+		if(ball2remove !=null) {
+			balls.remove(ball2remove);
+		}
+		return ball2remove;
+	}
+	
+	public List<Ball> getBalls(){
+		return balls;
 	}
 	
 	public synchronized void addWall(Wall wall){
@@ -43,6 +87,37 @@ public class Board {
 		else {
 			return wall.hasPosition(position);
 		}
+	}
+	
+	public synchronized boolean detectWallAt(Position position){
+		int x =(int) (Math.round((position.getX())/MAZECONSTANT))*MAZECONSTANT;
+		int y = (int) (Math.round((position.getY())/MAZECONSTANT))*MAZECONSTANT;
+		final int MARGE = 1;
+		if(!(position.getX()%MAZECONSTANT < MARGE || position.getX()%MAZECONSTANT > (MAZECONSTANT-MARGE)) 
+				&& !(position.getY()%MAZECONSTANT<MARGE || position.getY()%MAZECONSTANT > (MAZECONSTANT-MARGE))){
+			// positie is op een vakje
+			return false;
+		}
+		else if((position.getX()%MAZECONSTANT < MARGE || position.getX()%MAZECONSTANT > (MAZECONSTANT-MARGE))
+				&& !(position.getY()%MAZECONSTANT<MARGE || position.getY()%MAZECONSTANT > (MAZECONSTANT-MARGE))){
+			// verticale muren
+			y = (int) Math.floor((position.getY())/MAZECONSTANT)*MAZECONSTANT;
+			return findWallAt(new Position(x,y+20), position);
+		}
+		else if(!(position.getX()%MAZECONSTANT < MARGE || position.getX()%MAZECONSTANT > (MAZECONSTANT-MARGE))
+				&& (position.getY()%MAZECONSTANT<MARGE || position.getY()%MAZECONSTANT > (MAZECONSTANT-MARGE))){
+			// horizontale muren
+			x = (int) Math.floor((position.getX())/MAZECONSTANT)*MAZECONSTANT;
+			return findWallAt(new Position(x+20,y), position);
+		}
+		else{
+			for(Orientation orientation : Orientation.values()){
+				if(findWallAt(new Position(x+20*orientation.getXValue(),y+20*orientation.getYValue()),position)){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	public synchronized void addBarcode(Barcode barcode){
@@ -93,6 +168,20 @@ public class Board {
 		return seesaws.get(pos);
 	}
 	
+	public boolean hasSeesawAt(Position pos){
+		if(getSeesaw(pos) != null){
+			return true;
+		}
+		else {
+			for(Seesaw s : getSeesaws()){
+				if(s.hasPosition(pos)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	
 	//TODO Francis laten gebruiken
 	public void setLockForSeesawWithBarcode(int barcodenb, boolean lock) {
@@ -106,6 +195,14 @@ public class Board {
 				}
 			}
 		}
+	}
+
+	public List<InfraredBeamer> getInfraredBeamers() {
+		return infraBeamers;
+	}
+
+	public void addInfraBeamer(InfraredBeamer infraredBeamer) {
+		infraBeamers.add(infraredBeamer);
 	}
 
 }

@@ -29,7 +29,6 @@ public class BTRobotPilot extends RobotPilot  {
 	
 
 	
-	private Board board;
 	private  final float wheelsDiameter = 5.43F;
 	//	private static final float wheelDiameterLeft = 5.43F;
 	//	private static final float wheelDiameterRight = 5.43F;
@@ -61,18 +60,10 @@ public class BTRobotPilot extends RobotPilot  {
 			throw new ConnectErrorException();
 
 		}
-		board = new Board();
+		setBoard(new Board());
 	}
-	
-	@Override
-	public void setBoard(Board board){
-		this.board=  board;
-	}
-	
-	@Override
-	public Board getFoundBoard(){
-		return board;
-	}
+
+
 	
 
 	@Override
@@ -393,7 +384,7 @@ public class BTRobotPilot extends RobotPilot  {
 
 	@Override
 	public void addFoundWall(Wall wall) {
-		board.addWall(wall);
+		getFoundBoard().addWall(wall);
 	}
 
 	@Override

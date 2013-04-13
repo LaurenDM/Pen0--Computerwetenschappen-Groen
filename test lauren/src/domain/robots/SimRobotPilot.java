@@ -16,9 +16,13 @@ import domain.maze.Board;
 import domain.maze.Orientation;
 import domain.maze.Wall;
 import domain.maze.graph.MazePath;
+import domain.maze.infrared.InfraredBeamer;
+import domain.maze.infrared.InfraredDetector;
+import domain.maze.infrared.RobotIBeamer;
 import domain.robotFunctions.BarcodeGenerator;
 import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.Straightener;
+import domain.util.Angles;
 import domain.util.TimeStamp;
 
 
@@ -30,7 +34,10 @@ public class SimRobotPilot extends RobotPilot {
 	private Position position;
 	private boolean isScanningBarcode;
 	private boolean turningError = true;
-	
+	//De onderstaande variable wordt momenteel niet gebruikt maar is goed voor debuggen
+	private final InfraredBeamer infraBeamer;
+	private final InfraredDetector infraDetector;
+
 	
 
 	//The wanted rotation Speed of the robot.
@@ -69,6 +76,8 @@ public class SimRobotPilot extends RobotPilot {
 		this.setTurningSpeed(defaultTurningSpeed);
 		this.sensorAngle = 0;
 		setBoard(new Board());
+		this.infraBeamer= new RobotIBeamer(this);
+		this.infraDetector=new InfraredDetector(this);
 	}
 	
 	
@@ -379,13 +388,8 @@ public class SimRobotPilot extends RobotPilot {
 	}
 
 	double calcNewOrientation(double turnAmount) {
-		double newOrientation = getOrientation()+turnAmount;
-		while (newOrientation < -179) {
-			newOrientation += 360;
-		}
-		while (newOrientation > 180) {
-			newOrientation -= 360;
-		}
+		double newOrientation = Angles.moderateTo180(getOrientation()+turnAmount);
+		
 		return newOrientation;
 	}
 
@@ -712,7 +716,8 @@ public class SimRobotPilot extends RobotPilot {
 
 	@Override
 	public int getInfraredValue() {
-			return getWorldSimulator().detectRobotFrom(this) || getWorldSimulator().checkForOpenSeesawFrom(this)?70:0;
+//			return getWorldSimulator().detectRobotFrom(this) || getWorldSimulator().checkForOpenSeesawFrom(this)?70:0;
+	return infraDetector.getInfraredValue();
 	}
 
 	@Override

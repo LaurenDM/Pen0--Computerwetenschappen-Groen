@@ -19,41 +19,25 @@ public class WorldSimulator implements SpectatorHandler {
 	private static final int MAZECONSTANT = 40;
 	
 	private Board simulatorBoard;
-	
-	
-	private List<Ball> balls;
 	private HashMap<String,RobotPilot> otherRobots;
-
-	private HashMap<Integer,InitialPosition> initialPositions;
-	
-	private RobotPilot robot;
+	private final RobotPilot robot;
 	
 	public WorldSimulator(RobotPilot robot){
-		robot.setWorldSimulator(this);
-		simulatorBoard = new Board();
-		
-		
-		balls = new ArrayList<Ball>();
+		simulatorBoard = new Board();		
 		otherRobots = new HashMap<String, RobotPilot>();
-		initialPositions = new HashMap<Integer,InitialPosition>();
-
 		this.robot = robot;
 	}
 	
+	public Board getBoard(){
+		return this.simulatorBoard;
+	}
+	
 	public void addInitialPosition(InitialPosition pos, int nb){
-		System.out.println("init pos added: x:"+pos.getX()+" y:"+pos.getY()+" nb:"+nb);
-		initialPositions.put(nb, pos);
+		simulatorBoard.addInitialPosition(pos, nb);
 	}
 	
 	public InitialPosition getInitialPositionFromPlayer(int nb){
-		System.out.println("-----------------");
-		System.out.println("inpos");
-		for(int i =0; i<4; i++){
-			if(initialPositions.get(i)!=null)
-			System.out.println(initialPositions.get(i));			
-		}
-		System.out.println("-----------------");
-		return initialPositions.get(nb);
+		return simulatorBoard.getInitialPositionFromPlayer(nb);
 	}
 	
 	public void newExternalRobot(String id, RobotPilot robot){
@@ -73,7 +57,7 @@ public class WorldSimulator implements SpectatorHandler {
 	}
 	
 	public synchronized void addBall(Ball ball){
-		balls.add(ball);
+		simulatorBoard.addBall(ball);
 	}
 	
 	public synchronized void addSimulatedBarcode(Barcode barcode){
@@ -86,43 +70,24 @@ public class WorldSimulator implements SpectatorHandler {
 		}
 	}
 	
-	public boolean checkForOpenSeesawFrom(RobotPilot robot){
-		final int DISTANCE = 80;
-		for(Seesaw seesaw : getSeesaws()){
-			if(seesaw.getInfaredPosition().getDistance(robot.getPosition())<DISTANCE){
-				return true;
-			}
-		}
-		return false;
-	}
+//	public boolean checkForOpenSeesawFrom(RobotPilot robot){
+//		final int DISTANCE = 80;
+//		for(Seesaw seesaw : getSeesaws()){
+//			if(seesaw.getInfaredPosition().getDistance(robot.getPosition())<DISTANCE){
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 	
 	public boolean hasSeesawAt(Position pos){
-		if(getSeesaw(pos) != null){
-			return true;
-		}
-		else {
-			for(Seesaw s : getSeesaws()){
-				if(s.hasPosition(pos)){
-					return true;
-				}
-			}
-		}
-		return false;
+		return simulatorBoard.hasSeesawAt(pos);
 	}
 	
 	
 	
 	public Ball removeBall(Position position) {
-		Ball ball2remove = null;
-		for(Ball ball : balls){
-			if(ball.getPosition().getDistance(position)<10){
-				ball2remove = ball;
-			}
-		}
-		if(ball2remove !=null) {
-			balls.remove(ball2remove);
-		}
-		return ball2remove;
+		return simulatorBoard.removeBall(position);
 	}
 	
 	public List<Wall> getWalls(){
@@ -138,7 +103,7 @@ public class WorldSimulator implements SpectatorHandler {
 	}
 
 	public List<Ball> getBalls(){
-		return balls;
+		return simulatorBoard.getBalls();
 	}
 	
 	private boolean findWallAt(Position middlePosition, Position position){
@@ -146,34 +111,7 @@ public class WorldSimulator implements SpectatorHandler {
 	}
 	
 	public synchronized boolean detectWallAt(Position position){
-		int x =(int) (Math.round((position.getX())/MAZECONSTANT))*MAZECONSTANT;
-		int y = (int) (Math.round((position.getY())/MAZECONSTANT))*MAZECONSTANT;
-		final int MARGE = 1;
-		if(!(position.getX()%MAZECONSTANT < MARGE || position.getX()%MAZECONSTANT > (MAZECONSTANT-MARGE)) 
-				&& !(position.getY()%MAZECONSTANT<MARGE || position.getY()%MAZECONSTANT > (MAZECONSTANT-MARGE))){
-			// positie is op een vakje
-			return false;
-		}
-		else if((position.getX()%MAZECONSTANT < MARGE || position.getX()%MAZECONSTANT > (MAZECONSTANT-MARGE))
-				&& !(position.getY()%MAZECONSTANT<MARGE || position.getY()%MAZECONSTANT > (MAZECONSTANT-MARGE))){
-			// verticale muren
-			y = (int) Math.floor((position.getY())/MAZECONSTANT)*MAZECONSTANT;
-			return findWallAt(new Position(x,y+20), position);
-		}
-		else if(!(position.getX()%MAZECONSTANT < MARGE || position.getX()%MAZECONSTANT > (MAZECONSTANT-MARGE))
-				&& (position.getY()%MAZECONSTANT<MARGE || position.getY()%MAZECONSTANT > (MAZECONSTANT-MARGE))){
-			// horizontale muren
-			x = (int) Math.floor((position.getX())/MAZECONSTANT)*MAZECONSTANT;
-			return findWallAt(new Position(x+20,y), position);
-		}
-		else{
-			for(Orientation orientation : Orientation.values()){
-				if(findWallAt(new Position(x+20*orientation.getXValue(),y+20*orientation.getYValue()),position)){
-					return true;
-				}
-			}
-		}
-		return false;
+		return simulatorBoard.detectWallAt(position);
 	}
 	
 	public synchronized boolean detectWhiteLineAt(Position position){
@@ -209,30 +147,30 @@ public class WorldSimulator implements SpectatorHandler {
 		return false;
 	}
 	
-	public synchronized boolean detectRobotFrom(RobotPilot robot){
-		final int DISTANCE = 50; //TODO experimenteel bepalen van bereik van IRsensor
-		if(otherRobots!=null){
-			for(RobotPilot robot2 : otherRobots.values()){
-				if(robot2.getPosition().getDistance(robot.getPosition())<DISTANCE){
-					double distance = robot2.getPosition().getDistance(robot.getPosition());
-					double angle = Math.abs(robot.getOrientation()-robot.getPosition().getAngleTo(robot2.getPosition()));
-					if(angle<135){
-						// andere robot in gezichtsveld van robot
-						robot.turnUltrasonicSensor((int) angle);
-						if(robot.readUltrasonicValue() >= distance){
-							// geen muur tussen robots
-							return true;
-						}
-						//wel muur tussen robots
-					}
-					//robot ziet andere robot niet
-				}
-				// buiten bereik
-			}
-		}
-		return false;
-	}
-	
+//	public synchronized boolean detectRobotFrom(RobotPilot robot){
+//		final int DISTANCE = 50; //TODO experimenteel bepalen van bereik van IRsensor
+//		if(otherRobots!=null){
+//			for(RobotPilot robot2 : otherRobots.values()){
+//				if(robot2.getPosition().getDistance(robot.getPosition())<DISTANCE){
+//					double distance = robot2.getPosition().getDistance(robot.getPosition());
+//					double angle = Math.abs(robot.getOrientation()-robot.getPosition().getAngleTo(robot2.getPosition()));
+//					if(angle<135){
+//						// andere robot in gezichtsveld van robot
+//						robot.turnUltrasonicSensor((int) angle);
+//						if(robot.readUltrasonicValue() >= distance){
+//							// geen muur tussen robots
+//							return true;
+//						}
+//						//wel muur tussen robots
+//					}
+//					//robot ziet andere robot niet
+//				}
+//				// buiten bereik
+//			}
+//		}
+//		return false;
+//	}
+//	
 	public Seesaw getSeesaw(Position pos){
 		return simulatorBoard.getSeesaw(pos);
 	}
