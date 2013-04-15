@@ -379,4 +379,8 @@ public class ExploreMaze{
 		calculateWall(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation(), Direction.LEFT);
 		maze.setCurrentTileBarcode(barcodeNumber);
 	}
+
+	public void updateWithMap(String[][] resultMap) {
+		maze.updateWithMap(resultMap);		
+	}
 }

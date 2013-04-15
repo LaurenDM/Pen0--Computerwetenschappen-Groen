@@ -9,6 +9,7 @@ import java.util.Iterator;
 import peno.htttp.Tile;
 
 import domain.maze.Orientation;
+import domain.maze.Token;
 import domain.robots.RobotPilot;
 
 public class MazeGraph {
@@ -253,6 +254,17 @@ public class MazeGraph {
 		}
 	}
 	
+	private TileNode getTileNodeAt(int x, int y){
+		TileNode r = null;
+		for(TileNode t : tileNodes){
+			if(t.getX() == x && t.getY() == y){
+				r = t;
+				break;
+			}
+		}
+		return r;
+	}
+	
 	/**
 	 * Make a new WallNode at the given orientation relative to the robot's current orientation.
 	 * @param orientation
@@ -298,18 +310,22 @@ public class MazeGraph {
 		}
 	}
 	
-	private void generateSeesawNodeAt(Orientation orientation, boolean isUpAtThisSide) {
+	private void generateSeesawNodeAt(Orientation orientation, boolean isUpAtThisSide){
+		generateSeesawNodeAt(getCurrentNode(), orientation, isUpAtThisSide);
+	}
+	
+	private void generateSeesawNodeAt(TileNode tile, Orientation orientation, boolean isUpAtThisSide) {
 		Orientation absoluteOrientation = getCurrentRobotOrientation().getRelativeOrientation(orientation);
 		Orientation orientationToCurrent = absoluteOrientation.getBack();
-		SeesawNode newNode = new SeesawNode(getCurrentNode(),orientationToCurrent);
+		SeesawNode newNode = new SeesawNode(tile,orientationToCurrent);
 		newNode.setUp(isUpAtThisSide);
 		boolean thisNodeAlreadyExists = false;
 		
 		for(TileNode node:tileNodes){
 			//Deduplication
 			if((node).getX()==newNode.getX() && (node).getY()==newNode.getY()){
-				getCurrentNode().setNodeAt(absoluteOrientation, node);
-				node.setNodeAt(orientationToCurrent, getCurrentNode());
+				tile.setNodeAt(absoluteOrientation, node);
+				node.setNodeAt(orientationToCurrent, tile);
 				if(node.getClass().equals(SeesawNode.class)) {
 					((SeesawNode)node).setUp(isUpAtThisSide);
 					thisNodeAlreadyExists = true;
@@ -331,7 +347,7 @@ public class MazeGraph {
 			}
 		}
 		if(!thisNodeAlreadyExists){
-			getCurrentNode().setNodeAt(absoluteOrientation, newNode);
+			tile.setNodeAt(absoluteOrientation, newNode);
 			tileNodes.add(newNode);
 			tileNodes.add(newNode.getPairedNode());
 		}
@@ -602,5 +618,48 @@ public class MazeGraph {
 	
 	private void setTileBarcode(TileNode tile, int barcodeNumber) {
 		tile.setBarcode(barcodeNumber);
+	}
+
+	public void updateWithMap(String[][] resultMap) {	
+		boolean changed;
+		do{
+			changed = false;
+			for(int i=0; i<=resultMap.length; i++){
+				for(int j=0; j<=resultMap[0].length; j++){
+					if(getTileNodeAt(i, j)!=null && resultMap[i][j]!=null && !resultMap[i][j].equals("dummy")){
+						for(Orientation o : Orientation.values()){
+							int x = o.getXValue(); int y = o.getYValue();
+							if(resultMap[i+x][j+y]!=null && !resultMap[i][j].equals("dummy")){
+								if(resultMap[i+x][j+y].startsWith("Seesaw")){
+									generateSeesawNodeAt(getTileNodeAt(i, j), o, false); //Assumed to be down at this side
+								} else {
+									generateTileNodeAt(getTileNodeAt(i, j), o);
+								}
+								updateTileFromToken(getTileNodeAt(i+x, j+y), resultMap[i+x][j+y]);
+								changed = true;
+							}
+						}
+					}
+				}
+			}
+		} while(changed);
+	}
+
+	private void updateTileFromToken(TileNode tileNodeAt, String string) {
+		String[] split = string.split(".");
+		for(Orientation o : Orientation.values()){
+			if(Token.valueOf(split[0].toUpperCase()).hasWallAt(o.getRelativeOrientation(Orientation.getOrientation(split[1])))){
+				generateWallNodeAt(tileNodeAt, o);
+			}
+		}
+		try{
+			int barcode = -1;
+			if(split.length >= 3){
+				barcode = Integer.parseInt(split[2]);
+				setTileBarcode(tileNodeAt, barcode);
+			}
+		} catch(NumberFormatException e){
+			//Nothing
+		}
 	}
 }

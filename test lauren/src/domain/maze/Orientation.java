@@ -37,6 +37,17 @@ public enum Orientation {
 		else throw new IllegalArgumentException();
 	}
 
+	public static Orientation getOrientation(int x, int y) {
+		Orientation r = null;
+		for(Orientation o : Orientation.values()){
+			if(x == o.getXValue() && y == o.getYValue()){
+				r = o;
+			}
+		}
+		return r;
+	}
+
+
 	public Orientation getLeft(){
 		return this.getOffset(-1);
 	}

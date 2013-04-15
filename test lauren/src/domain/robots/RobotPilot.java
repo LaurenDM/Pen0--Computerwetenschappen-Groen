@@ -475,6 +475,7 @@ public abstract class RobotPilot implements PlayerHandler{
 		matcher.merge();
 		MazeInterpreter MI = new MazeInterpreter(board);
 		MI.readMap(matcher.getResultMap());
+		maze.updateWithMap(matcher.getResultMap());
 	}
 	
 	private void printMessage(String message){
