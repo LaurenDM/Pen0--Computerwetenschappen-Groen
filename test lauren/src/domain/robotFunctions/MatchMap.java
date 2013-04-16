@@ -591,6 +591,9 @@ public class MatchMap {
 	//xOrY -> true = expand x size
 	//downOrUp -> true = positively
 	private static String[][] enlargeResultList(String[][] resultList,boolean xOrY,boolean downOrUp) {
+		if(!(resultList.length > 20) || !(resultList[0].length > 20)){
+			return resultList;
+		}
 		//Enlarge on x size 
 		//Positively
 		if(xOrY == true && downOrUp == true){
@@ -695,7 +698,8 @@ public class MatchMap {
 			for (int j = 0; j < getOurMaze()[0].length; j++) {
 				String[] str = getOurMaze()[i][j].split(regex);
 				if(getBarcodeValue(getOurMaze()[i][j]) > 0);
-					if(checkForBarcodeMatches(str[1], getBarcodeValue(getOurMaze()[i][j]),i,j)){
+					try {
+						if(checkForBarcodeMatches(str[1], getBarcodeValue(getOurMaze()[i][j]),i,j)){
 						System.out.println("MERGEPOINT HAS BEEN SET");
 						ourMergePointX = i;
 						ourMergePointY = j;
@@ -704,6 +708,10 @@ public class MatchMap {
 						j = getOurMaze()[0].length;
 						i = getOurMaze().length;
 					}
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+					
 			}
 		}
 	}

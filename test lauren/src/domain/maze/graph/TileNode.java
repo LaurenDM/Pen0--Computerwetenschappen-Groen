@@ -15,6 +15,7 @@ public class TileNode extends MazeNode {
 	private boolean visited = false;
 	private int barcodeNumber = -1;
 	private boolean hasBarcode = false;
+	private int blockNavigationCount = 0;
 	
 	public TileNode(TileNode currentNode, Orientation orientationToCurrentNode){
 		connectedNodes = new HashMap<Orientation,MazeNode>();
@@ -138,7 +139,29 @@ public class TileNode extends MazeNode {
 	}
 	
 	public boolean isAccessible() {
-		return true;
+		return getBlockNavigationCount()==0;
+	}
+	
+	public void setAccessible(boolean accessible) {
+		if(accessible){
+			this.setBlockNavigationCount(0);
+		} else {
+			this.setBlockNavigationCount(3); //TODO put a less arbitrary value here.
+		}
+	}
+
+	public int getBlockNavigationCount() {
+		return blockNavigationCount;
+	}
+
+	protected void setBlockNavigationCount(int blockNavigationCount) {
+		this.blockNavigationCount = blockNavigationCount;
+	}
+	
+	public void decreaseBlockNavigationCount() {
+		if(getBlockNavigationCount()>0){
+			setBlockNavigationCount(getBlockNavigationCount()-1);
+		}
 	}
 
 	public String getToken() {
@@ -164,6 +187,20 @@ public class TileNode extends MazeNode {
 	
 	public int getBarcodeNumber() {
 		return this.barcodeNumber;
+	}
+	
+	@Override
+	public boolean equals(Object o){
+		if(o==null){
+			return false;
+		} else {
+			if(this.getClass().isAssignableFrom(o.getClass())){
+				if((((TileNode) o).getX())==getX() && (((TileNode)o).getY())==getY()){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 }
