@@ -14,6 +14,7 @@ import domain.maze.Wall;
 import domain.maze.graph.MazeGraph;
 import domain.maze.graph.MazePath;
 import domain.maze.graph.SeesawNode;
+import domain.maze.graph.TileNode;
 import domain.robots.CannotMoveException;
 import domain.robots.RobotPilot;
 
@@ -380,11 +381,26 @@ public class ExploreMaze{
 		maze.setCurrentTileBarcode(barcodeNumber);
 	}
 
+
 	public void updateWithMap(String[][] resultMap) {
 		maze.updateWithMap(resultMap);		
 	}
 
 	public void setPartnerPosition(int partnerX, int partnerY) {
 		maze.setPartnerPosition(partnerX, partnerY);
+	}
+
+	public Position findMostNegativePosition() {
+		int minX = 0;
+		int minY = 0;
+		for(TileNode t : getFoundTilesList()){
+			if(t.getX()<minX){
+				minX=t.getX();
+			}
+			if(t.getY()<minY){
+				minY=t.getY();
+			}
+		}
+		return new Position(minX,minY);
 	}
 }

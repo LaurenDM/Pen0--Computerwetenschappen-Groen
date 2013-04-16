@@ -63,7 +63,7 @@ public class Seesaw extends MazeElement {
 		
 		this.locked = false;//TODO kijken of die wel weg mag
 		this.infraBeamer=new SeesawIBeamer(this, board);
-		System.out.println("We have created a " + !isFromTXTfile  + " Seesaw with orientation " +  ORIENTATION);
+		//System.out.println("We have created a " + !isFromTXTfile  + " Seesaw with orientation " +  ORIENTATION);
 
 	}
 	
@@ -143,7 +143,7 @@ public class Seesaw extends MazeElement {
 	
 	public void setInfrared(int infrared){
 		try{
-		System.out.println("We are setting a " + !isFromTXTfile  + " Seesaw's infrared-position from " + getInfrareds()[this.infrared] + " To" + getInfrareds()[infrared]);
+		//System.out.println("We are setting a " + !isFromTXTfile  + " Seesaw's infrared-position from " + getInfrareds()[this.infrared] + " To" + getInfrareds()[infrared]);
 		}catch(NullPointerException n){
 //			this means the setInfrared happens in the constructor
 		}

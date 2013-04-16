@@ -587,6 +587,9 @@ public class MatchMap {
 	//xOrY -> true = expand x size
 	//downOrUp -> true = positively
 	private static String[][] enlargeResultList(String[][] resultList,boolean xOrY,boolean downOrUp) {
+		if(!(resultList.length > 20) || !(resultList[0].length > 20)){
+			return resultList;
+		}
 		//Enlarge on x size 
 		//Positively
 		if(xOrY == true && downOrUp == true){

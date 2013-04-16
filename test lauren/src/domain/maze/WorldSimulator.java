@@ -262,7 +262,7 @@ public class WorldSimulator implements SpectatorHandler {
 			// TODO boolean foundObject ergens bijhouden?
 		}
 		else{
-			System.err.println("Can't get robot from playerID to update position");
+//			System.err.println("Can't get robot from playerID to update position");
 		}
 	}
 		

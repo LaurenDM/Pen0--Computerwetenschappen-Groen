@@ -54,8 +54,8 @@ public class PlayerHandler implements peno.htttp.PlayerHandler {
 	@Override
 	public void gameStarted() {
 		printMessage("ph.gameStarted, starting to send position");
-		htttpImplementation.startSendingPositionsThread();
-		//TODO: verkenalgoritme starten, ik stekl voor dit handmatig te doen
+		//htttpImplementation.startSendingPositionsThread();
+		//TODO: verkenalgoritme starten, ik stel voor dit handmatig te doen
 		// waarom?
 	}
 	

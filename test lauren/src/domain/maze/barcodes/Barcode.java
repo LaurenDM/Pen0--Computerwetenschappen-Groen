@@ -30,7 +30,7 @@ public class Barcode extends MazeElement{
 		this.orientation = orientation;
 		this.action = getAction(decimal);
 		
-		System.out.println("Barcode created with value "+this.readBits[5]+this.readBits[4]+this.readBits[3]+this.readBits[2]+this.readBits[1]+this.readBits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
+		//System.out.println("Barcode created with value "+this.readBits[5]+this.readBits[4]+this.readBits[3]+this.readBits[2]+this.readBits[1]+this.readBits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
 	}
 	
 	
@@ -50,7 +50,7 @@ public class Barcode extends MazeElement{
 		this.orientation = Orientation.getOrientation(angle);
 		
 		action = getAction(decimal);
-		System.out.println("Barcode created with value "+this.readBits[5]+this.readBits[4]+this.readBits[3]+this.readBits[2]+this.readBits[1]+this.readBits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
+		//System.out.println("Barcode created with value "+this.readBits[5]+this.readBits[4]+this.readBits[3]+this.readBits[2]+this.readBits[1]+this.readBits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
 	}
 	
 	
