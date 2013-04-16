@@ -23,7 +23,7 @@ import domain.robots.RobotPilot;
 public class HtttpImplementation {
 	
 	
-	PlayerHandler playerHandler;
+	RobotPilot playerHandler;
 	GameHandler gameHandler;
 	
 	PlayerClient playerClient;
@@ -52,9 +52,9 @@ public class HtttpImplementation {
 	    
 	    //*******************************************************
 	    	    
-	    
+	    playerHandler = controller.getRobot();
 	    Connection connection = null;
-	    String gameID = "gameIDGroen";
+	    String gameID = "gameIDGroenSerge";
 	    String playerID = controller.getPlayerID();
 		try {
 			connection = factory.newConnection();
@@ -113,31 +113,31 @@ public class HtttpImplementation {
 	
 
 	
-	private void sendPositions(){
-		PlayerClient playerClient = getPlayerClient();
-		RobotPilot robot = getController().getRobot();
-		try {
-			playerClient.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation());
-		} catch (IllegalStateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public void startSendingPositionsThread(){
-		
-		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-		executor.scheduleAtFixedRate(new Runnable() {
-
-			@Override
-			public void run() {
-				sendPositions();
-			}
-			
-		}, 0, 1000, TimeUnit.MILLISECONDS);
-
-	}
+//	private void sendPositions(){
+//		PlayerClient playerClient = getPlayerClient();
+//		RobotPilot robot = getController().getRobot();
+//		try {
+//			playerClient.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation());
+//		} catch (IllegalStateException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//	
+//	public void startSendingPositionsThread(){
+//		
+//		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+//		executor.scheduleAtFixedRate(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				sendPositions();
+//			}
+//			
+//		}, 0, 1000, TimeUnit.MILLISECONDS);
+//
+//	}
 	
 	
 

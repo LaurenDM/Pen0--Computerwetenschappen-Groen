@@ -1,5 +1,6 @@
 package domain.robots;
 
+import groen.htttp.HtttpImplementation;
 import gui.ContentPanel;
 
 import java.util.ArrayList;
@@ -9,6 +10,9 @@ import gui.ContentPanel;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import peno.htttp.DisconnectReason;
 import peno.htttp.PlayerClient;
@@ -388,8 +392,6 @@ public abstract class RobotPilot implements PlayerHandler{
 	}
 	
 	
-	
-	
 	//////////////////////////////////////////////////////////////////////////////
 	//					VANAF HIER IMPLEMENTATIE PLAYER HANDLER					//	
 	//////////////////////////////////////////////////////////////////////////////
@@ -434,7 +436,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	@Override
 	public void gameStarted() {
 		printMessage("ph.gameStarted, starting to send position");
-	//	htttpImplementation.startSendingPositionsThread();
+		startSendingPositionsThread();
 		//TODO: verkenalgoritme starten, ik stel voor dit handmatig te doen
 		// waarom?
 	}
@@ -499,6 +501,31 @@ public abstract class RobotPilot implements PlayerHandler{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
+	}
+	
+	
+	private void sendPositions(){
+		try {
+			playerClient.updatePosition(getPosition().getX(), getPosition().getY(), getOrientation());
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void startSendingPositionsThread(){
+		
+		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+		executor.scheduleAtFixedRate(new Runnable() {
+
+			@Override
+			public void run() {
+				sendPositions();
+			}
+			
+		}, 0, 1000, TimeUnit.MILLISECONDS);
+
 	}
 	
 }
