@@ -14,6 +14,7 @@ import domain.maze.Wall;
 import domain.maze.graph.MazeGraph;
 import domain.maze.graph.MazePath;
 import domain.maze.graph.SeesawNode;
+import domain.maze.graph.TileNode;
 import domain.robots.CannotMoveException;
 import domain.robots.RobotPilot;
 
@@ -378,5 +379,19 @@ public class ExploreMaze{
 		calculateWall(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation(), Direction.RIGHT);
 		calculateWall(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation(), Direction.LEFT);
 		maze.setCurrentTileBarcode(barcodeNumber);
+	}
+
+	public Position findMostNegativePosition() {
+		int minX = 0;
+		int minY = 0;
+		for(TileNode t : getFoundTilesList()){
+			if(t.getX()<minX){
+				minX=t.getX();
+			}
+			if(t.getY()<minY){
+				minY=t.getY();
+			}
+		}
+		return new Position(minX,minY);
 	}
 }

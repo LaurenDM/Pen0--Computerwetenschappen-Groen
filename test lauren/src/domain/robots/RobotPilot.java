@@ -384,9 +384,10 @@ public abstract class RobotPilot implements PlayerHandler{
 	public ArrayList<peno.htttp.Tile> getFoundTilesList(){
 		ArrayList<domain.maze.graph.TileNode> foundTiles = getMaze().getFoundTilesList();
 		ArrayList<peno.htttp.Tile> returnList = new ArrayList<peno.htttp.Tile>();
+		Position pos = getMaze().findMostNegativePosition();
 		for(domain.maze.graph.TileNode node : foundTiles){
 			if(node.isFullyExpanded()){
-				returnList.add(new Tile(node.getX(), node.getY(), node.getToken()));
+				returnList.add(new Tile(node.getX()-(int)pos.getX(), node.getY()-(int)pos.getY(), node.getToken()));
 			}
 		}
 		return returnList;
