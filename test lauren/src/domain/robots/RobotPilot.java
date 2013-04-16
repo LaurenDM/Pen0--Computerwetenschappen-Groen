@@ -476,6 +476,8 @@ public abstract class RobotPilot implements PlayerHandler{
 		MazeInterpreter MI = new MazeInterpreter(board);
 		MI.readMap(matcher.getResultMap());
 		maze.updateWithMap(matcher.getResultMap());
+		int partnerX = 0; int partnerY = 0; //TODO update to code retrieving actual location tile
+		maze.setPartnerPosition(partnerX, partnerY);
 	}
 	
 	private void printMessage(String message){
@@ -490,6 +492,8 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	@Override
 	public void teamPosition(double x, double y, double angle) {
+		int partnerX = (int)x/40; int partnerY = (int)y/40; //TODO update to code retrieving actual location tile
+		maze.setPartnerPosition(partnerX, partnerY);
 		// TODO something useful
 		
 	}

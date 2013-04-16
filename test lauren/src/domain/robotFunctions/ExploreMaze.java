@@ -359,12 +359,12 @@ public class ExploreMaze{
 	}
 
 	public void driveOverSeesaw() {
-		if(maze.getCurrentNode().getNodeAt(maze.getCurrentRobotOrientation()).isAccessible()){
+		if(maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()).isAccessible()){
 			maze.move();
 			maze.move();
 			maze.move();
-			((SeesawNode)maze.getCurrentNode().getNodeAt(maze.getCurrentRobotOrientation().getBack())).setUp(false);
-			System.out.println("The node after the seesaw is "+maze.getCurrentNode());
+			((SeesawNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation().getBack())).setUp(false);
+			System.out.println("The node after the seesaw is "+maze.getCurrentTile());
 		}
 	}
 
@@ -382,5 +382,9 @@ public class ExploreMaze{
 
 	public void updateWithMap(String[][] resultMap) {
 		maze.updateWithMap(resultMap);		
+	}
+
+	public void setPartnerPosition(int partnerX, int partnerY) {
+		maze.setPartnerPosition(partnerX, partnerY);
 	}
 }

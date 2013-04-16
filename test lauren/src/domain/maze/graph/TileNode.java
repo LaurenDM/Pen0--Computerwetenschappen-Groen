@@ -59,8 +59,8 @@ public class TileNode extends MazeNode {
 		return connectedNodes;
 	}
 
-	public void setFinish() {
-		finish = true;
+	public void setFinish(boolean finish) {
+		this.finish = finish;
 	}
 
 	@Override

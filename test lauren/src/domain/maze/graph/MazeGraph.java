@@ -19,6 +19,7 @@ public class MazeGraph {
 	private TileNode currentNode;
 	private int tileCounter;
 	private MazePath shortestPath;
+	private boolean drivingToPartner = false;
 	
 	/**
 	 * A new MazeGraph is initialized with a starting node that represents the robot's current position.
@@ -28,7 +29,7 @@ public class MazeGraph {
 	public MazeGraph(){
 		tileNodes = new ArrayList<TileNode>();
 		startNode = new TileNode(null,null);
-		setCurrentNode(startNode);
+		setCurrentTile(startNode);
 		tileNodes.add(startNode);
 		setCurrentRobotOrientation(Orientation.NORTH);
 		System.out.println("");
@@ -49,7 +50,7 @@ public class MazeGraph {
 				//System.out.println("NEXTNODE"+nextNode.getX()+" "+nextNode.getY());
 				Orientation nextOrientation = null;
 				for(Orientation o:Orientation.values()){
-					if(getCurrentNode().getNodeAt(o)!=null && getCurrentNode().getNodeAt(o).equals(nextNode)){
+					if(getCurrentTile().getNodeAt(o)!=null && getCurrentTile().getNodeAt(o).equals(nextNode)){
 						nextOrientation = o;
 					}
 				}
@@ -135,15 +136,36 @@ public class MazeGraph {
 	 * Throws RuntimeException if the node in that direction is a WallNode or if there isn't any node in that direction.
 	 */
 	public void move(){
-		MazeNode nextNode = getCurrentNode().getNodeAt(getCurrentRobotOrientation());
+		MazeNode nextNode = getCurrentTile().getNodeAt(getCurrentRobotOrientation());
 		if(nextNode != null && (nextNode.getClass().equals(TileNode.class) || nextNode.getClass().equals(SeesawNode.class))){
-			setCurrentNode((TileNode) nextNode);
+			setCurrentTile((TileNode) nextNode);
 			decreaseAllBlockNavigationCounts(); //Eventually unblocks blocked tiles.
 		} else {
 //			throw new RuntimeException("There is no node there or it's a WallNode.");
 		}
 	}
 	
+	/**
+	 * Call when the robot turns to the left.
+	 */
+	public void turnLeft(){
+		setCurrentRobotOrientation(getCurrentRobotOrientation().getLeft());
+	}
+
+	/**
+	 * Call when the robot turns to the right.
+	 */
+	public void turnRight(){
+		setCurrentRobotOrientation(getCurrentRobotOrientation().getRight());
+	}
+
+	/**
+	 * Call when the robot turns 180 degrees.
+	 */
+	public void turnBack(){
+		setCurrentRobotOrientation(getCurrentRobotOrientation().getBack());
+	}
+
 	private void decreaseAllBlockNavigationCounts() {
 		for(TileNode t : tileNodes){
 			t.decreaseBlockNavigationCount();
@@ -161,19 +183,29 @@ public class MazeGraph {
 	 * @return
 	 */
 	public Orientation getNextMoveOrientation(){
-		if(getCurrentNode().getClass().equals(SeesawNode.class)){
+		//Just a safeguard so the robot will only drive forward on seesaws, this code should (in principle) never be called.
+		if(getCurrentTile().getClass().equals(SeesawNode.class)){
 			return Orientation.NORTH;
 		}
 		ArrayList<TileNode> unexpanded = new ArrayList<TileNode>();
-		for(TileNode node : tileNodes){
-			if(!node.isFullyExpanded()){
-				unexpanded.add(node);
+		//If we're driving towards our teammate we'll only consider paths to their location.
+		//If not all unexpanded tiles are added to the list.
+		if(drivingToPartner){
+			unexpanded.add(getFinishNode());
+		} else {
+			for(TileNode node : tileNodes){
+				if(!node.isFullyExpanded()){
+					unexpanded.add(node);
+				}
 			}
 		}
+		//TODO add code so that the robot will attempt to follow the most sensible path it can if no path to a goal is found
+		MazePath lastPath = null;
+		//Fill a new SortedPathSet with paths containing only the current tile and having the unexpanded tiles as finish
 		if(unexpanded.size()!=0){
 			SortedPathSet possiblePaths = new SortedPathSet();
 			for(TileNode node : unexpanded){
-				possiblePaths.add(new MazePath(getCurrentNode(),getCurrentRobotOrientation(),node));
+				possiblePaths.add(new MazePath(getCurrentTile(),getCurrentRobotOrientation(),node));
 			}
 			int shortestFound = Integer.MAX_VALUE;
 			ArrayList<MazePath> candidates = new ArrayList<MazePath>();
@@ -197,18 +229,19 @@ public class MazeGraph {
 				}
 			}
 			ArrayList<Orientation> orderedOrientations = new ArrayList<Orientation>();
+			//The order of the following lines determines the order in which we'll consider possible paths
 			orderedOrientations.add(Orientation.WEST);
 			orderedOrientations.add(Orientation.NORTH);
 			orderedOrientations.add(Orientation.EAST);
 			orderedOrientations.add(Orientation.SOUTH);
 			for(Orientation o : orderedOrientations){
 				for(MazePath path : candidates){
-					if(path.contains(getCurrentNode().getNodeAt(getCurrentRobotOrientation().getRelativeOrientation(o))))
+					if(path.contains(getCurrentTile().getNodeAt(getCurrentRobotOrientation().getRelativeOrientation(o))))
 						return o;
 				}
 			}
 		}
-		MazeNode frontNode = getCurrentNode().getNodeAt(getCurrentRobotOrientation());
+		MazeNode frontNode = getCurrentTile().getNodeAt(getCurrentRobotOrientation());
 		return frontNode!=null?(frontNode.isAccessible()?Orientation.NORTH:Orientation.SOUTH):null;
 	}
 	
@@ -218,7 +251,7 @@ public class MazeGraph {
 	 */
 	public void generateTileNodeAt(Orientation orientation){
 		Orientation absoluteOrientation = getCurrentRobotOrientation().getRelativeOrientation(orientation);
-		generateTileNodeAt(getCurrentNode(), absoluteOrientation);
+		generateTileNodeAt(getCurrentTile(), absoluteOrientation);
 	}
 	
 	private void generateTileNodeAt(TileNode tile, Orientation orientation){
@@ -272,7 +305,7 @@ public class MazeGraph {
 	 */
 	public boolean generateWallNodeAt(Orientation orientation){
 		Orientation absoluteOrientation = getCurrentRobotOrientation().getRelativeOrientation(orientation);
-		return generateWallNodeAt(getCurrentNode(),absoluteOrientation);
+		return generateWallNodeAt(getCurrentTile(),absoluteOrientation);
 	}
 	
 	/**
@@ -311,7 +344,7 @@ public class MazeGraph {
 	}
 	
 	private void generateSeesawNodeAt(Orientation orientation, boolean isUpAtThisSide){
-		generateSeesawNodeAt(getCurrentNode(), orientation, isUpAtThisSide);
+		generateSeesawNodeAt(getCurrentTile(), orientation, isUpAtThisSide);
 	}
 	
 	private void generateSeesawNodeAt(TileNode tile, Orientation orientation, boolean isUpAtThisSide) {
@@ -353,12 +386,20 @@ public class MazeGraph {
 		}
 	}
 
+	public boolean isDrivingToPartner() {
+		return drivingToPartner;
+	}
+
+	public void setDrivingToPartner(boolean drivingToPartner) {
+		this.drivingToPartner = drivingToPartner;
+	}
+
 	/**
 	 * 
 	 * @return Whether the node the robot is currently on is fully expanded
 	 */
 	public boolean isCurrentNodeFullyExpanded(){
-		return getCurrentNode().isFullyExpanded();
+		return getCurrentTile().isFullyExpanded();
 	}
 	
 	/**
@@ -368,7 +409,7 @@ public class MazeGraph {
 	 * @return Whether the node at the given orientation with respect to the robot is fully expanded
 	 */
 	public boolean isNodeThereFullyExpanded(Orientation orientation){
-		return getCurrentNode().getNodeAt(getCurrentRobotOrientation().getRelativeOrientation(orientation)).isFullyExpanded();
+		return getCurrentTile().getNodeAt(getCurrentRobotOrientation().getRelativeOrientation(orientation)).isFullyExpanded();
 	}
 	
 	/**
@@ -378,7 +419,7 @@ public class MazeGraph {
 	 * @return Whether the node at the given orientation with respect to the robot's current position is fully expanded
 	 */
 	public boolean isNodeThereFullyExpandedRelativeToGrid(Orientation orientation){
-		return getCurrentNode().getNodeAt(orientation).isFullyExpanded();
+		return getCurrentTile().getNodeAt(orientation).isFullyExpanded();
 	}
 	
 	/**
@@ -390,27 +431,6 @@ public class MazeGraph {
 		return isNodeThereFullyExpanded(Orientation.NORTH);
 	}
 	
-	/**
-	 * Call when the robot turns to the left.
-	 */
-	public void turnLeft(){
-		setCurrentRobotOrientation(getCurrentRobotOrientation().getLeft());
-	}
-	
-	/**
-	 * Call when the robot turns to the right.
-	 */
-	public void turnRight(){
-		setCurrentRobotOrientation(getCurrentRobotOrientation().getRight());
-	}
-	
-	/**
-	 * Call when the robot turns 180 degrees.
-	 */
-	public void turnBack(){
-		setCurrentRobotOrientation(getCurrentRobotOrientation().getBack());
-	}
-
 	/**
 	 * Returns the robot's current orientation relative to it's starting orientation (NORTH)
 	 * @return
@@ -427,26 +447,38 @@ public class MazeGraph {
 	/**
 	 * Sets the current TileNode as the Finish node.
 	 */
-	public void setCurrentTileToFinish(){
-		boolean finishAlreadyExists=false;
+	public void setCurrentTileToFinish() {
+		setTileToFinish(getCurrentTile());
+	}
+	
+	private void setTileToFinish(TileNode tile) {
 		for(TileNode node:tileNodes){
-			if(node.isFinish() && !node.equals(getCurrentNode())){
-				System.out.println("The finish node already exists! Cannot have 2 finish nodes!");
-				finishAlreadyExists=true;
+			if(node.isFinish() && !node.equals(tile)){
+				node.setFinish(false);
 			}
 		}
-		if(!finishAlreadyExists){
-			getCurrentNode().setFinish();
-		}
+		tile.setFinish(true);
 	}
 	
 	/**
 	 * Sets the current TileNode as a Checkpoint node.
 	 */
-	public void setCurrentTileToCheckpoint(){
-		getCurrentNode().setCheckpoint(true);
+	public void setCurrentTileToCheckpoint() {
+		getCurrentTile().setCheckpoint(true);
 	}
 	
+	/**
+	 * Set the current tile's barcode.
+	 * @param barcodeNumber
+	 */
+	public void setCurrentTileBarcode(int barcodeNumber) {
+		setTileBarcode(getCurrentTile(),barcodeNumber);
+	}
+
+	private void setTileBarcode(TileNode tile, int barcodeNumber) {
+		tile.setBarcode(barcodeNumber);
+	}
+
 	/**
 	 * Implements the A* shortest path algorithm for this MazeGraph to find the shortest path to the Finish node, which is marked
 	 * by the "Finish" barcode in the real maze.
@@ -458,14 +490,14 @@ public class MazeGraph {
 		TileNode checkpoint = checkpoints.size()!=0?checkpoints.get(0):null;
 		if(checkpoint == null){
 			ContentPanel.writeToDebug("No checkpoint found, driving straight to finish.");
-			checkpoint = getCurrentNode();
+			checkpoint = getCurrentTile();
 		}
 		TileNode finishNode = getFinishNode();
 		if(finishNode == null){
 			ContentPanel.writeToDebug("No finish barcode found, driving to starting node instead.");
 			finishNode = startNode;
 		}
-		return findShortestPathFromTo(getCurrentNode(),checkpoint).append(findShortestPathFromTo(checkpoint,finishNode));
+		return findShortestPathFromTo(getCurrentTile(),checkpoint).append(findShortestPathFromTo(checkpoint,finishNode));
 	}
 	
 	public ArrayList<TileNode> getCheckpoints(){
@@ -488,7 +520,7 @@ public class MazeGraph {
 		}
 		if(searchSet.isEmpty()){
 			System.out.println("No path found...");
-			return new MazePath(getCurrentNode(),getCurrentRobotOrientation(),finishNode);
+			return new MazePath(getCurrentTile(),getCurrentRobotOrientation(),finishNode);
 		} else {
 			System.out.println(searchSet.first());
 			return searchSet.first();
@@ -502,12 +534,12 @@ public class MazeGraph {
 		return null;
 	}
 
-	private boolean isCurrentNode(TileNode node){
+	private boolean isCurrentTile(TileNode node){
 		//Not .equals(), because it needs to be the same object
 		return node==currentNode;
 	}
 
-	private void setCurrentNode(TileNode currentNode){
+	private void setCurrentTile(TileNode currentNode){
 		this.currentNode = currentNode;
 	}
 	
@@ -515,7 +547,7 @@ public class MazeGraph {
 	 * Returns the TileNode the robot's currently on.
 	 * @return
 	 */
-	public TileNode getCurrentNode(){
+	public TileNode getCurrentTile(){
 		return currentNode;
 	}
 
@@ -529,7 +561,7 @@ public class MazeGraph {
 		if(o!=null){
 			for(TileNode node : tileNodes){
 				if(node.getX()==x && node.getY()==y){
-					setCurrentNode(node);
+					setCurrentTile(node);
 				}
 			}
 			setCurrentRobotOrientation(o);
@@ -563,11 +595,11 @@ public class MazeGraph {
 	 * A robot will never explore a known dead end.
 	 */
 	public void setNextTileToDeadEnd() {
-		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())==null){
+		if(getCurrentTile().getNodeAt(getCurrentRobotOrientation())==null){
 			generateTileNodeAt(Orientation.NORTH); //This is a relative orientation. In this case it just means in front of the robot.
 		}
-		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())!=null && getCurrentNode().getNodeAt(getCurrentRobotOrientation()).getClass().equals(TileNode.class)){
-			TileNode deadEndNode = (TileNode)getCurrentNode().getNodeAt(getCurrentRobotOrientation());
+		if(getCurrentTile().getNodeAt(getCurrentRobotOrientation())!=null && getCurrentTile().getNodeAt(getCurrentRobotOrientation()).getClass().equals(TileNode.class)){
+			TileNode deadEndNode = (TileNode)getCurrentTile().getNodeAt(getCurrentRobotOrientation());
 			generateWallNodeAt(deadEndNode, getCurrentRobotOrientation().getRelativeOrientation(Orientation.WEST));
 			generateWallNodeAt(deadEndNode, getCurrentRobotOrientation().getRelativeOrientation(Orientation.NORTH));
 			generateWallNodeAt(deadEndNode, getCurrentRobotOrientation().getRelativeOrientation(Orientation.EAST));
@@ -584,9 +616,9 @@ public class MazeGraph {
 	 * @param isUpAtThisSide
 	 */
 	public void setNextTileToSeesaw(boolean isUpAtThisSide) {
-		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())==null){
+		if(getCurrentTile().getNodeAt(getCurrentRobotOrientation())==null){
 			generateSeesawNodeAt(Orientation.NORTH,isUpAtThisSide); //This is a relative orientation. In this case it just means in front of the robot.
-			SeesawNode seesaw1 = (SeesawNode)getCurrentNode().getNodeAt(getCurrentRobotOrientation());
+			SeesawNode seesaw1 = (SeesawNode)getCurrentTile().getNodeAt(getCurrentRobotOrientation());
 			generateWallNodeAt(seesaw1, getCurrentRobotOrientation().getRelativeOrientation(Orientation.WEST));
 			generateWallNodeAt(seesaw1, getCurrentRobotOrientation().getRelativeOrientation(Orientation.EAST));
 			generateWallNodeAt(seesaw1.getPairedNode(), getCurrentRobotOrientation().getRelativeOrientation(Orientation.WEST));
@@ -596,30 +628,36 @@ public class MazeGraph {
 			generateWallNodeAt((TileNode)seesaw1.getPairedNode().getNodeAt(getCurrentRobotOrientation()), getCurrentRobotOrientation().getRelativeOrientation(Orientation.EAST));
 			System.out.println(seesaw1+","+seesaw1.getPairedNode());
 		}
-		if(getCurrentNode().getNodeAt(getCurrentRobotOrientation())!=null && getCurrentNode().getNodeAt(getCurrentRobotOrientation()).getClass().equals(SeesawNode.class)){
-			SeesawNode seesaw1 = (SeesawNode)getCurrentNode().getNodeAt(getCurrentRobotOrientation());
+		if(getCurrentTile().getNodeAt(getCurrentRobotOrientation())!=null && getCurrentTile().getNodeAt(getCurrentRobotOrientation()).getClass().equals(SeesawNode.class)){
+			SeesawNode seesaw1 = (SeesawNode)getCurrentTile().getNodeAt(getCurrentRobotOrientation());
 			seesaw1.setUp(isUpAtThisSide);
 		} else {
 			ContentPanel.writeToDebug("Couldn't create a seesaw at the position in front of the robot.");
 		}
 	}
 	
+	/**
+	 * True if the next tile is a SeesawNode.
+	 */
 	public boolean nextTileIsSeesaw(){
-		return getCurrentNode().getNodeAt(getCurrentRobotOrientation()).getClass().equals(SeesawNode.class);
+		return getCurrentTile().getNodeAt(getCurrentRobotOrientation()).getClass().equals(SeesawNode.class);
 	}
 
+	/**
+	 * The tiles we've already seen or visited, in the order they were seen.
+	 * The last fully expanded tile in this list is the current tile.
+	 * @return
+	 */
 	public ArrayList<TileNode> getFoundTilesList() {
 		return tileNodes;
 	}
 
-	public void setCurrentTileBarcode(int barcodeNumber) {
-		setTileBarcode(getCurrentNode(),barcodeNumber);
-	}
-	
-	private void setTileBarcode(TileNode tile, int barcodeNumber) {
-		tile.setBarcode(barcodeNumber);
-	}
-
+	/**
+	 * The MazeGraph will be updated with the information contained in this mapstringmatrix.
+	 * Tiles that are next to currently known tiles will be added iteratively until no more
+	 * tiles can be added, so separated islands of tiles are not added (that's an inconsistent state any way).
+	 * @param resultMap
+	 */
 	public void updateWithMap(String[][] resultMap) {	
 		boolean changed;
 		do{
@@ -661,5 +699,16 @@ public class MazeGraph {
 		} catch(NumberFormatException e){
 			//Nothing
 		}
+	}
+
+	/**
+	 * Sets the finish to the teammate's position and sets the drivingToPartner flag so the robot will explore
+	 * in the direction of the teammate.
+	 * @param partnerX
+	 * @param partnerY
+	 */
+	public void setPartnerPosition(int partnerX, int partnerY) {
+		setTileToFinish(getTileNodeAt(partnerX, partnerY));
+		setDrivingToPartner(true);
 	}
 }
