@@ -481,9 +481,9 @@ public abstract class RobotPilot implements PlayerHandler{
 		System.out.println("Merged");
 		MazeInterpreter MI = new MazeInterpreter(board);
 		MI.readMap(matcher.getResultMap());
-		maze.updateWithMap(matcher.getResultMap());
-		int partnerX = 0; int partnerY = 0; //TODO update to code retrieving actual location tile
-		maze.setPartnerPosition(partnerX, partnerY);
+		//maze.updateWithMap(matcher.getResultMap());
+		//int partnerX = 0; int partnerY = 0; //TODO update to code retrieving actual location tile
+		//maze.setPartnerPosition(partnerX, partnerY);
 		System.out.println("Maps merged and imported");
 	}
 	
