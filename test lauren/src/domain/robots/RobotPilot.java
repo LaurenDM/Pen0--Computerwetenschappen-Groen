@@ -276,9 +276,11 @@ public abstract class RobotPilot implements PlayerHandler{
 	public void indicateDeadEnd() {
 		getMaze().setNextTileToDeadEnd();
 	}
+	
 	public void foundBall(){
 		try {
 			playerClient.foundObject();
+			playerClient.joinTeam(getTeamNumber());
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -291,7 +293,6 @@ public abstract class RobotPilot implements PlayerHandler{
 		}
 	}
 
-//>>>>>>> branch 'master' of https://github.com/LaurenDM/Pen0--Computerwetenschappen-Groen.git
 
 	public Ball getBall(){
 		return this.ball;
@@ -456,6 +457,7 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	@Override
 	public void teamConnected(String partnerID) {
+		System.out.println("RP.teamConnected");
 		printMessage("ph.teamconnected: "+partnerID);
 		try {
 			playerClient.sendTiles(getFoundTilesList());
@@ -467,6 +469,7 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	@Override
 	public void teamTilesReceived(List<Tile> tiles) {
+		System.out.println("RP.teamTilesReceived");
 		printMessage("ph.Tiles recieved 'List<Tile>");
 		MatchMap matcher = new MatchMap();
 		List<Tile> ourTiles = getFoundTilesList();
@@ -474,8 +477,10 @@ public abstract class RobotPilot implements PlayerHandler{
 		matcher.setOurMazeTiles(ourTiles.toArray(new Tile[ourTiles.size()]));
 		matcher.setOriginalTiles(tiles.toArray(new Tile[tiles.size()]));
 		matcher.merge();
+		System.out.println("Merged");
 		MazeInterpreter MI = new MazeInterpreter(board);
 		MI.readMap(matcher.getResultMap());
+		System.out.println("Maps merged and imported");
 	}
 	
 	private void printMessage(String message){
