@@ -11,12 +11,14 @@ public class MatchMap {
 		Tile tile3 = new Tile(0, 2, "Seesaw.N");
 		Tile tile4 = new Tile(0, 3, "Straight.N.4");
 		Tile tile5 = new Tile(0, 4, "Cross.N");
-		Tile[] tileList = new Tile[5];
+		Tile tile6 = new Tile(0,5,"Cross.N");
+		Tile[] tileList = new Tile[6];
 		tileList[0] = tile1;
 		tileList[1] = tile2;
 		tileList[2] = tile3;
 		tileList[3] = tile4;
 		tileList[4] = tile5;
+		tileList[5] = tile6;
 		
 		Tile _tile1 = new Tile(0, 0, "Straight.N");
 		Tile _tile2 = new Tile(0, 1, "Cross.N");
@@ -41,12 +43,8 @@ public class MatchMap {
 		_tileList[9] = _tile10;
 		setOurMazeTiles(tileList);
 		setOriginalTiles(_tileList);
-		System.out.println(matrixToString(getOurMaze()));
-		System.out.println(matrixToString(getOriginal()));
 		merge();
-		System.out.println(getPermutatedDirection());
-		System.out.println(getBasicVector()[0]);
-		System.out.println(getBasicVector()[1]);
+		System.out.println(matrixToString(resultMap));
     }
 	public final static String dummyString = "dummy     ";
 	
@@ -61,6 +59,8 @@ public class MatchMap {
 	private static Permutation permutatedDirection = null;
 	private static int ourStartMergeX = 0;
 	private static int ourStartMergeY = 0;
+	private static int otherStartMergeX = 0;
+	private static int otherStartMergeY = 0;
 	private static int ourMergePointX = 0;
 	private static int ourMergePointY = 0;
 	private static int otherMergePointX = 0;
@@ -378,11 +378,7 @@ public class MatchMap {
 	
 	public static void merge(){
 		//TODO debug
-		
-		
-		
-		
-		if(false){//hasMutualSeeSaw()){
+		if(hasMutualSeeSaw()){
 			permutationBySeeSaw();
 			mergeMaps(mergeMaps(getPermutatedDirection()));
 		}
@@ -765,6 +761,8 @@ public class MatchMap {
 						System.out.println(i);
 						System.out.println(j);
 						otherMergePointX = i;
+						otherStartMergeX = i;
+						otherStartMergeY = j;
 						otherMergePointY = j;
 						return true;
 					}
@@ -932,45 +930,66 @@ public class MatchMap {
 		
 	}
 	
-	private static int[] getBasicVector(){
-		
-		System.out.println("______________________________________________");
-		System.out.println("______________________________________________");
-		System.out.println("______________________________________________");
-		int[] vector = new int[2];
-		int ourX = ourStartMergeX;
-		int ourY = ourStartMergeY;
-		int otherX = otherMergePointX;
-		int otherY = otherMergePointY;
-		System.out.println(ourMergePointX+"  "+ourMergePointY+"   "+otherMergePointX +"   "+otherMergePointY+"  ");
-		Enum<Permutation> perm = getPermutatedDirection();
-		if(perm == Permutation.ORIGINAL){
-			vector[0] = otherX - ourX;
-			vector[1] = otherY - ourY;
-			return vector;
-		}
-		else if(perm == Permutation.DEGREES_90){
-			vector[0] = otherX - ourX;
-			vector[1] = getOriginal()[0].length - otherMergePointY - ourY;
-			return vector;
-		}
-		else if(perm == Permutation.DEGREES_180){
-			vector[0] = getOriginal().length - otherMergePointX - ourX;
-			vector[1] = getOriginal()[0].length - otherMergePointY - ourY;
-			return vector;
-		}
-		else if(perm == Permutation.DEGREES_270){
-			vector[0] = getOriginal().length - otherMergePointX - ourX;
-			vector[1] = otherY - ourY;
-			return vector;
-		}
-		else {
+	//TODO
+	private static int[] convertCoordinate(int x, int y){
+		Permutation perm = getPermutatedDirection();
+		switch (perm) {
+		case ORIGINAL:
+			return getOriginalVector(x,y);
+		case DEGREES_90:
+			return get90Vector(x,y);
+		case DEGREES_180:
+			return get180Vector(x,y);
+		case DEGREES_270:
+			return get270Vector(x,y);
+		default:
 			return null;
 		}
-		
-			
-		
 	}
+	
+	private static int[] get270Vector(int x, int y) {
+		Permutation perm = Permutation.DEGREES_270;
+		int[] coords = rotateCoordinates(perm, x, y);
+		return new int[]{coords[0] + getBasicVector()[0],coords[1] + getBasicVector()[1]};
+	}
+
+	private static int[] get180Vector(int x, int y) {
+		Permutation perm = Permutation.DEGREES_180;
+		int[] coords = rotateCoordinates(perm, x, y);
+		return new int[]{coords[0] + getBasicVector()[0],coords[1] + getBasicVector()[1]};
+	}
+
+	private static int[] get90Vector(int x, int y) {
+		Permutation perm = Permutation.DEGREES_90;
+		int[] coords = rotateCoordinates(perm, x, y);
+		return new int[]{coords[0] + getBasicVector()[0],coords[1] + getBasicVector()[1]};
+	}
+	
+	private static int[] rotateCoordinates(Permutation perm, int x, int y){
+		switch (perm) {
+		case ORIGINAL:
+			return new int[]{x,y};
+		case DEGREES_90:
+			return new int[]{y,getOriginal().length - 1 - x};
+		case DEGREES_180:
+			return new int[]{getOriginal().length - 1 - x,getOriginal()[0].length - 1 - y};
+		case DEGREES_270:
+			return new int[]{getOriginal().length - 1 - y,x};
+		default:
+			return null;
+		}
+	}
+	
+	private static int[] getBasicVector(){
+		return new int[]{ourStartMergeX-otherStartMergeX,ourStartMergeY-otherStartMergeY};
+	}
+	
+	private static int[] getOriginalVector(int x, int y) {
+		int xChange = x + getBasicVector()[0];
+		int yChange = y + getBasicVector()[1];
+		return new int[]{xChange,yChange};
+	}
+
 	//___________________________________________
 	//END BASIC UTILS
 	//___________________________________________
