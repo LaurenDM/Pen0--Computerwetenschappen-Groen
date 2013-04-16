@@ -58,7 +58,7 @@ public class HtttpImplementation {
 	    String playerID = controller.getPlayerID();
 		try {
 			connection = factory.newConnection();
-			playerClient = new PlayerClient(connection, playerHandler, gameID, playerID);
+			playerClient = new PlayerClient(connection, controller.getRobot(), gameID, playerID);
 			spectatorClient = new SpectatorClient(connection, controller.getWorldSimulator(), gameID);
 			spectatorClient.start();
 			

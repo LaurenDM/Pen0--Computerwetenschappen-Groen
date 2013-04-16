@@ -481,12 +481,12 @@ public class ContentPanel implements ActionListener {
         else if(e.getSource() == connectButton){
         	if(getConnected() == true ){
         		connectButton.setText("Connect to brobot");
-        		drawingPanel.clear();
-        		drawingPanel.drawWhiteLines();
-        		drawingPanel.updateUI();
         		setConnected(false);
         		controller.connectNewSimRobot(0, new Position(20,20), controller.getPlayerID());
         		controller.setPlayerClient();
+        		drawingPanel.clear();
+        		drawingPanel.drawWhiteLines();
+        		drawingPanel.updateUI();
         	}
         	else{
         		try{
@@ -494,9 +494,10 @@ public class ContentPanel implements ActionListener {
         		controller.setPlayerClient();
         		connectButton.setText("Disconnect from brobot");
         		setConnected(true);
+        		drawingPanel.updateUI();
         		drawingPanel.clear();
         		drawingPanel.drawWhiteLines();
-        		drawingPanel.updateUI();}
+        		}
         		catch(ConnectErrorException e1){
         		}
         	}

@@ -320,7 +320,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	
 	public void handleSeesaw(int barcodeNb,Seesaw foundSeesaw){
 		boolean upAtThisSide = detectInfrared();
-		System.out.println("We change the seesaw based on infrared detection, barcodeNb: "+ barcodeNb+ " upats: " + upAtThisSide);
+		//System.out.println("We change the seesaw based on infrared detection, barcodeNb: "+ barcodeNb+ " upats: " + upAtThisSide);
 		foundSeesaw.setUpAt(barcodeNb, upAtThisSide);
 		
 		getMaze().setNextTileToSeesaw(upAtThisSide || foundSeesaw.isLocked());
@@ -468,7 +468,6 @@ public abstract class RobotPilot implements PlayerHandler{
 	@Override
 	public void teamTilesReceived(List<Tile> tiles) {
 		printMessage("ph.Tiles recieved 'List<Tile>");
-		//TODO info verwerken en naar teammate rijden tenzij mismatch, verder exploren
 		MatchMap matcher = new MatchMap();
 		List<Tile> ourTiles = getFoundTilesList();
 		// TODO: koen, methodes in MatchMap niet meer static maken
