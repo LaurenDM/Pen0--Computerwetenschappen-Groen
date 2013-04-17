@@ -391,184 +391,192 @@ public class MatchMap {
 		//FOLLOWED BY MERGING THE SQUARES AND MAKING UP WHERE OUR TEAMMATE IS
 		mergeMaps(getPermutatedDirection());
 	}
+	private static int startX = 0;
+	private static int startY = 0;
+	
 	private static void mergeMaps(String[][] mergeMaps) {
 		String[][] originList = getOurMaze();
 		String[][] permList = mergeMaps;
-		System.out.println(matrixToString(mergeMaps));
-		String[][] resultList = new String[originList.length * 2][originList[0].length * 2];
+		String[][] resultList = new String[(originList.length+permList.length) * 2][(originList[0].length+permList[0].length) * 2];
+		
+		startX = originList.length+permList.length;
+		startY = originList[0].length+permList[0].length;
+		System.out.println((originList.length+permList.length));
+		System.out.println((originList[0].length+permList[0].length));
+		System.out.println(startX);
+		System.out.println(startY);
 		for (int i = 0; i < resultList.length; i++) {
 			for (int j = 0; j < resultList[0].length; j++) {
 				resultList[i][j] = dummyString;
 			}
 		}
-		
 		//Fills the grid with our found elements 
-		for (int i = 0; i < resultList.length; i++) {
-			for (int j = 0; j < resultList[0].length; j++) {
+		int a = 0;
+		int b = 0;
+		for (int i = startX; i < resultList.length; i++) {
+			for (int j = startY; j < resultList[0].length; j++) {
 				try {
-					resultList[i][j] = originList[i][j];
+					resultList[i][j] = originList[a][b];
 				} catch (Exception e) {}
+				b++;
 			}
+			a++;
 		}
-		//System.out.println(matrixToString(resultList));
+		//TODO
+		startX+=ourStartMergeX;
+		startY+=ourStartMergeY;
 		resultList = mergeRightUp(resultList,permList);
-		System.out.println("_________________________________");
-		System.out.println("_________________________________");
-		System.out.println("mergeRightUP");
-		System.out.println(matrixToString(resultList));
 		resultList = mergeLeftUp(resultList, permList);
-		System.out.println("_________________________________");
-		System.out.println("_________________________________");
-		System.out.println("mergeLeftUp");
-		System.out.println(matrixToString(resultList));
 		resultList = mergeRightDown(resultList,permList);
-		System.out.println("_________________________________");
-		System.out.println("_________________________________");
-		System.out.println("mergeRightDown");
-		System.out.println(matrixToString(resultList));
 		resultList = mergeLeftDown(resultList,permList);
-		System.out.println("_________________________________");
-		System.out.println("_________________________________");
-		System.out.println("mergeLeftDown");
-		System.out.println(matrixToString(resultList));
-		System.out.println("_________________________________");
-		System.out.println("_________________________________");
-		System.out.println("resultstring");
-		System.out.println(matrixToString(resultList));
 		setResultMap(resultList);
 	}
 	
 	private static String[][] mergeLeftDown(String[][] resultList, String[][] permList) {
 		int permX = otherMergePointX;
 		int permY = otherMergePointY;
-		int i = ourMergePointX;
-		int j = ourMergePointY;
-		while(i >= 0){
-			while (j >= 0){
-				System.out.println("tested x :"+i+ "  tested y : "+j);
+		for (int i = startX; i >= 0; i--) {
+			for (int j = startY; j >= 0; j--) {
 				try {
-					System.out.println("adjusted");
 					resultList[i][j] = permList[permX][permY];
 				} catch (Exception e) {}
+				
 				permY--;
-				j--;
-				if(j < 0 && permY >= 0 && permX >= 0 ){
-					System.out.println("enlarging y");
-					int y = resultList[0].length;
-					resultList = enlargeResultList(resultList,false,true);
-					permX = otherMergePointX -1;
-					permY = otherMergePointY;
-					j = y;
-					i = ourMergePointX;
-				}
 			}
-			j = ourMergePointY;
 			permY = otherMergePointY;
 			permX--;
-			if(i < 0 && permY >= 0 && permX >= 0){					
-				resultList = enlargeResultList(resultList, true, true);
-			}
-			i--;
-			if(i < 0 && permY >= 0 && permX >= 0){
-				
-			}
 		}
 		
-//		for (int i = ourMergePointX; i < resultList.length; i--) {
-//			for (int j = ourMergePointY; j < resultList[0].length; j--) {
+//		int i = ourMergePointX;
+//		int j = ourMergePointY;
+//		while(i >= 0){
+//			while (j >= 0){
+//				System.out.println("tested x :"+i+ "  tested y : "+j);
 //				try {
+//					System.out.println("adjusted");
 //					resultList[i][j] = permList[permX][permY];
 //				} catch (Exception e) {}
-//				
 //				permY--;
+//				j--;
+//				if(j < 0 && permY >= 0 && permX >= 0 ){
+//					System.out.println("enlarging y");
+//					int y = resultList[0].length;
+//					resultList = enlargeResultList(resultList,false,true);
+//					permX = otherMergePointX -1;
+//					permY = otherMergePointY;
+//					j = y;
+//					i = ourMergePointX;
+//				}
 //			}
+//			j = ourMergePointY;
+//			permY = otherMergePointY;
 //			permX--;
+//			if(i < 0 && permY >= 0 && permX >= 0){					
+//				resultList = enlargeResultList(resultList, true, true);
+//			}
+//			i--;
+//			if(i < 0 && permY >= 0 && permX >= 0){
+//				
+//			}
 //		}
+//		
+
 		return resultList;
 	}
 	
 	private static String[][] mergeRightDown(String[][] resultList, String[][] permList) {
 		int permX = otherMergePointX;
 		int permY = otherMergePointY;
-		for (int i = ourMergePointX; i < resultList.length; i++) {
-			int j = ourMergePointY;
-			while(j >= 0){ 
+		for (int i = startX; i < resultList.length; i++) {
+			for (int j = startY; j >= 0; j--) {
 				try {
 					resultList[i][j] = permList[permX][permY];
 				} catch (Exception e) {}
 				permY--;
-				j--;
-				if(j < 0 && permY >= 0 && permX >= 0 ){
-					System.out.println("enlarging y");
-					int y = resultList[0].length;
-					resultList = enlargeResultList(resultList,false,true);
-					permX = otherMergePointX -1;
-					permY = otherMergePointY;
-					j = y;
-					i = ourMergePointX;
-				}
 			}
 			permY = otherMergePointY;
 			permX++;
-			if(i > resultList.length){
-				resultList = enlargeResultList(resultList, true, true);
-			}
 		}
+		
+//		for (int i = ourMergePointX; i < resultList.length; i++) {
+//			int j = ourMergePointY;
+//			while(j >= 0){ 
+//				try {
+//					resultList[i][j] = permList[permX][permY];
+//				} catch (Exception e) {}
+//				permY--;
+//				j--;
+//				if(j < 0 && permY >= 0 && permX >= 0 ){
+//					System.out.println("enlarging y");
+//					int y = resultList[0].length;
+//					resultList = enlargeResultList(resultList,false,true);
+//					permX = otherMergePointX -1;
+//					permY = otherMergePointY;
+//					j = y;
+//					i = ourMergePointX;
+//				}
+//			}
+//			permY = otherMergePointY;
+//			permX++;
+//			if(i > resultList.length){
+//				resultList = enlargeResultList(resultList, true, true);
+//			}
+//		}
 		return resultList;
 	}
 	
 	private static String[][] mergeLeftUp(String[][] resultList, String[][] permList) {
 		int permX = otherMergePointX;
 		int permY = otherMergePointY;
-		int i = ourMergePointX;
-		while(i >= 0){
-			for (int j = ourMergePointY; j < permList[0].length; j++) {
+		for (int i = startX; i >= 0; i--) {
+			for (int j = startY; j < resultList[0].length; j++) {
 				try {
+					System.out.println(i+"   "+j+"   "+permX+"   "+permY+"    "+permList[permX][permY]);
 					resultList[i][j] = permList[permX][permY];
 				} catch (Exception e) {}
 				permY++;
-				if(permY >= resultList[0].length){
-					resultList = enlargeResultList(resultList,false,true);
-				}
 			}
-			i--;
 			permY = otherMergePointY;
 			permX--;
-			
-			if(i < 0 && permX >= 0 && permY >= 0){
-				System.out.println("called2");
-				int size = resultList.length;
-				//resultList = enlargeResultList(resultList, true, false);
-				resultList = enlargeResultList(resultList, true, false);
-				System.out.println(matrixToString(resultList));
-				i = size;
-				permX = otherMergePointX;
-				permY = otherMergePointY;
-			}
-			
 		}
+		
+//		int i = ourMergePointX;
+//		while(i >= 0){
+//			for (int j = ourMergePointY; j < permList[0].length; j++) {
+//				try {
+//					resultList[i][j] = permList[permX][permY];
+//				} catch (Exception e) {}
+//				permY++;
+//				if(permY >= resultList[0].length){
+//					resultList = enlargeResultList(resultList,false,true);
+//				}
+//			}
+//			i--;
+//			permY = otherMergePointY;
+//			permX--;
+//			
+//			if(i < 0 && permX >= 0 && permY >= 0){
+//				System.out.println("called2");
+//				int size = resultList.length;
+//				//resultList = enlargeResultList(resultList, true, false);
+//				resultList = enlargeResultList(resultList, true, false);
+//				System.out.println(matrixToString(resultList));
+//				i = size;
+//				permX = otherMergePointX;
+//				permY = otherMergePointY;
+//			}
+//			
+//		}
+		System.out.println(matrixToString(resultList));
 		return resultList;
 	}
 		
 	
 	private static String[][] mergeRightUp(String[][] resultList, String[][] permList){
-		System.out.println(otherMergePointX);
-		System.out.println(otherMergePointY);
-		System.out.println("ours");
-		System.out.println(ourMergePointX);
-		System.out.println(ourMergePointY);
 		int permX = otherMergePointX;
 		int permY = otherMergePointY;
-		for (int i = ourMergePointX; i < permList.length; i++) {
-			for (int j = ourMergePointY; j < permList[0].length; j++) {
-				if(j >= resultList[0].length){
-					System.out.println("enlarged matrix y");
-					resultList = enlargeResultList(resultList,false,true);
-				}
-				if(i > resultList.length){
-					System.out.println("enlarged matrix x");
-					resultList = enlargeResultList(resultList, true, true);
-				}
+		for (int i = startX; i < resultList.length; i++) {
+			for (int j = startY; j < resultList[0].length; j++) {
 				try {
 					if(resultList[i][j].equals(dummyString) && ! permList[permX][permY].equals(dummyString))
 					resultList[i][j] = permList[permX][permY];
@@ -580,6 +588,28 @@ public class MatchMap {
 			permY = otherMergePointY;
 			permX++;
 		}
+		
+//		for (int i = ourMergePointX; i < permList.length; i++) {
+//			for (int j = ourMergePointY; j < permList[0].length; j++) {
+//				if(j >= resultList[0].length){
+//					System.out.println("enlarged matrix y");
+//					resultList = enlargeResultList(resultList,false,true);
+//				}
+//				if(i > resultList.length){
+//					System.out.println("enlarged matrix x");
+//					resultList = enlargeResultList(resultList, true, true);
+//				}
+//				try {
+//					if(resultList[i][j].equals(dummyString) && ! permList[permX][permY].equals(dummyString))
+//					resultList[i][j] = permList[permX][permY];
+//				} catch (Exception e) {
+//					System.out.println("catched on x "+i+"   y "+j);
+//				}
+//				permY++;
+//			}
+//			permY = otherMergePointY;
+//			permX++;
+//		}
 		System.out.println(matrixToString(resultList));
 		return resultList;
 	}
