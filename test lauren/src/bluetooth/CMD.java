@@ -193,4 +193,7 @@ public interface CMD {
 	public static final int FETCHBALL = 34;
 	public void fetchBall();
 	
+	public static final int SEESAWACTION = 35;
+	public void seesawAction();
+	
 }

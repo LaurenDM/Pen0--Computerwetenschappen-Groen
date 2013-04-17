@@ -39,12 +39,13 @@ public class ContentPanel implements ActionListener {
     static JFrame calibrationFrame = new JFrame("P&O - Groen - Lightsensor Calibration");
     static JFrame sensorOrientationFrame = new JFrame("P&O - Groen - Ultrasonicsensor Orientation");
     static JFrame barcodeFrame = new JFrame("P&O - Groen - Set the barcode values");
+    static JFrame connectionFrame = new JFrame("P&O - Groen - Connection through HTTTP");
     private static ControllerPoller controllerPoller;
     private JPanel titlePanel, buttonPanel, debugPanel, bottomButtonPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
     private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, infraredLabel, lineLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, 
-    calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton,
+    calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, connectionButton,
     rotateLittleLeft,rotateLittleRight,startButton, barcodeButton, finishButton, resumeButton, resetButton,setBarcodeButton;
     private static JTextArea debugText;
     final JPanel totalGUI = new JPanel();
@@ -213,8 +214,8 @@ public class ContentPanel implements ActionListener {
         setBarcodeButton = new JButton("SET BARCODE VALUES");
         fixButtonLayout(buttonPanel, setBarcodeButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 6*allButtonHeight);
         
-        sensorButton = new JButton("DISABLE TURN ERROR");
-        fixButtonLayout(buttonPanel, sensorButton, wideButtonWidth, allButtonHeight, 0, 6*allButtonHeight);
+        connectionButton = new JButton("OPEN CONNECTION PANEL");
+        fixButtonLayout(buttonPanel, connectionButton, wideButtonWidth, allButtonHeight, 0, 6*allButtonHeight);
         
         startButton = new JButton("Start");
 //        fixButtonLayout(buttonPanel, startButton, 20, 150, 0, 0);
@@ -277,8 +278,13 @@ public class ContentPanel implements ActionListener {
         barcodeFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         barcodeFrame.setSize(400,210);
         
+      //Creating connection panel
+        ConnectionPanel connectionPanel = new ConnectionPanel(connectionFrame, controller);
+        connectionFrame.setContentPane(connectionPanel.getContentPanel());
+        connectionFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        connectionFrame.setSize(400,400);
         
-    	
+            	
 	    //We create a controllerPoller that monitors debug info.
 	    controllerPoller = new ControllerPoller(controller, this);
 	    //We start the controllerPoller
@@ -310,7 +316,7 @@ public class ContentPanel implements ActionListener {
         yLabel.setHorizontalTextPosition(SwingConstants.LEFT);
         fixLabelLayout(debugPanel, yLabel, 125, 20, 100, 100);
         
-        infraredLabel = new JLabel("Infrared: FALSE");
+        infraredLabel = new JLabel("Infrared: 0");
         infraredLabel.setHorizontalTextPosition(SwingConstants.LEFT);
         fixLabelLayout(debugPanel, infraredLabel, 125, 20, 200, 100);
         
@@ -350,7 +356,9 @@ public class ContentPanel implements ActionListener {
 				drawingPanel.drawFoundBarcodes();
 				drawingPanel.drawLineToFinish();
 				drawingPanel.drawBalls();
-				drawingPanel.drawFoundSeaSaws();
+				drawingPanel.drawSeesaws();
+				drawingPanel.drawFoundSeesaws();
+				drawingPanel.drawInfraredPositions();
 				for(int i=0; i<collection.size(); i++){
 					if(i==0){drawingPanel.reDrawMyPolygon(collection.get(i), Color.BLACK);}
 					if(i==1){drawingPanel.reDrawMyPolygon(collection.get(i), Color.BLUE);}
@@ -399,7 +407,7 @@ public class ContentPanel implements ActionListener {
 					contentPanel.setRobotAngle(controller.getAngle());
 					contentPanel.setRobotLightValue(controller.readLightValue());
 					contentPanel.setRobotDistanceValue(controller.readUltrasonicValue());
-					contentPanel.setRobotInfraredValue(controller.detectInfrared());
+					contentPanel.setRobotInfraredValue(controller.getInfraredValue()); //TODO infra francis
 					contentPanel.setLineValue(controller.detectWhiteLine());
 					contentPanel.updateBalls();
 					if(controller.ballInPossesion() && count < 1){
@@ -477,11 +485,13 @@ public class ContentPanel implements ActionListener {
         		drawingPanel.drawWhiteLines();
         		drawingPanel.updateUI();
         		setConnected(false);
-        		controller.connectNewSimRobot(0, new Position(20,20), 0);
+        		controller.connectNewSimRobot(0, new Position(20,20), controller.getPlayerID());
+        		controller.setPlayerClient();
         	}
         	else{
         		try{
         		controller.connectNewBtRobot();
+        		controller.setPlayerClient();
         		connectButton.setText("Disconnect from brobot");
         		setConnected(true);
         		drawingPanel.clear();
@@ -531,12 +541,8 @@ public class ContentPanel implements ActionListener {
         	controller.findBlackLineAndCreateBarcode();
         	buttonPanel.requestFocusInWindow();
         }
-        else if(e.getSource() == sensorButton){
-//        	actionLabel.setText("Showing raw distance data");
-//        	showRawData = true;
-//        	buttonPanel.requestFocusInWindow();
-        	actionLabel.setText("Disabled error margin on turning");
-        	controller.disableError();
+        else if(e.getSource() == connectionButton){
+        	connectionFrame.setVisible(true);
         	buttonPanel.requestFocusInWindow();
         }
         else if(e.getSource() == rotateLittleRight){
@@ -684,9 +690,14 @@ public class ContentPanel implements ActionListener {
     	graphPanel.addValue(SensorGraphsPanel.DISTANCEPLOT, value);
     }
     
-    public void setRobotInfraredValue(boolean value){
-    	infraredLabel.setText("Infrared: " + Boolean.valueOf(value).toString());
-    }
+    public void setRobotInfraredValue(int value){ //TODO infra francis
+		if (!controller.detectInfrared()) {
+			infraredLabel.setForeground(Color.BLACK);
+		} else {
+			infraredLabel.setForeground(Color.RED);
+		}
+		infraredLabel.setText("Infrared: " + value);
+	}
     
     public void setLineValue(boolean value){
     	lineLabel.setText("Line: " + Boolean.valueOf(value).toString());
@@ -702,26 +713,26 @@ public class ContentPanel implements ActionListener {
 	}
 	
 	public void updateBalls(){
-//		System.out.println("updateBalls");
-		HashMap<Integer, RobotPilot> otherRobots = controller.getOtherRobots();
-	    Iterator<Entry<Integer, RobotPilot>> it = otherRobots.entrySet().iterator();
-		    while (it.hasNext()) {
-		        Map.Entry<Integer, RobotPilot> pairs = (Entry<Integer, RobotPilot>)it.next();
-//		        System.out.println(pairs.getKey() + " = " + pairs.getValue());
-		        Integer identifier = pairs.getKey();
-		        RobotPilot robot = pairs.getValue();
-		        if(!printedBalls.contains(identifier) && robot.hasBall()){
-		        	printedBalls.add(identifier);
-		        	writeToDebug("Robot "+identifier+" has found its ball");
-		        	System.out.println("FOUND BALL------------------------");
-		        }
-		    }
+////		System.out.println("updateBalls");
+//		HashMap<Integer, RobotPilot> otherRobots = controller.getOtherRobots();
+//	    Iterator<Entry<Integer, RobotPilot>> it = otherRobots.entrySet().iterator();
+//		    while (it.hasNext()) {
+//		        Map.Entry<Integer, RobotPilot> pairs = (Entry<Integer, RobotPilot>)it.next();
+////		        System.out.println(pairs.getKey() + " = " + pairs.getValue());
+//		        Integer identifier = pairs.getKey();
+//		        RobotPilot robot = pairs.getValue();
+//		        if(!printedBalls.contains(identifier) && robot.hasBall()){
+//		        	printedBalls.add(identifier);
+//		        	writeToDebug("Robot "+identifier+" has found its ball");
+//		        	System.out.println("FOUND BALL------------------------");
+//		        }
+//		    }
 		}
 	
 	
 	//barcodes
 	public void updateInfoPanel(){
-		for(Barcode b :controller.getRobot().getBoard().getFoundBarcodes()){
+		for(Barcode b :controller.getRobot().getBoard().getBarcodes()){
 			if(!b.getPrinted()){
 				b.setPrinted(true);
 				writeToDebug("Barcode "+b.getBits()[0]+b.getBits()[1]+b.getBits()[2]+b.getBits()[3]+b.getBits()[4]+b.getBits()[5]+" with value "+b.getPossibleDecimal()+" added.");

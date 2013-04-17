@@ -11,7 +11,6 @@ import domain.maze.barcodes.Action;
 import domain.maze.barcodes.Barcode;
 import domain.maze.graph.MazePath;
 import domain.robotFunctions.ExploreMaze;
-import domain.util.RobotChecker;
 import domain.util.TimeStamp;
 import exceptions.ConnectErrorException;
 import gui.ContentPanel;
@@ -47,8 +46,8 @@ public class BTRobotPilot extends RobotPilot  {
 	private long lastSensorUpdateTime;
 
 	
-	public BTRobotPilot(int number){
-		super(number);
+	public BTRobotPilot(String playerID){
+		super(playerID);
 		try {
 			btComm = (new BTCommPC(this));
 			btComm.open(null,bluetoothAdress );
@@ -64,10 +63,6 @@ public class BTRobotPilot extends RobotPilot  {
 
 		}
 		board = new Board();
-	}
-	
-	public BTRobotPilot(){
-		this(0);
 	}
 	
 	@Override
@@ -102,7 +97,7 @@ public class BTRobotPilot extends RobotPilot  {
 
 	@Override
 	public void forward() throws CannotMoveException {
-		setMovement(Movement.FORWARD);
+		setMovement(MoveType.FORWARD);
 //		if(canMove())
 			pilot.forward();
 //		else{
@@ -113,29 +108,25 @@ public class BTRobotPilot extends RobotPilot  {
 
 	@Override
 	public void backward() {
-		setMovement(Movement.BACKWARD);
+		setMovement(MoveType.BACKWARD);
 		pilot.backward();
 	}
 
 	@Override
 	public void stop() {
-		setMovement(Movement.STOPPED);
+		setMovement(MoveType.STOPPED);
 		pilot.stop();
 	}
 
 	@Override
 	public Position getPosition() {
-		if(RobotChecker.interruptionAllowed()){
-		return pilot.getPosition();}
-		else return new Position(0,0);
+		return pilot.getPosition();
 	}
 	
 	
 	@Override
 	public double getOrientation() {
-		if(RobotChecker.interruptionAllowed())
 			return pilot.getRotation();
-		else return 0;
 		
 	}
 
@@ -178,11 +169,11 @@ public class BTRobotPilot extends RobotPilot  {
 //			}
 //		}
 		if(distance>0)
-			setMovement(Movement.FORWARD);
+			setMovement(MoveType.FORWARD);
 		else if(distance>0)
-			setMovement(Movement.BACKWARD);
+			setMovement(MoveType.BACKWARD);
 		pilot.travel(distance);
-		setMovement(Movement.STOPPED);
+		setMovement(MoveType.STOPPED);
 	}
 
 	@Override
@@ -199,13 +190,11 @@ public class BTRobotPilot extends RobotPilot  {
 	
 	@Override
 	public int getSensorAngle(){
-		if(RobotChecker.interruptionAllowed())
 			updateSensorValues(false);
 		return prevSensorAngle;
 	}
 	
 //	public boolean isTouching(){
-//		if(RobotChecker.interruptionAllowed())
 //			updateSensorValues(false);
 //		return prevTouchBool;
 //	}
@@ -226,7 +215,6 @@ public class BTRobotPilot extends RobotPilot  {
 	@Override
 	public double readLightValue(){
 		try{
-			if(RobotChecker.interruptionAllowed())
 				updateSensorValues(false);
 			return prevLightValue;
 		}catch(Exception e){
@@ -241,16 +229,14 @@ public class BTRobotPilot extends RobotPilot  {
 	
 	@Override
 	public double readUltrasonicValue() {
-		if (RobotChecker.interruptionAllowed())
 			updateSensorValues(false);
 		return prevUltrasonicValue;
 	}
 	
 	@Override
-	public boolean detectInfrared(){
-		if (RobotChecker.interruptionAllowed())
+	public int getInfraredValue(){
 			updateSensorValues(false);
-		return prevIRValue>130;	//TODO: waarde moet experimenteel bepaald worden
+		return prevIRValue;	//TODO: waarde moet experimenteel bepaald worden
 	}
 	
 	private void updateSensorValues(boolean forced) {
@@ -312,21 +298,7 @@ public class BTRobotPilot extends RobotPilot  {
 	
 
 	public int getBatteryVoltage(){
-		if(RobotChecker.interruptionAllowed())
-			return btComm.sendCommand(CMD.BATTERY)[0];
-			else return 0; 
-		
-	}
-
-	@Override
-	public void arcForward(boolean left) {
-		
-//		pilot.steer(calcTurnRate(left)); 
-	}
-
-	@Override
-	public void arcBackward(boolean left) {
-//		pilot.steerBackward(calcTurnRate(left)); 
+			return btComm.sendCommand(CMD.BATTERY)[0];		
 	}
 
 	@Override
@@ -430,7 +402,7 @@ public class BTRobotPilot extends RobotPilot  {
 
 	@Override
 	public void addFoundWall(Wall wall) {
-		board.foundNewWall(wall);
+		board.addWall(wall);
 	}
 
 	@Override
@@ -465,8 +437,8 @@ public class BTRobotPilot extends RobotPilot  {
 
 	public void makeBarcode(int[] data) {
 		Barcode barcode = new Barcode(data[2], new Position(data[0], data[1]),
-				data[3]);
-		getBoard().addFoundBarcode(barcode);
+				data[3], this);
+		getBoard().addBarcode(barcode);
 		Action action = barcode.getAction();
 		if(action != null) action.run(this);
 	}
@@ -521,16 +493,21 @@ public class BTRobotPilot extends RobotPilot  {
 	public void doNothing() {
 		maze.setNextTileToDeadEnd();
 	}
-
+	
 	@Override
-	public boolean checkForSeaSawInfrared() {
-		return detectInfrared();
+	public void driveOverSeeSaw(int barcodeNb) {
+		btComm.sendCommand(CMD.SEESAWACTION);
+		getBoard().rollSeeSawWithBarcode(barcodeNb);
 	}
 
 	@Override
-	public void driveOverSeeSaw() {
-		// TODO Auto-generated method stub (Koen?)
-		
+	public void turnUltrasonicSensorTo(int angle) {
+		btComm.sendCommand(CMD.TURNSENSORTO,angle);
+	}
+
+	@Override
+	public void blackStraighten() {
+		// TODO Auto-generated method stub
 	}
 	
 

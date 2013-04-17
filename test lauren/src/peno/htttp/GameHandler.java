@@ -3,7 +3,7 @@ package peno.htttp;
 /**
  * A handler for game events.
  */
-public interface Handler {
+public interface GameHandler {
 
 	/**
 	 * Invoked when the game has started.
@@ -29,12 +29,20 @@ public interface Handler {
 	public void gamePaused();
 
 	/**
-	 * Invoked when the player numbers have been rolled.
+	 * Invoked when the game has been won.
 	 * 
-	 * @param playerNumber
-	 *            The local player's player number.
+	 * @param teamNumber
+	 *            The winning team's number.
 	 */
-	public void gameRolled(int playerNumber);
+	public void gameWon(int teamNumber);
+
+	/**
+	 * Invoked when a player attempts to join the game.
+	 * 
+	 * @param playerID
+	 *            The player identifier.
+	 */
+	public void playerJoining(String playerID);
 
 	/**
 	 * Invoked when a player has joined the game.
@@ -45,33 +53,33 @@ public interface Handler {
 	public void playerJoined(String playerID);
 
 	/**
-	 * Invoked when a player has left the game.
+	 * Invoked when a player has disconnected from the game.
 	 * 
 	 * @param playerID
 	 *            The player identifier.
+	 * @param reason
+	 *            The reason for the disconnect.
 	 */
-	public void playerLeft(String playerID);
+	public void playerDisconnected(String playerID, DisconnectReason reason);
 
 	/**
-	 * Invoked when a player updates its position.
+	 * Invoked when a player changes his ready state.
 	 * 
 	 * @param playerID
 	 *            The player identifier.
-	 * @param x
-	 *            The X-coordinate of the player's position.
-	 * @param y
-	 *            The Y-coordinate of the player's position.
-	 * @param angle
-	 *            The angle of the player's orientation.
+	 * @param isReady
+	 *            The player's new ready state.
 	 */
-	public void playerPosition(String playerID, double x, double y, double angle);
+	public void playerReady(String playerID, boolean isReady);
 
 	/**
 	 * Invoked when a player has found their object.
 	 * 
 	 * @param playerID
 	 *            The player identifier.
+	 * @param playerNumber
+	 *            The player number.
 	 */
-	public void playerFoundObject(String playerID);
+	public void playerFoundObject(String playerID, int playerNumber);
 
 }

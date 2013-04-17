@@ -2,7 +2,9 @@ package domain.maze.graph;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import domain.maze.Orientation;
 
 public class SortedPathSet implements Iterable<MazePath> {
 
@@ -29,24 +31,47 @@ public class SortedPathSet implements Iterable<MazePath> {
 	}
 	
 	private void trim(){
-		SortedPathSet clone = this.clone();
 		Iterator<MazePath> it = this.iterator();
-		Iterator<MazePath> otherIt = clone.iterator();
+		ArrayList<MazePath> toBeTrimmed = new ArrayList<MazePath>();
+		HashMap<MazeNode,MazePath> checkMap = new HashMap<MazeNode,MazePath>();
 		while(it.hasNext()){
-			MazePath path = it.next();
-			while(otherIt.hasNext()){
-				MazePath otherPath = otherIt.next();
-				if(otherPath.contains(path.getCurrentEndTile()) && path.getCurrentLength()>otherPath.getCurrentLength()){
-					System.out.println("Trimmed path "+path);
-					it.remove();
+			MazePath current = it.next();
+			if(checkMap.containsKey(current.getCurrentEndTile())){
+				MazePath shortestFromMap = checkMap.get(current.getCurrentEndTile());
+				if(shortestFromMap.getCurrentCost()<current.getCurrentCost()){
+					toBeTrimmed.add(current);
+				} else if(shortestFromMap.getCurrentCost()>current.getCurrentCost()) {
+					toBeTrimmed.add(shortestFromMap);
+					checkMap.put(current.getCurrentEndTile(), current);
 				}
+			} else {
+				checkMap.put(current.getCurrentEndTile(), current);
 			}
+		}		
+		
+//		SortedPathSet clone = this.clone();
+//		Iterator<MazePath> it = this.iterator();
+//		Iterator<MazePath> otherIt = clone.iterator();
+//		ArrayList<MazePath> toBeTrimmed = new ArrayList<MazePath>();
+//		while(it.hasNext()){
+//			MazePath path = it.next();
+//			while(otherIt.hasNext()){
+//				MazePath otherPath = otherIt.next();
+//				if(otherPath.contains(path.getCurrentEndTile()) && path.getCurrentLength()>otherPath.getCurrentLength()){
+//					System.out.println("Trimmed path "+path);
+//					toBeTrimmed.add(path);
+//				}
+//			}
+//		}
+		
+		for(MazePath m : toBeTrimmed){
+			remove(m);
 		}
 	}
 	
 	@Override
 	public SortedPathSet clone(){
-		MazePath dummyPath = new MazePath(new TileNode(null,null), new TileNode(null,null));
+		MazePath dummyPath = new MazePath(new TileNode(null,null), Orientation.NORTH, new TileNode(null,null));
 		SortedPathSet clone = new SortedPathSet(dummyPath);
 		clone.remove(dummyPath);
 		clone.addAll(sortedQueue);

@@ -1,31 +1,68 @@
 package domain.robots;
 
+import gui.ContentPanel;
+
+import java.io.IOException;
+import java.util.List;
+
+import peno.htttp.DisconnectReason;
+import peno.htttp.PlayerClient;
+import peno.htttp.PlayerHandler;
+import peno.htttp.Tile;
+
+import domain.Position.InitialPosition;
 import domain.Position.Position;
 import domain.maze.Ball;
 import domain.maze.Board;
+import domain.maze.Seesaw;
 import domain.maze.Wall;
+import domain.maze.WorldSimulator;
+import domain.maze.barcodes.Barcode;
 import domain.maze.graph.MazePath;
 import domain.polygons.RobotPolygon;
 import domain.robotFunctions.ExploreMaze;
 import domain.util.TimeStamp;
 
-public abstract class RobotPilot {
+public abstract class RobotPilot implements PlayerHandler{
 	
 	RobotPolygon robotPolygon;
-	private Movement movement;
+	private MoveType movement;
 	private Position finish;
 	private int number; //0-3
 	
 	private Board board;
+	private WorldSimulator worldSimulator;
 	
 	private Ball ball;
 	private int teamNumber;
+	private String playerID;
+	
+	private PlayerClient playerClient;
 	
 	
-	public RobotPilot(int number){
-		this.movement=Movement.STOPPED;
+	public RobotPilot(String playerID){
+		this.movement=MoveType.STOPPED;
 		this.robotPolygon=new RobotPolygon(this);
-		this.number = number;
+		this.playerID = playerID;
+		
+	}
+	
+	public void setPlayerClient(PlayerClient playerClient){
+		this.playerClient = playerClient;
+	}
+	
+	
+	
+	public void setWorldSimulator(WorldSimulator ws){
+		this.worldSimulator = ws;
+	}
+	
+	public WorldSimulator getWorldSimulator(){
+		return this.worldSimulator;
+	}
+	
+	public String getPlayerID(){
+		return this.playerID;
 	}
 	
 	public void setPlayerNb(int nb){
@@ -42,7 +79,7 @@ public abstract class RobotPilot {
 		return number;
 	}
 	
-	public Movement getMovementStatus() {
+	public MoveType getMovementStatus() {
 		return movement;
 	}
 		
@@ -70,7 +107,7 @@ public abstract class RobotPilot {
 	
 	public abstract void forward() throws CannotMoveException;
 	
-	public void setMovement(Movement movement){
+	public void setMovement(MoveType movement){
 		this.movement = movement;
 	}
 	
@@ -150,15 +187,9 @@ public abstract class RobotPilot {
 	public abstract void turnSensorForward();
 	
 	public abstract boolean detectWhiteLine();
-	
-	public abstract void straighten();
-	
-	//Starts moving de robot so that it makes an arc forward.
-	public abstract void arcForward(boolean left);
+	public abstract void blackStraighten();
 
-	//Starts moving de robot so that it makes an arc backward.
-	public abstract void arcBackward(boolean left);
-	
+	public abstract void straighten();
 	//Makes the robot make an arc of the specified angle. This method does not return immediately.
 	public abstract void steer(double angle);
 
@@ -209,6 +240,18 @@ public abstract class RobotPilot {
 
 	public abstract void fetchBall();
 	
+	public void foundBall(){
+		try {
+			playerClient.foundObject();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public abstract void doNothing();
 
 	public Ball getBall(){
@@ -234,15 +277,163 @@ public abstract class RobotPilot {
 	public int getTeamNumber(){
 		return teamNumber;
 	}
+		
+	public void handleSeesaw(int barcodeNb){
+		boolean open = detectInfrared();
+		getMaze().setNextTileToSeesaw(open);
+		if(!open){
+			try {
+				playerClient.lockSeesaw(barcodeNb);
+			} catch (IllegalStateException e) {
+				//  Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				//  Auto-generated catch block
+				e.printStackTrace();
+			}
+			driveOverSeeSaw(barcodeNb);
+			getMaze().driveOverSeesaw();
+		}
+		else{
+			doNothing();
+		}
+		try {
+			playerClient.unlockSeesaw();
+		} catch (IllegalStateException e) {
+			//  Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			//  Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public  boolean detectInfrared(){
+		return getInfraredValue()>60; //TODO infrarood francis
+	};
+
+
+	public abstract void driveOverSeeSaw(int barcodeNb);
+	// de check van infrarood is reeds gebeurd als deze methode wordt aangeroepen!
+
+	public abstract int getInfraredValue();
+
+	public abstract void turnUltrasonicSensorTo(int angle);
 	
-	public abstract boolean detectInfrared();
-
-	public abstract boolean checkForSeaSawInfrared();
-
-	public abstract void driveOverSeeSaw();
-	// de check van infrarood is reeds gebeurd als deze methode word aangeroepen!
 	
+	InitialPosition initialPosition;
+	int playerNb;
+	public void setInitialPositionNumber(int playernb){
+		this.playerNb = playernb;
+//		System.out.println("Setting initial pos to:"+initialPosition.getX()+" y:"+initialPosition.getY());
+//		setPose(pos.getOrientation().getAngleToHorizontal(), (int) pos.getX(), (int) pos.getY());
+	}
+	
+	public void teleportToStartPosition(){
+		initialPosition = getWorldSimulator().getInitialPositionFromPlayer(playerNb);
+		System.out.println("Setting initial pos to:"+initialPosition.getX()+" y:"+initialPosition.getY());
+		setPose(initialPosition.getOrientation().getAngleToHorizontal(), (int) initialPosition.getX(), (int) initialPosition.getY());
+	}
+	
+	
+	
+	
+	//////////////////////////////////////////////////////////////////////////////
+	//					VANAF HIER IMPLEMENTATIE PLAYER HANDLER					//	
+	//////////////////////////////////////////////////////////////////////////////
+	
+	@Override
+	public void playerReady(String playerID, boolean isReady) {
+		printMessage("ph.playerReady: "+playerID+" is ready");
+		//moeten wij niets met doen
+	}
+	
+	@Override
+	public void playerJoining(String playerID) {
+		printMessage("ph.playerJoining: "+playerID+" is joining");
+		//moeten wij niets met doen
+	}
+	
+	@Override
+	public void playerJoined(String playerID) {
+		printMessage("ph.playerJoined: "+playerID+" joined");
+		//moeten wij niets met doen
+	}
+	
+	@Override
+	public void playerFoundObject(String playerID, int playerNumber) {
+		printMessage("ph.playerFoundObj: "+playerID+" number:"+playerNumber+" found object");
+		//moeten we zelf checken of dit teammate is?
+	}
+	
+	@Override
+	public void playerDisconnected(String playerID, DisconnectReason reason) {
+		printMessage("ph.playerdisc: "+playerID+" disconnected, reason: "+reason);				
+		//moeten wij niets met doen
+	}
+	
+	@Override
+	public void gameStopped() {
+		printMessage("ph.gameStopped");
+	//	htttpImplementation.getController().cancel();
+		//TODO: ik zou reset doen
+	}
+	
+	@Override
+	public void gameStarted() {
+		printMessage("ph.gameStarted, starting to send position");
+	//	htttpImplementation.startSendingPositionsThread();
+		//TODO: verkenalgoritme starten, ik stel voor dit handmatig te doen
+		// waarom?
+	}
+	
+	@Override
+	public void gamePaused() {
+		printMessage("ph.gamePaused");
+	//	htttpImplementation.getController().cancel();
+	}
+	
+	@Override
+	public void gameRolled(int playerNumber, int objectNumber) {
+		printMessage("ph.gameRolled: playerNumber:"+playerNumber+" objectNumber:"+objectNumber);
+		setInitialPositionNumber(playerNumber);
+		Barcode.setBallNumber(objectNumber);
+	}
 
+	@Override
+	public void teamConnected(String partnerID) {
+		printMessage("ph.teamconnected: "+partnerID);
+		//TODO start sending maze to teammember
+	}
 
+	@Override
+	public void teamTilesReceived(List<Tile> tiles) {
+		printMessage("ph.Tiles recieved 'List<Tile>");
+		//TODO info verwerken en naar teammate rijden tenzij mismatch, verder exploren
+	}
+	
+	private void printMessage(String message){
+		System.out.println(message);
+		ContentPanel.writeToDebug(message);
+	}
+
+	@Override
+	public void gameWon(int teamNumber) {
+		printMessage("ph.GameWon by Team " + teamNumber);
+	}
+
+	@Override
+	public void teamPosition(double x, double y, double angle) {
+		// TODO something useful
+		
+	}
+	
+	public void setReady(boolean ready) {
+		try {
+			playerClient.setReady(ready);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+	}
 	
 }

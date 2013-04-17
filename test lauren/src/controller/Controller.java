@@ -1,5 +1,7 @@
 package controller;
 
+import groen.htttp.HtttpImplementation;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,6 +18,8 @@ import domain.maze.Ball;
 import domain.maze.Board;
 import domain.maze.MazeInterpreter;
 import domain.maze.RandomMazeGenerator;
+import domain.maze.Seesaw;
+import domain.maze.WorldSimulator;
 import domain.maze.barcodes.Barcode;
 import domain.robots.BTRobotPilot;
 import domain.robots.CannotMoveException;
@@ -30,34 +34,33 @@ public class Controller {
 	private RobotPilot currentRobot;
 	private RobotPilot btRobot;
 	private RobotPilot simRobot;
-	private HashMap<Integer, RobotPilot> otherRobots;
 	private Thread explorer;
-	private final EventPusher ep;
+	private WorldSimulator worldSimulator;
+//	private final EventPusher ep;
 //	private SimRobotPilot simRobotPilot ;
+	private HtttpImplementation htttpImplementation;
+	
+	private String playerID;
 	
 	public Controller() {
-		otherRobots = new HashMap<Integer, RobotPilot>();
-		SimRobotPilot simRobotPilot = new SimRobotPilot();
-		currentRobot=simRobot;
-		connectNewSimRobot(0, new Position(20,20), 0);
 		
-		ep = new EventPusher();
-		Thread epThread = new Thread(){
-		    @Override
-			public void run(){
-				ep.run(currentRobot);	//method to adjust current robot in ep needed
-		    }
-		  };
-		epThread.start();
-	
-    	final SubscribeMonitor sm = new SubscribeMonitor(this);	
-   		Thread smThread = new Thread(){
-		    @Override
-			public void run(){
-		    	sm.run();
-		    }
-		  };
-		smThread.start();
+		
+		int random = (int) (Math.random()*1000000);
+//	    random =1;
+		this.playerID = "playerIDGroen"+random;
+		
+		
+		
+		
+		connectNewSimRobot(0, new Position(20,20), playerID);
+		
+		try{
+			htttpImplementation = new HtttpImplementation(this);
+		} catch(Exception e){
+			System.out.println("Couldn't connect to the remote server.");
+		}
+		
+		setPlayerClient();
 		
 	}
 
@@ -65,27 +68,29 @@ public class Controller {
 	  
 	public void connectNewBtRobot() {
 		if(btRobot==null)
-		btRobot = new BTRobotPilot();
+		btRobot = new BTRobotPilot(this.playerID);
+		worldSimulator = new WorldSimulator(btRobot);
 		currentRobot=btRobot;
 		currentRobot.setBoard(new Board());
-
 
 	}
 	
 	//This is used to set the robot controlled by this GUI
-	public void connectNewSimRobot(double orientation, Position position, int number) {
-		simRobot = new SimRobotPilot(orientation, position,number);
+	public void connectNewSimRobot(double orientation, Position position, String playerID) {
+		simRobot = new SimRobotPilot(orientation, position,playerID);
+		worldSimulator = new WorldSimulator(simRobot); 
 		currentRobot = simRobot ;
 		currentRobot.setBoard(new Board());
 	}
 	
-	//This is used to set the robot controlled by this GUI
-	public void connectExternalSimRobot(double orientation, Position position, int number) {
-		SimRobotPilot otherSimRobot = new SimRobotPilot(orientation, position,number);
-		otherSimRobot.setBoard(new Board()); //miss aanpassen, nog te bespreken. (elke robot individueel bord?)
-		otherRobots.put(number, otherSimRobot);
-		}
+	public void setPlayerClient(){
+		currentRobot.setPlayerClient(htttpImplementation.getPlayerClient());
+	}
 	
+	public WorldSimulator getWorldSimulator(){
+		return this.worldSimulator;
+	}
+
 	
 	public void polygonDriver(int numberOfVertices, double edgeLength) {
 		PolygonDriver driver = new PolygonDriver(currentRobot);
@@ -135,6 +140,9 @@ public class Controller {
 		return currentRobot.getPosition();
 	}
 	
+	public String getPlayerID(){
+		return this.playerID;	}
+	
 	public double getXCo(){
 		return currentRobot.getPosition().getX();
 	}
@@ -155,10 +163,10 @@ public class Controller {
 	public List<ColorPolygon> getColorPolygons(){
 		List<ColorPolygon> colPolyList=new ArrayList<ColorPolygon>();
 		colPolyList.add(currentRobot.getRobotPolygon());
-		Iterator<Entry<Integer, RobotPilot>> it = otherRobots.entrySet().iterator();
+		Iterator<RobotPilot> it = worldSimulator.getOtherRobots().iterator();
 	    while (it.hasNext()) {
-	        Map.Entry<Integer, RobotPilot> pairs = it.next();
-	        colPolyList.add(pairs.getValue().getRobotPolygon());
+	        RobotPilot robot = it.next();
+	        colPolyList.add(robot.getRobotPolygon());
 //	        it.remove(); // avoids a ConcurrentModificationException
 	    }
 //		for(Robot robot: otherRobots){
@@ -197,8 +205,8 @@ public class Controller {
 		return currentRobot.readUltrasonicValue();
 	}
 
-	public boolean detectInfrared(){
-		return currentRobot.detectInfrared();
+	public int getInfraredValue(){
+		return currentRobot.getInfraredValue();
 	}
 	
 	public void turnUltrasonicSensor(int angle){
@@ -233,16 +241,9 @@ public class Controller {
 	public RobotPilot getRobot() {
 		return currentRobot;
 	}
-	public void arcForward(boolean left){
-		currentRobot.arcForward(left);
-	};
-
-	public void arcBackward(boolean left) {
-		currentRobot.arcBackward(left);
-	};
 
 	public void readMazeFromFile(String fileLocation) {
-		MazeInterpreter MI = new MazeInterpreter(this.getRobot().getBoard());
+		MazeInterpreter MI = new MazeInterpreter(worldSimulator);
 		if(fileLocation.equals("nullnull")){
 		RandomMazeGenerator RMG = new RandomMazeGenerator(MI);
 		}
@@ -327,7 +328,10 @@ public class Controller {
 	public void reset(){
 		STOPPED = true;
 		while(explorer!=null && explorer.isAlive()){}
-		connectNewSimRobot(0, new Position(20,20), 0);
+		int random = (int) (Math.random()*1000000);
+//	    random =1;
+		String playerID = "playerIDGroen"+random;
+		connectNewSimRobot(0, new Position(20,20), playerID);
 	}
 
 	public static boolean isStopped() {
@@ -343,38 +347,39 @@ public class Controller {
 	public void autoCalibrateLight() {
 		currentRobot.autoCalibrateLight();}
 	
-	public void disableError() {
-		otherRobots.get(1).setPose(3, 100, 100); 
-//		simRobotPilot.disableError();
-	}
+//	public void disableError() {
+//		otherRobots.get(1).setPose(3, 100, 100); 
+////		simRobotPilot.disableError();
+//	}
 	
-	//set the simRobot of this gui to the first robot
-	public void setFirstRobot(){
-		connectNewSimRobot(0, new Position(20,20), 0);
-	}
-	
-	//set the simRobot of this gui to the first robot
-	public void setSecondRobot(){
-		connectNewSimRobot(0, new Position(100,20), 1);
-	}
+//	//set the simRobot of this gui to the first robot
+//	public void setFirstRobot(){
+//		connectNewSimRobot(0, new Position(20,20), 0);
+//	}
+//	
+//	//set the simRobot of this gui to the first robot
+//	public void setSecondRobot(){
+//		connectNewSimRobot(0, new Position(100,20), 1);
+//	}
 
 
 	public RobotPilot getRobotFromIdentifier(int identifier) {
-//		System.out.println("IDENTIFIER"+identifier);
-//		System.out.println("currIDEN:"+ep.getRobotRandomIdentifier());
-		if(identifier==ep.getRobotRandomIdentifier()){
-			//message komt van deze robot
-			return null;
-		}
-		else{
-			if(otherRobots.containsKey(identifier)){
-				return otherRobots.get(identifier);
-			}
-			else{
-				connectExternalSimRobot(2, new Position(220, 20), identifier);
-				return getRobotFromIdentifier(identifier);
-			}
-		}
+////		System.out.println("IDENTIFIER"+identifier);
+////		System.out.println("currIDEN:"+ep.getRobotRandomIdentifier());
+//		if(identifier==ep.getRobotRandomIdentifier()){
+//			//message komt van deze robot
+//			return null;
+//		}
+//		else{
+//			if(otherRobots.containsKey(identifier)){
+//				return otherRobots.get(identifier);
+//			}
+//			else{
+//				connectExternalSimRobot(2, new Position(220, 20), identifier);
+//				return getRobotFromIdentifier(identifier);
+//			}
+//		}
+		return null;
 	}
 	
 
@@ -395,10 +400,7 @@ public class Controller {
 	public void ballFoundByOtherRobot(RobotPilot robot){
 		robot.setFoundBall(robot.getNumber());
 	}
-	
-	public HashMap<Integer, RobotPilot> getOtherRobots(){
-		return otherRobots;
-	}
+
 	
 	public int getTeamNumber(){
 		return currentRobot.getTeamNumber();
@@ -415,11 +417,45 @@ public class Controller {
 	
 	public void playerJoined(int identifier){
 		//RobotPilot newRobot = new RobotPilot(identifier);
-		// TODO simrobot of btrobot aanmaken + hoe bepalen?
 		//otherRobots.put(identifier, newRobot);
 	}
 	
-	public void playerLeft(int identifier){
-		otherRobots.remove(identifier);
+	
+
+
+
+	public void launchCatapult() {
+		turnUltrasonicSensorTo(180);		
+	}
+	private void turnUltrasonicSensorTo(int angle) {
+		currentRobot.turnUltrasonicSensorTo(angle);
+	}
+
+
+
+	public boolean detectInfrared() {
+		return currentRobot.detectInfrared();
+	}
+
+	public void setReady(boolean ready) {
+		currentRobot.setReady(ready);
+	}
+	
+	public void setInitialPositionNumber(int playerNb){
+		currentRobot.setInitialPositionNumber(playerNb);
+	}
+
+	public void teleport() {
+		currentRobot.teleportToStartPosition();
+	}
+
+
+	public void mousePressed(int x, int y) {
+		List<Seesaw> seesaws = worldSimulator.getSeesaws();
+		for(Seesaw s: seesaws){
+			if(s.hasPosition(new Position(x, y))){
+			s.rollOver();
+			}
+		}
 	}
 }

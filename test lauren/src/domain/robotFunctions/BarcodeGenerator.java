@@ -5,7 +5,7 @@ import domain.maze.barcodes.Barcode;
 import domain.robots.CannotMoveException;
 import domain.robots.RobotPilot;
 
-public class BarcodeGenerator extends RobotFunction {
+public class BarcodeGenerator {
 
 	private RobotPilot robot;
 	private final int MAZECONSTANT = 40;
@@ -58,8 +58,8 @@ public class BarcodeGenerator extends RobotFunction {
 		
 		int lowx = (int) (Math.floor((pos.getX())/MAZECONSTANT))*MAZECONSTANT;
 		int lowy = (int) (Math.floor((pos.getY())/MAZECONSTANT))*MAZECONSTANT;
-		Barcode barcode = new Barcode(convertBits(bits), new Position(lowx+20, lowy+20), robot.getOrientation()); 
-		robot.getBoard().addFoundBarcode(barcode);
+		Barcode barcode = new Barcode(convertBits(bits), new Position(lowx+20, lowy+20), robot.getOrientation(),robot); 
+		robot.getBoard().addBarcode(barcode);
 //		robot.setMovingSpeed(robot.getDefaultMovingSpeed());
 		robot.setMovingSpeed(moveSpeed);
 		robot.setTurningSpeed(turnSpeed);

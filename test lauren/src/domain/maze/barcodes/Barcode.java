@@ -1,5 +1,6 @@
 package domain.maze.barcodes;
 
+import java.awt.Robot;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,52 +10,74 @@ import domain.maze.Orientation;
 import domain.robots.RobotPilot;
 
 public class Barcode extends MazeElement{
-
-	private Action action;
+	
+	private final Action action;
 	private Position pos; //centre of barcode ( == centre of square; ex "20,20", always multiple of 20)
 	private Orientation orientation;
 	private int[] bits;
 	private List<Integer> legalInts = new ArrayList<Integer>();
 	private boolean printed;
+	private RobotPilot robot=null;
+	private final int decimal;
+	private final int firstReadRobotOrientation;
 	
-	public Barcode(int[] bits, Position pos, double angle){
+	public Barcode(int decimal, Position pos, Orientation orientation, int firstReadRobotOrientation, Action action, RobotPilot robot){
+		fillLegals();
+		this.robot=robot;
+		bits = getBinary(decimal);
+		if(!legalInts.contains(decimal)){
+			mirrorBits();
+			this.decimal = getDecimal(this.bits);
+		}else{
+			this.decimal=decimal;
+		}
+		this.pos = pos;
+		this.orientation = orientation;
+		this.firstReadRobotOrientation=Orientation.snapAngle(90,0,firstReadRobotOrientation);
+		if (action == null && robot != null) {
+			this.action = getAction(decimal);
+		} else {
+			this.action = action; // This is not needed here because the actions
+									// are only used for found barcodes
+		}
+		System.out.println("Barcode created with value "+this.bits[5]+this.bits[4]+this.bits[3]+this.bits[2]+this.bits[1]+this.bits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
+	}
+	
+	
+	public Barcode(int[] bits, Position pos, double angle, RobotPilot robot){
 		fillLegals();
 		if(bits.length != 6){
 			throw new IllegalArgumentException();
 		}
+		this.robot=robot;
+		this.firstReadRobotOrientation=Orientation.snapAngle(90,0,robot.getOrientation());
 		this.bits = bits;
 		this.pos = pos;
 		this.orientation = Orientation.getOrientation(angle);
-		int decimal = getDecimal(bits);
-		if(!legalInts.contains(decimal)){
+		int calculatedDecimal=getDecimal(bits);
+		if(!legalInts.contains(calculatedDecimal)){
 			mirrorBits();
 			decimal = getDecimal(this.bits);
+		}else{
+			decimal = calculatedDecimal;
 		}
 		action = getAction(decimal);
 		System.out.println("Barcode created with value "+this.bits[5]+this.bits[4]+this.bits[3]+this.bits[2]+this.bits[1]+this.bits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
 	}
 	
 	public Barcode(int decimal, Position pos, Orientation orientation){
-		fillLegals();
-		bits = getBinary(decimal);
-		if(!legalInts.contains(decimal)){
-			mirrorBits();
-			decimal = getDecimal(this.bits);
-		}
-		this.pos = pos;
-		this.orientation = orientation;
-		action = getAction(decimal);
-		System.out.println("Barcode created with value "+this.bits[5]+this.bits[4]+this.bits[3]+this.bits[2]+this.bits[1]+this.bits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
+		this( decimal,  pos,  orientation, 999, null, null);
 	}
 	
-	public Barcode(int decimal, Position pos, double angle){
-		this(decimal, pos, Orientation.getOrientation(angle));
+	public Barcode(int decimal, Position pos, double angle, RobotPilot robot){
+		this(decimal, pos, Orientation.getOrientation(angle),(int)robot.getOrientation(),null, robot);
 	}
 	
 
 	private static int ownBallNumber = 0;
 	private static int[] otherBallNumbers = new int[] {1,2,3};
-	private static int[] seaSawNumbers = new int[] {11,13,15,17,19,21};
+	private static int[] seesawNumbers = new int[] {11,13,15,17,19,21};
+	private static int[] checkPointNumbers = new int[]{55,47,43,39,37};
 	
 	public static void setBallNumber(int ballNumber) {
 		ownBallNumber = ballNumber;
@@ -72,6 +95,14 @@ public class Barcode extends MazeElement{
 		return false;
 	}
 	
+	private static boolean isCheckPointNumber(int number){
+		for (int n : checkPointNumbers){
+			if(n==number)
+				return true;
+		}
+		return false;
+	}
+	
 //	private static boolean isOwnBallNumber(int number){
 //		if(number == ownBallNumber){
 //			return true;
@@ -80,9 +111,9 @@ public class Barcode extends MazeElement{
 //		}
 //	}
 	
-	private static boolean isSeaSawNumber(int number){
-		for(int n : seaSawNumbers){
-			if(n == number)
+	public boolean isSeesawBC(){
+		for(int n : seesawNumbers){
+			if(n == decimal)
 				return true;
 		}
 		return false;
@@ -96,25 +127,16 @@ public class Barcode extends MazeElement{
 				return new FetchBallAction(1);
 			}
 		}
-		if(isOtherBallNumber(number))
+		if(isOtherBallNumber(number)){
 			return new DoNothingAction();
-		
-		else if(isSeaSawNumber(number)){
-			Position pos = getCenterPosition().getNewPosition(getOrientation().getAngleToHorizontal(), 60);
-			return new SeaSawAction(number, pos, getOrientation());
 		}
-			// TODO add actions for seesaw, ...
-			
-//			switch (number){
-//			case 5: return new TurnLeftAction();
-//			case 9: return new TurnRightAction();
-//			case 13: return new SetCheckPointAction();
-//			case 15: return new PlayTuneAction();
-//			case 19: return new Wait5Action();
-//			case 25: return new DriveSlowAction();
-//			case 37: return new DriveFastAction();
-//			case 55: return new SetFinishAction();
-//			default: return null;
+		else if(isSeesawBC()){
+			Position pos = getCenterPosition().getNewPosition(Orientation.getOrientation(robot.getOrientation()).getAngleToHorizontal(), 60);
+			return new SeesawAction(number, pos, getOrientation());
+		}
+		else if(isCheckPointNumber(number)){
+			return new SetCheckPointAction();
+		}
 			return null;
 		
 	}
@@ -333,5 +355,10 @@ public class Barcode extends MazeElement{
 	@Override
 	public boolean hasPosition(Position position) {
 		return containsPosition(position);
+	}
+	public boolean sameFirstReadOrientation() {
+			int orientationNow=Orientation.snapAngle(90,0,robot.getOrientation());
+
+		return orientationNow==firstReadRobotOrientation;
 	}
 }

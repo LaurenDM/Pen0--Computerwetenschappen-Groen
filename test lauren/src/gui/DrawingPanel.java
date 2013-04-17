@@ -3,6 +3,8 @@ package gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Polygon;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -15,7 +17,7 @@ import domain.Position.Position;
 import domain.maze.Ball;
 import domain.maze.MazeElement;
 import domain.maze.Orientation;
-import domain.maze.SeaSaw;
+import domain.maze.Seesaw;
 import domain.maze.Wall;
 import domain.maze.barcodes.Barcode;
 import domain.maze.graph.MazePath;
@@ -39,6 +41,24 @@ public class DrawingPanel extends JPanel {
 		previousPolygons = new HashMap<ColorPolygon, Polygon>();
 		drawWhiteLines();
 //		drawWalls();
+		
+		addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				int x = e.getX()-OFFSET;
+				int y = e.getY()-OFFSET;
+				controller.mousePressed(x,y);
+//				System.out.println(x+" "+y);
+			}
+			
+			public void mouseReleased(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseClicked(MouseEvent e) {}
+		});
+		
+			
 	}
 
 	public static final int IMG_WIDTH = 700;
@@ -54,6 +74,8 @@ public class DrawingPanel extends JPanel {
 			g.drawImage(image, 0, 0, null);
 		}
 	}
+	
+	
 
 	public void drawMyLine(int x1, int y1, int x2, int y2, Color color) {
 		g.setColor(color);
@@ -72,16 +94,16 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	public void drawSimulatedWalls(){
-		List<Wall> walls = controller.getRobot().getBoard().getWalls();
+		List<Wall> walls = controller.getRobot().getWorldSimulator().getWalls();
 		for(Wall w: walls){
 			drawWall(w, true);
 		}
 		drawSimulatedBarcodes();
-		drawSeaSaws();
+		drawSeesaws();
 	}
 	
 	public void drawFoundWalls(){
-		List<Wall> walls = controller.getRobot().getBoard().getFoundWalls();
+		List<Wall> walls = controller.getRobot().getBoard().getWalls();
 		try {
 			for(Wall w: walls){
 			drawWall(w, false);
@@ -117,7 +139,7 @@ public class DrawingPanel extends JPanel {
 		}
 		else{
 			boolean goodWall = false;
-			List<Wall> simWalls = controller.getRobot().getBoard().getWalls();
+			List<Wall> simWalls = controller.getRobot().getWorldSimulator().getWalls();
 			if(simWalls.size()>0){
 				for(Wall w: simWalls){
 					if(w.hasPosition(wall.getCenterPosition())){
@@ -141,14 +163,14 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	public void drawSimulatedBarcodes(){
-		List<Barcode> barcodes = controller.getRobot().getBoard().getSimulatedBarcodes();
+		List<Barcode> barcodes = controller.getRobot().getWorldSimulator().getSimulatedBarcodes();
 		for(Barcode b: barcodes){
 			drawBarcode(b, true);
 		}
 	}
 	
 	public void drawFoundBarcodes(){
-		List<Barcode> barcodes = controller.getRobot().getBoard().getFoundBarcodes();
+		List<Barcode> barcodes = controller.getRobot().getBoard().getBarcodes();
 		for(Barcode b: barcodes){
 			drawBarcode(b, false);
 		}
@@ -191,27 +213,34 @@ public class DrawingPanel extends JPanel {
 		}
 	}
 	
-	public void drawSeaSaws(){
-		List<SeaSaw> seaSaws = controller.getRobot().getBoard().getSeaSaws();
-		for(SeaSaw s : seaSaws){
-			drawSeaSaw(s,true);
+	public void drawSeesaws(){
+		List<Seesaw> seesaws = controller.getRobot().getWorldSimulator().getSeesaws();
+		for(Seesaw s : seesaws){
+			drawSeesaw(s,true);
 		}
 	}
 	
-	public void drawFoundSeaSaws(){
-		List<SeaSaw> seaSaws = controller.getRobot().getBoard().getFoundSeaSaws();
-		for(SeaSaw s : seaSaws){
-			drawSeaSaw(s,false);
+	public void drawInfraredPositions(){
+		List<Seesaw> seesaws = controller.getRobot().getWorldSimulator().getSeesaws();
+		for(Seesaw s : seesaws){
+			drawSeesawInfrared(s);
 		}
 	}
 	
-	public void drawSeaSaw(SeaSaw seasaw, boolean simulated){
+	public void drawFoundSeesaws(){
+		List<Seesaw> seesaws = controller.getRobot().getBoard().getSeesaws();
+		for(Seesaw s : seesaws){
+			drawSeesaw(s,false);
+		}
+	}
+	
+	public void drawSeesaw(Seesaw seesaw, boolean simulated){
 		Polygon pol = new Polygon();
-		int posX = (int) (seasaw.getCenterPosition().getX() + OFFSET);
-		int posY = (int) (seasaw.getCenterPosition().getY() + OFFSET);
+		int posX = (int) (seesaw.getCenterPosition().getX() + OFFSET);
+		int posY = (int) (seesaw.getCenterPosition().getY() + OFFSET);
 		
 		int xRange,yRange;
-		if(seasaw.getOrientation().equals(Orientation.EAST) || seasaw.getOrientation().equals(Orientation.WEST)){
+		if(seesaw.getOrientation().equals(Orientation.EAST) || seesaw.getOrientation().equals(Orientation.WEST)){
 			xRange = 40; yRange = 20;
 		}
 		else{
@@ -231,6 +260,18 @@ public class DrawingPanel extends JPanel {
 		}
 		g.drawPolygon(pol);
 		g.fillPolygon(pol);
+		
+		
+		totalGui.repaint();
+	}
+	
+	public void drawSeesawInfrared(Seesaw seesaw){
+		int posX = (int) (seesaw.getInfaredPosition().getX() + OFFSET);
+		int posY = (int) (seesaw.getInfaredPosition().getY() + OFFSET);
+		g.setColor(Color.red);
+		g.drawOval(posX, posY, 5, 5);
+		g.fillOval( posX, posY, 5, 5);
+		
 		totalGui.repaint();
 	}
 	
@@ -422,7 +463,7 @@ public class DrawingPanel extends JPanel {
 	
 	
 	public void drawBalls(){
-		List<Ball> balls = controller.getRobot().getBoard().getBalls();
+		List<Ball> balls = controller.getRobot().getWorldSimulator().getBalls();
 		for(Ball b: balls){
 			drawBall(b);
 		}
