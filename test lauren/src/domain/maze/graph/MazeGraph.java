@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import peno.htttp.Tile;
 
+import domain.Position.Position;
 import domain.maze.Orientation;
 import domain.robots.RobotPilot;
 
@@ -19,6 +20,8 @@ public class MazeGraph {
 	private int tileCounter;
 	private MazePath shortestPath;
 	
+	private static Orientation INITIALORIENTATION = Orientation.NORTH;
+	
 	/**
 	 * A new MazeGraph is initialized with a starting node that represents the robot's current position.
 	 * The current orientation of the robot is assumed to be North. (It doesn't matter what it's actual orientation
@@ -29,8 +32,12 @@ public class MazeGraph {
 		startNode = new TileNode(null,null);
 		setCurrentNode(startNode);
 		tileNodes.add(startNode);
-		setCurrentRobotOrientation(Orientation.NORTH);
+		setCurrentRobotOrientation(INITIALORIENTATION);
 		System.out.println("");
+	}
+	
+	public static Orientation getInitialOrientation(){
+		return INITIALORIENTATION;
 	}
 	
 	/**
@@ -148,6 +155,8 @@ public class MazeGraph {
 			t.decreaseBlockNavigationCount();
 		}
 	}
+	
+	
 
 	/**
 	 * Returns the orientation to move in to continue exploring. 
@@ -228,20 +237,20 @@ public class MazeGraph {
 		//Cycle the collection of all tilenodes, check if the node that we're trying to create already exists
 		//Also check if we have info about neighbouring nodes so we can set walls at the correct places.
 		//Note that connections to nodes are not automatically made if we don't know if there's a wall or not!
-		for(TileNode node:tileNodes){
+		for(TileNode node1:tileNodes){
 			//Deduplication
-			if((node).getX()==newNode.getX() && (node).getY()==newNode.getY()){
-				tile.setNodeAt(absoluteOrientation, node);
-				node.setNodeAt(orientationToCurrent, tile);
+			if((node1).getX()==newNode.getX() && (node1).getY()==newNode.getY()){
+				tile.setNodeAt(absoluteOrientation, node1);
+				node1.setNodeAt(orientationToCurrent, tile);
 				thisNodeAlreadyExists = true;
 				break;
 			}
 			//Wallinfo check
 			for(Orientation o: Orientation.values()){
-				if(node.getX()==newNode.getX()+o.getXValue()&&node.getY()==newNode.getY()+o.getYValue()){
-					MazeNode nodeAtOBack = node.getNodeAt(o.getBack());
+				if(node1.getX()==newNode.getX()+o.getXValue()&&node1.getY()==newNode.getY()+o.getYValue()){
+					MazeNode nodeAtOBack = node1.getNodeAt(o.getBack());
 					if(nodeAtOBack!=null && nodeAtOBack.getClass().equals(WallNode.class)){
-						newNode.setNodeAt(o, new WallNode(node,o));
+						newNode.setNodeAt(o, new WallNode(node1,o));
 
 					}
 				}
