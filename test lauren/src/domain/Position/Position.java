@@ -2,6 +2,7 @@ package domain.Position;
 import java.lang.Math;
 
 import domain.maze.Orientation;
+import domain.maze.graph.MazeGraph;
 import domain.util.Angles;
 import domain.util.Geometrics;
 
@@ -125,7 +126,29 @@ public class Position implements Cloneable {
 			}
 		}
 		return -checkPosAngleinRad*180/Math.PI;//De min is omdat het coordinatenstelsel linksBOVEN begint ipv linksonder
-		}
+	}
+	
+	public static InitialPosition getAbsolutePose(InitialPosition initialPose, InitialPosition relativePose){
+		// everything with 'relative' means in the other's board
+		// everything without 'relative' is in our board
+		
+		Orientation startOrient = initialPose.getOrientation();
+		Orientation relativeStartOrient = MazeGraph.getInitialOrientation();
+		
+		//Find Orientation
+		Orientation deltaOrient = relativeStartOrient.getRelativeOrientation(relativePose.getOrientation());
+		Orientation newOrient = startOrient.getRelativeOrientation(deltaOrient);
+		
+		//Find position
+		double deltaY = relativePose.getY()-initialPose.getY();
+		double deltaX = relativePose.getX()-initialPose.getX();
+		Position newPos = initialPose.getNewPosition(startOrient.getAngleToHorizontal(), deltaY);
+		newPos = newPos.getNewPosition(startOrient.getOffset(1).getAngleToHorizontal(), deltaX);
+		return new InitialPosition(newPos, newOrient);
+		
+		// Belangrijk: deze methode gaat er nu van uit dat relativeStartOrient = North
+		// Indien niet moeten lijnen 145 en 146 veranderd worden
+	}
 	
 	
 	

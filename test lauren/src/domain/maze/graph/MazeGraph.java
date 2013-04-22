@@ -20,6 +20,8 @@ public class MazeGraph {
 	private int tileCounter;
 	private MazePath shortestPath;
 	
+	private static Orientation INITIALORIENTATION = Orientation.NORTH;
+	
 	/**
 	 * A new MazeGraph is initialized with a starting node that represents the robot's current position.
 	 * The current orientation of the robot is assumed to be North. (It doesn't matter what it's actual orientation
@@ -30,8 +32,12 @@ public class MazeGraph {
 		startNode = new TileNode(null,null);
 		setCurrentNode(startNode);
 		tileNodes.add(startNode);
-		setCurrentRobotOrientation(Orientation.NORTH);
+		setCurrentRobotOrientation(INITIALORIENTATION);
 		System.out.println("");
+	}
+	
+	public static Orientation getInitialOrientation(){
+		return INITIALORIENTATION;
 	}
 	
 	/**

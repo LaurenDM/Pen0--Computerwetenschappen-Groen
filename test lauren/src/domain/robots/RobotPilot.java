@@ -500,8 +500,7 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	@Override
 	public void teamPosition(double x, double y, double angle) {
-		// TODO something useful
-		
+		// TODO: something clever --> Koen ;)
 	}
 	
 	public void setReady(boolean ready) {

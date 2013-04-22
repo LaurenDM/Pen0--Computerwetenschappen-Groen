@@ -270,10 +270,9 @@ public class WorldSimulator implements SpectatorHandler {
 		RobotPilot robot = otherRobots.get(playerID);
 		if(robot!=null){
 			InitialPosition initialPose = getInitialPositionFromPlayer(playerNumber);
-			int xPos = (int) x*MAZECONSTANT + MAZECONSTANT/2;
-			int yPos = (int) y*MAZECONSTANT + MAZECONSTANT/2;
-			yPos = (int) (initialPose.getY() - (yPos-initialPose.getY()));
-			robot.setPose(angle, xPos, yPos);
+			InitialPosition relativePose = new InitialPosition(40*x+20,40*y+20,Orientation.getOrientation(angle));
+			InitialPosition newPose = Position.getAbsolutePose(initialPose, relativePose);
+			robot.setPose(newPose.getOrientation().getAngleToHorizontal(), (int)newPose.getX(), (int)newPose.getY());
 			if(foundObject)
 				robot.setFoundBall(playerNumber);
 		}
