@@ -1,6 +1,7 @@
 package domain.Position;
 import java.lang.Math;
 
+import domain.maze.Orientation;
 import domain.util.Angles;
 import domain.util.Geometrics;
 
@@ -125,6 +126,7 @@ public class Position implements Cloneable {
 		}
 		return -checkPosAngleinRad*180/Math.PI;//De min is omdat het coordinatenstelsel linksBOVEN begint ipv linksonder
 		}
+	
 	
 	
 }

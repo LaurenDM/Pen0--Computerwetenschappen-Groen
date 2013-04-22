@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import peno.htttp.Tile;
 
+import domain.Position.Position;
 import domain.maze.Orientation;
 import domain.robots.RobotPilot;
 
@@ -148,6 +149,8 @@ public class MazeGraph {
 			t.decreaseBlockNavigationCount();
 		}
 	}
+	
+	
 
 	/**
 	 * Returns the orientation to move in to continue exploring. 

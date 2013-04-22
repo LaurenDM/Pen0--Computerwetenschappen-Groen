@@ -21,7 +21,14 @@ import domain.robots.RobotPilot;
 public class ExploreMaze{
 	
 	private enum Direction {
-	    LEFT,FORWARD,RIGHT,BACKWARD
+	    LEFT(-1),FORWARD(0),RIGHT(1),BACKWARD(-2);
+	    private int offset;
+	    private Direction(int offset){
+	    	this.offset = offset;
+	    }
+	    public int getOffset(){
+	    	return this.offset;
+	    }
 	}
 	private RobotPilot robot;
 	private final int valuedDistance = 27;
@@ -79,7 +86,9 @@ public class ExploreMaze{
 			makeWall(distances);
 			if(!maze.isComplete()){
 				//robot.setMovingSpeed(robot.getDefaultMovingSpeed());
+				checkForOtherRobots();
 				Direction direction = getNextDirection(distances);
+				updatePosition(direction);
 				if(checkStraighten(distances)){
 					moveWithStraighten(direction);
 				}
@@ -94,6 +103,23 @@ public class ExploreMaze{
 			robot.setDriveToFinishSpeed();
 			maze.driveToFinish(robot);
 		}
+	}
+	
+	public void checkForOtherRobots(){
+		for(Orientation o : Orientation.values()){
+			TileNode node = (TileNode) maze.getCurrentNode();
+			while(TileNode.class.isAssignableFrom(node.getNodeAt(o).getClass())){
+				node = (TileNode) node.getNodeAt(o);
+				Position pos = new Position(node.getX()*40+20,node.getY()*40+20);
+				node.setAccessible(robot.checkRobotSensor(pos));
+			}
+		}
+	}
+	
+	public void updatePosition(Direction direction){
+		Orientation nextOrientation = maze.getCurrentRobotOrientation().getOffset(direction.getOffset());
+		TileNode nextNode = (TileNode) maze.getCurrentNode().getNodeAt(nextOrientation);
+		robot.updatePosition(nextNode.getX(), nextNode.getY(), nextOrientation.getAngleToHorizontal());
 	}
 	
 	private boolean nextTileIsSeesaw(){
