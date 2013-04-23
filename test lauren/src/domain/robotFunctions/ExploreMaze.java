@@ -43,7 +43,7 @@ public class ExploreMaze{
 	
 	public void start(){
 		initialSetup();
-		continueExploring(0,0,Orientation.NORTH);
+		continueExploring(0,0,maze.getStartingOrientation());
 	}
 	
 	private void initialSetup(){
@@ -54,12 +54,12 @@ public class ExploreMaze{
 		robot.turnSensorLeft();
 		double backValue = robot.readUltrasonicValue();
 		if(backValue < valuedDistance){
-			maze.generateWallNodeAt(Orientation.SOUTH);
+			maze.generateWallNodeAt(Orientation.SOUTH); //Relative!
 			double x = robot.getPosition().getX();
 			double y = robot.getPosition().getY();
 			calculateWall(x, y, robot.getOrientation(), Direction.LEFT);
 		}else{
-			maze.generateTileNodeAt(Orientation.SOUTH);
+			maze.generateTileNodeAt(Orientation.SOUTH); //Relative!
 		}
 		robot.turnSensorForward();
 		robot.turnRight();
@@ -330,6 +330,12 @@ public class ExploreMaze{
 			return Direction.FORWARD;
 		else if(next == Orientation.EAST)
 			return Direction.RIGHT;
+		else if(next == null){
+			distances = new double[3];
+			distances = checkDistances();
+			makeWall(distances);
+			return getNextDirection(distances);
+		}
 		return Direction.BACKWARD;
 	}
 	

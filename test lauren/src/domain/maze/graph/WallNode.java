@@ -5,9 +5,11 @@ import domain.maze.Orientation;
 public class WallNode extends MazeNode {
 	
 	private TileNode tile;
+	private int trust;
 
 	public WallNode(TileNode currentNode, Orientation orientationToCurrentNode) {
 		tile = currentNode;
+		trust = 1;
 	}
 
 	/**
@@ -34,6 +36,14 @@ public class WallNode extends MazeNode {
 	@Override
 	public boolean isAccessible() {
 		return false;
+	}
+
+	public int getTrust() {
+		return trust;
+	}
+	
+	public void increaseTrust() {
+		trust++;
 	}
 	
 	
