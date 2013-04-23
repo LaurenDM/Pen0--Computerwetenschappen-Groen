@@ -9,6 +9,7 @@ import peno.htttp.Tile;
 
 import controller.Controller;
 
+import domain.Position.InitialPosition;
 import domain.Position.Position;
 import domain.maze.Orientation;
 import domain.maze.Wall;
@@ -129,8 +130,9 @@ public class ExploreMaze{
 			TileNode node = (TileNode) maze.getCurrentTile();
 			while(TileNode.class.isAssignableFrom(node.getNodeAt(o).getClass())){
 				node = (TileNode) node.getNodeAt(o);
-				Position pos = new Position(node.getX()*40+20,node.getY()*40+20);
-				node.setAccessible(robot.checkRobotSensor(pos));
+				InitialPosition relativePose = new InitialPosition(node.getX()*40.0,node.getY()*40.0,maze.getCurrentRobotOrientation());
+				Position pos = Position.getAbsolutePose(robot.getInitialPosition(), relativePose);	
+				node.setAccessible(!robot.checkRobotSensor(pos));
 			}
 		}
 	}

@@ -60,6 +60,10 @@ public abstract class RobotPilot implements PlayerHandler{
 		
 	}
 	
+	public InitialPosition getInitialPosition(){
+		return initialPosition;
+	}
+	
 	public void setPlayerClient(PlayerClient playerClient){
 		this.playerClient = playerClient;
 	}
@@ -442,7 +446,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	@Override
 	public void gameStarted() {
 		printMessage("ph.gameStarted, starting to send position");
-		updatePosition(0,0,0);
+		updatePosition(0,0,90);
 //		startSendingPositionsThread();
 		//TODO: verkenalgoritme starten, ik stel voor dit handmatig te doen
 		// waarom?
