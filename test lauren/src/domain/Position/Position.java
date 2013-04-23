@@ -140,8 +140,8 @@ public class Position implements Cloneable {
 		Orientation newOrient = startOrient.getRelativeOrientation(deltaOrient);
 		
 		//Find position
-		double deltaY = relativePose.getY()-initialPose.getY();
-		double deltaX = relativePose.getX()-initialPose.getX();
+		double deltaY = relativePose.getY();
+		double deltaX = relativePose.getX();
 		Position newPos = initialPose.getNewPosition(startOrient.getAngleToHorizontal(), deltaY);
 		newPos = newPos.getNewPosition(startOrient.getOffset(1).getAngleToHorizontal(), deltaX);
 		return new InitialPosition(newPos, newOrient);

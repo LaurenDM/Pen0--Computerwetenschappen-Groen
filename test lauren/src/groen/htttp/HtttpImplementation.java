@@ -54,7 +54,7 @@ public class HtttpImplementation {
 	    	    
 	    playerHandler = controller.getRobot();
 	    Connection connection = null;
-	    String gameID = "gameIDGroenSerge";
+	    String gameID = "gameIDGroenSerge2";
 	    String playerID = controller.getPlayerID();
 		try {
 			connection = factory.newConnection();
