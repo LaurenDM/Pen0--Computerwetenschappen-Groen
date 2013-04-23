@@ -725,6 +725,13 @@ public class SimRobotPilot extends RobotPilot {
 		setSensorAngle(angle);
 		
 	}
+
+
+
+	@Override
+	public void snapPoseToTileMid() {
+		//This method is not used for the simrobot
+	}
 	
 	
 	
