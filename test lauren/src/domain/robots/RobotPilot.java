@@ -393,6 +393,10 @@ public abstract class RobotPilot implements PlayerHandler{
 		return returnList;
 	}
 	
+	public boolean checkRobotSensor(Position pos){
+		return worldSimulator.checkRobotOn(pos);
+	}
+	
 	
 	//////////////////////////////////////////////////////////////////////////////
 	//					VANAF HIER IMPLEMENTATIE PLAYER HANDLER					//	
@@ -438,7 +442,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	@Override
 	public void gameStarted() {
 		printMessage("ph.gameStarted, starting to send position");
-		startSendingPositionsThread();
+//		startSendingPositionsThread();
 		//TODO: verkenalgoritme starten, ik stel voor dit handmatig te doen
 		// waarom?
 	}
@@ -499,10 +503,11 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	@Override
 	public void teamPosition(double x, double y, double angle) {
+
 		int partnerX = (int)x/40; int partnerY = (int)y/40; //TODO update to code retrieving actual location tile
 		maze.setPartnerPosition(partnerX, partnerY);
-		// TODO something useful
-		
+
+		// TODO: something clever --> Koen ;)
 	}
 	
 	public void setReady(boolean ready) {
@@ -513,29 +518,43 @@ public abstract class RobotPilot implements PlayerHandler{
 		}		
 	}
 	
-	
-	private void sendPositions(){
+	public void updatePosition(int x, int y, double angle){
 		try {
-			playerClient.updatePosition(getPosition().getX(), getPosition().getY(), getOrientation());
+			playerClient.updatePosition(x, y, angle);
 		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public void startSendingPositionsThread(){
-		
-		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-		executor.scheduleAtFixedRate(new Runnable() {
-
-			@Override
-			public void run() {
-				sendPositions();
-			}
-			
-		}, 0, 1000, TimeUnit.MILLISECONDS);
-
-	}
+	
+//	private void sendPositions(){
+//		int x = (int) getPosition().getX()/Barcode.getMazeConstant();
+//		int y = (int) getPosition().getY()/Barcode.getMazeConstant();
+//		try {
+//			playerClient.updatePosition(x,y, getOrientation());
+//		} catch (IllegalStateException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//	
+//	public void startSendingPositionsThread(){
+//		
+//		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+//		executor.scheduleAtFixedRate(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				sendPositions();
+//			}
+//			
+//		}, 0, 1000, TimeUnit.MILLISECONDS);
+//
+//	}
 	
 }

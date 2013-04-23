@@ -133,5 +133,7 @@ public enum Orientation {
 		if(otherOrientation==null) return false;
 		return this.getAngleToHorizontal()==otherOrientation.getAngleToHorizontal();
 	}
+	
+	
 }
 
