@@ -175,7 +175,7 @@ public class WorldSimulator implements SpectatorHandler {
 		final int MARGE = 20;
 		if(otherRobots!=null)
 			for(RobotPilot robot2 : otherRobots.values()){
-				if(robot2.getPosition().getDistance(robot.getPosition())<MARGE){
+				if(robot2.getPosition().getDistance(pos)<MARGE){
 					return true;
 				}
 			}
