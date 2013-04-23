@@ -92,7 +92,7 @@ public class ExploreMaze{
 				Direction direction = getNextDirection(distances);
 				updatePosition(direction);
 				if(checkBadPosition(distances)){
-					adjustRotation(distances);
+//					adjustRotation(distances);
 					if(checkVeryBadPosition(distances)){
 						moveWithStraighten(direction);
 					}
@@ -147,7 +147,6 @@ public class ExploreMaze{
 		robot.updatePosition(nextNode.getX(), nextNode.getY(), nextOrientation.getAngleToHorizontal());
 
 	}
-	
 	private boolean nextTileIsSeesaw(){
 		return maze.nextTileIsSeesaw();
 	}
