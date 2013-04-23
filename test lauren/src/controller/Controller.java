@@ -38,6 +38,7 @@ public class Controller {
 	private RobotPilot btRobot;
 	private RobotPilot simRobot;
 	private Thread explorer;
+	public boolean robotChangeNotHandledByGUI=false;
 //	private final EventPusher ep;
 //	private SimRobotPilot simRobotPilot ;
 	private HtttpImplementation htttpImplementation;
@@ -73,7 +74,7 @@ public class Controller {
 		btRobot = new BTRobotPilot(this.playerID);
 		currentRobot=btRobot;
 		currentRobot.setBoard(new Board());
-
+		robotChangeNotHandledByGUI=true;
 	}
 	
 	//This is used to set the robot controlled by this GUI
@@ -81,6 +82,8 @@ public class Controller {
 		simRobot = new SimRobotPilot(orientation, position,playerID);
 		currentRobot = simRobot ;
 		currentRobot.setBoard(new Board());
+		robotChangeNotHandledByGUI=true;
+
 	}
 	
 	public void setPlayerClient(){

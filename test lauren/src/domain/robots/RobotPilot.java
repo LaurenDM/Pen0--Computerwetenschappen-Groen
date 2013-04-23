@@ -1,5 +1,6 @@
 package domain.robots;
 
+import groen.htttp.HtttpImplementation;
 import gui.ContentPanel;
 
 import java.util.ArrayList;
@@ -9,6 +10,9 @@ import gui.ContentPanel;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import peno.htttp.DisconnectReason;
 import peno.htttp.PlayerClient;
@@ -54,6 +58,10 @@ public abstract class RobotPilot implements PlayerHandler{
 		this.robotPolygon=new RobotPolygon(this);
 		this.playerID = playerID;
 		
+	}
+	
+	public InitialPosition getInitialPosition(){
+		return initialPosition;
 	}
 	
 	public void setPlayerClient(PlayerClient playerClient){
@@ -272,9 +280,11 @@ public abstract class RobotPilot implements PlayerHandler{
 	public void indicateDeadEnd() {
 		getMaze().setNextTileToDeadEnd();
 	}
+	
 	public void foundBall(){
 		try {
 			playerClient.foundObject();
+			playerClient.joinTeam(getTeamNumber());
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -287,7 +297,6 @@ public abstract class RobotPilot implements PlayerHandler{
 		}
 	}
 
-//>>>>>>> branch 'master' of https://github.com/LaurenDM/Pen0--Computerwetenschappen-Groen.git
 
 	public Ball getBall(){
 		return this.ball;
@@ -316,7 +325,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	
 	public void handleSeesaw(int barcodeNb,Seesaw foundSeesaw){
 		boolean upAtThisSide = detectInfrared();
-		System.out.println("We change the seesaw based on infrared detection, barcodeNb: "+ barcodeNb+ " upats: " + upAtThisSide);
+		//System.out.println("We change the seesaw based on infrared detection, barcodeNb: "+ barcodeNb+ " upats: " + upAtThisSide);
 		foundSeesaw.setUpAt(barcodeNb, upAtThisSide);
 		
 		getMaze().setNextTileToSeesaw(upAtThisSide || foundSeesaw.isLocked());
@@ -379,15 +388,18 @@ public abstract class RobotPilot implements PlayerHandler{
 	public ArrayList<peno.htttp.Tile> getFoundTilesList(){
 		ArrayList<domain.maze.graph.TileNode> foundTiles = getMaze().getFoundTilesList();
 		ArrayList<peno.htttp.Tile> returnList = new ArrayList<peno.htttp.Tile>();
+		Position pos = getMaze().findMostNegativePosition();
 		for(domain.maze.graph.TileNode node : foundTiles){
 			if(node.isFullyExpanded()){
-				returnList.add(new Tile(node.getX(), node.getY(), node.getToken()));
+				returnList.add(new Tile(node.getX()-(int)pos.getX(), node.getY()-(int)pos.getY(), node.getToken()));
 			}
 		}
 		return returnList;
 	}
 	
-	
+	public boolean checkRobotSensor(Position pos){
+		return worldSimulator.checkRobotOn(pos);
+	}
 	
 	
 	//////////////////////////////////////////////////////////////////////////////
@@ -434,7 +446,8 @@ public abstract class RobotPilot implements PlayerHandler{
 	@Override
 	public void gameStarted() {
 		printMessage("ph.gameStarted, starting to send position");
-	//	htttpImplementation.startSendingPositionsThread();
+		updatePosition(0,0,90);
+//		startSendingPositionsThread();
 		//TODO: verkenalgoritme starten, ik stel voor dit handmatig te doen
 		// waarom?
 	}
@@ -454,6 +467,7 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	@Override
 	public void teamConnected(String partnerID) {
+		System.out.println("RP.teamConnected");
 		printMessage("ph.teamconnected: "+partnerID);
 		try {
 			playerClient.sendTiles(getFoundTilesList());
@@ -465,19 +479,21 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	@Override
 	public void teamTilesReceived(List<Tile> tiles) {
+		System.out.println("RP.teamTilesReceived");
 		printMessage("ph.Tiles recieved 'List<Tile>");
-		//TODO info verwerken en naar teammate rijden tenzij mismatch, verder exploren
 		MatchMap matcher = new MatchMap();
 		List<Tile> ourTiles = getFoundTilesList();
 		// TODO: koen, methodes in MatchMap niet meer static maken
 		matcher.setOurMazeTiles(ourTiles.toArray(new Tile[ourTiles.size()]));
 		matcher.setOriginalTiles(tiles.toArray(new Tile[tiles.size()]));
 		matcher.merge();
+		System.out.println("Merged");
 		MazeInterpreter MI = new MazeInterpreter(board);
 		MI.readMap(matcher.getResultMap());
-		maze.updateWithMap(matcher.getResultMap());
-		int partnerX = 0; int partnerY = 0; //TODO update to code retrieving actual location tile
-		maze.setPartnerPosition(partnerX, partnerY);
+		//maze.updateWithMap(matcher.getResultMap());
+		//int partnerX = 0; int partnerY = 0; //TODO update to code retrieving actual location tile
+		//maze.setPartnerPosition(partnerX, partnerY);
+		System.out.println("Maps merged and imported");
 	}
 	
 	private void printMessage(String message){
@@ -492,10 +508,11 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	@Override
 	public void teamPosition(double x, double y, double angle) {
+
 		int partnerX = (int)x/40; int partnerY = (int)y/40; //TODO update to code retrieving actual location tile
 		maze.setPartnerPosition(partnerX, partnerY);
-		// TODO something useful
-		
+
+		// TODO: something clever --> Koen ;)
 	}
 	
 	public void setReady(boolean ready) {
@@ -505,5 +522,44 @@ public abstract class RobotPilot implements PlayerHandler{
 			e.printStackTrace();
 		}		
 	}
+	
+	public void updatePosition(int x, int y, double angle){
+		try {
+			playerClient.updatePosition(x, y, angle);
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+//	private void sendPositions(){
+//		int x = (int) getPosition().getX()/Barcode.getMazeConstant();
+//		int y = (int) getPosition().getY()/Barcode.getMazeConstant();
+//		try {
+//			playerClient.updatePosition(x,y, getOrientation());
+//		} catch (IllegalStateException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//	
+//	public void startSendingPositionsThread(){
+//		
+//		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+//		executor.scheduleAtFixedRate(new Runnable() {
+//
+//			@Override
+//			public void run() {
+//				sendPositions();
+//			}
+//			
+//		}, 0, 1000, TimeUnit.MILLISECONDS);
+//
+//	}
 	
 }

@@ -6,11 +6,11 @@ import peno.htttp.Tile;
 public class MatchMap {
 	
 	public static void main(String[] args) {
-		Tile tile1 = new Tile(0, 0, "Straight.N.3");
-		Tile tile2 = new Tile(0, 1, "Seesaw.S");
-		Tile tile3 = new Tile(0, 2, "Seesaw.N");
-		Tile tile4 = new Tile(0, 3, "Straight.N.4");
-		Tile tile5 = new Tile(0, 4, "Cross.N");
+		Tile tile1 = new Tile(0, 0, "DeadEnd.E");
+		Tile tile2 = new Tile(1, 0, "Cross");
+		Tile tile3 = new Tile(1, 1, "Straight.N.4");
+		Tile tile4 = new Tile(1, 2, "Cross");
+		Tile tile5 = new Tile(0, 2, "Straight.E");
 		Tile[] tileList = new Tile[5];
 		tileList[0] = tile1;
 		tileList[1] = tile2;
@@ -18,37 +18,23 @@ public class MatchMap {
 		tileList[3] = tile4;
 		tileList[4] = tile5;
 		
-		Tile _tile1 = new Tile(0, 0, "Straight.N");
-		Tile _tile2 = new Tile(0, 1, "Cross.N");
-		Tile _tile7 = new Tile(0, 2, "Straight.N");
-		Tile _tile3 = new Tile(1, 1, "Straight.E.4");
-		Tile _tile4 = new Tile(2, 1, "Seesaw.W");
-		Tile _tile5 = new Tile(3, 1, "Seesaw.E");
-		Tile _tile6 = new Tile(4, 1, "Straight.E.3");
-		Tile _tile8 = new Tile(1, 2, "DeadEnd.S");
-		Tile _tile9 = new Tile(4, 2, "DeadEnd.S");
-		Tile _tile10 = new Tile(4, 0, "Test.N");
-		Tile[] _tileList = new Tile[10];
-		_tileList[0] = _tile1;
-		_tileList[1] = _tile2;
-		_tileList[2] = _tile3;
-		_tileList[3] = _tile4;
-		_tileList[4] = _tile5;
-		_tileList[5] = _tile6;
-		_tileList[6] = _tile7;
-		_tileList[7] = _tile8;
-		_tileList[8] = _tile9;
-		_tileList[9] = _tile10;
+		Tile _tile2 = new Tile(0, 1, "DeadEnd.E");
+		Tile _tile7 = new Tile(1, 0, "Straight.N");
+		Tile _tile3 = new Tile(1, 1, "Cross");
+		Tile _tile4 = new Tile(2, 1, "Straight.E.4");
+		Tile _tile8 = new Tile(1, 2, "Straight.N");
+		Tile[] _tileList = new Tile[5];
+		_tileList[0] = _tile2;
+		_tileList[1] = _tile3;
+		_tileList[2] = _tile4;
+		_tileList[3] = _tile7;
+		_tileList[4] = _tile8;
 		setOurMazeTiles(tileList);
 		setOriginalTiles(_tileList);
-		System.out.println(matrixToString(getOurMaze()));
-		System.out.println(matrixToString(getOriginal()));
 		merge();
-		System.out.println(getPermutatedDirection());
-		System.out.println(getBasicVector()[0]);
-		System.out.println(getBasicVector()[1]);
+		
     }
-	public final static String dummyString = "dummy     ";
+	public final static String dummyString = "dummy";
 	
 	public enum Permutation {
 		ORIGINAL,DEGREES_90,DEGREES_180,DEGREES_270;
@@ -61,10 +47,14 @@ public class MatchMap {
 	private static Permutation permutatedDirection = null;
 	private static int ourStartMergeX = 0;
 	private static int ourStartMergeY = 0;
+	private static int otherStartMergeX = 0;
+	private static int otherStartMergeY = 0;
 	private static int ourMergePointX = 0;
 	private static int ourMergePointY = 0;
 	private static int otherMergePointX = 0;
 	private static int otherMergePointY = 0;
+	
+	private static int stringLength = 20;
 	
 	private static ArrayList<Integer> ourBarcodes = new ArrayList<Integer>();
 	
@@ -135,7 +125,7 @@ public class MatchMap {
 		String[][] originalList = new String[maxX][maxY];
 		for (int i = 0; i < maxX; i++) {
 			for (int j = 0; j < maxY; j++) {
-				originalList[i][j] = " ";
+				originalList[i][j] = "";
 			}
 		}
 		for (Tile tile : tiles) {
@@ -305,13 +295,20 @@ public class MatchMap {
 		for (int i = string[0].length - 1; i >= 0; i--) {
 			printout += "\n";
 			for (int j = 0; j < string.length; j++) {
-				printout += string[j][i] + "  		  ";
+				printout += string[j][i] + fixWhiteSpace(stringLength-string[j][i].length());
 			}
 		}
 		return printout;
 		
 	}
 	
+	private static String fixWhiteSpace(int nmbr){
+		String result = "";
+		for (int i = 0; i < nmbr; i++) {
+			result+=" ";
+		}
+		return result;
+	}
 	private static boolean hasMutualSeeSaw(){
 		String[][] tmpList = getOriginal();
 		if(hasMutualSeeSawPermutationChecker(tmpList))
@@ -378,201 +375,221 @@ public class MatchMap {
 	
 	public static void merge(){
 		//TODO debug
+		System.out.println("ourmaze");
+		System.out.println(matrixToString(getOurMaze()));
+		System.out.println("_________________________");
+		System.out.println("getOri");
+		System.out.println(matrixToString(getOriginal()));
+		System.out.println("_________________________");
+		System.out.println("get90");
+		System.out.println(matrixToString(get90Degree()));
+		System.out.println("_________________________");
+		System.out.println("get180");
+		System.out.println(matrixToString(get180Degree()));
+		System.out.println("_________________________");
+		System.out.println("get270");
+		System.out.println(matrixToString(get270Degree()));
 		
-		
-		
-		
-		if(false){//hasMutualSeeSaw()){
+		if(hasMutualSeeSaw()){
 			permutationBySeeSaw();
-			mergeMaps(mergeMaps(getPermutatedDirection()));
+			mergeMaps(getMergedMaps(getPermutatedDirection()));
 		}
 		else if(hasMutualBarcode()){
 			permutationByBarcode();
-			mergeMaps(mergeMaps(getPermutatedDirection()));
+			System.out.println(getPermutatedDirection() +"   perm");
+			mergeMaps(getMergedMaps(getPermutatedDirection()));
 		}
 		else 
 			throw new IllegalArgumentException("There was nothing base found to merge on");
 		//FOLLOWED BY MERGING THE SQUARES AND MAKING UP WHERE OUR TEAMMATE IS
-		mergeMaps(getPermutatedDirection());
+		getMergedMaps(getPermutatedDirection());
+		System.out.println(matrixToString(resultMap));
 	}
+	private static int startX = 0;
+	private static int startY = 0;
+	
 	private static void mergeMaps(String[][] mergeMaps) {
 		String[][] originList = getOurMaze();
+		System.out.println(matrixToString(originList));
 		String[][] permList = mergeMaps;
-		System.out.println(matrixToString(mergeMaps));
-		String[][] resultList = new String[originList.length * 2][originList[0].length * 2];
+		String[][] resultList = new String[(originList.length+permList.length) * 2][(originList[0].length+permList[0].length) * 2];
+		
+		startX = originList.length+permList.length;
+		startY = originList[0].length+permList[0].length;
 		for (int i = 0; i < resultList.length; i++) {
 			for (int j = 0; j < resultList[0].length; j++) {
 				resultList[i][j] = dummyString;
 			}
 		}
-		
 		//Fills the grid with our found elements 
-		for (int i = 0; i < resultList.length; i++) {
-			for (int j = 0; j < resultList[0].length; j++) {
+		int a = 0;
+		int b = 0;
+		for (int i = startX; i < resultList.length; i++) {
+			for (int j = startY; j < resultList[0].length; j++) {
 				try {
-					resultList[i][j] = originList[i][j];
+					if(!originList[a][b].equals(dummyString))
+					resultList[i][j] = originList[a][b];
 				} catch (Exception e) {}
+				b++;
 			}
+			b = 0;
+			a++;
 		}
-		//System.out.println(matrixToString(resultList));
+		System.out.println("tmpresult");
+		System.out.println(matrixToString(resultList));
+		startX+=ourStartMergeX;
+		startY+=ourStartMergeY;
 		resultList = mergeRightUp(resultList,permList);
-		System.out.println("_________________________________");
-		System.out.println("_________________________________");
-		System.out.println("mergeRightUP");
-		System.out.println(matrixToString(resultList));
 		resultList = mergeLeftUp(resultList, permList);
-		System.out.println("_________________________________");
-		System.out.println("_________________________________");
-		System.out.println("mergeLeftUp");
-		System.out.println(matrixToString(resultList));
 		resultList = mergeRightDown(resultList,permList);
-		System.out.println("_________________________________");
-		System.out.println("_________________________________");
-		System.out.println("mergeRightDown");
-		System.out.println(matrixToString(resultList));
 		resultList = mergeLeftDown(resultList,permList);
-		System.out.println("_________________________________");
-		System.out.println("_________________________________");
-		System.out.println("mergeLeftDown");
-		System.out.println(matrixToString(resultList));
-		System.out.println("_________________________________");
-		System.out.println("_________________________________");
-		System.out.println("resultstring");
-		System.out.println(matrixToString(resultList));
 		setResultMap(resultList);
 	}
 	
 	private static String[][] mergeLeftDown(String[][] resultList, String[][] permList) {
 		int permX = otherMergePointX;
 		int permY = otherMergePointY;
-		int i = ourMergePointX;
-		int j = ourMergePointY;
-		while(i >= 0){
-			while (j >= 0){
-				System.out.println("tested x :"+i+ "  tested y : "+j);
+		for (int i = startX; i >= 0; i--) {
+			for (int j = startY; j >= 0; j--) {
 				try {
-					System.out.println("adjusted");
 					resultList[i][j] = permList[permX][permY];
 				} catch (Exception e) {}
+				
 				permY--;
-				j--;
-				if(j < 0 && permY >= 0 && permX >= 0 ){
-					System.out.println("enlarging y");
-					int y = resultList[0].length;
-					resultList = enlargeResultList(resultList,false,true);
-					permX = otherMergePointX -1;
-					permY = otherMergePointY;
-					j = y;
-					i = ourMergePointX;
-				}
 			}
-			j = ourMergePointY;
 			permY = otherMergePointY;
 			permX--;
-			if(i < 0 && permY >= 0 && permX >= 0){					
-				resultList = enlargeResultList(resultList, true, true);
-			}
-			i--;
-			if(i < 0 && permY >= 0 && permX >= 0){
-				
-			}
 		}
 		
-//		for (int i = ourMergePointX; i < resultList.length; i--) {
-//			for (int j = ourMergePointY; j < resultList[0].length; j--) {
+//		int i = ourMergePointX;
+//		int j = ourMergePointY;
+//		while(i >= 0){
+//			while (j >= 0){
+//				System.out.println("tested x :"+i+ "  tested y : "+j);
 //				try {
+//					System.out.println("adjusted");
 //					resultList[i][j] = permList[permX][permY];
 //				} catch (Exception e) {}
-//				
 //				permY--;
+//				j--;
+//				if(j < 0 && permY >= 0 && permX >= 0 ){
+//					System.out.println("enlarging y");
+//					int y = resultList[0].length;
+//					resultList = enlargeResultList(resultList,false,true);
+//					permX = otherMergePointX -1;
+//					permY = otherMergePointY;
+//					j = y;
+//					i = ourMergePointX;
+//				}
 //			}
+//			j = ourMergePointY;
+//			permY = otherMergePointY;
 //			permX--;
+//			if(i < 0 && permY >= 0 && permX >= 0){					
+//				resultList = enlargeResultList(resultList, true, true);
+//			}
+//			i--;
+//			if(i < 0 && permY >= 0 && permX >= 0){
+//				
+//			}
 //		}
+//		
+
 		return resultList;
 	}
 	
 	private static String[][] mergeRightDown(String[][] resultList, String[][] permList) {
 		int permX = otherMergePointX;
 		int permY = otherMergePointY;
-		for (int i = ourMergePointX; i < resultList.length; i++) {
-			int j = ourMergePointY;
-			while(j >= 0){ 
+		for (int i = startX; i < resultList.length; i++) {
+			for (int j = startY; j >= 0; j--) {
 				try {
 					resultList[i][j] = permList[permX][permY];
 				} catch (Exception e) {}
 				permY--;
-				j--;
-				if(j < 0 && permY >= 0 && permX >= 0 ){
-					System.out.println("enlarging y");
-					int y = resultList[0].length;
-					resultList = enlargeResultList(resultList,false,true);
-					permX = otherMergePointX -1;
-					permY = otherMergePointY;
-					j = y;
-					i = ourMergePointX;
-				}
 			}
 			permY = otherMergePointY;
 			permX++;
-			if(i > resultList.length){
-				resultList = enlargeResultList(resultList, true, true);
-			}
 		}
+		
+//		for (int i = ourMergePointX; i < resultList.length; i++) {
+//			int j = ourMergePointY;
+//			while(j >= 0){ 
+//				try {
+//					resultList[i][j] = permList[permX][permY];
+//				} catch (Exception e) {}
+//				permY--;
+//				j--;
+//				if(j < 0 && permY >= 0 && permX >= 0 ){
+//					System.out.println("enlarging y");
+//					int y = resultList[0].length;
+//					resultList = enlargeResultList(resultList,false,true);
+//					permX = otherMergePointX -1;
+//					permY = otherMergePointY;
+//					j = y;
+//					i = ourMergePointX;
+//				}
+//			}
+//			permY = otherMergePointY;
+//			permX++;
+//			if(i > resultList.length){
+//				resultList = enlargeResultList(resultList, true, true);
+//			}
+//		}
 		return resultList;
 	}
 	
 	private static String[][] mergeLeftUp(String[][] resultList, String[][] permList) {
 		int permX = otherMergePointX;
 		int permY = otherMergePointY;
-		int i = ourMergePointX;
-		while(i >= 0){
-			for (int j = ourMergePointY; j < permList[0].length; j++) {
+		for (int i = startX; i >= 0; i--) {
+			for (int j = startY; j < resultList[0].length; j++) {
 				try {
+					System.out.println(i+"   "+j+"   "+permX+"   "+permY+"    "+permList[permX][permY]);
 					resultList[i][j] = permList[permX][permY];
 				} catch (Exception e) {}
 				permY++;
-				if(permY >= resultList[0].length){
-					resultList = enlargeResultList(resultList,false,true);
-				}
 			}
-			i--;
 			permY = otherMergePointY;
 			permX--;
-			
-			if(i < 0 && permX >= 0 && permY >= 0){
-				System.out.println("called2");
-				int size = resultList.length;
-				//resultList = enlargeResultList(resultList, true, false);
-				resultList = enlargeResultList(resultList, true, false);
-				System.out.println(matrixToString(resultList));
-				i = size;
-				permX = otherMergePointX;
-				permY = otherMergePointY;
-			}
-			
 		}
+		
+//		int i = ourMergePointX;
+//		while(i >= 0){
+//			for (int j = ourMergePointY; j < permList[0].length; j++) {
+//				try {
+//					resultList[i][j] = permList[permX][permY];
+//				} catch (Exception e) {}
+//				permY++;
+//				if(permY >= resultList[0].length){
+//					resultList = enlargeResultList(resultList,false,true);
+//				}
+//			}
+//			i--;
+//			permY = otherMergePointY;
+//			permX--;
+//			
+//			if(i < 0 && permX >= 0 && permY >= 0){
+//				System.out.println("called2");
+//				int size = resultList.length;
+//				//resultList = enlargeResultList(resultList, true, false);
+//				resultList = enlargeResultList(resultList, true, false);
+//				
+//				i = size;
+//				permX = otherMergePointX;
+//				permY = otherMergePointY;
+//			}
+//			
+//		}
 		return resultList;
 	}
 		
 	
 	private static String[][] mergeRightUp(String[][] resultList, String[][] permList){
-		System.out.println(otherMergePointX);
-		System.out.println(otherMergePointY);
-		System.out.println("ours");
-		System.out.println(ourMergePointX);
-		System.out.println(ourMergePointY);
 		int permX = otherMergePointX;
 		int permY = otherMergePointY;
-		for (int i = ourMergePointX; i < permList.length; i++) {
-			for (int j = ourMergePointY; j < permList[0].length; j++) {
-				if(j >= resultList[0].length){
-					System.out.println("enlarged matrix y");
-					resultList = enlargeResultList(resultList,false,true);
-				}
-				if(i > resultList.length){
-					System.out.println("enlarged matrix x");
-					resultList = enlargeResultList(resultList, true, true);
-				}
+		for (int i = startX; i < resultList.length; i++) {
+			for (int j = startY; j < resultList[0].length; j++) {
 				try {
 					if(resultList[i][j].equals(dummyString) && ! permList[permX][permY].equals(dummyString))
 					resultList[i][j] = permList[permX][permY];
@@ -584,13 +601,38 @@ public class MatchMap {
 			permY = otherMergePointY;
 			permX++;
 		}
-		System.out.println(matrixToString(resultList));
+		
+//		for (int i = ourMergePointX; i < permList.length; i++) {
+//			for (int j = ourMergePointY; j < permList[0].length; j++) {
+//				if(j >= resultList[0].length){
+//					System.out.println("enlarged matrix y");
+//					resultList = enlargeResultList(resultList,false,true);
+//				}
+//				if(i > resultList.length){
+//					System.out.println("enlarged matrix x");
+//					resultList = enlargeResultList(resultList, true, true);
+//				}
+//				try {
+//					if(resultList[i][j].equals(dummyString) && ! permList[permX][permY].equals(dummyString))
+//					resultList[i][j] = permList[permX][permY];
+//				} catch (Exception e) {
+//					System.out.println("catched on x "+i+"   y "+j);
+//				}
+//				permY++;
+//			}
+//			permY = otherMergePointY;
+//			permX++;
+//		}
+		
 		return resultList;
 	}
 	
 	//xOrY -> true = expand x size
 	//downOrUp -> true = positively
 	private static String[][] enlargeResultList(String[][] resultList,boolean xOrY,boolean downOrUp) {
+		if(!(resultList.length > 20) || !(resultList[0].length > 20)){
+			return resultList;
+		}
 		//Enlarge on x size 
 		//Positively
 		if(xOrY == true && downOrUp == true){
@@ -669,8 +711,7 @@ public class MatchMap {
 		
 	}
 
-	private static String[][] mergeMaps(Permutation permutatedDirection) {
-		System.out.println(permutatedDirection);
+	private static String[][] getMergedMaps(Permutation permutatedDirection) {
 		switch (permutatedDirection) {
 			case DEGREES_90:
 				return get90Degree();
@@ -694,8 +735,9 @@ public class MatchMap {
 		for (int i = 0; i < getOurMaze().length; i++) {
 			for (int j = 0; j < getOurMaze()[0].length; j++) {
 				String[] str = getOurMaze()[i][j].split(regex);
-				if(getBarcodeValue(getOurMaze()[i][j]) > 0);
-					if(checkForBarcodeMatches(str[1], getBarcodeValue(getOurMaze()[i][j]),i,j)){
+				if(getBarcodeValue(getOurMaze()[i][j]) > 0)
+					try {
+						if(checkForBarcodeMatches(str[1], getBarcodeValue(getOurMaze()[i][j]),i,j)){
 						System.out.println("MERGEPOINT HAS BEEN SET");
 						ourMergePointX = i;
 						ourMergePointY = j;
@@ -704,12 +746,16 @@ public class MatchMap {
 						j = getOurMaze()[0].length;
 						i = getOurMaze().length;
 					}
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+					
 			}
 		}
 	}
 	
 	private static boolean checkForBarcodeMatches(String direction,int number,int originalX,int originalY){
-		System.out.println("______");
+		System.out.println("___________________");
 		for (Permutation dir : Permutation.values()) {
 			switch (dir) {
 				case DEGREES_180:
@@ -754,19 +800,23 @@ public class MatchMap {
 	}
 	
 	private static boolean checkForBarcodePermutation(String[][] maze,String direction, int number,int originalX,int originalY) {
-		
+		int test = 0;
 		for (int i = 0; i < maze.length; i++) {
 			for (int j = 0; j < maze[0].length; j++) {
 				//String[] str = maze[i][j].split(regex);
 				try {
-					if (getBarcodeValue(maze[i][j]) == number && checkBarcodeSurrounding(maze,originalX,originalY,i,j)) {
+					if (getBarcodeValue(maze[i][j]) == number){
+						test++;
+						System.out.println("tested : "+test);
+						if(checkBarcodeSurrounding(maze,originalX,originalY,i,j)) {
 						System.out.println("equality found on");
-						System.out.println(matrixToString(maze));
-						System.out.println(i);
-						System.out.println(j);
 						otherMergePointX = i;
+						otherStartMergeX = i;
+						otherStartMergeY = j;
 						otherMergePointY = j;
 						return true;
+					}
+						
 					}
 				} catch (Exception e) {}
 			}
@@ -775,14 +825,7 @@ public class MatchMap {
 	}
 	private static boolean checkBarcodeSurrounding(String[][] maze,int originalX,int originalY, int permX, int permY) {
 		int counter = 0;
-		System.out.println("______start test ________");
-		System.out.println(maze[permX][permY]);
-		System.out.println(matrixToString(getOurMaze()));
-		System.out.println("_________");
-		System.out.println(matrixToString(maze));
-		System.out.println("_________");
-		System.out.println("orix : "+originalX+"   oriY: "+originalY);
-		System.out.println("checkX : "+permX+"  checkY :"+permY);
+		System.out.println("coord of merge   "+originalX+"    "+originalY);
 		counter+=checkBarcodeEquality(maze,originalX+1,originalY,permX+1,permY);
 		counter+=checkBarcodeEquality(maze,originalX,originalY+1,permX,permY+1);
 		counter+=checkBarcodeEquality(maze,originalX-1,originalY,permX-1,permY);
@@ -791,28 +834,22 @@ public class MatchMap {
 		counter+=checkBarcodeEquality(maze,originalX+1,originalY+1,permX+1,permY+1);
 		counter+=checkBarcodeEquality(maze,originalX+1,originalY-1,permX+1,permY-1);
 		counter+=checkBarcodeEquality(maze,originalX-1,originalY+1,permX-1,permY+1);	
-		System.out.println("counter:"+counter);
-		System.out.println("__________end test ________");
-		if(counter > 11)
+		if(counter > 7)
 			return true;
 		return false;
 		
 	}
 	
 	private static int checkBarcodeEquality(String[][] maze,int originalX,int originalY, int permX, int permY){
-		System.out.println("_____try2_____");
-		System.out.println("orix : "+originalX+"   oriY: "+originalY);
-		System.out.println("checkX : "+permX+"  checkY :"+permY);
 		try {
 			String[] str = getOurMaze()[originalX][originalY].split(regex);
 			String[] str2 = maze[permX][permY].split(regex);
-			System.out.println("string 1 : "+str[0]+"    string 2 : "+str2[0]);
-			if(str[0].equals(str2[0]) && isEqualOrientation(str[1], str2[1]))
+			if(str[0].equals(str2[0]))
 				return 5;
 			else
-				return 0;
+				return -1;
 		} catch (Exception e) {
-			return 1;
+			return 0;
 		}
 	}
 	
@@ -932,45 +969,66 @@ public class MatchMap {
 		
 	}
 	
-	private static int[] getBasicVector(){
-		
-		System.out.println("______________________________________________");
-		System.out.println("______________________________________________");
-		System.out.println("______________________________________________");
-		int[] vector = new int[2];
-		int ourX = ourStartMergeX;
-		int ourY = ourStartMergeY;
-		int otherX = otherMergePointX;
-		int otherY = otherMergePointY;
-		System.out.println(ourMergePointX+"  "+ourMergePointY+"   "+otherMergePointX +"   "+otherMergePointY+"  ");
-		Enum<Permutation> perm = getPermutatedDirection();
-		if(perm == Permutation.ORIGINAL){
-			vector[0] = otherX - ourX;
-			vector[1] = otherY - ourY;
-			return vector;
-		}
-		else if(perm == Permutation.DEGREES_90){
-			vector[0] = otherX - ourX;
-			vector[1] = getOriginal()[0].length - otherMergePointY - ourY;
-			return vector;
-		}
-		else if(perm == Permutation.DEGREES_180){
-			vector[0] = getOriginal().length - otherMergePointX - ourX;
-			vector[1] = getOriginal()[0].length - otherMergePointY - ourY;
-			return vector;
-		}
-		else if(perm == Permutation.DEGREES_270){
-			vector[0] = getOriginal().length - otherMergePointX - ourX;
-			vector[1] = otherY - ourY;
-			return vector;
-		}
-		else {
+	//TODO
+	private static int[] convertCoordinate(int x, int y){
+		Permutation perm = getPermutatedDirection();
+		switch (perm) {
+		case ORIGINAL:
+			return getOriginalVector(x,y);
+		case DEGREES_90:
+			return get90Vector(x,y);
+		case DEGREES_180:
+			return get180Vector(x,y);
+		case DEGREES_270:
+			return get270Vector(x,y);
+		default:
 			return null;
 		}
-		
-			
-		
 	}
+	
+	private static int[] get270Vector(int x, int y) {
+		Permutation perm = Permutation.DEGREES_270;
+		int[] coords = rotateCoordinates(perm, x, y);
+		return new int[]{coords[0] + getBasicVector()[0],coords[1] + getBasicVector()[1]};
+	}
+
+	private static int[] get180Vector(int x, int y) {
+		Permutation perm = Permutation.DEGREES_180;
+		int[] coords = rotateCoordinates(perm, x, y);
+		return new int[]{coords[0] + getBasicVector()[0],coords[1] + getBasicVector()[1]};
+	}
+
+	private static int[] get90Vector(int x, int y) {
+		Permutation perm = Permutation.DEGREES_90;
+		int[] coords = rotateCoordinates(perm, x, y);
+		return new int[]{coords[0] + getBasicVector()[0],coords[1] + getBasicVector()[1]};
+	}
+	
+	private static int[] rotateCoordinates(Permutation perm, int x, int y){
+		switch (perm) {
+		case ORIGINAL:
+			return new int[]{x,y};
+		case DEGREES_90:
+			return new int[]{y,getOriginal().length - 1 - x};
+		case DEGREES_180:
+			return new int[]{getOriginal().length - 1 - x,getOriginal()[0].length - 1 - y};
+		case DEGREES_270:
+			return new int[]{getOriginal().length - 1 - y,x};
+		default:
+			return null;
+		}
+	}
+	
+	private static int[] getBasicVector(){
+		return new int[]{ourStartMergeX-otherStartMergeX,ourStartMergeY-otherStartMergeY};
+	}
+	
+	private static int[] getOriginalVector(int x, int y) {
+		int xChange = x + getBasicVector()[0];
+		int yChange = y + getBasicVector()[1];
+		return new int[]{xChange,yChange};
+	}
+
 	//___________________________________________
 	//END BASIC UTILS
 	//___________________________________________

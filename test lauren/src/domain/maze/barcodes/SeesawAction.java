@@ -43,11 +43,11 @@ public class SeesawAction implements Action {
 					otherBarcodePosition, otherBarcodeOrientation);
 
 			robot.getFoundBoard().addBarcode(newBarcode);
-		System.out.println("We are going to handle a newly found seesaw");
+		//System.out.println("We are going to handle a newly found seesaw");
 
 		}
 		else{
-			System.out.println("We are going to handle an already found seesaw");
+			//System.out.println("We are going to handle an already found seesaw");
 		}
 			
 			//Note that in the handleSeesaw, we take into account whether the seesaw is locked or not.

@@ -22,15 +22,15 @@ public class Barcode extends MazeElement{
 		fillLegals();
 		readBits = getBinary(decimal);
 		if(!legalInts.contains(decimal)){
-			this.decimal = getDecimal(this.readBits);
+			this.decimal = getDecimal(getmirroredBits());
 		}else{
 			this.decimal=decimal;
 		}
 		this.pos = pos;
 		this.orientation = orientation;
-		this.action = getAction(decimal);
+		this.action = getAction(this.decimal);
 		
-		System.out.println("Barcode created with value "+this.readBits[5]+this.readBits[4]+this.readBits[3]+this.readBits[2]+this.readBits[1]+this.readBits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
+		//System.out.println("Barcode created with value "+this.readBits[5]+this.readBits[4]+this.readBits[3]+this.readBits[2]+this.readBits[1]+this.readBits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
 	}
 	
 	
@@ -42,15 +42,16 @@ public class Barcode extends MazeElement{
 		}
 		int calculatedDecimal=getDecimal(bits);
 		if(!legalInts.contains(calculatedDecimal)){
-			decimal = getDecimal(getmirroredBits());
+			this.decimal = getDecimal(getmirroredBits());
 		}else{
-			decimal = calculatedDecimal;
+			this.decimal = calculatedDecimal;
 		}
 		this.pos = pos;
 		this.orientation = Orientation.getOrientation(angle);
 		
-		action = getAction(decimal);
-		System.out.println("Barcode created with value "+this.readBits[5]+this.readBits[4]+this.readBits[3]+this.readBits[2]+this.readBits[1]+this.readBits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
+		action = getAction(this.decimal);
+//		System.out.println("Barcode created with value "+this.readBits[5]+this.readBits[4]+this.readBits[3]+this.readBits[2]+this.readBits[1]+this.readBits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
+
 	}
 	
 	
@@ -71,9 +72,8 @@ public class Barcode extends MazeElement{
 	}
 	
 	private static boolean isOtherBallNumber(int number){
-		for (int n : otherBallNumbers) {
-			if(n == number)
-				return true;
+		if(number<8 && number%4!=ownBallNumber){
+			return true;
 		}
 		return false;
 	}
@@ -104,11 +104,8 @@ public class Barcode extends MazeElement{
 	
 	public Action getAction(int number){
 		if((number<8) && (ownBallNumber == number%4)){
-			if(number%4==number){
-				return new FetchBallAction(0);
-			} else {
-				return new FetchBallAction(1);
-			}
+			int teamNb = readBits[2];
+			return new FetchBallAction(teamNb);
 		}
 		if(isOtherBallNumber(number)){
 			return new DoNothingAction();

@@ -8,13 +8,14 @@ import java.util.Iterator;
 
 import peno.htttp.Tile;
 
+import domain.Position.Position;
 import domain.maze.Orientation;
 import domain.maze.Token;
 import domain.robotFunctions.MatchMap;
 import domain.robots.RobotPilot;
 
 public class MazeGraph {
-	private static final Orientation startingOrientation = Orientation.EAST;
+	private static final Orientation initialOrientation = Orientation.EAST;
 	private ArrayList<TileNode> tileNodes;
 	private Orientation currentRobotOrientation;
 	private TileNode startNode;
@@ -34,7 +35,7 @@ public class MazeGraph {
 		startNode = new TileNode(null,null);
 		setCurrentTile(startNode);
 		tileNodes.add(startNode);
-		setCurrentRobotOrientation(getStartingOrientation());
+		setCurrentRobotOrientation(getInitialOrientation());
 		System.out.println("");
 	}
 	
@@ -199,6 +200,8 @@ public class MazeGraph {
 			t.decreaseBlockNavigationCount();
 		}
 	}
+	
+	
 
 	/**
 	 * Returns the orientation to move in to continue exploring. 
@@ -278,7 +281,7 @@ public class MazeGraph {
 			}
 		}
 		MazeNode frontNode = getCurrentTile().getNodeAt(getCurrentRobotOrientation());
-		return frontNode!=null?(frontNode.isAccessible()?Orientation.NORTH:Orientation.SOUTH):null;
+		return frontNode!=null?(frontNode.isAccessible()?Orientation.NORTH:null):null;
 	}
 	
 	/**
@@ -795,7 +798,7 @@ public class MazeGraph {
 		setDrivingToPartner(true);
 	}
 
-	public Orientation getStartingOrientation() {
-		return startingOrientation;
+	public static Orientation getInitialOrientation() {
+		return initialOrientation;
 	}
 }
