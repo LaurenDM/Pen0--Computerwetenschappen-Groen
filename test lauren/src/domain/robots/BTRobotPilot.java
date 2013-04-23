@@ -461,6 +461,12 @@ public class BTRobotPilot extends RobotPilot  {
 	public void blackStraighten() {
 		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public void snapPoseToTileMid() {
+		btComm.sendCommand(CMD.SNAPPOSETOTILEMID);
+		
+	}
 	
 
 }
