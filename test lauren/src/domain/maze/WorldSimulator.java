@@ -270,7 +270,7 @@ public class WorldSimulator implements SpectatorHandler {
 		RobotPilot robot = otherRobots.get(playerID);
 		if(robot!=null){
 			InitialPosition initialPose = getInitialPositionFromPlayer(playerNumber);
-			InitialPosition relativePose = new InitialPosition(40*x+20,40*y+20,Orientation.getOrientation(angle));
+			InitialPosition relativePose = new InitialPosition(40*x,40*y,Orientation.getOrientation(angle));
 			InitialPosition newPose = Position.getAbsolutePose(initialPose, relativePose);
 			robot.setPose(newPose.getOrientation().getAngleToHorizontal(), (int)newPose.getX(), (int)newPose.getY());
 			if(foundObject)
