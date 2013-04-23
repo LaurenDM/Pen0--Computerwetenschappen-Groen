@@ -6,41 +6,29 @@ import peno.htttp.Tile;
 public class MatchMap {
 	
 	public static void main(String[] args) {
-		Tile tile1 = new Tile(0, 0, "Straight.N.3");
-		Tile tile2 = new Tile(0, 1, "Seesaw.S");
-		Tile tile3 = new Tile(0, 2, "Seesaw.N");
-		Tile tile4 = new Tile(0, 3, "Straight.N.4");
-		Tile tile5 = new Tile(0, 4, "Cross.N");
-		Tile tile6 = new Tile(0,5,"Cross.N");
-		Tile[] tileList = new Tile[6];
+		Tile tile1 = new Tile(0, 0, "DeadEnd.E");
+		Tile tile2 = new Tile(1, 0, "Cross");
+		Tile tile3 = new Tile(1, 1, "Straight.N.4");
+		Tile tile4 = new Tile(1, 2, "Cross");
+		Tile tile5 = new Tile(0, 2, "Straight.E");
+		Tile[] tileList = new Tile[5];
 		tileList[0] = tile1;
 		tileList[1] = tile2;
 		tileList[2] = tile3;
 		tileList[3] = tile4;
 		tileList[4] = tile5;
-		tileList[5] = tile6;
 		
-		Tile _tile1 = new Tile(0, 0, "Straight.N");
-		Tile _tile2 = new Tile(0, 1, "Cross.N");
-		Tile _tile7 = new Tile(0, 2, "Straight.N");
-		Tile _tile3 = new Tile(1, 1, "Straight.E.4");
-		Tile _tile4 = new Tile(2, 1, "Seesaw.W");
-		Tile _tile5 = new Tile(3, 1, "Seesaw.E");
-		Tile _tile6 = new Tile(4, 1, "Straight.E.3");
-		Tile _tile8 = new Tile(1, 2, "DeadEnd.S");
-		Tile _tile9 = new Tile(4, 2, "DeadEnd.S");
-		Tile _tile10 = new Tile(4, 0, "Test.N");
-		Tile[] _tileList = new Tile[10];
-		_tileList[0] = _tile1;
-		_tileList[1] = _tile2;
-		_tileList[2] = _tile3;
-		_tileList[3] = _tile4;
-		_tileList[4] = _tile5;
-		_tileList[5] = _tile6;
-		_tileList[6] = _tile7;
-		_tileList[7] = _tile8;
-		_tileList[8] = _tile9;
-		_tileList[9] = _tile10;
+		Tile _tile2 = new Tile(0, 1, "DeadEnd.E");
+		Tile _tile7 = new Tile(1, 0, "Straight.N");
+		Tile _tile3 = new Tile(1, 1, "Cross");
+		Tile _tile4 = new Tile(2, 1, "Straight.E.4");
+		Tile _tile8 = new Tile(1, 2, "Straight.N");
+		Tile[] _tileList = new Tile[5];
+		_tileList[0] = _tile2;
+		_tileList[1] = _tile3;
+		_tileList[2] = _tile4;
+		_tileList[3] = _tile7;
+		_tileList[4] = _tile8;
 		setOurMazeTiles(tileList);
 		setOriginalTiles(_tileList);
 		merge();
@@ -380,20 +368,32 @@ public class MatchMap {
 		//TODO debug
 		System.out.println("ourmaze");
 		System.out.println(matrixToString(getOurMaze()));
-		System.out.println("gettheirs");
+		System.out.println("_________________________");
+		System.out.println("getOri");
 		System.out.println(matrixToString(getOriginal()));
+		System.out.println("_________________________");
+		System.out.println("get90");
+		System.out.println(matrixToString(get90Degree()));
+		System.out.println("_________________________");
+		System.out.println("get180");
+		System.out.println(matrixToString(get180Degree()));
+		System.out.println("_________________________");
+		System.out.println("get270");
+		System.out.println(matrixToString(get270Degree()));
+		
 		if(hasMutualSeeSaw()){
 			permutationBySeeSaw();
-			mergeMaps(mergeMaps(getPermutatedDirection()));
+			mergeMaps(getMergedMaps(getPermutatedDirection()));
 		}
 		else if(hasMutualBarcode()){
 			permutationByBarcode();
-			mergeMaps(mergeMaps(getPermutatedDirection()));
+			System.out.println(getPermutatedDirection() +"   perm");
+			mergeMaps(getMergedMaps(getPermutatedDirection()));
 		}
 		else 
 			throw new IllegalArgumentException("There was nothing base found to merge on");
 		//FOLLOWED BY MERGING THE SQUARES AND MAKING UP WHERE OUR TEAMMATE IS
-		mergeMaps(getPermutatedDirection());
+		getMergedMaps(getPermutatedDirection());
 		System.out.println(matrixToString(resultMap));
 	}
 	private static int startX = 0;
@@ -401,6 +401,7 @@ public class MatchMap {
 	
 	private static void mergeMaps(String[][] mergeMaps) {
 		String[][] originList = getOurMaze();
+		System.out.println(matrixToString(originList));
 		String[][] permList = mergeMaps;
 		String[][] resultList = new String[(originList.length+permList.length) * 2][(originList[0].length+permList[0].length) * 2];
 		
@@ -421,9 +422,11 @@ public class MatchMap {
 				} catch (Exception e) {}
 				b++;
 			}
+			b = 0;
 			a++;
 		}
-		//TODO
+		System.out.println("tmpresult");
+		System.out.println(matrixToString(resultList));
 		startX+=ourStartMergeX;
 		startY+=ourStartMergeY;
 		resultList = mergeRightUp(resultList,permList);
@@ -698,7 +701,7 @@ public class MatchMap {
 		
 	}
 
-	private static String[][] mergeMaps(Permutation permutatedDirection) {
+	private static String[][] getMergedMaps(Permutation permutatedDirection) {
 		switch (permutatedDirection) {
 			case DEGREES_90:
 				return get90Degree();
@@ -722,7 +725,7 @@ public class MatchMap {
 		for (int i = 0; i < getOurMaze().length; i++) {
 			for (int j = 0; j < getOurMaze()[0].length; j++) {
 				String[] str = getOurMaze()[i][j].split(regex);
-				if(getBarcodeValue(getOurMaze()[i][j]) > 0);
+				if(getBarcodeValue(getOurMaze()[i][j]) > 0)
 					try {
 						if(checkForBarcodeMatches(str[1], getBarcodeValue(getOurMaze()[i][j]),i,j)){
 						System.out.println("MERGEPOINT HAS BEEN SET");
@@ -742,7 +745,7 @@ public class MatchMap {
 	}
 	
 	private static boolean checkForBarcodeMatches(String direction,int number,int originalX,int originalY){
-		System.out.println("______");
+		System.out.println("___________________");
 		for (Permutation dir : Permutation.values()) {
 			switch (dir) {
 				case DEGREES_180:
@@ -787,18 +790,23 @@ public class MatchMap {
 	}
 	
 	private static boolean checkForBarcodePermutation(String[][] maze,String direction, int number,int originalX,int originalY) {
-		
+		int test = 0;
 		for (int i = 0; i < maze.length; i++) {
 			for (int j = 0; j < maze[0].length; j++) {
 				//String[] str = maze[i][j].split(regex);
 				try {
-					if (getBarcodeValue(maze[i][j]) == number && checkBarcodeSurrounding(maze,originalX,originalY,i,j)) {
+					if (getBarcodeValue(maze[i][j]) == number){
+						test++;
+						System.out.println("tested : "+test);
+						if(checkBarcodeSurrounding(maze,originalX,originalY,i,j)) {
 						System.out.println("equality found on");
 						otherMergePointX = i;
 						otherStartMergeX = i;
 						otherStartMergeY = j;
 						otherMergePointY = j;
 						return true;
+					}
+						
 					}
 				} catch (Exception e) {}
 			}
@@ -807,6 +815,7 @@ public class MatchMap {
 	}
 	private static boolean checkBarcodeSurrounding(String[][] maze,int originalX,int originalY, int permX, int permY) {
 		int counter = 0;
+		System.out.println("coord of merge   "+originalX+"    "+originalY);
 		counter+=checkBarcodeEquality(maze,originalX+1,originalY,permX+1,permY);
 		counter+=checkBarcodeEquality(maze,originalX,originalY+1,permX,permY+1);
 		counter+=checkBarcodeEquality(maze,originalX-1,originalY,permX-1,permY);
@@ -815,7 +824,7 @@ public class MatchMap {
 		counter+=checkBarcodeEquality(maze,originalX+1,originalY+1,permX+1,permY+1);
 		counter+=checkBarcodeEquality(maze,originalX+1,originalY-1,permX+1,permY-1);
 		counter+=checkBarcodeEquality(maze,originalX-1,originalY+1,permX-1,permY+1);	
-		if(counter > 11)
+		if(counter > 7)
 			return true;
 		return false;
 		
@@ -825,12 +834,12 @@ public class MatchMap {
 		try {
 			String[] str = getOurMaze()[originalX][originalY].split(regex);
 			String[] str2 = maze[permX][permY].split(regex);
-			if(str[0].equals(str2[0]) && isEqualOrientation(str[1], str2[1]))
+			if(str[0].equals(str2[0]))
 				return 5;
 			else
-				return 0;
+				return -1;
 		} catch (Exception e) {
-			return 1;
+			return 0;
 		}
 	}
 	
