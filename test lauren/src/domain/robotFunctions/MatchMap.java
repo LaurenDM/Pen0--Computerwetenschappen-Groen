@@ -394,6 +394,7 @@ public class MatchMap {
 			throw new IllegalArgumentException("There was nothing base found to merge on");
 		//FOLLOWED BY MERGING THE SQUARES AND MAKING UP WHERE OUR TEAMMATE IS
 		mergeMaps(getPermutatedDirection());
+		System.out.println(matrixToString(resultMap));
 	}
 	private static int startX = 0;
 	private static int startY = 0;
