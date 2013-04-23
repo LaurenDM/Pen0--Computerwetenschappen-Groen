@@ -5,6 +5,7 @@ import gui.ContentPanel;
 import java.util.ArrayList;
 
 import peno.htttp.Tile;
+import sun.invoke.util.BytecodeName;
 
 import controller.Controller;
 
@@ -86,11 +87,21 @@ public class ExploreMaze{
 			makeWall(distances);
 			if(!maze.isComplete()){
 				//robot.setMovingSpeed(robot.getDefaultMovingSpeed());
-				checkForOtherRobots();
+				try{
+					checkForOtherRobots();
+				}catch(NullPointerException e){
+					//In dit geval is de robot niet verbonden met andere robots
+				}
 				Direction direction = getNextDirection(distances);
 				updatePosition(direction);
-				if(checkStraighten(distances)){
-					moveWithStraighten(direction);
+				if(checkBadPosition(distances)){
+					adjustRotation(distances);
+					if(checkVeryBadPosition(distances)){
+						moveWithStraighten(direction);
+					}
+					else{
+						move(direction);
+					}
 				}
 				else{
 					move(direction);
@@ -104,7 +115,15 @@ public class ExploreMaze{
 			maze.driveToFinish(robot);
 		}
 	}
-	
+
+	private void adjustRotation(double[] distances) {
+		double leftDistance=distances[0];
+		double rightDistance=distances[2];
+		double tooMuchLeft=leftDistance%MAZECONSTANT-rightDistance%MAZECONSTANT;
+		double rotation=Math.min(20, (180/Math.PI)*Math.abs(Math.atan(tooMuchLeft/MAZECONSTANT/2))) * -Math.signum(tooMuchLeft);
+		robot.turn(rotation);
+	}
+
 	public void checkForOtherRobots(){
 		for(Orientation o : Orientation.values()){
 			TileNode node = (TileNode) maze.getCurrentNode();
@@ -119,7 +138,11 @@ public class ExploreMaze{
 	public void updatePosition(Direction direction){
 		Orientation nextOrientation = maze.getCurrentRobotOrientation().getOffset(direction.getOffset());
 		TileNode nextNode = (TileNode) maze.getCurrentNode().getNodeAt(nextOrientation);
+		try{
 		robot.updatePosition(nextNode.getX(), nextNode.getY(), nextOrientation.getAngleToHorizontal());
+		}catch (NullPointerException e) {
+			// In dit geval is de robot niet verbonden
+		}
 	}
 	
 	private boolean nextTileIsSeesaw(){
@@ -128,13 +151,20 @@ public class ExploreMaze{
 	
 
 	
-	private boolean checkStraighten(double[] distances){
+	private boolean checkBadPosition(double[] distances){
 		for (int i = 0; i < distances.length; i++) {
-			if(distances[i]!=255 &&(distances[i] < 17 || distances[i]%40 > 23)) {
+			if(distances[i]!=255 &&(distances[i]%MAZECONSTANT < 17 || distances[i]%MAZECONSTANT > 23)) {
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	private boolean checkVeryBadPosition(double[] distances){
+		double leftDistance=distances[0];
+		double rightDistance=distances[2];
+		double tooMuchLeft=leftDistance%MAZECONSTANT-rightDistance%MAZECONSTANT;
+		return Math.abs(tooMuchLeft)>6;
 	}
 	
 	/**

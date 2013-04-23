@@ -503,13 +503,20 @@ public class ContentPanel implements ActionListener {
         	}
         	else{
         		try{
+        	 		calibrationFrame.setVisible(true);
+                	actionLabel.setText("The lightsensor is being calibrated.");
+                	calibrateButton.setSelected(false);
         		controller.connectNewBtRobot();
         		controller.setPlayerClient();
         		drawingPanel.clear();
         		setConnected(true);
+        		
+       
+        		
         		}
         		catch(ConnectErrorException e1){
         		}
+        		
         	}
         	buttonPanel.requestFocusInWindow();
         }
