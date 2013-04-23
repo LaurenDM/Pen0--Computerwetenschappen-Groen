@@ -34,7 +34,7 @@ public class MatchMap {
 		merge();
 		
     }
-	public final static String dummyString = "dummy     ";
+	public final static String dummyString = "dummy";
 	
 	public enum Permutation {
 		ORIGINAL,DEGREES_90,DEGREES_180,DEGREES_270;
@@ -53,6 +53,8 @@ public class MatchMap {
 	private static int ourMergePointY = 0;
 	private static int otherMergePointX = 0;
 	private static int otherMergePointY = 0;
+	
+	private static int stringLength = 20;
 	
 	private static ArrayList<Integer> ourBarcodes = new ArrayList<Integer>();
 	
@@ -123,7 +125,7 @@ public class MatchMap {
 		String[][] originalList = new String[maxX][maxY];
 		for (int i = 0; i < maxX; i++) {
 			for (int j = 0; j < maxY; j++) {
-				originalList[i][j] = " ";
+				originalList[i][j] = "";
 			}
 		}
 		for (Tile tile : tiles) {
@@ -293,13 +295,20 @@ public class MatchMap {
 		for (int i = string[0].length - 1; i >= 0; i--) {
 			printout += "\n";
 			for (int j = 0; j < string.length; j++) {
-				printout += string[j][i] + "  		  ";
+				printout += string[j][i] + fixWhiteSpace(stringLength-string[j][i].length());
 			}
 		}
 		return printout;
 		
 	}
 	
+	private static String fixWhiteSpace(int nmbr){
+		String result = "";
+		for (int i = 0; i < nmbr; i++) {
+			result+=" ";
+		}
+		return result;
+	}
 	private static boolean hasMutualSeeSaw(){
 		String[][] tmpList = getOriginal();
 		if(hasMutualSeeSawPermutationChecker(tmpList))
@@ -418,6 +427,7 @@ public class MatchMap {
 		for (int i = startX; i < resultList.length; i++) {
 			for (int j = startY; j < resultList[0].length; j++) {
 				try {
+					if(!originList[a][b].equals(dummyString))
 					resultList[i][j] = originList[a][b];
 				} catch (Exception e) {}
 				b++;
