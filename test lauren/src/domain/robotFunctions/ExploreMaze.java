@@ -77,7 +77,7 @@ public class ExploreMaze{
 	
 	public void resumeExplore(int x, int y, Orientation o){
 		interrupted = false;
-		continueExploring(0,0,null);
+		continueExploring(0,0,o);
 	}
 	
 	private void continueExploring(int x, int y, Orientation o){
