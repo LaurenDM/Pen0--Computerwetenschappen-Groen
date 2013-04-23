@@ -136,8 +136,8 @@ public class Position implements Cloneable {
 		Orientation relativeStartOrient = MazeGraph.getInitialOrientation();
 		
 		//Find Orientation
-		Orientation deltaOrient = relativeStartOrient.getRelativeOrientation(relativePose.getOrientation());
-		Orientation newOrient = startOrient.getRelativeOrientation(deltaOrient);
+		int offset = relativeStartOrient.getOffsetTo(relativePose.getOrientation());
+		Orientation newOrient = startOrient.getOffset(offset);
 		
 		//Find position
 		double deltaY = relativePose.getY();

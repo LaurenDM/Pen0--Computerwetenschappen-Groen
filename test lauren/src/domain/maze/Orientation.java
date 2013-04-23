@@ -110,6 +110,16 @@ public enum Orientation {
 	public Orientation getRelativeOrientation(Orientation relative){
 		return this.getOffset(relative.getRelativeOffset());
 	}
+	
+	public int getOffsetTo(Orientation other){
+		ArrayList<Orientation> orderedList = new ArrayList<Orientation>();
+		for(Orientation o : orderedArray){
+			orderedList.add(o);
+		}
+		int index1 = orderedList.indexOf(this);
+		int index2 = orderedList.indexOf(other);
+		return index2-index1;
+	}
 
 	private int getRelativeOffset() {
 		return relativeOffset;
