@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import peno.htttp.Tile;
 
+
 import controller.Controller;
 
 import domain.Position.Position;
@@ -21,7 +22,14 @@ import domain.robots.RobotPilot;
 public class ExploreMaze{
 	
 	private enum Direction {
-	    LEFT,FORWARD,RIGHT,BACKWARD
+	    LEFT(-1),FORWARD(0),RIGHT(1),BACKWARD(-2);
+	    private int offset;
+	    private Direction(int offset){
+	    	this.offset = offset;
+	    }
+	    public int getOffset(){
+	    	return this.offset;
+	    }
 	}
 	private RobotPilot robot;
 	private final int valuedDistance = 27;
@@ -79,9 +87,21 @@ public class ExploreMaze{
 			makeWall(distances);
 			if(!maze.isComplete()){
 				//robot.setMovingSpeed(robot.getDefaultMovingSpeed());
+				try{
+					checkForOtherRobots();
+				}catch(NullPointerException e){
+					//In dit geval is de robot niet verbonden met andere robots
+				}
 				Direction direction = getNextDirection(distances);
-				if(checkStraighten(distances)){
-					moveWithStraighten(direction);
+				updatePosition(direction);
+				if(checkBadPosition(distances)){
+					adjustRotation(distances);
+					if(checkVeryBadPosition(distances)){
+						moveWithStraighten(direction);
+					}
+					else{
+						move(direction);
+					}
 				}
 				else{
 					move(direction);
@@ -95,6 +115,35 @@ public class ExploreMaze{
 			maze.driveToFinish(robot);
 		}
 	}
+
+	private void adjustRotation(double[] distances) {
+		double leftDistance=distances[0];
+		double rightDistance=distances[2];
+		double tooMuchLeft=leftDistance%MAZECONSTANT-rightDistance%MAZECONSTANT;
+		double rotation=Math.min(20, (180/Math.PI)*Math.abs(Math.atan(tooMuchLeft/MAZECONSTANT/2))) * -Math.signum(tooMuchLeft);
+		robot.turn(rotation);
+	}
+
+	public void checkForOtherRobots(){
+		for(Orientation o : Orientation.values()){
+			TileNode node = (TileNode) maze.getCurrentTile();
+			while(TileNode.class.isAssignableFrom(node.getNodeAt(o).getClass())){
+				node = (TileNode) node.getNodeAt(o);
+				Position pos = new Position(node.getX()*40+20,node.getY()*40+20);
+				node.setAccessible(robot.checkRobotSensor(pos));
+			}
+		}
+	}
+	
+	public void updatePosition(Direction direction){
+		Orientation nextOrientation = maze.getCurrentRobotOrientation().getOffset(direction.getOffset());
+		TileNode nextNode = (TileNode) maze.getCurrentTile().getNodeAt(nextOrientation);
+		try{
+		robot.updatePosition(nextNode.getX(), nextNode.getY(), nextOrientation.getAngleToHorizontal());
+		}catch (NullPointerException e) {
+			// In dit geval is de robot niet verbonden
+		}
+	}
 	
 	private boolean nextTileIsSeesaw(){
 		return maze.nextTileIsSeesaw();
@@ -102,13 +151,20 @@ public class ExploreMaze{
 	
 
 	
-	private boolean checkStraighten(double[] distances){
+	private boolean checkBadPosition(double[] distances){
 		for (int i = 0; i < distances.length; i++) {
-			if(distances[i]!=255 &&(distances[i] < 17 || distances[i]%40 > 23)) {
+			if(distances[i]!=255 &&(distances[i]%MAZECONSTANT < 17 || distances[i]%MAZECONSTANT > 23)) {
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	private boolean checkVeryBadPosition(double[] distances){
+		double leftDistance=distances[0];
+		double rightDistance=distances[2];
+		double tooMuchLeft=leftDistance%MAZECONSTANT-rightDistance%MAZECONSTANT;
+		return Math.abs(tooMuchLeft)>6;
 	}
 	
 	/**

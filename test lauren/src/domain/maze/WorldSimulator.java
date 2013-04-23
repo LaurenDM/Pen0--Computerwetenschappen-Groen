@@ -148,7 +148,7 @@ public class WorldSimulator implements SpectatorHandler {
 	}
 	
 //	public synchronized boolean detectRobotFrom(RobotPilot robot){
-//		final int DISTANCE = 50; //TODO experimenteel bepalen van bereik van IRsensor
+//		final int DISTANCE = 50; 
 //		if(otherRobots!=null){
 //			for(RobotPilot robot2 : otherRobots.values()){
 //				if(robot2.getPosition().getDistance(robot.getPosition())<DISTANCE){
@@ -170,7 +170,18 @@ public class WorldSimulator implements SpectatorHandler {
 //		}
 //		return false;
 //	}
-//	
+	
+	public boolean checkRobotOn(Position pos){
+		final int MARGE = 20;
+		if(otherRobots!=null)
+			for(RobotPilot robot2 : otherRobots.values()){
+				if(robot2.getPosition().getDistance(robot.getPosition())<MARGE){
+					return true;
+				}
+			}
+		return false;
+	}
+	
 	public Seesaw getSeesaw(Position pos){
 		return simulatorBoard.getSeesaw(pos);
 	}
@@ -258,8 +269,12 @@ public class WorldSimulator implements SpectatorHandler {
 //		printMessage("sh.updatedPlayer ID: "+playerID+" no:"+playerNumber+" x:"+x+" y:"+y);
 		RobotPilot robot = otherRobots.get(playerID);
 		if(robot!=null){
-			robot.setPose(angle, (int) x, (int) y);
-			// TODO boolean foundObject ergens bijhouden?
+			InitialPosition initialPose = getInitialPositionFromPlayer(playerNumber);
+			InitialPosition relativePose = new InitialPosition(40*x+20,40*y+20,Orientation.getOrientation(angle));
+			InitialPosition newPose = Position.getAbsolutePose(initialPose, relativePose);
+			robot.setPose(newPose.getOrientation().getAngleToHorizontal(), (int)newPose.getX(), (int)newPose.getY());
+			if(foundObject)
+				robot.setFoundBall(playerNumber);
 		}
 		else{
 //			System.err.println("Can't get robot from playerID to update position");

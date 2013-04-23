@@ -24,6 +24,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
 
+import sun.misc.Cleaner;
+
 import controller.Controller;
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
@@ -193,7 +195,7 @@ public class ContentPanel implements ActionListener {
         variableButton = new JButton("POLYGON");
         fixButtonLayout(buttonPanel, variableButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 2*allButtonHeight);
         
-        connectButton = new JButton("CONNECT TO BROBOT");
+        connectButton = new JButton("CONNECT BUTTON");
         fixButtonLayout(buttonPanel, connectButton, wideButtonWidth, allButtonHeight, 0, 3*allButtonHeight );
         
         calibrateButton = new JButton("CALIBRATE LIGHTSENSOR");
@@ -400,6 +402,21 @@ public class ContentPanel implements ActionListener {
 			int count = 0;
 			try{
 				while(true){
+					if (controller.robotChangeNotHandledByGUI) {
+						contentPanel.drawingPanel.clear();
+						contentPanel.drawingPanel.drawWhiteLines();
+						contentPanel.drawingPanel.updateUI();
+						controller.robotChangeNotHandledByGUI = false;
+						if (contentPanel.connectButton.getText()
+								.equalsIgnoreCase("CONNECT TO BROBOT")) {
+
+							contentPanel.connectButton
+									.setText("DISCONNECT FROM BROBOT");
+						} else {
+							contentPanel.connectButton
+									.setText("CONNECT TO BROBOT");
+						}
+					}
 					contentPanel.updateBoard(controller.getColorPolygons());
 					contentPanel.setRobotX(controller.getXCo());
 					contentPanel.setRobotY(controller.getYCo());
@@ -480,26 +497,26 @@ public class ContentPanel implements ActionListener {
         }
         else if(e.getSource() == connectButton){
         	if(getConnected() == true ){
-        		connectButton.setText("Connect to brobot");
         		setConnected(false);
         		controller.connectNewSimRobot(0, new Position(20,20), controller.getPlayerID());
         		controller.setPlayerClient();
-        		drawingPanel.clear();
-        		drawingPanel.drawWhiteLines();
-        		drawingPanel.updateUI();
         	}
         	else{
         		try{
+        	 		calibrationFrame.setVisible(true);
+                	actionLabel.setText("The lightsensor is being calibrated.");
+                	calibrateButton.setSelected(false);
         		controller.connectNewBtRobot();
         		controller.setPlayerClient();
-        		connectButton.setText("Disconnect from brobot");
-        		setConnected(true);
-        		drawingPanel.updateUI();
         		drawingPanel.clear();
-        		drawingPanel.drawWhiteLines();
+        		setConnected(true);
+        		
+       
+        		
         		}
         		catch(ConnectErrorException e1){
         		}
+        		
         	}
         	buttonPanel.requestFocusInWindow();
         }

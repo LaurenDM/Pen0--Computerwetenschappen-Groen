@@ -22,13 +22,13 @@ public class Barcode extends MazeElement{
 		fillLegals();
 		readBits = getBinary(decimal);
 		if(!legalInts.contains(decimal)){
-			this.decimal = getDecimal(this.readBits);
+			this.decimal = getDecimal(getmirroredBits());
 		}else{
 			this.decimal=decimal;
 		}
 		this.pos = pos;
 		this.orientation = orientation;
-		this.action = getAction(decimal);
+		this.action = getAction(this.decimal);
 		
 		//System.out.println("Barcode created with value "+this.readBits[5]+this.readBits[4]+this.readBits[3]+this.readBits[2]+this.readBits[1]+this.readBits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
 	}
@@ -42,15 +42,16 @@ public class Barcode extends MazeElement{
 		}
 		int calculatedDecimal=getDecimal(bits);
 		if(!legalInts.contains(calculatedDecimal)){
-			decimal = getDecimal(getmirroredBits());
+			this.decimal = getDecimal(getmirroredBits());
 		}else{
-			decimal = calculatedDecimal;
+			this.decimal = calculatedDecimal;
 		}
 		this.pos = pos;
 		this.orientation = Orientation.getOrientation(angle);
 		
-		action = getAction(decimal);
-		//System.out.println("Barcode created with value "+this.readBits[5]+this.readBits[4]+this.readBits[3]+this.readBits[2]+this.readBits[1]+this.readBits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
+		action = getAction(this.decimal);
+//		System.out.println("Barcode created with value "+this.readBits[5]+this.readBits[4]+this.readBits[3]+this.readBits[2]+this.readBits[1]+this.readBits[0]+" ("+decimal+") at position x:"+pos.getX()+" y:"+pos.getY()+" facing "+this.orientation);
+
 	}
 	
 	

@@ -11,6 +11,10 @@ public class InitialPosition extends Position {
 		this.orientation = orientation;
 	}
 	
+	public InitialPosition(Position pos, Orientation orientation){
+		this(pos.getX(), pos.getY(), orientation);
+	}
+	
 	public Position getPosition(){
 		return new Position(getX(),getY());
 	}
