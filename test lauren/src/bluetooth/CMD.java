@@ -196,4 +196,7 @@ public interface CMD {
 	public static final int SEESAWACTION = 35;
 	public void seesawAction();
 	
+	public static final int SNAPPOSETOTILEMID =36;
+	public void snapPoseToTileMid();
+
 }

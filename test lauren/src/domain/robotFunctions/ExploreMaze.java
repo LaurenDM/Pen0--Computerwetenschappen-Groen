@@ -101,10 +101,12 @@ public class ExploreMaze{
 					}
 					else{
 						move(direction);
+						robot.snapPoseToTileMid();
 					}
 				}
 				else{
 					move(direction);
+					robot.snapPoseToTileMid();
 				}
 				//System.out.println("Now at "+maze.getCurrentNode().getX()+" "+maze.getCurrentNode().getY());
 			}

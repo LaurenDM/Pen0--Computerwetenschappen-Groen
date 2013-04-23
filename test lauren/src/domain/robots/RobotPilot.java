@@ -522,7 +522,9 @@ public abstract class RobotPilot implements PlayerHandler{
 			e.printStackTrace();
 		}
 	}
-	
+
+	//ATtention This method is not used for the simrobot, only has an effect on the real robot
+	public abstract void snapPoseToTileMid();
 	
 //	private void sendPositions(){
 //		int x = (int) getPosition().getX()/Barcode.getMazeConstant();
