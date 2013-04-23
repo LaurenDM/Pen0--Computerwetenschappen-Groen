@@ -130,7 +130,7 @@ public class ExploreMaze{
 			TileNode node = (TileNode) maze.getCurrentTile();
 			while(TileNode.class.isAssignableFrom(node.getNodeAt(o).getClass())){
 				node = (TileNode) node.getNodeAt(o);
-				InitialPosition relativePose = new InitialPosition(node.getX()*40.0+20,node.getY()*40.0+20,maze.getCurrentRobotOrientation());
+				InitialPosition relativePose = new InitialPosition(node.getX()*40.0,node.getY()*40.0,maze.getCurrentRobotOrientation());
 				Position pos = Position.getAbsolutePose(robot.getInitialPosition(), relativePose);	
 				node.setAccessible(!robot.checkRobotSensor(pos));
 			}
