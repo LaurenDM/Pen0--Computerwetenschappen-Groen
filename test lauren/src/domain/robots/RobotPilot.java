@@ -14,6 +14,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import controller.Controller;
+
 import peno.htttp.DisconnectReason;
 import peno.htttp.PlayerClient;
 import peno.htttp.PlayerHandler;
@@ -512,6 +514,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	}
 	
 	public void updatePosition(int x, int y, double angle){
+		if(Controller.interconnected){
 		try {
 			playerClient.updatePosition(x, y, angle);
 		} catch (IllegalStateException e) {
@@ -520,6 +523,7 @@ public abstract class RobotPilot implements PlayerHandler{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
 		}
 	}
 

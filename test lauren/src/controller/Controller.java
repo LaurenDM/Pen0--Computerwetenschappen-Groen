@@ -32,6 +32,7 @@ import domain.util.ColorPolygon;
 
 //Robotclass, generates/keeps track of current positioning.
 public class Controller {
+	public static boolean interconnected = false;
 	private static boolean STOPPED = false;
 	private Thread executingThread;
 	private RobotPilot currentRobot;
@@ -60,6 +61,7 @@ public class Controller {
 		try{
 			htttpImplementation = new HtttpImplementation(this);
 			setPlayerClient();
+			interconnected=true;
 		} catch(Exception e){
 			System.out.println("Couldn't connect to the remote server.");
 		}

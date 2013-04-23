@@ -87,11 +87,8 @@ public class ExploreMaze{
 			makeWall(distances);
 			if(!maze.isComplete()){
 				//robot.setMovingSpeed(robot.getDefaultMovingSpeed());
-				try{
 					checkForOtherRobots();
-				}catch(NullPointerException e){
-					//In dit geval is de robot niet verbonden met andere robots
-				}
+		
 				Direction direction = getNextDirection(distances);
 				updatePosition(direction);
 				if(checkBadPosition(distances)){
@@ -121,12 +118,17 @@ public class ExploreMaze{
 	private void adjustRotation(double[] distances) {
 		double leftDistance=distances[0];
 		double rightDistance=distances[2];
-		double tooMuchLeft=leftDistance%MAZECONSTANT-rightDistance%MAZECONSTANT;
-		double rotation=Math.min(20, (180/Math.PI)*Math.abs(Math.atan(tooMuchLeft/MAZECONSTANT/2))) * -Math.signum(tooMuchLeft);
+		double tooMuchLeft=-rightDistance%MAZECONSTANT-MAZECONSTANT/2;
+		if(Math.abs(leftDistance)<Math.abs(rightDistance)){
+			tooMuchLeft=leftDistance%MAZECONSTANT-MAZECONSTANT/2;
+		}
+		
+		double rotation=2* (Math.min(10, (180/Math.PI)*Math.abs(Math.atan(tooMuchLeft/MAZECONSTANT/2))) * -Math.signum(tooMuchLeft));
 		robot.turn(rotation);
 	}
 
 	public void checkForOtherRobots(){
+		if(Controller.interconnected){
 		for(Orientation o : Orientation.values()){
 			TileNode node = (TileNode) maze.getCurrentNode();
 			while(TileNode.class.isAssignableFrom(node.getNodeAt(o).getClass())){
@@ -135,16 +137,15 @@ public class ExploreMaze{
 				node.setAccessible(robot.checkRobotSensor(pos));
 			}
 		}
+		}
 	}
 	
 	public void updatePosition(Direction direction){
 		Orientation nextOrientation = maze.getCurrentRobotOrientation().getOffset(direction.getOffset());
 		TileNode nextNode = (TileNode) maze.getCurrentNode().getNodeAt(nextOrientation);
-		try{
+		
 		robot.updatePosition(nextNode.getX(), nextNode.getY(), nextOrientation.getAngleToHorizontal());
-		}catch (NullPointerException e) {
-			// In dit geval is de robot niet verbonden
-		}
+
 	}
 	
 	private boolean nextTileIsSeesaw(){
