@@ -136,6 +136,10 @@ public class ExploreMaze{
 	}
 	
 	public void updatePosition(Direction direction){
+		if(direction==null){
+			robot.updatePosition(maze.getCurrentTile().getX(), maze.getCurrentTile().getY(), maze.getCurrentRobotOrientation().getAngleToHorizontal());
+			return;
+		}
 		Orientation nextOrientation = maze.getCurrentRobotOrientation().getOffset(direction.getOffset());
 		TileNode nextNode = (TileNode) maze.getCurrentTile().getNodeAt(nextOrientation);
 		try{
