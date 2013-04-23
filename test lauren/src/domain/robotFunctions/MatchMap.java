@@ -724,7 +724,8 @@ public class MatchMap {
 			for (int j = 0; j < getOurMaze()[0].length; j++) {
 				String[] str = getOurMaze()[i][j].split(regex);
 				if(getBarcodeValue(getOurMaze()[i][j]) > 0);
-					if(checkForBarcodeMatches(str[1], getBarcodeValue(getOurMaze()[i][j]),i,j)){
+					try {
+						if(checkForBarcodeMatches(str[1], getBarcodeValue(getOurMaze()[i][j]),i,j)){
 						System.out.println("MERGEPOINT HAS BEEN SET");
 						ourMergePointX = i;
 						ourMergePointY = j;
@@ -733,6 +734,10 @@ public class MatchMap {
 						j = getOurMaze()[0].length;
 						i = getOurMaze().length;
 					}
+					} catch (Exception e) {
+						// TODO: handle exception
+					}
+					
 			}
 		}
 	}
