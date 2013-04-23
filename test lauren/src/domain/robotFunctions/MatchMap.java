@@ -427,7 +427,7 @@ public class MatchMap {
 		for (int i = startX; i < resultList.length; i++) {
 			for (int j = startY; j < resultList[0].length; j++) {
 				try {
-					if(!originList[a][b].equals(dummyString))
+					if(!originList[a][b].equals(dummyString) || !originList[a][b].equals(""))
 					resultList[i][j] = originList[a][b];
 				} catch (Exception e) {}
 				b++;
