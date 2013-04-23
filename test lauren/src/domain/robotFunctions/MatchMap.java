@@ -44,7 +44,7 @@ public class MatchMap {
 		setOurMazeTiles(tileList);
 		setOriginalTiles(_tileList);
 		merge();
-		System.out.println(matrixToString(resultMap));
+		
     }
 	public final static String dummyString = "dummy     ";
 	
@@ -378,6 +378,10 @@ public class MatchMap {
 	
 	public static void merge(){
 		//TODO debug
+		System.out.println("ourmaze");
+		System.out.println(matrixToString(getOurMaze()));
+		System.out.println("gettheirs");
+		System.out.println(matrixToString(getOriginal()));
 		if(hasMutualSeeSaw()){
 			permutationBySeeSaw();
 			mergeMaps(mergeMaps(getPermutatedDirection()));
@@ -401,10 +405,6 @@ public class MatchMap {
 		
 		startX = originList.length+permList.length;
 		startY = originList[0].length+permList[0].length;
-		System.out.println((originList.length+permList.length));
-		System.out.println((originList[0].length+permList[0].length));
-		System.out.println(startX);
-		System.out.println(startY);
 		for (int i = 0; i < resultList.length; i++) {
 			for (int j = 0; j < resultList[0].length; j++) {
 				resultList[i][j] = dummyString;
@@ -560,14 +560,13 @@ public class MatchMap {
 //				int size = resultList.length;
 //				//resultList = enlargeResultList(resultList, true, false);
 //				resultList = enlargeResultList(resultList, true, false);
-//				System.out.println(matrixToString(resultList));
+//				
 //				i = size;
 //				permX = otherMergePointX;
 //				permY = otherMergePointY;
 //			}
 //			
 //		}
-		System.out.println(matrixToString(resultList));
 		return resultList;
 	}
 		
@@ -610,7 +609,7 @@ public class MatchMap {
 //			permY = otherMergePointY;
 //			permX++;
 //		}
-		System.out.println(matrixToString(resultList));
+		
 		return resultList;
 	}
 	
@@ -699,7 +698,6 @@ public class MatchMap {
 	}
 
 	private static String[][] mergeMaps(Permutation permutatedDirection) {
-		System.out.println(permutatedDirection);
 		switch (permutatedDirection) {
 			case DEGREES_90:
 				return get90Degree();
@@ -790,9 +788,6 @@ public class MatchMap {
 				try {
 					if (getBarcodeValue(maze[i][j]) == number && checkBarcodeSurrounding(maze,originalX,originalY,i,j)) {
 						System.out.println("equality found on");
-						System.out.println(matrixToString(maze));
-						System.out.println(i);
-						System.out.println(j);
 						otherMergePointX = i;
 						otherStartMergeX = i;
 						otherStartMergeY = j;
@@ -806,14 +801,6 @@ public class MatchMap {
 	}
 	private static boolean checkBarcodeSurrounding(String[][] maze,int originalX,int originalY, int permX, int permY) {
 		int counter = 0;
-		System.out.println("______start test ________");
-		System.out.println(maze[permX][permY]);
-		System.out.println(matrixToString(getOurMaze()));
-		System.out.println("_________");
-		System.out.println(matrixToString(maze));
-		System.out.println("_________");
-		System.out.println("orix : "+originalX+"   oriY: "+originalY);
-		System.out.println("checkX : "+permX+"  checkY :"+permY);
 		counter+=checkBarcodeEquality(maze,originalX+1,originalY,permX+1,permY);
 		counter+=checkBarcodeEquality(maze,originalX,originalY+1,permX,permY+1);
 		counter+=checkBarcodeEquality(maze,originalX-1,originalY,permX-1,permY);
@@ -822,8 +809,6 @@ public class MatchMap {
 		counter+=checkBarcodeEquality(maze,originalX+1,originalY+1,permX+1,permY+1);
 		counter+=checkBarcodeEquality(maze,originalX+1,originalY-1,permX+1,permY-1);
 		counter+=checkBarcodeEquality(maze,originalX-1,originalY+1,permX-1,permY+1);	
-		System.out.println("counter:"+counter);
-		System.out.println("__________end test ________");
 		if(counter > 11)
 			return true;
 		return false;
@@ -831,13 +816,9 @@ public class MatchMap {
 	}
 	
 	private static int checkBarcodeEquality(String[][] maze,int originalX,int originalY, int permX, int permY){
-		System.out.println("_____try2_____");
-		System.out.println("orix : "+originalX+"   oriY: "+originalY);
-		System.out.println("checkX : "+permX+"  checkY :"+permY);
 		try {
 			String[] str = getOurMaze()[originalX][originalY].split(regex);
 			String[] str2 = maze[permX][permY].split(regex);
-			System.out.println("string 1 : "+str[0]+"    string 2 : "+str2[0]);
 			if(str[0].equals(str2[0]) && isEqualOrientation(str[1], str2[1]))
 				return 5;
 			else
