@@ -53,6 +53,9 @@ public class TileNode extends MazeNode {
 	
 	public void setNodeAt(Orientation currentRobotOrientation, MazeNode mazeNode) {
 		getConnectedNodes().put(currentRobotOrientation, mazeNode);
+		if(mazeNode==null){
+			this.fullyExpanded=false;
+		}
 	}
 	
 	private HashMap<Orientation, MazeNode> getConnectedNodes() {
