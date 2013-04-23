@@ -60,6 +60,10 @@ public abstract class RobotPilot implements PlayerHandler{
 		
 	}
 	
+	public InitialPosition getInitialPosition(){
+		return initialPosition;
+	}
+	
 	public void setPlayerClient(PlayerClient playerClient){
 		this.playerClient = playerClient;
 	}
