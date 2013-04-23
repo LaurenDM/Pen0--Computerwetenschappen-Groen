@@ -125,7 +125,7 @@ public class MatchMap {
 		String[][] originalList = new String[maxX][maxY];
 		for (int i = 0; i < maxX; i++) {
 			for (int j = 0; j < maxY; j++) {
-				originalList[i][j] = "";
+				originalList[i][j] = dummyString;
 			}
 		}
 		for (Tile tile : tiles) {
