@@ -142,11 +142,11 @@ public class Position implements Cloneable {
 		//Find position
 		double deltaY = relativePose.getY();
 		double deltaX = relativePose.getX();
-		Position newPos = initialPose.getNewPosition(startOrient.getAngleToHorizontal(), deltaY);
-		newPos = newPos.getNewPosition(startOrient.getOffset(1).getAngleToHorizontal(), deltaX);
+		Position newPos = initialPose.getNewPosition(startOrient.getAngleToHorizontal(), deltaX);
+		newPos = newPos.getNewPosition(startOrient.getOffset(-1).getAngleToHorizontal(), deltaY);
 		return new InitialPosition(newPos, newOrient);
 		
-		// Belangrijk: deze methode gaat er nu van uit dat relativeStartOrient = North
+		// Belangrijk: deze methode gaat er nu van uit dat relativeStartOrient = East
 		// Indien niet moeten lijnen 145 en 146 veranderd worden
 	}
 	
