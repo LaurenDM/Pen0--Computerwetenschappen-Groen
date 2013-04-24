@@ -383,8 +383,10 @@ public abstract class RobotPilot implements PlayerHandler{
 	
 	public void teleportToStartPosition(){
 		initialPosition = getWorldSimulator().getInitialPositionFromPlayer(playerNb);
-		System.out.println("Setting initial pos to:"+initialPosition.getX()+" y:"+initialPosition.getY());
-		setPose(initialPosition.getOrientation().getAngleToHorizontal(), (int) initialPosition.getX(), (int) initialPosition.getY());
+		if(initialPosition != null){
+			System.out.println("Setting initial pos to:"+initialPosition.getX()+" y:"+initialPosition.getY());
+			setPose(initialPosition.getOrientation().getAngleToHorizontal(), (int) initialPosition.getX(), (int) initialPosition.getY());
+		}
 	}
 	
 	public ArrayList<peno.htttp.Tile> getFoundTilesList(){
@@ -463,6 +465,8 @@ public abstract class RobotPilot implements PlayerHandler{
 		printMessage("ph.gameRolled: playerNumber:"+playerNumber+" objectNumber:"+objectNumber);
 		setInitialPositionNumber(playerNumber);
 		Barcode.setBallNumber(objectNumber);
+		setReady(true);
+		teleportToStartPosition();
 	}
 
 	@Override
