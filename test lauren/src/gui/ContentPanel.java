@@ -916,6 +916,20 @@ public class ContentPanel implements ActionListener {
 		}
 
 	    }
+	
+	public void automaticConnection(){
+		controller.readMazeFromFile("test lauren/mazes/MergeTestMaze");
+    	drawingPanel.drawSimulatedWalls();
+    	try {
+			Thread.sleep(4000);
+	    	controller.teleport();
+	    	controller.setReady(true);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 }
 
  

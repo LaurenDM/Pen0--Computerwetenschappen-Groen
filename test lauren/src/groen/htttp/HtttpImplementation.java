@@ -1,6 +1,7 @@
 package groen.htttp;
 
 import gui.ContentPanel;
+import gui.GUI;
 
 import java.io.IOException;
 import java.util.Set;
@@ -54,8 +55,12 @@ public class HtttpImplementation {
 	    	    
 	    playerHandler = controller.getRobot();
 	    Connection connection = null;
-	    String gameID = "gameIDGroenSerge2";
+	    String gameID = "gameIDGroenSerge3";
+	    if(GUI.getGameID()!=null){
+	    	gameID = GUI.getGameID();
+	    }
 	    String playerID = controller.getPlayerID();
+	    
 		try {
 			connection = factory.newConnection();
 			playerClient = new PlayerClient(connection, controller.getRobot(), gameID, playerID);
