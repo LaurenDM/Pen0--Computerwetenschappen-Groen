@@ -683,11 +683,6 @@ public class SimRobotPilot extends RobotPilot {
 			e.printStackTrace();
 		}
 	}
-	
-	@Override
-	public void indicateDeadEnd() {
-		maze.setNextTileToDeadEnd();
-	}
 
 	@Override
 	public synchronized void driveOverSeeSaw(int barcodeNb) {

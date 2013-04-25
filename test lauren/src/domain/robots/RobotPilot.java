@@ -21,7 +21,7 @@ import peno.htttp.PlayerClient;
 import peno.htttp.PlayerHandler;
 import peno.htttp.Tile;
 
-import domain.Position.InitialPosition;
+import domain.Position.Pose;
 import domain.Position.Position;
 import domain.maze.Ball;
 import domain.maze.Board;
@@ -62,7 +62,7 @@ public abstract class RobotPilot implements PlayerHandler{
 		
 	}
 	
-	public InitialPosition getInitialPosition(){
+	public Pose getInitialPosition(){
 		return initialPosition;
 	}
 	
@@ -279,8 +279,8 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	public abstract void fetchBall();
 	
-	public void indicateDeadEnd() {
-		getMaze().setNextTileToDeadEnd();
+	public void indicateDeadEnd(boolean accessible) {
+		getMaze().setNextTileToDeadEnd(accessible);
 	}
 	
 	public void foundBall(){
@@ -373,7 +373,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	public abstract void turnUltrasonicSensorTo(int angle);
 	
 	
-	InitialPosition initialPosition;
+	Pose initialPosition;
 	int playerNb;
 	public void setInitialPositionNumber(int playernb){
 		this.playerNb = playernb;

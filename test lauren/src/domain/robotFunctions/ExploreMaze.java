@@ -9,7 +9,7 @@ import peno.htttp.Tile;
 
 import controller.Controller;
 
-import domain.Position.InitialPosition;
+import domain.Position.Pose;
 import domain.Position.Position;
 import domain.maze.Orientation;
 import domain.maze.Wall;
@@ -82,17 +82,27 @@ public class ExploreMaze{
 	
 	private void continueExploring(int x, int y, Orientation o){
 		maze.continueExploring(x,y,o);
-		while(!maze.isComplete() && Controller.isStopped()==false){
+		while(!maze.isComplete() && !Controller.isStopped() && !interrupted){
 			double[] distances = new double[3];
 			distances = checkDistances();
 			makeWall(distances);
 			if(!maze.isComplete()){
 				//robot.setMovingSpeed(robot.getDefaultMovingSpeed());
-					checkForOtherRobots();
-		
+				checkForOtherRobots();
 				Direction direction = getNextDirection(distances);
 				updatePosition(direction);
-				if(checkBadPosition(distances)){
+				if(direction == null){
+					stopExploring();	
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						// Auto-generated catch block
+						e.printStackTrace();
+					}
+					resumeExplore(0, 0, null);
+					break;
+				}
+				else if(checkBadPosition(distances)){
 //					adjustRotation(distances);
 					if(checkVeryBadPosition(distances)){
 						moveWithStraighten(direction);
@@ -134,7 +144,7 @@ public class ExploreMaze{
 			TileNode node = (TileNode) maze.getCurrentTile();
 			while(node.getNodeAt(o)!=null && TileNode.class.isAssignableFrom(node.getNodeAt(o).getClass())){
 				node = (TileNode) node.getNodeAt(o);
-				InitialPosition relativePose = new InitialPosition(node.getX()*40.0,node.getY()*40.0,maze.getCurrentRobotOrientation());
+				Pose relativePose = new Pose(node.getX()*40.0,node.getY()*40.0,maze.getCurrentRobotOrientation());
 				Position pos = Position.getAbsolutePose(robot.getInitialPosition(), relativePose);	
 				node.setAccessible(!robot.checkRobotSensor(pos));
 			}
@@ -195,8 +205,12 @@ public class ExploreMaze{
 	 * These walls are added in the graph and in the GUI.
 	 */
 	public void setNextTileToDeadEnd(){
+		setNextTileToDeadEnd(true);
+	}
+	
+	public void setNextTileToDeadEnd(boolean accessible){
 		this.atDeadEnd = true;
-		maze.setNextTileToDeadEnd();
+		maze.setNextTileToDeadEnd(accessible);
 		double orientation = robot.getOrientation();
 		double deadEndX = robot.getPosition().getX()+Math.cos(orientation/180*Math.PI)*MAZECONSTANT;
 		double deadEndY = robot.getPosition().getY()+Math.sin(orientation/180*Math.PI)*MAZECONSTANT;
@@ -395,10 +409,7 @@ public class ExploreMaze{
 		else if(next == Orientation.EAST)
 			return Direction.RIGHT;
 		else if(next == null){
-			distances = new double[3];
-			distances = checkDistances();
-			makeWall(distances);
-			return getNextDirection(distances);
+			return null;
 		}
 		return Direction.BACKWARD;
 	}

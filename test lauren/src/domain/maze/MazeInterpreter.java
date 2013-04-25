@@ -13,7 +13,7 @@ import java.util.List;
 import javax.crypto.spec.PSource;
 
 
-import domain.Position.InitialPosition;
+import domain.Position.Pose;
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
 
@@ -36,6 +36,7 @@ public class MazeInterpreter {
 		for(int x = 0; x<map.length; x++){
 			for(int y = 0; y<map[x].length; y++){
 				readCommand(map[x][y], x, y);
+				System.out.println(x + "    " + y + "    " + map[x][y]);
 			}
 		}
 	}
@@ -172,7 +173,7 @@ public class MazeInterpreter {
 		YCoo = YCoo*MAZECONSTANT + MAZECONSTANT/2;
 		Orientation orientation = Orientation.getOrientation(orientString);
 		System.out.println("1 Xcoo "+XCoo+" YCoo"+YCoo);
-		InitialPosition pos = new InitialPosition(XCoo,YCoo,orientation);
+		Pose pos = new Pose(XCoo,YCoo,orientation);
 		board.addInitialPosition(pos, playernb);
 	}
 	

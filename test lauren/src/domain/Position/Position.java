@@ -128,7 +128,7 @@ public class Position implements Cloneable {
 		return -checkPosAngleinRad*180/Math.PI;//De min is omdat het coordinatenstelsel linksBOVEN begint ipv linksonder
 	}
 	
-	public static InitialPosition getAbsolutePose(InitialPosition initialPose, InitialPosition relativePose){
+	public static Pose getAbsolutePose(Pose initialPose, Pose relativePose){
 		// everything with 'relative' means in the other's board
 		// everything without 'relative' is in our board
 		
@@ -144,7 +144,7 @@ public class Position implements Cloneable {
 		double deltaX = relativePose.getX();
 		Position newPos = initialPose.getNewPosition(startOrient.getAngleToHorizontal(), deltaX);
 		newPos = newPos.getNewPosition(startOrient.getOffset(-1).getAngleToHorizontal(), deltaY);
-		return new InitialPosition(newPos, newOrient);
+		return new Pose(newPos, newOrient);
 		
 		// Belangrijk: deze methode gaat er nu van uit dat relativeStartOrient = East
 		// Indien niet moeten lijnen 145 en 146 veranderd worden

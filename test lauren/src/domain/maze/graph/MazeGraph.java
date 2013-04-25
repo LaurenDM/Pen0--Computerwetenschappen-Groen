@@ -232,16 +232,19 @@ public class MazeGraph {
 		}
 		//If the current tile is unexplored return null so the walls are checked again.
 		if(unexpanded.contains(getCurrentTile())){
+			System.out.println("MG.unexpanded contains current tile");
 			return null;
 		}
 		//TODO add code so that the robot will attempt to follow the most sensible path it can if no path to a goal is found
 		MazePath lastPath = null;
 		//Fill a new SortedPathSet with paths containing only the current tile and having the unexpanded tiles as finish
+		System.out.println("MG.Unexpanded size = " + unexpanded.size());
 		if(unexpanded.size()!=0){
 			SortedPathSet possiblePaths = new SortedPathSet();
 			for(TileNode node : unexpanded){
 				possiblePaths.add(new MazePath(getCurrentTile(),getCurrentRobotOrientation(),node));
 			}
+			System.out.println("MG.possiblepaths size1 = "+ possiblePaths.size());
 			int shortestFound = Integer.MAX_VALUE;
 			ArrayList<MazePath> candidates = new ArrayList<MazePath>();
 			do{
@@ -256,6 +259,7 @@ public class MazeGraph {
 				}
 				//In the while condition the path will only get added if it's valid but it'll always be removed from possiblePaths.
 			}while( possiblePaths.size()>0 && possiblePaths.first().getCurrentLength()<=shortestFound);
+			System.out.println("MG.candidates size 1 = "+ candidates.size());
 			Iterator<MazePath> it = candidates.iterator();
 			while(it.hasNext()){
 				MazePath path = it.next();
@@ -263,6 +267,7 @@ public class MazeGraph {
 					it.remove();
 				}
 			}
+			System.out.println("MG.candidates size 2 = "+ candidates.size());
 			ArrayList<Orientation> orderedOrientations = new ArrayList<Orientation>();
 			//The order of the following lines determines the order in which we'll consider possible paths
 			orderedOrientations.add(Orientation.WEST);
@@ -275,12 +280,15 @@ public class MazeGraph {
 					if(nodeAtO!=null && path.contains(nodeAtO)){
 						return o;
 					} else if (nodeAtO==null){
+						System.out.println("MG.nodeAtO null");
 						return null;
+						
 					}
 				}
 			}
 		}
 		MazeNode frontNode = getCurrentTile().getNodeAt(getCurrentRobotOrientation());
+		System.out.println("MG.Frontnode");
 		return frontNode!=null?(frontNode.isAccessible()?Orientation.NORTH:null):null;
 	}
 	
@@ -670,18 +678,22 @@ public class MazeGraph {
 	 * A robot will never explore a known dead end.
 	 */
 	public void setNextTileToDeadEnd() {
+		setNextTileToDeadEnd(true);
+	}
+	
+	public void setNextTileToDeadEnd(boolean accessible){
 		if(getCurrentTile().getNodeAt(getCurrentRobotOrientation())==null){
 			generateTileNodeAt(Orientation.NORTH); //This is a relative orientation. In this case it just means in front of the robot.
 		}
 		if(getCurrentTile().getNodeAt(getCurrentRobotOrientation())!=null && getCurrentTile().getNodeAt(getCurrentRobotOrientation()).getClass().equals(TileNode.class)){
 			TileNode deadEndNode = (TileNode)getCurrentTile().getNodeAt(getCurrentRobotOrientation());
+			deadEndNode.setAccessible(accessible);
 			generateWallNodeAt(deadEndNode, getCurrentRobotOrientation().getRelativeOrientation(Orientation.WEST));
 			generateWallNodeAt(deadEndNode, getCurrentRobotOrientation().getRelativeOrientation(Orientation.NORTH));
 			generateWallNodeAt(deadEndNode, getCurrentRobotOrientation().getRelativeOrientation(Orientation.EAST));
 		} else {
 			ContentPanel.writeToDebug("Couldn't create a dead end at the position in front of the robot.");
 		}
-		
 	}
 
 	/**
