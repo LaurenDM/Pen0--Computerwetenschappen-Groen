@@ -507,7 +507,8 @@ public class ContentPanel implements ActionListener {
                 	actionLabel.setText("The lightsensor is being calibrated.");
                 	calibrateButton.setSelected(false);
         		controller.connectNewBtRobot();
-        		controller.setPlayerClient();
+        		if(Controller.interconnected){
+        		controller.setPlayerClient();}
         		drawingPanel.clear();
         		setConnected(true);
         		
