@@ -91,7 +91,6 @@ public class ExploreMaze{
 				checkForOtherRobots();
 				Direction direction = getNextDirection(distances);
 				updatePosition(direction);
-<<<<<<< HEAD
 				if(direction == null){
 					stopExploring();	
 					try {
@@ -105,10 +104,8 @@ public class ExploreMaze{
 				}
 				else if(checkBadPosition(distances)){
 //					adjustRotation(distances);
-=======
 				if(checkBadPosition(distances)){
 					adjustRotation(distances);
->>>>>>> f7d40515bf59dc4eae8087deae4d910aa93535d5
 					if(checkVeryBadPosition(distances)){
 						moveWithStraighten(direction);
 					}
@@ -129,7 +126,7 @@ public class ExploreMaze{
 			robot.setDriveToFinishSpeed();
 			maze.driveToFinish(robot);
 		}
-	}
+		}}
 
 	private void adjustRotation(double[] distances) {
 		double leftDistance=distances[0];
