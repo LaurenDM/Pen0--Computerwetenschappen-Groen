@@ -33,7 +33,9 @@ public class ExploreMaze{
 	    }
 	}
 	private RobotPilot robot;
-	private final int valuedDistance = 27;
+	private final int sideValuedDistance = 32;
+	private final int frontValuedDistance = 27;
+
 	private final int distanceBlocks = 40;
 	private final int MAZECONSTANT = 40;
 	private ArrayList<Wall> wallList = new ArrayList<Wall>();
@@ -63,7 +65,7 @@ public class ExploreMaze{
 		robot.turnLeft();
 		robot.turnSensorLeft();
 		double backValue = robot.readUltrasonicValue();
-		if(backValue < valuedDistance){
+		if(backValue < sideValuedDistance){
 			maze.generateWallNodeAt(Orientation.SOUTH); //Relative!
 			double x = robot.getPosition().getX();
 			double y = robot.getPosition().getY();
@@ -103,17 +105,18 @@ public class ExploreMaze{
 					break;
 				}
 				else if(checkBadPosition(distances)){
-					if(!closeSideWalls(distances)){
+					if(!closeSideWalls(distances)||direction.getOffset()==Direction.LEFT.getOffset()||direction.getOffset()==Direction.RIGHT.getOffset()){
 						moveWithStraighten(direction);
 					}else{
-					adjustRotation(distances);
+					adjustRotation(distances, direction);
 					if(checkVeryBadPosition(distances)){
 						moveWithStraighten(direction);
 					}
 					else{
 						move(direction);
 						robot.snapPoseToTileMid();
-					}}
+					}
+					}
 				}
 				else{
 					move(direction);
@@ -135,7 +138,8 @@ public class ExploreMaze{
 		return leftDistance<MAZECONSTANT && rightDistance<MAZECONSTANT;
 	}
 
-	private void adjustRotation(double[] distances) {
+	private void adjustRotation(double[] distances,Direction direction) {
+		
 		double leftDistance=distances[0];
 		double rightDistance=distances[2];
 		double tooMuchLeft=-(rightDistance%MAZECONSTANT-MAZECONSTANT/2);
@@ -144,6 +148,13 @@ public class ExploreMaze{
 		}
 		
 		double rotation=2*(Math.min(5, (180/Math.PI)*Math.abs(Math.atan(tooMuchLeft/MAZECONSTANT/2))) * -Math.signum(tooMuchLeft));
+		switch (direction) {
+		case BACKWARD:
+			rotation=-rotation;
+			break;
+		default:
+			break;
+		}
 		robot.turn(rotation);
 	}
 
@@ -189,8 +200,9 @@ public class ExploreMaze{
 	private boolean checkVeryBadPosition(double[] distances){
 		double leftDistance=distances[0];
 		double rightDistance=distances[2];
+		double frontDistance=distances[1];
 		double tooMuchLeft=leftDistance%MAZECONSTANT-rightDistance%MAZECONSTANT;
-		return Math.abs(tooMuchLeft)>6;
+		return Math.abs(tooMuchLeft)>6||Math.abs(frontDistance%MAZECONSTANT-MAZECONSTANT/2)>4;
 	}
 	
 	/**
@@ -283,7 +295,7 @@ public class ExploreMaze{
 		double x = robot.getPosition().getX();
 		double y = robot.getPosition().getY();
 		double orientation = robot.getOrientation();
-		if(distances[0] < valuedDistance){
+		if(distances[0] < sideValuedDistance){
 			if(maze.generateWallNodeAt(Orientation.WEST)){
 				calculateWall(x,y,orientation,Direction.LEFT);
 			}
@@ -291,7 +303,7 @@ public class ExploreMaze{
 			maze.generateTileNodeAt(Orientation.WEST);
 		}
 			
-		if(distances[1] < valuedDistance){
+		if(distances[1] < frontValuedDistance){
 			if(maze.generateWallNodeAt(Orientation.NORTH)){
 				calculateWall(x,y,orientation,Direction.FORWARD);
 			}
@@ -299,7 +311,7 @@ public class ExploreMaze{
 			maze.generateTileNodeAt(Orientation.NORTH);
 		}
 			
-		if(distances[2] < valuedDistance){
+		if(distances[2] < sideValuedDistance){
 			if(maze.generateWallNodeAt(Orientation.EAST)){
 				calculateWall(x,y,orientation,Direction.RIGHT);
 			}			
