@@ -103,6 +103,9 @@ public class ExploreMaze{
 					break;
 				}
 				else if(checkBadPosition(distances)){
+					if(!closeSideWalls(distances)){
+						moveWithStraighten(direction);
+					}else{
 					adjustRotation(distances);
 					if(checkVeryBadPosition(distances)){
 						moveWithStraighten(direction);
@@ -110,7 +113,7 @@ public class ExploreMaze{
 					else{
 						move(direction);
 						robot.snapPoseToTileMid();
-					}
+					}}
 				}
 				else{
 					move(direction);
@@ -124,6 +127,12 @@ public class ExploreMaze{
 			robot.setDriveToFinishSpeed();
 			maze.driveToFinish(robot);
 		}
+	}
+
+	private boolean closeSideWalls(double[] distances) {
+		double leftDistance=distances[0];
+		double rightDistance=distances[2];
+		return leftDistance<MAZECONSTANT && rightDistance<MAZECONSTANT;
 	}
 
 	private void adjustRotation(double[] distances) {
