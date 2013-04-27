@@ -91,6 +91,7 @@ public class ExploreMaze{
 				checkForOtherRobots();
 				Direction direction = getNextDirection(distances);
 				updatePosition(direction);
+<<<<<<< HEAD
 				if(direction == null){
 					stopExploring();	
 					try {
@@ -104,6 +105,10 @@ public class ExploreMaze{
 				}
 				else if(checkBadPosition(distances)){
 //					adjustRotation(distances);
+=======
+				if(checkBadPosition(distances)){
+					adjustRotation(distances);
+>>>>>>> f7d40515bf59dc4eae8087deae4d910aa93535d5
 					if(checkVeryBadPosition(distances)){
 						moveWithStraighten(direction);
 					}
@@ -129,12 +134,12 @@ public class ExploreMaze{
 	private void adjustRotation(double[] distances) {
 		double leftDistance=distances[0];
 		double rightDistance=distances[2];
-		double tooMuchLeft=-rightDistance%MAZECONSTANT-MAZECONSTANT/2;
+		double tooMuchLeft=-(rightDistance%MAZECONSTANT-MAZECONSTANT/2);
 		if(Math.abs(leftDistance)<Math.abs(rightDistance)){
 			tooMuchLeft=leftDistance%MAZECONSTANT-MAZECONSTANT/2;
 		}
 		
-		double rotation=2* (Math.min(10, (180/Math.PI)*Math.abs(Math.atan(tooMuchLeft/MAZECONSTANT/2))) * -Math.signum(tooMuchLeft));
+		double rotation=2*(Math.min(5, (180/Math.PI)*Math.abs(Math.atan(tooMuchLeft/MAZECONSTANT/2))) * -Math.signum(tooMuchLeft));
 		robot.turn(rotation);
 	}
 

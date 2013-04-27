@@ -375,21 +375,11 @@ public class MatchMap {
 	
 	public static void merge(){
 		//TODO debug
-		System.out.println("ourmaze");
+		System.out.println("ourmaze1");
 		System.out.println(matrixToString(getOurMaze()));
 		System.out.println("_________________________");
 		System.out.println("getOri");
 		System.out.println(matrixToString(getOriginal()));
-		System.out.println("_________________________");
-		System.out.println("get90");
-		System.out.println(matrixToString(get90Degree()));
-		System.out.println("_________________________");
-		System.out.println("get180");
-		System.out.println(matrixToString(get180Degree()));
-		System.out.println("_________________________");
-		System.out.println("get270");
-		System.out.println(matrixToString(get270Degree()));
-		
 		if(hasMutualSeeSaw()){
 			permutationBySeeSaw();
 			mergeMaps(getMergedMaps(getPermutatedDirection()));
@@ -397,6 +387,7 @@ public class MatchMap {
 		else if(hasMutualBarcode()){
 			permutationByBarcode();
 			System.out.println(getPermutatedDirection() +"   perm");
+			System.out.println("merging on : "+getOurMaze()[ourStartMergeX][ourStartMergeY]);
 			mergeMaps(getMergedMaps(getPermutatedDirection()));
 		}
 		else 
@@ -435,14 +426,20 @@ public class MatchMap {
 			b = 0;
 			a++;
 		}
-		System.out.println("tmpresult");
+		System.out.println("firstStart");
 		System.out.println(matrixToString(resultList));
-		startX+=ourStartMergeX;
-		startY+=ourStartMergeY;
 		resultList = mergeRightUp(resultList,permList);
+		System.out.println("firstmerge right up");
+		System.out.println(matrixToString(resultList));
 		resultList = mergeLeftUp(resultList, permList);
+		System.out.println("secondMerge left up");
+		System.out.println(matrixToString(resultList));
 		resultList = mergeRightDown(resultList,permList);
+		System.out.println("thirdmerge right down");
+		System.out.println(matrixToString(resultList));
 		resultList = mergeLeftDown(resultList,permList);
+		System.out.println("firstStart left down");
+		System.out.println(matrixToString(resultList));
 		setResultMap(resultList);
 	}
 	
