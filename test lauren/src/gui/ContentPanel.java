@@ -7,12 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,13 +19,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
 
-import sun.misc.Cleaner;
-
 import controller.Controller;
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
 import domain.robots.CannotMoveException;
-import domain.robots.RobotPilot;
 import domain.util.ColorPolygon;
 import exceptions.ConnectErrorException;
 /**
@@ -41,24 +33,24 @@ import exceptions.ConnectErrorException;
 public class ContentPanel implements ActionListener {
 	static ContentPanel runningPanel;
 	static JFrame frame = new JFrame("P&O - Groen");
-    static JFrame variableFrame = new JFrame("P&O - Groen - Variables");
-    static JFrame calibrationFrame = new JFrame("P&O - Groen - Lightsensor Calibration");
-    static JFrame sensorOrientationFrame = new JFrame("P&O - Groen - Ultrasonicsensor Orientation");
-    static JFrame barcodeFrame = new JFrame("P&O - Groen - Set the barcode values");
+//    static JFrame variableFrame = new JFrame("P&O - Groen - Variables");
+//    static JFrame calibrationFrame = new JFrame("P&O - Groen - Lightsensor Calibration");
+//    static JFrame sensorOrientationFrame = new JFrame("P&O - Groen - Ultrasonicsensor Orientation");
+//    static JFrame barcodeFrame = new JFrame("P&O - Groen - Set the barcode values");
     static JFrame connectionFrame = new JFrame("P&O - Groen - Connection through HTTTP");
     private static ControllerPoller controllerPoller;
     private JPanel titlePanel, buttonPanel, debugPanel, bottomButtonPanel;
-    private JLabel buttonLabel, actionLabel, titleLabel;
-    private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, infraredLabel, lineLabel;
-    private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, 
-    calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, connectionButton,
-    rotateLittleLeft,rotateLittleRight,startButton, barcodeButton, finishButton, resumeButton, resetButton,setBarcodeButton;
+    private JLabel actionLabel, titleLabel;
+    private JLabel xLabel, yLabel, speedLabel, angleLabel, infraredLabel, lineLabel;
+    private JButton upButton, rightButton,leftButton, downButton, cancelButton, connectButton, 
+    calibrateButton, loadMazeButton, connectionButton,
+    rotateLittleLeft,rotateLittleRight,startButton, finishButton, resumeButton, resetButton;
     private static JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
     final static int totalXDimensions = 1100;
     final static int moveButtonWidth = 100;
-    final static int allButtonHeight = 20;
+    final static int allButtonHeight = 25;
     final static int wideButtonWidth=150;
 	final static int rightPanelWidth=300;
 	final static int yPaddingTop=50;
@@ -67,13 +59,13 @@ public class ContentPanel implements ActionListener {
 
     private boolean connected = false;
     private DrawingPanel drawingPanel;
-    private boolean upButtonPressed = false;
-    private boolean leftButtonPressed = false;
-    private boolean rightButtonPressed = false;
-    private boolean downButtonPressed = false;
+//    private boolean upButtonPressed = false;
+//    private boolean leftButtonPressed = false;
+//    private boolean rightButtonPressed = false;
+//    private boolean downButtonPressed = false;
     private boolean showRawData = false;
     private int rotateLittleAmount = 10;
-    private ArrayList<Integer> printedBalls;
+//    private ArrayList<Integer> printedBalls;
     
     Controller controller;
 	private SensorGraphsPanel graphPanel;
@@ -166,66 +158,53 @@ public class ContentPanel implements ActionListener {
         //___________________________________________________
         // Creation of a Panel to contain all the JButtons.
         buttonPanel = new JPanel();
-		fixPanelLayout(buttonPanel, rightPanelWidth,8*allButtonHeight, 750, yPaddingTop+debugPanelHeight+sensorGraphsPanelHeight);
+		fixPanelLayout(buttonPanel, rightPanelWidth+50,8*allButtonHeight, 750, yPaddingTop+debugPanelHeight+sensorGraphsPanelHeight);
         buttonPanel.addKeyListener(l);
         
         
         actionLabel = new JLabel("The robot is doing nothing at this moment.");
-        fixLabelLayout(buttonPanel, actionLabel, 300, allButtonHeight, 0, 7*allButtonHeight);
+        fixLabelLayout(buttonPanel, actionLabel, 300, allButtonHeight, 0, 5*allButtonHeight+1);
         
        
 
         upButton = new JButton("FORWARD");
-        fixButtonLayout(buttonPanel, upButton, moveButtonWidth, allButtonHeight, moveButtonWidth, 0);
+        fixButtonLayout(buttonPanel, upButton, moveButtonWidth, allButtonHeight, moveButtonWidth, 1);
 
         rightButton = new JButton("RIGHT");
-        fixButtonLayout(buttonPanel, rightButton, moveButtonWidth, allButtonHeight, 2*moveButtonWidth, 0);
+        fixButtonLayout(buttonPanel, rightButton, moveButtonWidth, allButtonHeight, 2*moveButtonWidth, 1);
 
         leftButton = new JButton("LEFT");
-        fixButtonLayout(buttonPanel, leftButton, moveButtonWidth, allButtonHeight, 0, 0);
+        fixButtonLayout(buttonPanel, leftButton, moveButtonWidth, allButtonHeight, 0, 1);
         
         downButton = new JButton("BACKWARD");
-        fixButtonLayout(buttonPanel, downButton, moveButtonWidth , allButtonHeight, moveButtonWidth, allButtonHeight);
+        fixButtonLayout(buttonPanel, downButton, moveButtonWidth , allButtonHeight, moveButtonWidth, allButtonHeight+1);
         
         rotateLittleLeft = new JButton("10 L");
-        fixButtonLayout(buttonPanel, rotateLittleLeft, moveButtonWidth, allButtonHeight, 0, allButtonHeight);
+        fixButtonLayout(buttonPanel, rotateLittleLeft, moveButtonWidth, allButtonHeight, 0, allButtonHeight+1);
         
         rotateLittleRight = new JButton("10 R");
-        fixButtonLayout(buttonPanel,rotateLittleRight, moveButtonWidth, allButtonHeight, 2*moveButtonWidth, allButtonHeight);
+        fixButtonLayout(buttonPanel,rotateLittleRight, moveButtonWidth, allButtonHeight, 2*moveButtonWidth, allButtonHeight+1);
         
         cancelButton = new JButton("STOP");
-		fixButtonLayout(buttonPanel, cancelButton, wideButtonWidth, allButtonHeight, 0, 2*allButtonHeight );
-        
-        variableButton = new JButton("POLYGON");
-        fixButtonLayout(buttonPanel, variableButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 2*allButtonHeight);
+		fixButtonLayout(buttonPanel, cancelButton, wideButtonWidth*2, allButtonHeight, 0, 2*allButtonHeight+1 );
         
         connectButton = new JButton("CONNECT BUTTON");
-        fixButtonLayout(buttonPanel, connectButton, wideButtonWidth, allButtonHeight, 0, 3*allButtonHeight );
+        fixButtonLayout(buttonPanel, connectButton, wideButtonWidth, allButtonHeight, 0, 3*allButtonHeight +1);
         
         calibrateButton = new JButton("CALIBRATE LIGHTSENSOR");
-        fixButtonLayout(buttonPanel, calibrateButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 3*allButtonHeight);
+        fixButtonLayout(buttonPanel, calibrateButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 3*allButtonHeight+1);
         
-        sensorOrientationButton = new JButton("SENSOR ANGLE");
-        fixButtonLayout(buttonPanel, sensorOrientationButton, wideButtonWidth, allButtonHeight, 0, 4*allButtonHeight);
+        //TODO: loadmazebutton en connectionbutton ook weg voor laatste demo
         
         loadMazeButton = new JButton("LOAD MAZE");
-        fixButtonLayout(buttonPanel, loadMazeButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 4*allButtonHeight);
-        
-        straightenButton = new JButton("STRAIGHTEN");
-        fixButtonLayout(buttonPanel, straightenButton, wideButtonWidth, allButtonHeight, 0, 5*allButtonHeight);
-        
-        barcodeButton = new JButton("FIND BARCODE");
-        fixButtonLayout(buttonPanel, barcodeButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 5*allButtonHeight);
-        
-        setBarcodeButton = new JButton("SET BARCODE VALUES");
-        fixButtonLayout(buttonPanel, setBarcodeButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 6*allButtonHeight);
-        
+        fixButtonLayout(buttonPanel, loadMazeButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 4*allButtonHeight+1);
+          
         connectionButton = new JButton("OPEN CONNECTION PANEL");
-        fixButtonLayout(buttonPanel, connectionButton, wideButtonWidth, allButtonHeight, 0, 6*allButtonHeight);
+        fixButtonLayout(buttonPanel, connectionButton, wideButtonWidth, allButtonHeight, 0, 4*allButtonHeight+1);
         
-        startButton = new JButton("Start");
-//        fixButtonLayout(buttonPanel, startButton, 20, 150, 0, 0);
-        buttonPanel.setFocusable(true);
+//        startButton = new JButton("Start");
+////        fixButtonLayout(buttonPanel, startButton, 20, 150, 0, 0);
+//        buttonPanel.setFocusable(true);
         
       //___________________________________________________
         // Creation of a Panel to contain all the JButtons.
@@ -261,28 +240,28 @@ public class ContentPanel implements ActionListener {
         
         //________________________
         //Creating variable panel
-        VariablePanel variablePanel = new VariablePanel(variableFrame,controller);
-        variableFrame.setContentPane(variablePanel.getContentPanel());;
-        variableFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        variableFrame.setSize(400, 400);
+//        VariablePanel variablePanel = new VariablePanel(variableFrame,controller);
+//        variableFrame.setContentPane(variablePanel.getContentPanel());;
+//        variableFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+//        variableFrame.setSize(400, 400);
         
         //Creating calibration panel
-        CalibrationPanel calibrationPanel = new CalibrationPanel(calibrationFrame, controller);
-        calibrationFrame.setContentPane(calibrationPanel.getContentPanel());
-        calibrationFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        calibrationFrame.setSize(400,400);
+//        CalibrationPanel calibrationPanel = new CalibrationPanel(calibrationFrame, controller);
+//        calibrationFrame.setContentPane(calibrationPanel.getContentPanel());
+//        calibrationFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+//        calibrationFrame.setSize(400,400);
         
         //Creating sensorOrientation panel
-        SensorOrientationPanel sensorOrientationPanel = new SensorOrientationPanel(sensorOrientationFrame, controller);
-        sensorOrientationFrame.setContentPane(sensorOrientationPanel.getContentPanel());
-        sensorOrientationFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        sensorOrientationFrame.setSize(400,400);
+//        SensorOrientationPanel sensorOrientationPanel = new SensorOrientationPanel(sensorOrientationFrame, controller);
+//        sensorOrientationFrame.setContentPane(sensorOrientationPanel.getContentPanel());
+//        sensorOrientationFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+//        sensorOrientationFrame.setSize(400,400);
         
         //Creating barcodePanel
-        BallBarcodePanel ballBarcodePanel = new BallBarcodePanel(barcodeFrame, controller);
-        barcodeFrame.setContentPane(ballBarcodePanel.getContentPanel());
-        barcodeFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        barcodeFrame.setSize(400,210);
+//        BallBarcodePanel ballBarcodePanel = new BallBarcodePanel(barcodeFrame, controller);
+//        barcodeFrame.setContentPane(ballBarcodePanel.getContentPanel());
+//        barcodeFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+//        barcodeFrame.setSize(400,210);
         
       //Creating connection panel
         ConnectionPanel connectionPanel = new ConnectionPanel(connectionFrame, controller);
@@ -298,7 +277,7 @@ public class ContentPanel implements ActionListener {
         
         frame.requestFocusInWindow(); 
 
-		printedBalls = new ArrayList<Integer>();
+//		printedBalls = new ArrayList<Integer>();
 
                 
 	}
@@ -309,10 +288,10 @@ public class ContentPanel implements ActionListener {
         JScrollPane scrollPane = new JScrollPane(debugText);
         debugText.setEditable(false);
         debugPanel.add(scrollPane);
-        fixPanelLayout(debugPanel, rightPanelWidth, debugPanelHeight , 750, yPaddingTop);
+        fixPanelLayout(debugPanel, rightPanelWidth+30, debugPanelHeight , 750, yPaddingTop);
         scrollPane.setLocation(0, 0);
         scrollPane.setSize(rightPanelWidth,100);
-        writeToDebug("Program started successfully");
+ //       writeToDebug("Program started successfully");
         //Infolabels
         xLabel = new JLabel("X: 0");
         xLabel.setHorizontalTextPosition(SwingConstants.LEFT);
@@ -492,13 +471,13 @@ public class ContentPanel implements ActionListener {
         	buttonPanel.requestFocusInWindow();
         	controller.cancel();
         }
-        else if(e.getSource() == variableButton){
-        	variableFrame.setVisible(true);
-        	actionLabel.setText("The robot is setting parameters.");
-        	variableButton.setSelected(false);
-        	buttonPanel.requestFocusInWindow();
-        	
-        }
+//        else if(e.getSource() == variableButton){
+//        	variableFrame.setVisible(true);
+//        	actionLabel.setText("The robot is setting parameters.");
+//        	variableButton.setSelected(false);
+//        	buttonPanel.requestFocusInWindow();
+//        	
+//        }
         else if(e.getSource() == connectButton){
         	if(getConnected() == true ){
         		setConnected(false);
@@ -507,9 +486,9 @@ public class ContentPanel implements ActionListener {
         	}
         	else{
         		try{
-        	 		calibrationFrame.setVisible(true);
-                	actionLabel.setText("The lightsensor is being calibrated.");
-                	calibrateButton.setSelected(false);
+//        	 		calibrationFrame.setVisible(true);
+//                	actionLabel.setText("The lightsensor is being calibrated.");
+//                	calibrateButton.setSelected(false);
         		controller.connectNewBtRobot();
         		if(Controller.interconnected){
         		controller.setPlayerClient();}
@@ -526,23 +505,23 @@ public class ContentPanel implements ActionListener {
         	buttonPanel.requestFocusInWindow();
         }
         else if(e.getSource() == calibrateButton){
-        	calibrationFrame.setVisible(true);
+//        	calibrationFrame.setVisible(true);
         	actionLabel.setText("The lightsensor is being calibrated.");
-        	calibrateButton.setSelected(false);
+        	controller.autoCalibrateLight();
         	buttonPanel.requestFocusInWindow();
         }
-        else if(e.getSource() == setBarcodeButton){
-        	barcodeFrame.setVisible(true);
-        	actionLabel.setText("The barcode numbers are being added");
-        	setBarcodeButton.setSelected(false);
-        	buttonPanel.requestFocusInWindow();
-        }
-        else if(e.getSource() == sensorOrientationButton){
-        	sensorOrientationFrame.setVisible(true);
-        	actionLabel.setText("The ultrasonicsensor is being oriented.");
-        	sensorOrientationButton.setSelected(false);
-        	buttonPanel.requestFocusInWindow();
-        }
+//        else if(e.getSource() == setBarcodeButton){
+//        	barcodeFrame.setVisible(true);
+//        	actionLabel.setText("The barcode numbers are being added");
+//        	setBarcodeButton.setSelected(false);
+//        	buttonPanel.requestFocusInWindow();
+//        }
+//        else if(e.getSource() == sensorOrientationButton){
+//        	sensorOrientationFrame.setVisible(true);
+//        	actionLabel.setText("The ultrasonicsensor is being oriented.");
+//        	sensorOrientationButton.setSelected(false);
+//        	buttonPanel.requestFocusInWindow();
+//        }
         else if(e.getSource() == loadMazeButton){
         	        	
         	actionLabel.setText("Maze loaded from file.");
@@ -554,16 +533,16 @@ public class ContentPanel implements ActionListener {
         	drawingPanel.drawSimulatedWalls();
         	buttonPanel.requestFocusInWindow();
         }
-        else if(e.getSource() == straightenButton){
-        	actionLabel.setText("Finding white line and straightening");
-        	controller.findLineAndStraighten();
-        	buttonPanel.requestFocusInWindow();
-        }
-        else if(e.getSource() == barcodeButton){
-        	actionLabel.setText("Finding barcode and reading it");
-        	controller.findBlackLineAndCreateBarcode();
-        	buttonPanel.requestFocusInWindow();
-        }
+//        else if(e.getSource() == straightenButton){
+//        	actionLabel.setText("Finding white line and straightening");
+//        	controller.findLineAndStraighten();
+//        	buttonPanel.requestFocusInWindow();
+//        }
+//        else if(e.getSource() == barcodeButton){
+//        	actionLabel.setText("Finding barcode and reading it");
+//        	controller.findBlackLineAndCreateBarcode();
+//        	buttonPanel.requestFocusInWindow();
+//        }
         else if(e.getSource() == connectionButton){
         	connectionFrame.setVisible(true);
         	buttonPanel.requestFocusInWindow();
@@ -841,6 +820,18 @@ public class ContentPanel implements ActionListener {
 				runningPanel.controller.cancel();
 			}
 		},
+		STARTCLASS(KeyEvent.VK_ENTER) {
+			@Override
+			void stopAction() {
+				return;
+			}
+
+			@Override
+			void startAction() {
+				runningPanel.actionLabel.setText("The robot starts exploring");
+				runningPanel.controller.startExplore();
+			}
+		},
 		NONECLASS(Integer.MAX_VALUE) {
 			@Override
 			void stopAction() {
@@ -861,8 +852,8 @@ public class ContentPanel implements ActionListener {
 		}
 
 		public static Button UP = UPCLASS, RIGHT = RIGHTCLASS,
-				DOWN = DOWNCLASS, LEFT = LEFTCLASS, NONE = NONECLASS;
-		public static Button[] allButtons = { UP, RIGHT, DOWN, LEFT };
+				DOWN = DOWNCLASS, LEFT = LEFTCLASS, NONE = NONECLASS, START = STARTCLASS;
+		public static Button[] allButtons = { UP, RIGHT, DOWN, LEFT, START };
 		private static final int LINUX_KEY_DELAY = 3;
 		boolean isAlreadyVirtuallyPressed = false;
 		boolean isReallyReleased = true;
@@ -930,7 +921,7 @@ public class ContentPanel implements ActionListener {
 	    	controller.teleport();
 	    	//controller.setReady(true);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+			//  Auto-generated catch block
 			e.printStackTrace();
 		}
 
