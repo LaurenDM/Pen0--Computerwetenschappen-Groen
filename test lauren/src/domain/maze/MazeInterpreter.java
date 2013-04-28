@@ -7,19 +7,63 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import javax.crypto.spec.PSource;
+
+
+import domain.Position.Pose;
 import domain.Position.Position;
-import domain.barcodes.Barcode;
+import domain.maze.barcodes.Barcode;
 
 public class MazeInterpreter {
 	
 	private Board board;
 	private int firstLine; //number of line with first command
 	
+	private HashMap<Position,Integer> barcodePositions;
+	
 	
 	public MazeInterpreter(Board board){
 		this.board = board;
+		barcodePositions = new HashMap<Position,Integer>();
+	}
+	
+	public void readMap(String[][] map){
+		map = eliminateDummies(map);
+		firstLine = 0;
+		for(int x = 0; x<map.length; x++){
+			for(int y = 0; y<map[x].length; y++){
+				readCommand(map[x][y], x, y);
+				System.out.println(x + "    " + y + "    " + map[x][y]);
+			}
+		}
+	}
+	
+	private String[][] eliminateDummies(String[][] map){
+		int firstX=0, firstY = 0;
+		for(int x=0; x<map.length; x++){
+			for(int y = 0; y<map[x].length; y++){
+				if(!map[x][y].contains("dummy")){
+					firstX=x;
+				}
+			}
+		}
+		for(int y=0; y<map[0].length; y++){
+			for(int x =0; x<map.length; x++){
+				if(!map[x][y].contains("dummy")){
+					firstY=y;
+				}
+			}
+		}
+		String[][] newMap = new String[map.length-firstX][map[0].length-firstY];
+		for(int x = 0; x<newMap.length ; x++){
+			for(int y= 0; y<newMap[x].length; y++){
+				newMap[x][y] = map[x+firstX][y+firstY];
+			}
+		}
+		return newMap;
 	}
 	
 	public void readFile(String fileLocation){
@@ -32,9 +76,9 @@ public class MazeInterpreter {
 		  int lineCounter = 0;
 
 		  while ((strLine = br.readLine()) != null)   {
-//		  System.out.println (strLine);
-		  readline(strLine, lineCounter);
-		  lineCounter++;
+//		  	System.out.println (strLine);
+			  readline(strLine, lineCounter);
+			  lineCounter++;
 		  }
 		  in.close();
 		    }
@@ -46,7 +90,8 @@ public class MazeInterpreter {
 	
 	public void readline(String strLine, int numberOfLine){
 		if((strLine.startsWith("DeadEnd") || strLine.startsWith("Corner")
-		|| strLine.startsWith("Straight") || strLine.startsWith("T."))){
+		|| strLine.startsWith("Straight") || strLine.startsWith("T.") || strLine.startsWith("Seesaw")
+		|| strLine.startsWith("Closed") || strLine.startsWith("Cross"))){
 			if(firstLine==-1){
 				firstLine = numberOfLine; 
 			}
@@ -62,6 +107,19 @@ public class MazeInterpreter {
 			}
 		}
 	}
+	
+//	// tiles van links naar rechts, boven naar onder
+//	public void readTiles(List<Tile> tiles){
+//		int width = 4; //TODO aanpassen aan echte dimensie!
+//		int counter = 0;
+//		for(Tile t : tiles){
+//			int XCoo = counter%width;
+//			int YCoo = counter/width;
+//			String command = t.getToken();
+//			readCommand(command,XCoo,YCoo);
+//			counter++;
+//		}
+//	}
 	
 	public void readCommand(String command, int XCoo, int YCoo){
 		YCoo = YCoo - firstLine;
@@ -79,12 +137,22 @@ public class MazeInterpreter {
 		else if(commandSplit[0].equals("Straight")){
 			createStraight(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
 		}
+		else if(commandSplit[0].equals("Seesaw")){
+			createSeesaw(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
+		}
+		else if(commandSplit[0].equals("Closed")){
+			createClosed(XCoo, YCoo);
+		}
 		if(commandSplit.length>2){
-			if(commandSplit[2].equals("B")){
-				System.out.println("Ball");
+			if(commandSplit[2].equals("V")){
+				System.out.println("Object");
 				createBall(XCoo, YCoo);
 			}
-			else if(!commandSplit[2].equals("00")){
+			else if(commandSplit[2].contains("S")){
+				char[] args = commandSplit[2].toCharArray();
+				createInitialPosition(XCoo,YCoo,String.valueOf(args[2]),Integer.parseInt(String.valueOf(args[1])));
+			}
+			else {
 				createBarcode(commandSplit[2], XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
 			}
 		}
@@ -97,9 +165,30 @@ public class MazeInterpreter {
 		Ball ball = new Ball(new Position(xBall, yBall));
 		board.addBall(ball);
 	}
+	
+	public void createInitialPosition(int XCoo, int YCoo, String orientString, int playernb){
+		System.out.println("1 Xcoo "+XCoo+" YCoo"+YCoo);
+		int MAZECONSTANT = MazeElement.getMazeConstant();
+		XCoo = XCoo*MAZECONSTANT + MAZECONSTANT/2;
+		YCoo = YCoo*MAZECONSTANT + MAZECONSTANT/2;
+		Orientation orientation = Orientation.getOrientation(orientString);
+		System.out.println("1 Xcoo "+XCoo+" YCoo"+YCoo);
+		Pose pos = new Pose(XCoo,YCoo,orientation);
+		board.addInitialPosition(pos, playernb);
+	}
+	
+	public void createClosed(int XCoo, int YCoo){
+		Position pos = new Position(XCoo, YCoo);
+		for(Orientation o : Orientation.values()){
+			makeWall(pos, o);
+		}
+	}
 
 
 	public void createDeadEnd(int XCoo, int YCoo, Orientation orientation){
+		if(XCoo == 0 && YCoo == 6){
+			int a =0;
+		}
 		Position pos = new Position(XCoo, YCoo);
 		switch (orientation) {
         case NORTH: 
@@ -234,9 +323,9 @@ public class MazeInterpreter {
 	             break;
 			}
 			if(posConflict!=null){
-			if(board.detectWallAt(posConflict)==false){
-				board.addWall(new Wall(position1, position2));
-			}
+				if(board.detectWallAt(posConflict)==false){
+					board.addWall(new Wall(position1, position2));
+				}
 			}
 	}
 	
@@ -245,22 +334,82 @@ public class MazeInterpreter {
 		int MAZECONSTANT = MazeElement.getMazeConstant();
 		xCoo = xCoo*MAZECONSTANT+(MAZECONSTANT/2);
 		yCoo = yCoo*MAZECONSTANT+(MAZECONSTANT/2);
-		board.addSimulatedBarcode(new Barcode(dec, new Position(xCoo, yCoo), orientation));
-//		testBarcode();
-	}
-	
-	private void testBarcode(){
-		for(Barcode b: board.getSimulatedBarcodes()){
-			for(int i = 0; i<200; i++){
-			boolean test1 = b.isBlackAt(new Position(20, i));
-			boolean test2 = b.isBlackAt(new Position(60, i));
-			boolean test3 = b.isBlackAt(new Position(100, i));
-			boolean test4 = b.isBlackAt(new Position(140, i));
-			boolean test5 = b.isBlackAt(new Position(180, i));
-			boolean test6 = b.isBlackAt(new Position(220, i));
-			System.out.println("Y:"+i+" "+test1+" "+test2+" "+test3+" "+test4+" "+test5+" "+test6);
-			}
+		Position pos = new Position(xCoo,yCoo);
+		if(!board.detectBarcodeAt(pos)){
+			board.addBarcode(new Barcode(dec, pos, orientation));
+		}
+		if((dec>10) && (dec<22) && (dec%2==1)){
+			// barcode is voor wip
+			barcodePositions.put(pos, dec);
 		}
 	}
+	
+	/**
+	 * Opbouw mazefile: straight.Or.barcodenr seesaw.Or seesaw.Or
+	 * straight.Or.barcodenr
+	 * metr Or voor orientatie
+	 * Uit voorzorg gebruiken we de zin die meegegeven is bij de seesaw niet, wel de richting.
+	 *Voor infrarood-instellingsredenen willen we dat de orientatie zo is: lage barcode, seesaw, hoge barcode.
+	 *Vb: orientatie West: links: hoge barcode, midden: seesaw, rechts: lage barcode
+	 */
+	
+	private void createSeesaw(int xCoo, int yCoo, Orientation orientation){
+		int MAZECONSTANT = MazeElement.getMazeConstant();
+		xCoo = xCoo*MAZECONSTANT+(MAZECONSTANT/2);
+		yCoo = yCoo*MAZECONSTANT+(MAZECONSTANT/2);
+		final Position posSeesawPart = new Position(xCoo,yCoo);
+		
+		// We bepalen eerst aan welke kant van dit seesaw-stuk dat er een
+		// barcode ligt en zetten de orientatie er naartoe gericht (wordt later
+		// nog veranderd)
+		Position posBarcodeTry1 = posSeesawPart.getNewPosition(
+				orientation.getAngleToHorizontal(), MAZECONSTANT);
+				//We snap to tile center because the getNewPosition Method can give none-rounded results
+		posBarcodeTry1.snapTo(MAZECONSTANT,MAZECONSTANT/2, MAZECONSTANT/2);
+		Position posBarcodeTry2 = posSeesawPart.getNewPosition(
+				orientation.getAngleToHorizontal(), -MAZECONSTANT);
+		posBarcodeTry2.snapTo(MAZECONSTANT,MAZECONSTANT/2, MAZECONSTANT/2);
+
+		if(board.hasSeesawAt(posBarcodeTry1)||board.hasSeesawAt(posBarcodeTry2)){
+			return;
+		}
+		Orientation towardsBarcodeOrientation = null;
+		int barcodeNb;
+		if (barcodePositions.get(posBarcodeTry1) != null) {
+			towardsBarcodeOrientation = orientation;
+			barcodeNb = barcodePositions.get(posBarcodeTry1);
+		} else if (barcodePositions.get(posBarcodeTry2) != null) {
+			towardsBarcodeOrientation = orientation.getBack();
+			barcodeNb = barcodePositions.get(posBarcodeTry2);
+
+		} else {
+			throw new IllegalStateException("De mazefile klopt niet, er zou voor of na een seesawstuk een barcode te vinden moeten zijn");
+		}	
+		// Als er een lage barcode voor het te verwerken wipstuk staat tov
+		// towardsBarcodeOrientation, dan moet de orientatie andersom zijn tov
+		// towardsBarcodeOrientation.
+		Orientation finalSeesawOrientation = Seesaw.isALowBcNb(barcodeNb) ? towardsBarcodeOrientation
+				.getBack() : towardsBarcodeOrientation;
+		final Position posSeesawCenter = posSeesawPart.getNewRoundPosition(
+				towardsBarcodeOrientation.getBack().getAngleToHorizontal(), MAZECONSTANT / 2);
+		if(!board.hasSeesawAt(posSeesawCenter)){
+			board.addSeesaw(new Seesaw(posSeesawCenter, finalSeesawOrientation,barcodeNb, true,board));
+		}
+		//else wip staat er al
+	}
+	
+//	private void testBarcode(){
+//		for(Barcode b: board.getSimulatedBarcodes()){
+//			for(int i = 0; i<200; i++){
+//			boolean test1 = b.isBlackAt(new Position(20, i));
+//			boolean test2 = b.isBlackAt(new Position(60, i));
+//			boolean test3 = b.isBlackAt(new Position(100, i));
+//			boolean test4 = b.isBlackAt(new Position(140, i));
+//			boolean test5 = b.isBlackAt(new Position(180, i));
+//			boolean test6 = b.isBlackAt(new Position(220, i));
+//			System.out.println("Y:"+i+" "+test1+" "+test2+" "+test3+" "+test4+" "+test5+" "+test6);
+//			}
+//		}
+//	}
 	
 }

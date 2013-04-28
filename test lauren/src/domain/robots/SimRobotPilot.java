@@ -9,27 +9,35 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
+import lejos.nxt.addon.AngleSensor;
+
 import domain.Position.Position;
-import domain.barcodes.Barcode;
-import domain.maze.Ball;
 import domain.maze.Board;
+import domain.maze.Orientation;
 import domain.maze.Wall;
 import domain.maze.graph.MazePath;
+import domain.maze.infrared.InfraredBeamer;
+import domain.maze.infrared.InfraredDetector;
+import domain.maze.infrared.RobotIBeamer;
 import domain.robotFunctions.BarcodeGenerator;
 import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.Straightener;
+import domain.util.Angles;
 import domain.util.TimeStamp;
 
 
-public class SimRobotPilot implements RobotPilot {
+public class SimRobotPilot extends RobotPilot {
+	private static final double DISTANCE_BETWEEN_SENSOR_AND_WHEELS = 9;
+	private static final double BARCODE_LENGTH = 8;
 	private MoveThread moveThread;
 	private double orientation; // Degrees to horizontal
 	private Position position;
 	private boolean isScanningBarcode;
-	private ExploreMaze maze;
 	private boolean turningError = true;
-	
-	private Ball ball;
+	//De onderstaande variable wordt momenteel niet gebruikt maar is goed voor debuggen
+	private final InfraredBeamer infraBeamer;
+	private final InfraredDetector infraDetector;
+
 	
 
 	//The wanted rotation Speed of the robot.
@@ -39,40 +47,42 @@ public class SimRobotPilot implements RobotPilot {
 	private double travelSpeed;
 	private TurnThread turnThread;
 
-	private Board board;
-
 	private int sensorAngle;
 
 	private final int defaultMovingSpeed=80; //was 80
 	private final int defaultTurningSpeed=200;
-	private Robot robot;
 	
 	private double lastDistance = 0;
 
 	/**
 	 * Assenstelsel wordt geinitialiseerd met oorsprong waar de robot begint
 	 */
-	public SimRobotPilot(){
-		this(0, new Position(20,20));
+	public SimRobotPilot(String playerID){
+		this(0, new Position(20,20),playerID);
 	}
+	
+	
+	
 	@Override
-	public void setRobot(Robot robot){
-		this.robot = robot;
+	public ExploreMaze getMaze(){
+		return this.maze;
 	}
-
-	private Robot getRobot(){
-		return robot;
-	}
-	public SimRobotPilot(double orientation, Position position){
+	
+	public SimRobotPilot(double orientation, Position position, String playerID){
+		super(playerID);
 		setOrientation(orientation);
 		this.position=position;
 		this.setMovingSpeed(defaultMovingSpeed);
 		this.setTurningSpeed(defaultTurningSpeed);
 		this.sensorAngle = 0;
-		board = new Board();
+		setBoard(new Board());
+		this.infraBeamer= new RobotIBeamer(this);
+		this.infraDetector=new InfraredDetector(this);
 	}
+	
+	
 
-	private void setOrientation(double orientation) {
+	void setOrientation(double orientation) {
 		if(Math.abs(orientation)>180){
 			throw new IllegalArgumentException();
 		}
@@ -83,14 +93,7 @@ public class SimRobotPilot implements RobotPilot {
 		return position;
 	}
 
-	public void setBoard(Board board){
-		this.board = board;
-	}
-
-	public Board getBoard(){
-		return board;
-	}
-
+	@Override
 	public int getSensorAngle(){
 		return sensorAngle;
 	}
@@ -157,12 +160,12 @@ public class SimRobotPilot implements RobotPilot {
 
 	public void keepTurningLeft(){
 		stop();
-		startTurnThread(true);
+		startTurnThread(MoveType.TURNLEFT);
 	}
 
 	public void keepTurningRight(){
 		stop();
-		startTurnThread(false);
+		startTurnThread(MoveType.TURNRIGHT);
 	}
 
 
@@ -172,7 +175,7 @@ public class SimRobotPilot implements RobotPilot {
 	}
 	@Override
 	public void UpdateUntil(TimeStamp timestamp) {
-		//TODO
+		
 	}
 
 
@@ -188,19 +191,20 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void forward() throws CannotMoveException {
+		setMovement(MoveType.FORWARD);
 		forward(false);
 	}
 
 	public void forward(boolean whiteLine) throws CannotMoveException {
 		stop();
-		startMoveThread(Movement.FORWARD, whiteLine);
+		startMoveThread(MoveType.FORWARD, whiteLine);
 	}
 
-	private void startMoveThread(Movement movement) throws CannotMoveException {
+	private void startMoveThread(MoveType movement) throws CannotMoveException {
 		startMoveThread(movement, false);
 	}
 
-	private void startMoveThread(Movement movement, boolean whiteLine) throws CannotMoveException{
+	private void startMoveThread(MoveType movement, boolean whiteLine) throws CannotMoveException{
 		stopThread(moveThread);
 		moveThread= new MoveThread(movement, this,whiteLine);
 		try{
@@ -211,17 +215,18 @@ public class SimRobotPilot implements RobotPilot {
 		}
 	}
 
-	private void startTurnThread(boolean left) {
+	private void startTurnThread(MoveType moveType) {
 		stopThread(turnThread);
-		turnThread= new TurnThread(left, this);
+		turnThread= new TurnThread(moveType, this);
 		turnThread.start();
 	}
 
 	@Override
 	public void backward(){
+		setMovement(MoveType.BACKWARD);
 		stop();
 		try {
-			startMoveThread(Movement.BACKWARD);
+			startMoveThread(MoveType.BACKWARD);
 		} catch (CannotMoveException e) {
 			
 		}
@@ -230,6 +235,7 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void stop() {
+		setMovement(MoveType.STOPPED);
 		stopThread(moveThread);
 		stopThread(turnThread);
 	}
@@ -242,21 +248,31 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public synchronized void move(double wantedDistance) throws CannotMoveException {
+		move(wantedDistance,false);
+	}
+
+	public synchronized void move(double wantedDistance, boolean ignoreBarcodes)
+			throws CannotMoveException {
+		if (wantedDistance > 0)
+			setMovement(MoveType.FORWARD);
+		else if (wantedDistance < 0)
+			setMovement(MoveType.BACKWARD);
 		Position pos1 = getPosition().clone();
 		boolean running = true;
 		if (wantedDistance > 0) {
-			if(wantedDistance <1){
+			if (wantedDistance < 1) {
 				this.getPosition().move(getOrientation(), wantedDistance);
 				try {
-					//deze gaf altijd 1 waardoor robot over barcode vloog (de 50 was 1)
+					// deze gaf altijd 1 waardoor robot over barcode vloog (de
+					// 50 was 1)
 					double offset = 50;
-					if(getMovingSpeed()>getDefaultMovingSpeed()){
+					if (getMovingSpeed() > getDefaultMovingSpeed()) {
 						offset = 25;
-					}
-					else if(getMovingSpeed()<getDefaultMovingSpeed()){
+					} else if (getMovingSpeed() < getDefaultMovingSpeed()) {
 						offset = 75;
 					}
-					Thread.sleep(Double.valueOf(wantedDistance/getMovingSpeed()).intValue()+50);
+					Thread.sleep(Double.valueOf(
+							wantedDistance / getMovingSpeed()).intValue() + 50);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -267,39 +283,68 @@ public class SimRobotPilot implements RobotPilot {
 		} else {
 			backward();
 		}
-		double turnSpeed = robot.getTurningSpeed();
-		double moveSpeed = robot.getMovingSpeedSetting();
-		while(running && !Thread.interrupted()){
-			double currDistance=getPosition().getDistance(pos1);
-			if(detectBlackLine() && !isScanningBarcode){
-				Position pos = robot.getPosition().getNewPosition(robot.getOrientation(), 8);
-				if(!robot.getBoard().detectBarcodeAt(pos)){
-					isScanningBarcode = true;
-					BarcodeGenerator bg = new BarcodeGenerator(getRobot());
-					try {
-						bg.generateBarcode();
-						move(-8);
-					} catch(IllegalArgumentException e){
-						ContentPanel.writeToDebug("Could not read barcode, trying again");
-						setMovingSpeed(moveSpeed);
-						setTurningSpeed(turnSpeed);
-						move(-40);
-						//turn(180);
-						findWhiteLine();
-						straighten();
-						//turn(180);
-						isScanningBarcode = false;
-					}
-					
+		double turnSpeed = getTurningSpeed();
+		double moveSpeed = getMovingSpeed();
+		while (running && !Thread.interrupted()) {
+
+			double currDistance = getPosition().getDistance(pos1);
+			if (detectBlackLine()) {
+
+				if(isScanningBarcode){
+					int i=0; //for debug
 				}
-				forward();
-				isScanningBarcode = false;
+				if (!isScanningBarcode  &&!ignoreBarcodes) {
+
+					
+
+					Position pos = getPosition().getNewPosition(
+							getOrientation(),
+							DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
+					if (!getFoundBoard().detectBarcodeAt(pos)) {
+
+						isScanningBarcode = true;
+						BarcodeGenerator bg = new BarcodeGenerator(this);
+						try {
+							bg.generateBarcode();
+							// move(-DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
+							// //Francis heeft deze code gecomment omdat die
+							// nergens nuttig voor lijkt te zijn en problemen
+							// veroorzaakt
+							isScanningBarcode = false;
+						} catch (IllegalArgumentException e) {
+							ContentPanel
+									.writeToDebug("Could not read barcode, trying again");
+							setMovingSpeed(moveSpeed);
+							setTurningSpeed(turnSpeed);
+							move(-40);
+							// turn(180);
+							findWhiteLine();
+							straighten();
+							// turn(180);
+							isScanningBarcode = false;
+						}
+					} else if (getFoundBoard().getBarcodeAt(pos)!=null &&getFoundBoard().getBarcodeAt(pos).isSeesawBC()&&wantedDistance>0) {
+						if (getFoundBoard().getBarcodeAt(pos).sameFirstReadOrientation(this.getOrientation())) {
+							isScanningBarcode = true;
+
+							stop();
+							//System.out.println("going to run action");
+							getFoundBoard().getBarcodeAt(pos).runAction(this);
+							isScanningBarcode = false;
+						} else {
+							System.out.println("Not same firstReadOrientation");
+						}
+
+					}
+					forward();
+				}
 			}
 			if(currDistance>=Math.abs(wantedDistance)  || !canMove()){
 				running= false;
 				stopThread(moveThread);
 			}
 		}
+		setMovement(MoveType.STOPPED);
 	}
 
 	@Override
@@ -322,8 +367,9 @@ public class SimRobotPilot implements RobotPilot {
 		this.rotateSpeed = speed;
 	}
 
+	@Override
 	public boolean canMove(){
-		if(moveThread.getMovement().equals(Movement.BACKWARD)){
+		if(moveThread.getMovement().equals(MoveType.BACKWARD)){
 			return canMoveBackward();
 		}
 		double distance = readUltrasonicValue();	
@@ -341,49 +387,21 @@ public class SimRobotPilot implements RobotPilot {
 			return true;
 	}
 
-	private double calcNewOrientation(double turnAmount) {
-		double newOrientation = getOrientation()+turnAmount;
-		while (newOrientation < -179) {
-			newOrientation += 360;
-		}
-		while (newOrientation > 180) {
-			newOrientation -= 360;
-		}
+	double calcNewOrientation(double turnAmount) {
+		double newOrientation = Angles.moderateTo180(getOrientation()+turnAmount);
+		
 		return newOrientation;
 	}
 
-	private class TurnThread extends Thread{
-		private boolean left;
-		private SimRobotPilot simRobotPilot;
-		public TurnThread(boolean left, SimRobotPilot simRobotPilot){
-			this.simRobotPilot=simRobotPilot;
-			this.left=left;
-		}
 
-		@Override
-		public void run() {
-			double speed = simRobotPilot.getTurningSpeed();
-			double turnAmount = left ? -1 : 1;
-			int sleepTime = Math.abs((int) Math.round( (500 * turnAmount / speed)));
-			while (true) {
-				double newOrientation = calcNewOrientation(turnAmount);
-				setOrientation(newOrientation);
-				try {
-					Thread.sleep(sleepTime);
-				} catch (InterruptedException e) {
-					break;
-				}
-			}
-		}
-	}
 
-	@Override
-	public boolean isTouching() {
-		if(moveThread == null || moveThread.getMovement().equals(Movement.FORWARD)){
-			return board.detectWallAt(getPosition().getNewPosition(getOrientation(), 14));
+	
+	private boolean isTouching() {
+		if(moveThread == null || moveThread.getMovement().equals(MoveType.FORWARD)){
+			return getWorldSimulator().detectWallAt(getPosition().getNewPosition(getOrientation(), 14));
 		}
 		else{
-			return board.detectWallAt(getPosition().getNewPosition(getOrientation()+180, 5));
+			return getWorldSimulator().detectWallAt(getPosition().getNewPosition(getOrientation()+180, 5));
 		}
 
 	}
@@ -395,7 +413,7 @@ public class SimRobotPilot implements RobotPilot {
 		final double BLACK = -200;
 		return WOOD+detectWhiteLineGradient()*WHITE+detectBlackLineGradient()*BLACK+randomDouble(10);
 	}
-	//TODO: waardes hangen af van kalibratie van echte sensor
+	
 
 	@Override
 	public double readUltrasonicValue() {
@@ -406,7 +424,7 @@ public class SimRobotPilot implements RobotPilot {
 		for(int i = 1; i<MAX_VALUE; i++){
 			for(int j = -15; j<15; j++){
 				Position pos = getPosition().getNewPosition(getOrientation()+ getSensorAngle()+j, i);
-				foundWall = board.detectWallAt(pos);
+				foundWall = getWorldSimulator().detectWallAt(pos);
 				if(foundWall){
 					if(getPosition().getDistance(pos)<shortestDistance){
 						shortestDistance = getPosition().getDistance(pos);
@@ -418,6 +436,7 @@ public class SimRobotPilot implements RobotPilot {
 		lastDistance = shortestDistance;
 		return shortestDistance;
 	}
+	
 
 	@Override
 	public void calibrateLightHigh() {
@@ -455,19 +474,19 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public boolean detectWhiteLine() {
-		return board.detectWhiteLineAt(getPosition().getNewPosition(getOrientation(), 8));
+		return getWorldSimulator().detectWhiteLineAt(getPosition().getNewPosition(getOrientation(), DISTANCE_BETWEEN_SENSOR_AND_WHEELS));
 	}
 	
 	public double detectWhiteLineGradient() {
-		Position checkPosition = getPosition().getNewPosition(getOrientation(), 8);
+		Position checkPosition = getPosition().getNewPosition(getOrientation(), DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 		double aggregate = 0;
-		boolean center = board.detectWhiteLineAt(checkPosition);
+		boolean center = getWorldSimulator().detectWhiteLineAt(checkPosition);
 		for(domain.maze.Orientation o: domain.maze.Orientation.values()){
-			boolean out = board.detectWhiteLineAt(new Position(checkPosition.getX()+o.getXValue()*0.5,checkPosition.getY()+o.getYValue()*0.5));
+			boolean out = getWorldSimulator().detectWhiteLineAt(new Position(checkPosition.getX()+o.getXValue()*0.5,checkPosition.getY()+o.getYValue()*0.5));
 			if(center==out){
 				aggregate+=(center?0.25:0);
 			} else {
-				boolean outCenter = board.detectWhiteLineAt(new Position(checkPosition.getX()+o.getXValue()*0.25,checkPosition.getY()+o.getYValue()*0.25));
+				boolean outCenter = getWorldSimulator().detectWhiteLineAt(new Position(checkPosition.getX()+o.getXValue()*0.25,checkPosition.getY()+o.getYValue()*0.25));
 				aggregate+=0.25*((center?0.5:0)+(outCenter?0.25:0)+(out?0.25:0));
 			}
 		}
@@ -475,15 +494,15 @@ public class SimRobotPilot implements RobotPilot {
 	}
 	
 	public double detectBlackLineGradient() {
-		Position checkPosition = getPosition().getNewPosition(getOrientation(), 8);
+		Position checkPosition = getPosition().getNewPosition(getOrientation(), DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
 		double aggregate = 0;
-		boolean center = board.detectBlackLineAt(checkPosition);
+		boolean center = getWorldSimulator().detectBlackLineAt(checkPosition);
 		for(domain.maze.Orientation o: domain.maze.Orientation.values()){
-			boolean out = board.detectBlackLineAt(new Position(checkPosition.getX()+o.getXValue()*0.5,checkPosition.getY()+o.getYValue()*0.5));
+			boolean out = getWorldSimulator().detectBlackLineAt(new Position(checkPosition.getX()+o.getXValue()*0.5,checkPosition.getY()+o.getYValue()*0.5));
 			if(center==out){
 				aggregate+=(center?0.25:0);
 			} else {
-				boolean outCenter = board.detectBlackLineAt(new Position(checkPosition.getX()+o.getXValue()*0.25,checkPosition.getY()+o.getYValue()*0.25));
+				boolean outCenter = getWorldSimulator().detectBlackLineAt(new Position(checkPosition.getX()+o.getXValue()*0.25,checkPosition.getY()+o.getYValue()*0.25));
 				aggregate+=0.25*((center?0.5:0)+(outCenter?0.25:0)+(out?0.25:0));
 			}
 		}
@@ -492,32 +511,10 @@ public class SimRobotPilot implements RobotPilot {
 
 
 	@Override
-	public void arcForward(boolean left) {
-		try {
-			startMoveThread(Movement.FORWARD);
-		} catch (CannotMoveException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		startTurnThread(left);
-	}
-
-	@Override
-	public void arcBackward(boolean left) {
-		try {
-			startMoveThread(Movement.BACKWARD);
-		} catch (CannotMoveException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		startTurnThread(left);
-	}
-	@Override
 	public void steer(double angle) {
 		try {
-			startMoveThread(Movement.FORWARD);
+			startMoveThread(MoveType.FORWARD);
 		} catch (CannotMoveException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		turn(angle);
@@ -526,13 +523,14 @@ public class SimRobotPilot implements RobotPilot {
 
 	@Override
 	public void straighten() {
-		(new Straightener(new Robot(this, 0))).straighten(0);
+		(new Straightener(this)).straighten(0, true);
 
 	}
 
 	@Override
 	public void keepTurning(boolean left) {
-		startTurnThread(left);
+		MoveType moveType= left?MoveType.TURNLEFT:MoveType.TURNRIGHT;
+		startTurnThread(moveType);
 	}
 
 	@Override
@@ -542,7 +540,6 @@ public class SimRobotPilot implements RobotPilot {
 		try {
 			forward(true);
 		} catch (CannotMoveException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		while(detections<wantedDetections){
@@ -552,21 +549,21 @@ public class SimRobotPilot implements RobotPilot {
 		try {
 			move(1);
 		} catch (CannotMoveException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	public void fixWall() {
-		robot.turnSensorLeft();
-		double leftValue = robot.readUltrasonicValue();
-		robot.turnSensorRight();
-		double rightValue = robot.readUltrasonicValue();
-		robot.turnSensorForward();
+		turnSensorLeft();
+		double leftValue = readUltrasonicValue();
+		turnSensorRight();
+		double rightValue = readUltrasonicValue();
+		turnSensorForward();
 		if(leftValue < rightValue)
-			robot.turn(90);
+			turn(90);
 	}
 
+	@Override
 	public void findBlackLine(){
 		int wantedDetections=1;
 		setMovingSpeed(2);
@@ -587,7 +584,6 @@ public class SimRobotPilot implements RobotPilot {
 		try {
 			move(1);
 		} catch (CannotMoveException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -626,54 +622,21 @@ public class SimRobotPilot implements RobotPilot {
 		this.position=new Position(x,y);
 	}
 
-	@Override
-	public void startExplore() {
-		maze = new ExploreMaze(this);
-		maze.start();
-	}
 
+	@Override
 	public void addFoundWall(Wall wall){
-		board.foundNewWall(wall);
+		getFoundBoard().addWall(wall);
 	}
 
 	@Override
 	public boolean detectBlackLine() {
-		return getBoard().detectBlackLineAt(getPosition().getNewPosition(getOrientation(), 8));
+		return getWorldSimulator().detectBlackLineAt(getPosition().getNewPosition(getOrientation(), DISTANCE_BETWEEN_SENSOR_AND_WHEELS));
 	}
 	@Override
 	public void scanBarcode() {
-		BarcodeGenerator bg = new BarcodeGenerator(new Robot(this, 0));
+		BarcodeGenerator bg = new BarcodeGenerator(this);
 		bg.generateBarcode();
 	}
-
-	@Override
-	public void setCheckpoint() {
-		maze.setCurrentTileToCheckpoint();
-
-	}
-	@Override
-	public void setFinish() {
-		maze.setCurrentTileToFinish();		
-	}
-	@Override
-	public void resumeExplore() {
-		if(maze!=null){
-			maze.resumeExplore(0, 0, null);
-		} else {
-			ContentPanel.writeToDebug("You haven't started exploring yet!");
-		}
-
-	}
-	@Override
-	public void driveToFinish() {
-		if(maze!=null){
-			maze.stopExploring();
-			maze.driveToFinish();
-		} else {
-			ContentPanel.writeToDebug("You haven't started exploring yet!");
-		}
-	}
-
 
 
 	private double randomDouble(double max){
@@ -700,10 +663,7 @@ public class SimRobotPilot implements RobotPilot {
 	public void disableError() {
 			turningError = false;
 	}
-	@Override
-	public MazePath getPathToFinish() {
-		return maze.getPathToFinish();
-	}
+	
 	@Override
 	public void setDriveToFinishSpeed() {
 		setMovingSpeed(150);
@@ -714,26 +674,63 @@ public class SimRobotPilot implements RobotPilot {
 		try {
 			move(40);
 		} catch (CannotMoveException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		this.ball = board.removeBall(getPosition());
+		setBall(getWorldSimulator().removeBall(getPosition()));
 		try {
 			move(-40);
+		} catch (CannotMoveException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public synchronized void driveOverSeeSaw(int barcodeNb) {
+		try {
+			blackStraighten();
+//			addSeesawBarcodePositions(); //This is to avoid detecting a barcode when driving on a seesaw // WERKT niet
+			move(65,true);
+
+			getWorldSimulator().rollSeeSawWithBarcode(barcodeNb);
+
+			move(55,true);
+			blackStraighten();
+			move(-6,true);
+			//TODO values of infrared needs to be taken into consideration !
 		} catch (CannotMoveException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 	}
 	
 	@Override
-	public void doNothing() {
-		maze.setNextTileToDeadEnd();
+	public void blackStraighten() {
+		(new Straightener(this)).straighten(0, false);
+	}
+
+	@Override
+	public int getInfraredValue() {
+//			return getWorldSimulator().detectRobotFrom(this) || getWorldSimulator().checkForOpenSeesawFrom(this)?70:0;
+	return infraDetector.getInfraredValue();
+	}
+
+	@Override
+	public void turnUltrasonicSensorTo(int angle) {
+		setSensorAngle(angle);
+		
+	}
+
+
+
+	@Override
+	public void snapPoseToTileMid() {
+		//This method is not used for the simrobot
 	}
 	
-	public Ball getBall(){
-		return this.ball;
-	}
+	
+	
+	
 
 
 }

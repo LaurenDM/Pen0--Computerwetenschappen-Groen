@@ -19,9 +19,9 @@ public class BallBarcodePanel implements ActionListener{
 	JFrame surroundingFrame;
 	static int totalXDimensions = 400;
 	static int totalYDimensions = 210;
-	private JButton submitButton, correctBarcodeButton, otherBarcodeButton1, otherBarcodeButton2,otherBarcodeButton3;
+	private JButton submitButton;
 	private Controller controller;
-	private JTextField correctBarcodeField,falseBarcodeField1,falseBarcodeField2,falseBarcodeField3;
+	private JTextField correctBarcodeField;
 
 	public BallBarcodePanel(JFrame surroundingFrame, Controller controller) {
 		if (surroundingFrame == null) {
@@ -37,40 +37,22 @@ public class BallBarcodePanel implements ActionListener{
 		titlePanel.setSize(totalXDimensions, totalYDimensions);
 		variableGUI.add(titlePanel);
 
-		titleLabel = new JLabel("P&O - Team Groen - Lightsensor Calibration");
+		titleLabel = new JLabel("P&O - Team Groen - Ball Number Input");
 		titleLabel.setLocation(0, 0);
 		titleLabel.setSize(totalXDimensions, 30);
 		titleLabel.setHorizontalAlignment(0);
 		titleLabel.setForeground(Color.black);
 		titlePanel.add(titleLabel);
 		
-		JLabel correctBarcodeLabel = new JLabel("Correct barcode number:");
+		JLabel correctBarcodeLabel = new JLabel("Own ball number:");
 		correctBarcodeLabel.setBounds(20, 20, 200, 30);
 		titlePanel.add(correctBarcodeLabel);
 		correctBarcodeField = new JTextField(16);
 		correctBarcodeField.setText("0");
-		correctBarcodeField.setBounds(20, 50, 70, 30);
+		correctBarcodeField.setBounds(20, 50, 50, 30);
 		titlePanel.add(correctBarcodeField);
 		
-		JLabel falseBarcodeLabel = new JLabel("False barcode numbers:");
-		falseBarcodeLabel.setBounds(20, 80, 200, 30);
-		titlePanel.add(falseBarcodeLabel);
-		falseBarcodeField1 = new JTextField(16);
-		falseBarcodeField1.setText("1");
-		falseBarcodeField1.setBounds(20, 110, 50, 30);
-		titlePanel.add(falseBarcodeField1);
-		
-		falseBarcodeField2 = new JTextField(16);
-		falseBarcodeField2.setText("2");
-		falseBarcodeField2.setBounds(80, 110, 50, 30);
-		titlePanel.add(falseBarcodeField2);
-		
-		falseBarcodeField3 = new JTextField(16);
-		falseBarcodeField3.setText("3");
-		falseBarcodeField3.setBounds(140, 110, 50, 30);
-		titlePanel.add(falseBarcodeField3);
-		
-		submitButton = new JButton("Submit the barcode codes");
+		submitButton = new JButton("Submit the ball number");
 		submitButton.setBounds(20, 150, 200, 30);
 		titlePanel.add(submitButton);
 		submitButton.addActionListener(this);
@@ -83,18 +65,35 @@ public class BallBarcodePanel implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == submitButton) {
-			controller.setBallBarcode(getCorrectBallBarcode());
-			controller.setFalseBallBarcodes(getFalseBallBarcodes());
+			controller.setBallNumber(getCorrectBallNumber());
+			controller.setFalseBallNumbers(getFalseBallNumber());
 			surroundingFrame.setVisible(false);
 		}
 		
 	}
-	public int getCorrectBallBarcode(){
+	
+	/**
+	 * The number of the ball our robot needs to pick up.
+	 * @return
+	 */
+	public int getCorrectBallNumber(){
 		return Integer.parseInt(correctBarcodeField.getText());
 	}
-	public int[] getFalseBallBarcodes(){
-		int[] list = new int[] {Integer.parseInt(falseBarcodeField1.getText()), 
-				Integer.parseInt(falseBarcodeField2.getText()), Integer.parseInt(falseBarcodeField3.getText())};
+	
+	
+	/**
+	 * Ball numbers are in the range [0,3] so this method returns a list with 3 ints, those that are not the correct numbers.
+	 * @return
+	 */
+	public int[] getFalseBallNumber(){
+		int[] list = new int[] {0,0,0};
+		int index = 0;
+		for(int i = 0; i<4; i++){
+			if(i!=getCorrectBallNumber()){
+				list[index] = i;
+				index++;
+			}
+		}
 		return list;
  	}
 }

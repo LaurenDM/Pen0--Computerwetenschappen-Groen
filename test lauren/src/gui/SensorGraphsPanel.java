@@ -1,7 +1,6 @@
 package gui;
 
-import java.awt.Canvas;
-import java.awt.Color;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -20,8 +19,8 @@ public class SensorGraphsPanel extends JPanel{
 	
 	public SensorGraphsPanel(){
     	this.setSize(300, 350);
-		addPlot(1, 0.5, 0, 0, 100, -200, 200);
-		addPlot(1, 0.5, 0, 0.5, 100, 0, 257); 
+		addPlot(1, 0.5, 0, 0, 50, -200, 200, "Light Value");
+		addPlot(1, 0.5, 0, 0.5, 50, 0, 257, "Distance"); 
 	}
 	
 	public void addValue(int plotNumber,double value){
@@ -41,9 +40,9 @@ public class SensorGraphsPanel extends JPanel{
 	 * @param maxY=the maximal Y value that will be shown
 	 * @return the index number of the plot
 	 */
-	private PlotJPanel addPlot(double xPortion, double yPortion, double specialXCo, double specialYCo, int noValues, int minY, int maxY){
+	private PlotJPanel addPlot(double xPortion, double yPortion, double specialXCo, double specialYCo, int noValues, int minY, int maxY, String plotname){
 		int plotIndex=numberOfPlots++;
-		PlotJPanel newPlotJPanel=new PlotJPanel(noValues, minY, maxY);
+		PlotJPanel newPlotJPanel=new PlotJPanel(noValues, minY, maxY, plotname);
 		int 	completePanelXsize=this.getWidth(), 
 				completePanelYsize=this.getHeight();
 		int xsize=(int) (completePanelXsize*xPortion),

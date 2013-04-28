@@ -9,18 +9,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import domain.robots.CannotMoveException;
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 
 /**
  * @author Joren
  *
  */
 public class TestDriver {	
-	private static Robot robot;
+	private static RobotPilot robot;
 	private static TestController testController;
 	private static boolean testRunning;
 	
-	public TestDriver(Robot robot,TestController testController){
+	public TestDriver(RobotPilot robot,TestController testController){
 		if(testRunning){
 			throw(new IllegalArgumentException("A test is already running"));
 		} else {
@@ -44,7 +44,7 @@ public class TestDriver {
 			testType.log(Double.valueOf(distance).toString());
 			for(String string:measurements){testType.log(string);}
 			testType.log("\n");
-			testType.step(stepType, i*distance/steps, (double)calcPolygonAngles(steps));
+			testType.step(stepType, i*distance/steps, calcPolygonAngles(steps));
 		}
 		logTestResults(testType.logFileName()+stepType.logFileExtension()+extraConditions, testType.popLog());
 	}
@@ -58,6 +58,7 @@ public class TestDriver {
 	
 	public static enum TestType {
 		LIGHT_SENSOR{
+			@Override
 			public String logFileName(){
 				return "testLight";
 			}
@@ -68,6 +69,7 @@ public class TestDriver {
 				return retString;
 			}
 		}, DISTANCE_SENSOR{
+			@Override
 			public String logFileName(){
 				return "testDistance";
 			}
@@ -78,6 +80,7 @@ public class TestDriver {
 				return retString;
 			}
 		}, DRIVE{
+			@Override
 			public String logFileName(){
 				return "testDrive";
 			}

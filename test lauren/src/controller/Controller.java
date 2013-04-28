@@ -1,7 +1,9 @@
 package controller;
 
-import java.io.IOException;
-import java.security.Permission;
+import groen.htttp.HtttpImplementation;
+import gui.GUI;
+
+import java.awt.Robot;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,64 +11,64 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import peno.htttp.Tile;
+
 import rabbitMQ.EventPusher;
 import rabbitMQ.SubscribeMonitor;
 
-import lejos.nxt.Motor;
-import lejos.pc.comm.NXTCommandConnector;
-import lejos.util.PilotProps;
-
-
-
 import domain.PolygonDriver;
 import domain.Position.Position;
-import domain.barcodes.Barcode;
 import domain.maze.Ball;
 import domain.maze.Board;
 import domain.maze.MazeInterpreter;
 import domain.maze.RandomMazeGenerator;
-import domain.robotFunctions.BarcodeGenerator;
+import domain.maze.Seesaw;
+import domain.maze.WorldSimulator;
+import domain.maze.barcodes.Barcode;
 import domain.robots.BTRobotPilot;
 import domain.robots.CannotMoveException;
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 import domain.robots.SimRobotPilot;
 import domain.util.ColorPolygon;
 
 //Robotclass, generates/keeps track of current positioning.
 public class Controller {
-	private static boolean stopped = false;
+	public static boolean interconnected = false;
+	private static boolean STOPPED = false;
 	private Thread executingThread;
-	private Robot currentRobot;
-	private Robot btRobot;
-	private Robot simRobot;
-	private HashMap<Integer, Robot> otherRobots;
+	private RobotPilot currentRobot;
+	private RobotPilot btRobot;
+	private RobotPilot simRobot;
 	private Thread explorer;
+	public boolean robotChangeNotHandledByGUI=false;
 //	private final EventPusher ep;
 //	private SimRobotPilot simRobotPilot ;
+	private HtttpImplementation htttpImplementation;
+	
+	private String playerID;
 	
 	public Controller() {
-		otherRobots = new HashMap<Integer, Robot>();
-		SimRobotPilot simRobotPilot = new SimRobotPilot();
-		simRobot = new Robot(simRobotPilot, 0);
-		simRobot.getRobotPilot().setRobot(simRobot);
-		currentRobot=simRobot;
-		connectNewSimRobot(0, new Position(20,20), 0);
-//		
-//		ep = new EventPusher();
-//		Thread epThread = new Thread(){
-//		    public void run(){
-//				ep.run(currentRobot);	//method to adjust current robot in ep needed
-//		    }
-//		  };
-//		epThread.start();
-//	
-//    	final SubscribeMonitor sm = new SubscribeMonitor(this);	
-//   		Thread smThread = new Thread(){
-//		    public void run(){
-//		    	sm.run();
-//		    }
-//		  };
-//		smThread.start();
+		
+		
+		int random = (int) (Math.random()*1000000);
+//	    random =1;
+		this.playerID = "playerIDGroen"+random;
+		if(GUI.getPlayerID()!=null){
+	    	playerID = GUI.getPlayerID();
+	    }
+		
+		
+		
+		connectNewSimRobot(0, new Position(20,20), playerID);
+		
+		try{
+			htttpImplementation = new HtttpImplementation(this);
+			setPlayerClient();
+			interconnected=true;
+		} catch(Exception e){
+			System.out.println("Couldn't connect to the remote server.");
+		}
+		
 		
 	}
 
@@ -74,32 +76,29 @@ public class Controller {
 	  
 	public void connectNewBtRobot() {
 		if(btRobot==null)
-		btRobot = new Robot(new BTRobotPilot(), 0);
-		btRobot.getRobotPilot().setRobot(btRobot);
+		btRobot = new BTRobotPilot(this.playerID);
 		currentRobot=btRobot;
 		currentRobot.setBoard(new Board());
-
-
+		robotChangeNotHandledByGUI=true;
 	}
 	
 	//This is used to set the robot controlled by this GUI
-	public void connectNewSimRobot(double orientation, Position position, int number) {
-		SimRobotPilot simRobotPilot = new SimRobotPilot(orientation, position);
-		simRobot = new Robot(simRobotPilot, number);
-		simRobot.getRobotPilot().setRobot(simRobot);
+	public void connectNewSimRobot(double orientation, Position position, String playerID) {
+		simRobot = new SimRobotPilot(orientation, position,playerID);
 		currentRobot = simRobot ;
 		currentRobot.setBoard(new Board());
+		robotChangeNotHandledByGUI=true;
+
 	}
 	
-	//This is used to set the robot controlled by this GUI
-	public void connectExternalSimRobot(double orientation, Position position, int number) {
-		SimRobotPilot simRobotPilot = new SimRobotPilot(orientation, position);
-		Robot otherSimRobot = new Robot(simRobotPilot, number);
-		otherSimRobot.getRobotPilot().setRobot(otherSimRobot);
-		otherSimRobot.setBoard(new Board()); //miss aanpassen, nog te bespreken. (elke robot individueel bord?)
-		otherRobots.put(number, otherSimRobot);
-		}
+	public void setPlayerClient(){
+		currentRobot.setPlayerClient(htttpImplementation.getPlayerClient());
+	}
 	
+	public WorldSimulator getWorldSimulator(){
+		return currentRobot.getWorldSimulator();
+	}
+
 	
 	public void polygonDriver(int numberOfVertices, double edgeLength) {
 		PolygonDriver driver = new PolygonDriver(currentRobot);
@@ -137,17 +136,20 @@ public class Controller {
 	}
 	
 	public void cancel() {
-		stopped = true;
+		STOPPED = true;
 		while(explorer!=null && explorer.isAlive()){}
 		currentRobot.interrupt();
 		startNewThread(null);
 		currentRobot.stop();
-		stopped = false;
+		STOPPED = false;
 	}
 	
 	public Position getPosition(){
 		return currentRobot.getPosition();
 	}
+	
+	public String getPlayerID(){
+		return this.playerID;	}
 	
 	public double getXCo(){
 		return currentRobot.getPosition().getX();
@@ -158,7 +160,7 @@ public class Controller {
 	}
 
 	public double getSpeed() {
-		return currentRobot.getMovingSpeedSetting();
+		return currentRobot.getMovingSpeed();
 //		return currentRobot.getActualMovingSpeed();
 	}
 
@@ -169,10 +171,10 @@ public class Controller {
 	public List<ColorPolygon> getColorPolygons(){
 		List<ColorPolygon> colPolyList=new ArrayList<ColorPolygon>();
 		colPolyList.add(currentRobot.getRobotPolygon());
-		Iterator<Entry<Integer, Robot>> it = otherRobots.entrySet().iterator();
+		Iterator<RobotPilot> it = getWorldSimulator().getOtherRobots().iterator();
 	    while (it.hasNext()) {
-	        Map.Entry<Integer, Robot> pairs = (Map.Entry<Integer, Robot>)it.next();
-	        colPolyList.add(pairs.getValue().getRobotPolygon());
+	        RobotPilot robot = it.next();
+	        colPolyList.add(robot.getRobotPolygon());
 //	        it.remove(); // avoids a ConcurrentModificationException
 	    }
 //		for(Robot robot: otherRobots){
@@ -210,9 +212,9 @@ public class Controller {
 	public double readUltrasonicValue(){
 		return currentRobot.readUltrasonicValue();
 	}
-	
-	public boolean isTouching(){
-		return currentRobot.isTouching();
+
+	public int getInfraredValue(){
+		return currentRobot.getInfraredValue();
 	}
 	
 	public void turnUltrasonicSensor(int angle){
@@ -244,19 +246,12 @@ public class Controller {
 		return readUltrasonicValue() < DISTANCE_LIMIT;
 	}
 
-	public Robot getRobot() {
+	public RobotPilot getRobot() {
 		return currentRobot;
 	}
-	public void arcForward(boolean left){
-		currentRobot.arcForward(left);
-	};
-
-	public void arcBackward(boolean left) {
-		currentRobot.arcBackward(left);
-	};
 
 	public void readMazeFromFile(String fileLocation) {
-		MazeInterpreter MI = new MazeInterpreter(this.getRobot().getBoard());
+		MazeInterpreter MI = new MazeInterpreter(getWorldSimulator().getBoard());
 		if(fileLocation.equals("nullnull")){
 		RandomMazeGenerator RMG = new RandomMazeGenerator(MI);
 		}
@@ -280,10 +275,7 @@ public class Controller {
 
 
 	public void rotateAmount(int i) {
-		currentRobot.setTurningSpeed(2);
-		currentRobot.turn(i);
-		currentRobot.resetToDefaultSpeeds();
-		
+		currentRobot.turn(i);		
 	}
 	
 	public void findBlackLineAndCreateBarcode(){
@@ -300,9 +292,9 @@ public class Controller {
 
 	public void startExplore() {
 		if(explorer!=null){
-			stopped = true;
+			STOPPED = true;
 			while(explorer.isAlive()){}
-			stopped = false;
+			STOPPED = false;
 		}
 		Runnable explore = new Runnable() {
 
@@ -316,10 +308,11 @@ public class Controller {
 	}
 
 	public void resumeExplore() {
-		stopped = true;
+		STOPPED = true;
 		while(explorer.isAlive()){}
-		stopped = false;
+		STOPPED = false;
 		explorer = new Thread(new Runnable() {
+			@Override
 			public void run(){
 				currentRobot.resumeExplore();
 			}
@@ -328,10 +321,11 @@ public class Controller {
 	}
 
 	public void driveToFinish() {
-		stopped = true;
+		STOPPED = true;
 		while(explorer.isAlive()){}
-		stopped = false;
+		STOPPED = false;
 		explorer = new Thread(new Runnable() {
+			@Override
 			public void run(){
 				currentRobot.driveToFinish();
 			}
@@ -340,13 +334,20 @@ public class Controller {
 	}
 	
 	public void reset(){
-		stopped = true;
+		STOPPED = true;
 		while(explorer!=null && explorer.isAlive()){}
-		connectNewSimRobot(0, new Position(20,20), 0);
+		int random = (int) (Math.random()*1000000);
+//	    random =1;
+		String playerID = "playerIDGroen"+random;
+		connectNewSimRobot(0, new Position(20,20), playerID);
 	}
 
 	public static boolean isStopped() {
-		return stopped ;
+		return STOPPED ;
+	}
+	
+	public static void setStopped(boolean stopped) {
+		Controller.STOPPED = stopped;
 	}
 
 
@@ -354,43 +355,44 @@ public class Controller {
 	public void autoCalibrateLight() {
 		currentRobot.autoCalibrateLight();}
 	
-	public void disableError() {
-		otherRobots.get(1).setPose(3, 100, 100);
-//		simRobotPilot.disableError();
-	}
+//	public void disableError() {
+//		otherRobots.get(1).setPose(3, 100, 100); 
+////		simRobotPilot.disableError();
+//	}
 	
-	//set the simRobot of this gui to the first robot
-	public void setFirstRobot(){
-		connectNewSimRobot(0, new Position(20,20), 0);
-	}
-	
-	//set the simRobot of this gui to the first robot
-	public void setSecondRobot(){
-		connectNewSimRobot(0, new Position(100,20), 1);
-	}
+//	//set the simRobot of this gui to the first robot
+//	public void setFirstRobot(){
+//		connectNewSimRobot(0, new Position(20,20), 0);
+//	}
+//	
+//	//set the simRobot of this gui to the first robot
+//	public void setSecondRobot(){
+//		connectNewSimRobot(0, new Position(100,20), 1);
+//	}
 
 
-	public Robot getRobotFromIdentifier(String string) {
-		int identifier = Integer.parseInt(string);
-//		System.out.println("IDENTIFIER"+identifier);
-//		System.out.println("currIDEN:"+ep.getRobotRandomIdentifier());
+	public RobotPilot getRobotFromIdentifier(int identifier) {
+////		System.out.println("IDENTIFIER"+identifier);
+////		System.out.println("currIDEN:"+ep.getRobotRandomIdentifier());
 //		if(identifier==ep.getRobotRandomIdentifier()){
 //			//message komt van deze robot
 //			return null;
 //		}
 //		else{
-			if(otherRobots.containsKey(identifier)){
-				return otherRobots.get(identifier);
-			}
-			else{
-				connectExternalSimRobot(2, new Position(220, 20), identifier);
-				return getRobotFromIdentifier(string);
-			}
-		}
-//	}
+//			if(otherRobots.containsKey(identifier)){
+//				return otherRobots.get(identifier);
+//			}
+//			else{
+//				connectExternalSimRobot(2, new Position(220, 20), identifier);
+//				return getRobotFromIdentifier(identifier);
+//			}
+//		}
+		return null;
+	}
 	
-	public void setBallBarcode(int barcode){
-		Barcode.setBallBarcode(barcode);
+
+	public void setBallNumber(int number){
+		Barcode.setBallNumber(number);
 	}
 
 
@@ -402,9 +404,76 @@ public class Controller {
 	public Ball getBall(){
 		return getRobot().getBall();
 	}
-
-
-	public void setFalseBallBarcodes(int[] falseBallBarcodes) {
-		Barcode.setFalseBallBarcodes(falseBallBarcodes);
+	
+	public void ballFoundByOtherRobot(RobotPilot robot){
+		robot.setFoundBall(robot.getNumber());
 	}
+
+	
+	public int getTeamNumber(){
+		return currentRobot.getTeamNumber();
+	}
+	
+	public void setPlayerNb(int nb){
+		currentRobot.setPlayerNb(nb);
+	}
+
+
+	public void setFalseBallNumbers(int[] falseBallBarcodes) {
+		Barcode.setFalseBallNumbers(falseBallBarcodes);
+	}
+	
+	public void playerJoined(int identifier){
+		//RobotPilot newRobot = new RobotPilot(identifier);
+		//otherRobots.put(identifier, newRobot);
+	}
+	
+	
+
+
+
+	public void launchCatapult() {
+		turnUltrasonicSensorTo(180);		
+	}
+	private void turnUltrasonicSensorTo(int angle) {
+		currentRobot.turnUltrasonicSensorTo(angle);
+	}
+
+
+
+	public boolean detectInfrared() {
+		return currentRobot.detectInfrared();
+	}
+
+	public void setReady(boolean ready) {
+		currentRobot.setReady(ready);
+	}
+	
+	public void setInitialPositionNumber(int playerNb){
+		currentRobot.setInitialPositionNumber(playerNb);
+	}
+
+	public void teleport() {
+		currentRobot.teleportToStartPosition();
+	}
+
+
+	public void mousePressed(int x, int y) {
+		// De getSeasaw(Position) kan hier niet gebruikt worden omdat de muis
+		// niet ingedrukt word op precies het midden)
+		List<Seesaw> simWorldSeesaws = getWorldSimulator().getSeesaws();
+		for(Seesaw s: simWorldSeesaws){
+			if(s.hasPosition(new Position(x, y))){
+			s.rollOver();
+			}
+		}
+		
+		List<Seesaw> foundSeesaws = currentRobot.getFoundBoard().getSeesaws();
+		for(Seesaw s: foundSeesaws){
+			if(s.hasPosition(new Position(x, y))){
+			s.rollOver();
+			}
+		}
+	}
+	
 }

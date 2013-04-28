@@ -3,6 +3,8 @@ package gui;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Polygon;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,11 +14,12 @@ import javax.swing.JPanel;
 
 import controller.Controller;
 import domain.Position.Position;
-import domain.barcodes.Barcode;
 import domain.maze.Ball;
 import domain.maze.MazeElement;
 import domain.maze.Orientation;
+import domain.maze.Seesaw;
 import domain.maze.Wall;
+import domain.maze.barcodes.Barcode;
 import domain.maze.graph.MazePath;
 import domain.maze.graph.TileNode;
 import domain.util.ColorPolygon;
@@ -38,6 +41,24 @@ public class DrawingPanel extends JPanel {
 		previousPolygons = new HashMap<ColorPolygon, Polygon>();
 		drawWhiteLines();
 //		drawWalls();
+		
+		addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				int x = e.getX()-OFFSET;
+				int y = e.getY()-OFFSET;
+				controller.mousePressed(x,y);
+//				System.out.println(x+" "+y);
+			}
+			
+			public void mouseReleased(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseClicked(MouseEvent e) {}
+		});
+		
+			
 	}
 
 	public static final int IMG_WIDTH = 700;
@@ -46,12 +67,15 @@ public class DrawingPanel extends JPanel {
 	private BufferedImage image = new BufferedImage(IMG_WIDTH, IMG_HEIGHT,
 			BufferedImage.TYPE_INT_ARGB);
 
+	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if (image != null) {
 			g.drawImage(image, 0, 0, null);
 		}
 	}
+	
+	
 
 	public void drawMyLine(int x1, int y1, int x2, int y2, Color color) {
 		g.setColor(color);
@@ -70,15 +94,16 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	public void drawSimulatedWalls(){
-		List<Wall> walls = controller.getRobot().getBoard().getWalls();
+		List<Wall> walls = controller.getRobot().getWorldSimulator().getWalls();
 		for(Wall w: walls){
 			drawWall(w, true);
 		}
 		drawSimulatedBarcodes();
+		drawSimWorldSeesaws();
 	}
 	
 	public void drawFoundWalls(){
-		List<Wall> walls = controller.getRobot().getBoard().getFoundWalls();
+		List<Wall> walls = controller.getRobot().getFoundBoard().getWalls();
 		try {
 			for(Wall w: walls){
 			drawWall(w, false);
@@ -91,7 +116,7 @@ public class DrawingPanel extends JPanel {
 	
 	public void drawWall(Wall wall, boolean simulated){
 		Polygon pol = new Polygon();
-		Position pos = null;
+	//	Position pos = null;
 		int pos1X = (int)wall.getPos1().getX()+OFFSET;
 		int pos1Y = (int)wall.getPos1().getY()+OFFSET;
 		int pos2X = (int)wall.getPos2().getX()+OFFSET;
@@ -114,7 +139,7 @@ public class DrawingPanel extends JPanel {
 		}
 		else{
 			boolean goodWall = false;
-			List<Wall> simWalls = controller.getRobot().getBoard().getWalls();
+			List<Wall> simWalls = controller.getRobot().getWorldSimulator().getWalls();
 			if(simWalls.size()>0){
 				for(Wall w: simWalls){
 					if(w.hasPosition(wall.getCenterPosition())){
@@ -138,14 +163,14 @@ public class DrawingPanel extends JPanel {
 	}
 	
 	public void drawSimulatedBarcodes(){
-		List<Barcode> barcodes = controller.getRobot().getBoard().getSimulatedBarcodes();
+		List<Barcode> barcodes = controller.getRobot().getWorldSimulator().getSimulatedBarcodes();
 		for(Barcode b: barcodes){
 			drawBarcode(b, true);
 		}
 	}
 	
 	public void drawFoundBarcodes(){
-		List<Barcode> barcodes = controller.getRobot().getBoard().getFoundBarcodes();
+		List<Barcode> barcodes = controller.getRobot().getFoundBoard().getBarcodes();
 		for(Barcode b: barcodes){
 			drawBarcode(b, false);
 		}
@@ -188,12 +213,76 @@ public class DrawingPanel extends JPanel {
 		}
 	}
 	
+	public void drawSimWorldSeesaws(){
+
+		List<Seesaw> seesaws = controller.getRobot().getWorldSimulator().getSeesaws();
+		for(Seesaw s : seesaws){
+			drawSeesaw(s,true);
+		}
+	}
+	
+	public void drawInfraredPositions(){
+
+		List<Seesaw> seesaws = controller.getRobot().getWorldSimulator().getSeesaws();
+		for(Seesaw s : seesaws){
+			drawSeesawInfrared(s);
+		}
+	}
+	
+	public void drawFoundSeesaws(){
+		List<Seesaw> seesaws = controller.getRobot().getFoundBoard().getSeesaws();
+		for(Seesaw s : seesaws){
+			drawSeesaw(s,false);
+		}
+	}
+	
+	public void drawSeesaw(Seesaw seesaw, boolean simulated){
+		Polygon pol = new Polygon();
+		int posX = (int) (seesaw.getCenterPosition().getX() + OFFSET);
+		int posY = (int) (seesaw.getCenterPosition().getY() + OFFSET);
+		
+		int xRange,yRange;
+		if(seesaw.getOrientation().equals(Orientation.EAST) || seesaw.getOrientation().equals(Orientation.WEST)){
+			xRange = 40; yRange = 20;
+		}
+		else{
+			xRange = 20; yRange = 40;
+		}
+		
+		pol.addPoint(posX-xRange, posY-yRange);
+		pol.addPoint(posX+xRange, posY-yRange);
+		pol.addPoint(posX+xRange, posY+yRange);
+		pol.addPoint(posX-xRange, posY+yRange);
+		
+		if(simulated){
+			g.setColor(Color.lightGray);
+		}
+		else{
+			g.setColor(Color.darkGray);
+		}
+		g.drawPolygon(pol);
+		g.fillPolygon(pol);
+		
+		
+		totalGui.repaint();
+	}
+	
+	public void drawSeesawInfrared(Seesaw seesaw){
+		int posX = (int) (seesaw.getInfaredPosition().getX() + OFFSET);
+		int posY = (int) (seesaw.getInfaredPosition().getY() + OFFSET);
+		g.setColor(Color.red);
+		g.drawOval(posX, posY, 5, 5);
+		g.fillOval( posX, posY, 5, 5);
+		
+		totalGui.repaint();
+	}
+	
 	public void drawHorizontalWhiteLines(Barcode barcode){
 		int LINEWIDTH = 2;
 		Orientation orientation = barcode.getOrientation();
 		int posXLowestLine = (int)barcode.getPos().getX()+OFFSET; 
 		int posYLowestLine = (int)barcode.getPos().getY()+OFFSET+6; //lowest line NOT including the outer black lines
-		int[] bits = barcode.getBits();
+		int[] bits = barcode.getReadBits();
 
 		if(orientation == Orientation.NORTH){
 			for(int i=0; i<bits.length; i++){
@@ -216,7 +305,7 @@ public class DrawingPanel extends JPanel {
 		Orientation orientation = barcode.getOrientation();
 		int posXLowestLine = (int)barcode.getPos().getX()+OFFSET-6; 
 		int posYLowestLine = (int)barcode.getPos().getY()+OFFSET; //lowest line NOT including the outer black lines
-		int[] bits = barcode.getBits();
+		int[] bits = barcode.getReadBits();
 
 		if(orientation == Orientation.EAST){
 			for(int i=0; i<bits.length; i++){
@@ -247,6 +336,7 @@ public class DrawingPanel extends JPanel {
 		totalGui.repaint();
 	}
 
+	@Override
 	public Graphics getGraphics() {
 		return image.getGraphics();
 	}
@@ -309,18 +399,18 @@ public class DrawingPanel extends JPanel {
 						if(beginOrient<45 && beginOrient>-45){
 						
 						if(firstPos){
-						zeroX = (robotX - (int) nextNode1.getY()*40);
-						zeroY = (robotY - (int) nextNode1.getX()*40);
-						System.out.println("ZEROPOS "+zeroX+" "+zeroY);
+						zeroX = (robotX - nextNode1.getY()*40);
+						zeroY = (robotY - nextNode1.getX()*40);
+						//System.out.println("ZEROPOS "+zeroX+" "+zeroY);
 						firstPos = false;
 						}
 						
 						//oost
-						x1 = Math.abs((int) nextNode1.getY()*40 + OFFSET + zeroX); 
-						y1 = Math.abs((int) nextNode1.getX()*40 + OFFSET + zeroY);
-						x2 = Math.abs((int) nextNode2.getY()*40 + OFFSET + zeroX); 
-						y2 = Math.abs((int) nextNode2.getX()*40 + OFFSET + zeroY);
-						System.out.println("POS "+x1+" "+y1+";  "+x2+" "+y2);
+						x1 = Math.abs(nextNode1.getY()*40 + OFFSET + zeroX); 
+						y1 = Math.abs(nextNode1.getX()*40 + OFFSET + zeroY);
+						x2 = Math.abs(nextNode2.getY()*40 + OFFSET + zeroX); 
+						y2 = Math.abs(nextNode2.getX()*40 + OFFSET + zeroY);
+						//System.out.println("POS "+x1+" "+y1+";  "+x2+" "+y2);
 						
 						}
 //						
@@ -375,7 +465,7 @@ public class DrawingPanel extends JPanel {
 	
 	
 	public void drawBalls(){
-		List<Ball> balls = controller.getRobot().getBoard().getBalls();
+		List<Ball> balls = controller.getRobot().getWorldSimulator().getBalls();
 		for(Ball b: balls){
 			drawBall(b);
 		}
@@ -388,7 +478,10 @@ public class DrawingPanel extends JPanel {
 	
 	public void removeBall(Ball ball){
 		g.setColor(Color.white);
-		g.fillOval((int)ball.getPosition().getX()-5+OFFSET, (int)ball.getPosition().getY()-5+OFFSET, 10, 10);
+		try {
+			g.fillOval((int)ball.getPosition().getX()-5+OFFSET, (int)ball.getPosition().getY()-5+OFFSET, 10, 10);
+		} catch (Exception e) {}
+		
 	}
 	
 
@@ -396,6 +489,7 @@ public class DrawingPanel extends JPanel {
 	public void clear() {
 		g.setColor(Color.white);
 		g.fillRect(0, 0, IMG_WIDTH, IMG_HEIGHT);
+		previousPolygons.clear();
 		totalGui.repaint();
 	}
 

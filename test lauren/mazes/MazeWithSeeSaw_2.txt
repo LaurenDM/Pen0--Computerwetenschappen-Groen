@@ -1,0 +1,9 @@
+6 5
+
+#
+Corner.N	Straight.E.13	Seesaw.W	Seesaw.E	Straight.W.11	Corner.E
+Corner.W	Corner.E	Corner.N	T.N		T.N		Corner.E
+Straight.N	DeadEnd.S	Straight.N	Straight.N	Corner.W	Corner.S
+T.W		Straight.W	T.S		T.S		T.N		Corner.E
+Corner.W	DeadEnd.E	Closed		Closed		DeadEnd.S	Corner.S	
+

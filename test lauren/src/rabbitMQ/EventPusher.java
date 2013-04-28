@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Date;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -14,7 +13,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 
 /**
  * A program that uses a AMQP server to publish events. At a fixed interval it
@@ -37,7 +36,7 @@ public class EventPusher {
 	 * This method does all the work of this class. It sets up all connections,
 	 * listens for launch events and generates the events while racing. 
 	 */
-	public void run(Robot robot) {
+	public void run(RobotPilot robot) {
 		this.robot = robot;
 		this.robotRandomIdentifier = (int) (Math.random()*1000000);
 		try {
@@ -72,7 +71,7 @@ public class EventPusher {
 	private String teamName = null;
 	private String routingKey = null;
 	private boolean racing = false;
-	private Robot robot;
+	private RobotPilot robot;
 	private int robotRandomIdentifier;
 	
 	/**
@@ -81,12 +80,12 @@ public class EventPusher {
 	 * 
 	 * @throws IOException
 	 */
-	public void setup(Robot robot) throws IOException {
+	public void setup(RobotPilot robot) throws IOException {
 		// create connection to the AMQP server and create a channel to the exchange (See Config.EXCHANGE_NAME)
 		this.conn = MQ.createConnection();
 		this.channel = MQ.createChannel(this.conn);
 		
-		this.routingKey = "race.robot_" + robotRandomIdentifier;
+		this.routingKey = "race.groen.robot_" + robotRandomIdentifier;
 
 		System.out.println(String.format("Sending events with routing key '%s' to exchange %s",
 				this.teamName, this.routingKey, Config.EXCHANGE_NAME));
@@ -106,6 +105,7 @@ public class EventPusher {
 		@Override
 		public void run() {
 			if (racing) {
+				checkBallInPossesion();
 				String message = robot.getPosition().getX()+"_"+robot.getPosition().getY()+"_"+(int)robot.getOrientation();
 				sendMessage(message);
 							
@@ -154,6 +154,21 @@ public class EventPusher {
 		System.out.println("Race stopped");
 		this.racing = false;
 	}
+	
+	public void foundBall(){
+		sendMessage("Ball found"); 
+	}
+	
+	
+	private boolean ballInPossession=false;
+	
+	public void checkBallInPossesion(){
+		if(robot.hasBall() && !ballInPossession){
+			ballInPossession=true;
+			foundBall();
+		}
+	}
+
 	
 	/**
 	 * Sets up a consumer to listen for launch events. If launch messages are

@@ -1,31 +1,36 @@
 package gui;
+
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
-import javax.swing.GroupLayout.Alignment;
+import java.util.Map;
+import java.util.Map.Entry;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
+import javax.swing.WindowConstants;
 
-import org.jfree.ui.Align;
+import sun.misc.Cleaner;
 
 import controller.Controller;
 import domain.Position.Position;
-import domain.barcodes.Barcode;
+import domain.maze.barcodes.Barcode;
 import domain.robots.CannotMoveException;
+import domain.robots.RobotPilot;
 import domain.util.ColorPolygon;
 import exceptions.ConnectErrorException;
 /**
@@ -34,29 +39,30 @@ import exceptions.ConnectErrorException;
  *
  */
 public class ContentPanel implements ActionListener {
+	static ContentPanel runningPanel;
 	static JFrame frame = new JFrame("P&O - Groen");
     static JFrame variableFrame = new JFrame("P&O - Groen - Variables");
     static JFrame calibrationFrame = new JFrame("P&O - Groen - Lightsensor Calibration");
     static JFrame sensorOrientationFrame = new JFrame("P&O - Groen - Ultrasonicsensor Orientation");
     static JFrame barcodeFrame = new JFrame("P&O - Groen - Set the barcode values");
+    static JFrame connectionFrame = new JFrame("P&O - Groen - Connection through HTTTP");
     private static ControllerPoller controllerPoller;
     private JPanel titlePanel, buttonPanel, debugPanel, bottomButtonPanel;
     private JLabel buttonLabel, actionLabel, titleLabel;
-    private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, touchingLabel, lineLabel;
+    private JLabel xLabel, yLabel, speedLabel, angleLabel, lightLabel, distanceLabel, infraredLabel, lineLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, variableButton, connectButton, 
-    calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, sensorButton,
-    rotateSlowLeft,rotateSlowRight,startButton, barcodeButton, finishButton, resumeButton, resetButton,setBarcodeButton;
+    calibrateButton, sensorOrientationButton, loadMazeButton, straightenButton, connectionButton,
+    rotateLittleLeft,rotateLittleRight,startButton, barcodeButton, finishButton, resumeButton, resetButton,setBarcodeButton;
     private static JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
     final static int totalXDimensions = 1100;
-//    final static int totalYDimensions = 750; TODO verwijderen indien niet gebruikt na i4
     final static int moveButtonWidth = 100;
     final static int allButtonHeight = 20;
     final static int wideButtonWidth=150;
-	final static int rightPanelWidth=365;
+	final static int rightPanelWidth=300;
 	final static int yPaddingTop=50;
-	final static int debugPanelHeight=100+3*20; //100 for the scrollpane an 2*20 for 2 textlines
+	final static int debugPanelHeight=100+2*20; //100 for the scrollpane an 2*20 for 2 textlines
 	final static int sensorGraphsPanelHeight=350;
 
     private boolean connected = false;
@@ -66,13 +72,11 @@ public class ContentPanel implements ActionListener {
     private boolean rightButtonPressed = false;
     private boolean downButtonPressed = false;
     private boolean showRawData = false;
-    private int rotateSlowAmount = 10;
-    public enum Button {
-        UP, LEFT, DOWN, RIGHT,NONE
-    }
-	
+    private int rotateLittleAmount = 10;
+    private ArrayList<Integer> printedBalls;
     
     Controller controller;
+	private SensorGraphsPanel graphPanel;
 
     public void setFocusButtons(){
     	buttonPanel.requestFocusInWindow();
@@ -89,7 +93,7 @@ public class ContentPanel implements ActionListener {
     	object.setLayout(null);
     	object.setLocation(xco, yco);
     	object.setSize(xsize, ysize);
-    	object.setHorizontalAlignment(JLabel.LEFT);
+    	object.setHorizontalAlignment(SwingConstants.LEFT);
         object.setForeground(Color.black);
     	//totalGUI.add(object);
     	source.add(object);
@@ -109,39 +113,40 @@ public class ContentPanel implements ActionListener {
     	fixButtonLayout(source, jButton, xsize, ysize, xco,  yco, 9);
     }
     
-    public Button getCurrentPressedButton(){
-    	if(upButtonPressed == true)
-    		return Button.UP;
-    	else if(leftButtonPressed == true)
-    		return Button.LEFT;
-    	else if(rightButtonPressed == true)
-    		return Button.RIGHT;
-    	else if(downButtonPressed == true)
-    		return Button.DOWN;
-    	else
-    		return Button.NONE;
-    }
-    
-    public void setCurrentPressedButton(boolean pressed,Button button){
-    	if(button == Button.RIGHT){
-    		this.rightButtonPressed = pressed;
-    	}
-    		
-    	else if(button == Button.LEFT){
-    		this.leftButtonPressed = pressed;
-    	}
-    		
-    	else if(button == Button.UP){
-    		this.upButtonPressed = pressed;
-    	}
-    		
-    	else if(button == Button.DOWN){
-    		this.downButtonPressed = pressed;
-    	}
-    		
-    }
+//    public Button getCurrentPressedButton(){
+//    	if(upButtonPressed == true)
+//    		return Button.UP;
+//    	else if(leftButtonPressed == true)
+//    		return Button.LEFT;
+//    	else if(rightButtonPressed == true)
+//    		return Button.RIGHT;
+//    	else if(downButtonPressed == true)
+//    		return Button.DOWN;
+//    	else
+//    		return Button.NONE;
+//    }
+//    
+//    public void setCurrentPressedButton(boolean pressed,Button button){
+//    	if(button == Button.RIGHT){
+//    		this.rightButtonPressed = pressed;
+//    	}
+//    		
+//    	else if(button == Button.LEFT){
+//    		this.leftButtonPressed = pressed;
+//    	}
+//    		
+//    	else if(button == Button.UP){
+//    		this.upButtonPressed = pressed;
+//    	}
+//    		
+//    	else if(button == Button.DOWN){
+//    		this.downButtonPressed = pressed;
+//    	}
+//    		
+//    }
     
 	public ContentPanel() {
+		runningPanel=this;
 		//We create a controller that controls communication with the domain.
 	    controller = new Controller();
 		// We create a bottom JPanel to place everything on.
@@ -161,7 +166,7 @@ public class ContentPanel implements ActionListener {
         //___________________________________________________
         // Creation of a Panel to contain all the JButtons.
         buttonPanel = new JPanel();
-		fixPanelLayout(buttonPanel, 300,8*allButtonHeight, 750, yPaddingTop+debugPanelHeight+sensorGraphsPanelHeight);
+		fixPanelLayout(buttonPanel, rightPanelWidth,8*allButtonHeight, 750, yPaddingTop+debugPanelHeight+sensorGraphsPanelHeight);
         buttonPanel.addKeyListener(l);
         
         
@@ -182,11 +187,11 @@ public class ContentPanel implements ActionListener {
         downButton = new JButton("BACKWARD");
         fixButtonLayout(buttonPanel, downButton, moveButtonWidth , allButtonHeight, moveButtonWidth, allButtonHeight);
         
-        rotateSlowLeft = new JButton("Slow L");
-        fixButtonLayout(buttonPanel, rotateSlowLeft, moveButtonWidth, allButtonHeight, 0, allButtonHeight);
+        rotateLittleLeft = new JButton("10 L");
+        fixButtonLayout(buttonPanel, rotateLittleLeft, moveButtonWidth, allButtonHeight, 0, allButtonHeight);
         
-        rotateSlowRight = new JButton("Slow R");
-        fixButtonLayout(buttonPanel,rotateSlowRight, moveButtonWidth, allButtonHeight, 2*moveButtonWidth, allButtonHeight);
+        rotateLittleRight = new JButton("10 R");
+        fixButtonLayout(buttonPanel,rotateLittleRight, moveButtonWidth, allButtonHeight, 2*moveButtonWidth, allButtonHeight);
         
         cancelButton = new JButton("STOP");
 		fixButtonLayout(buttonPanel, cancelButton, wideButtonWidth, allButtonHeight, 0, 2*allButtonHeight );
@@ -194,7 +199,7 @@ public class ContentPanel implements ActionListener {
         variableButton = new JButton("POLYGON");
         fixButtonLayout(buttonPanel, variableButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 2*allButtonHeight);
         
-        connectButton = new JButton("CONNECT TO ROBOT");
+        connectButton = new JButton("CONNECT BUTTON");
         fixButtonLayout(buttonPanel, connectButton, wideButtonWidth, allButtonHeight, 0, 3*allButtonHeight );
         
         calibrateButton = new JButton("CALIBRATE LIGHTSENSOR");
@@ -215,8 +220,8 @@ public class ContentPanel implements ActionListener {
         setBarcodeButton = new JButton("SET BARCODE VALUES");
         fixButtonLayout(buttonPanel, setBarcodeButton, wideButtonWidth, allButtonHeight, wideButtonWidth, 6*allButtonHeight);
         
-        sensorButton = new JButton("DISABLE TURN ERROR");
-        fixButtonLayout(buttonPanel, sensorButton, wideButtonWidth, allButtonHeight, 0, 6*allButtonHeight);
+        connectionButton = new JButton("OPEN CONNECTION PANEL");
+        fixButtonLayout(buttonPanel, connectionButton, wideButtonWidth, allButtonHeight, 0, 6*allButtonHeight);
         
         startButton = new JButton("Start");
 //        fixButtonLayout(buttonPanel, startButton, 20, 150, 0, 0);
@@ -258,29 +263,34 @@ public class ContentPanel implements ActionListener {
         //Creating variable panel
         VariablePanel variablePanel = new VariablePanel(variableFrame,controller);
         variableFrame.setContentPane(variablePanel.getContentPanel());;
-        variableFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        variableFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         variableFrame.setSize(400, 400);
         
         //Creating calibration panel
         CalibrationPanel calibrationPanel = new CalibrationPanel(calibrationFrame, controller);
         calibrationFrame.setContentPane(calibrationPanel.getContentPanel());
-        calibrationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        calibrationFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         calibrationFrame.setSize(400,400);
         
         //Creating sensorOrientation panel
         SensorOrientationPanel sensorOrientationPanel = new SensorOrientationPanel(sensorOrientationFrame, controller);
         sensorOrientationFrame.setContentPane(sensorOrientationPanel.getContentPanel());
-        sensorOrientationFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        sensorOrientationFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         sensorOrientationFrame.setSize(400,400);
         
         //Creating barcodePanel
         BallBarcodePanel ballBarcodePanel = new BallBarcodePanel(barcodeFrame, controller);
         barcodeFrame.setContentPane(ballBarcodePanel.getContentPanel());
-        barcodeFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        barcodeFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         barcodeFrame.setSize(400,210);
         
+      //Creating connection panel
+        ConnectionPanel connectionPanel = new ConnectionPanel(connectionFrame, controller);
+        connectionFrame.setContentPane(connectionPanel.getContentPanel());
+        connectionFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        connectionFrame.setSize(400,400);
         
-    	
+            	
 	    //We create a controllerPoller that monitors debug info.
 	    controllerPoller = new ControllerPoller(controller, this);
 	    //We start the controllerPoller
@@ -288,6 +298,7 @@ public class ContentPanel implements ActionListener {
         
         frame.requestFocusInWindow(); 
 
+		printedBalls = new ArrayList<Integer>();
 
                 
 	}
@@ -300,41 +311,45 @@ public class ContentPanel implements ActionListener {
         debugPanel.add(scrollPane);
         fixPanelLayout(debugPanel, rightPanelWidth, debugPanelHeight , 750, yPaddingTop);
         scrollPane.setLocation(0, 0);
-        scrollPane.setSize(315,100);
+        scrollPane.setSize(rightPanelWidth,100);
         writeToDebug("Program started successfully");
         //Infolabels
         xLabel = new JLabel("X: 0");
-        xLabel.setHorizontalTextPosition(JLabel.LEFT);
+        xLabel.setHorizontalTextPosition(SwingConstants.LEFT);
         fixLabelLayout(debugPanel, xLabel, 125, 20, 0, 100);
         
         yLabel = new JLabel("Y: 0");
-        yLabel.setHorizontalTextPosition(JLabel.LEFT);
+        yLabel.setHorizontalTextPosition(SwingConstants.LEFT);
         fixLabelLayout(debugPanel, yLabel, 125, 20, 100, 100);
         
-        touchingLabel = new JLabel("Touch: FALSE");
-        touchingLabel.setHorizontalTextPosition(JLabel.LEFT);
-        fixLabelLayout(debugPanel, touchingLabel, 125, 20, 200, 100);
+        infraredLabel = new JLabel("Infrared: 0");
+        infraredLabel.setHorizontalTextPosition(SwingConstants.LEFT);
+        fixLabelLayout(debugPanel, infraredLabel, 125, 20, 200, 100);
         
         speedLabel = new JLabel("Speed: 0");
-        speedLabel.setHorizontalTextPosition(JLabel.LEFT);
+        speedLabel.setHorizontalTextPosition(SwingConstants.LEFT);
         fixLabelLayout(debugPanel, speedLabel, 125, 20, 0, 120);
         
         angleLabel = new JLabel("Angle: 0");
-        angleLabel.setHorizontalTextPosition(JLabel.LEFT);
+        angleLabel.setHorizontalTextPosition(SwingConstants.LEFT);
         fixLabelLayout(debugPanel, angleLabel, 125, 20, 100, 120);
 		
-        lightLabel = new JLabel("Lightsensor: 0");
-	    lightLabel.setHorizontalTextPosition(JLabel.LEFT);
-	    fixLabelLayout(debugPanel, lightLabel, 125, 20, 0, 140);
-        
-	    distanceLabel = new JLabel("Distance: 0");
-        distanceLabel.setHorizontalTextPosition(JLabel.LEFT);
-        fixLabelLayout(debugPanel, distanceLabel, 125, 20, 125, 140);
-//        TODO Francis: vervangen door grafiek
+//        lightLabel = new JLabel("Lightsensor: 0");
+//	    lightLabel.setHorizontalTextPosition(JLabel.LEFT);
+//	    fixLabelLayout(debugPanel, lightLabel, 125, 20, 0, 140);
+//        
+//	    distanceLabel = new JLabel("Distance: 0");
+//        distanceLabel.setHorizontalTextPosition(JLabel.LEFT);
+//        fixLabelLayout(debugPanel, distanceLabel, 125, 20, 125, 140);
+//        Dit is vervangen door grafiek
         
         lineLabel = new JLabel("Line: FALSE");
         lineLabel.setHorizontalTextPosition(JLabel.LEFT);
         fixLabelLayout(debugPanel, lineLabel, 125, 20, 200, 120);
+        
+        graphPanel=new SensorGraphsPanel();
+        graphPanel.fixPanelLayout(rightPanelWidth,sensorGraphsPanelHeight, 750, yPaddingTop+debugPanelHeight);
+        totalGUI.add(graphPanel);
 
 	}
 	
@@ -347,6 +362,9 @@ public class ContentPanel implements ActionListener {
 				drawingPanel.drawFoundBarcodes();
 				drawingPanel.drawLineToFinish();
 				drawingPanel.drawBalls();
+				drawingPanel.drawSimWorldSeesaws();
+				drawingPanel.drawFoundSeesaws();
+				drawingPanel.drawInfraredPositions();
 				for(int i=0; i<collection.size(); i++){
 					if(i==0){drawingPanel.reDrawMyPolygon(collection.get(i), Color.BLACK);}
 					if(i==1){drawingPanel.reDrawMyPolygon(collection.get(i), Color.BLUE);}
@@ -388,6 +406,21 @@ public class ContentPanel implements ActionListener {
 			int count = 0;
 			try{
 				while(true){
+					if (controller.robotChangeNotHandledByGUI) {
+						contentPanel.drawingPanel.clear();
+						contentPanel.drawingPanel.drawWhiteLines();
+						contentPanel.drawingPanel.updateUI();
+						controller.robotChangeNotHandledByGUI = false;
+						if (contentPanel.connectButton.getText()
+								.equalsIgnoreCase("CONNECT TO BROBOT")) {
+
+							contentPanel.connectButton
+									.setText("DISCONNECT FROM BROBOT");
+						} else {
+							contentPanel.connectButton
+									.setText("CONNECT TO BROBOT");
+						}
+					}
 					contentPanel.updateBoard(controller.getColorPolygons());
 					contentPanel.setRobotX(controller.getXCo());
 					contentPanel.setRobotY(controller.getYCo());
@@ -395,15 +428,16 @@ public class ContentPanel implements ActionListener {
 					contentPanel.setRobotAngle(controller.getAngle());
 					contentPanel.setRobotLightValue(controller.readLightValue());
 					contentPanel.setRobotDistanceValue(controller.readUltrasonicValue());
-					contentPanel.setRobotTouchingValue(controller.isTouching());
+					contentPanel.setRobotInfraredValue(controller.getInfraredValue());
 					contentPanel.setLineValue(controller.detectWhiteLine());
+					contentPanel.updateBalls();
 					if(controller.ballInPossesion() && count < 1){
 						count++;
 						contentPanel.ballAlert();
 					}
 					contentPanel.drawRawData();
 					contentPanel.updateInfoPanel();
-					//TODO
+					
 					sleep(100);
 				}
 			} catch(InterruptedException e){
@@ -467,23 +501,27 @@ public class ContentPanel implements ActionListener {
         }
         else if(e.getSource() == connectButton){
         	if(getConnected() == true ){
-        		connectButton.setText("Connect to robot");
-        		drawingPanel.clear();
-        		drawingPanel.drawWhiteLines();
-        		drawingPanel.updateUI();
         		setConnected(false);
-        		controller.connectNewSimRobot(0, new Position(20,20), 0);
+        		controller.connectNewSimRobot(0, new Position(20,20), controller.getPlayerID());
+        		controller.setPlayerClient();
         	}
         	else{
         		try{
+        	 		calibrationFrame.setVisible(true);
+                	actionLabel.setText("The lightsensor is being calibrated.");
+                	calibrateButton.setSelected(false);
         		controller.connectNewBtRobot();
-        		connectButton.setText("Disconnect from robot");
-        		setConnected(true);
+        		if(Controller.interconnected){
+        		controller.setPlayerClient();}
         		drawingPanel.clear();
-        		drawingPanel.drawWhiteLines();
-        		drawingPanel.updateUI();}
+        		setConnected(true);
+        		
+       
+        		
+        		}
         		catch(ConnectErrorException e1){
         		}
+        		
         	}
         	buttonPanel.requestFocusInWindow();
         }
@@ -526,20 +564,16 @@ public class ContentPanel implements ActionListener {
         	controller.findBlackLineAndCreateBarcode();
         	buttonPanel.requestFocusInWindow();
         }
-        else if(e.getSource() == sensorButton){
-//        	actionLabel.setText("Showing raw distance data");
-//        	showRawData = true;
-//        	buttonPanel.requestFocusInWindow();
-        	actionLabel.setText("Disabled error margin on turning");
-        	controller.disableError();
+        else if(e.getSource() == connectionButton){
+        	connectionFrame.setVisible(true);
         	buttonPanel.requestFocusInWindow();
         }
-        else if(e.getSource() == rotateSlowRight){
-        	controller.rotateAmount(rotateSlowAmount);
+        else if(e.getSource() == rotateLittleRight){
+        	controller.rotateAmount(rotateLittleAmount);
         	buttonPanel.requestFocusInWindow();
         }
-		else if(e.getSource() == rotateSlowLeft){
-			controller.rotateAmount(-rotateSlowAmount);
+		else if(e.getSource() == rotateLittleLeft){
+			controller.rotateAmount(-rotateLittleAmount);
 			buttonPanel.requestFocusInWindow();
         }
 		else if(e.getSource() == startButton){
@@ -593,78 +627,27 @@ public class ContentPanel implements ActionListener {
 			
 			@Override
 			public void keyReleased(KeyEvent e) {
-				//System.out.println("released");
-				if (e.getKeyCode() == KeyEvent.VK_RIGHT && getCurrentPressedButton() == Button.RIGHT){
-					setCurrentPressedButton(false,Button.RIGHT);
-					actionLabel.setText("The robot is doing nothing atm!");
-					rightButton.setSelected(false);
-					controller.cancel();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_LEFT && getCurrentPressedButton() == Button.LEFT){
-					setCurrentPressedButton(false,Button.LEFT);
-					actionLabel.setText("The robot is doing nothing atm!");
-					leftButton.setSelected(false);
-					controller.cancel();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_UP && getCurrentPressedButton() == Button.UP){
-					setCurrentPressedButton(false,Button.UP);
-					actionLabel.setText("The robot is doing nothing atm!");
-					upButton.setSelected(false);
-					controller.cancel();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_DOWN && getCurrentPressedButton() == Button.DOWN){
-					setCurrentPressedButton(false,Button.DOWN);
-					actionLabel.setText("The robot is doing nothing atm!");
-					downButton.setSelected(false);
-					controller.cancel();
-				}
-				
-			}
-			
+				// System.out.println("released");
+				Button pressedButton=Button.getButton(e.getKeyCode());
+				pressedButton.virtualRelease();
+			};
+
 			@Override
 			public void keyPressed(KeyEvent e) {
-				
-				if (getCurrentPressedButton() == Button.NONE){
-				if (e.getKeyCode() == KeyEvent.VK_RIGHT){
-					setCurrentPressedButton(true,Button.RIGHT);
-					actionLabel.setText("The robot is turning right!");
-					rightButton.setSelected(true);
-					controller.rotateRightNonBlocking();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_UP){
-					setCurrentPressedButton(true,Button.UP);
-					actionLabel.setText("The robot is going forward!");
-					upButton.setSelected(true);
-					try {
-						controller.moveForward();
-					} catch (CannotMoveException e1) {
-						actionLabel.setText("The robot has encountered an obstacle");
+				if (Button.nonePressed()) {
+					if (e.getKeyCode() == KeyEvent.VK_X) {
+						controller.turnSensorLeft();
+					} else if (e.getKeyCode() == KeyEvent.VK_C) {
+						controller.turnSensorRight();
+					} else if (e.getKeyCode() == KeyEvent.VK_D) {
+						controller.turnSensorForward();
+					} else {
+						Button pressedButton = Button.getButton(e.getKeyCode());
+						pressedButton.virtualPress();
 					}
 				}
-				else if (e.getKeyCode() == KeyEvent.VK_LEFT){
-					setCurrentPressedButton(true,Button.LEFT);
-					actionLabel.setText("The robot is turning left!");
-					leftButton.setSelected(true);
-					controller.rotateLeftNonBlocking();
-				}
-				else if (e.getKeyCode() == KeyEvent.VK_DOWN){
-					setCurrentPressedButton(true,Button.DOWN);
-					actionLabel.setText("The robot is going back!");
-					downButton.setSelected(true);
-					controller.moveBack();
-				}
-				else if(e.getKeyCode() == KeyEvent.VK_X){
-					controller.turnSensorLeft();
-				}
-				else if(e.getKeyCode() == KeyEvent.VK_C){
-					controller.turnSensorRight();
-				}
-				else if(e.getKeyCode() == KeyEvent.VK_D){
-					controller.turnSensorForward();
-				}
-				}
 			}
-			
+
 		};
 		return l;
 	}
@@ -687,6 +670,7 @@ public class ContentPanel implements ActionListener {
 	 */
 	public static void writeToDebug(final String text) {
 		SwingUtilities.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				debugText.append(text + "\n");
 			}
@@ -722,16 +706,21 @@ public class ContentPanel implements ActionListener {
     }
     
     public void setRobotLightValue(double value){
-    	lightLabel.setText("Lightsensor: " + Double.valueOf(value).intValue()); //TODO Francis
+    	graphPanel.addValue(SensorGraphsPanel.LIGHTPLOT, value);
     }
     
     public void setRobotDistanceValue(double value){
-    	distanceLabel.setText("Distance: " + Double.valueOf(value).intValue()); //TODO Francis
+    	graphPanel.addValue(SensorGraphsPanel.DISTANCEPLOT, value);
     }
     
-    public void setRobotTouchingValue(boolean value){
-    	touchingLabel.setText("Touching: " + Boolean.valueOf(value).toString());
-    }
+    public void setRobotInfraredValue(int value){
+		if (!controller.detectInfrared()) {
+			infraredLabel.setForeground(Color.BLACK);
+		} else {
+			infraredLabel.setForeground(Color.RED);
+		}
+		infraredLabel.setText("Infrared: " + value);
+	}
     
     public void setLineValue(boolean value){
     	lineLabel.setText("Line: " + Boolean.valueOf(value).toString());
@@ -746,12 +735,30 @@ public class ContentPanel implements ActionListener {
 		drawingPanel.drawRawSensorData();
 	}
 	
+	public void updateBalls(){
+////		System.out.println("updateBalls");
+//		HashMap<Integer, RobotPilot> otherRobots = controller.getOtherRobots();
+//	    Iterator<Entry<Integer, RobotPilot>> it = otherRobots.entrySet().iterator();
+//		    while (it.hasNext()) {
+//		        Map.Entry<Integer, RobotPilot> pairs = (Entry<Integer, RobotPilot>)it.next();
+////		        System.out.println(pairs.getKey() + " = " + pairs.getValue());
+//		        Integer identifier = pairs.getKey();
+//		        RobotPilot robot = pairs.getValue();
+//		        if(!printedBalls.contains(identifier) && robot.hasBall()){
+//		        	printedBalls.add(identifier);
+//		        	writeToDebug("Robot "+identifier+" has found its ball");
+//		        	System.out.println("FOUND BALL------------------------");
+//		        }
+//		    }
+		}
+	
+	
 	//barcodes
 	public void updateInfoPanel(){
-		for(Barcode b :controller.getRobot().getBoard().getFoundBarcodes()){
+		for(Barcode b :controller.getRobot().getFoundBoard().getBarcodes()){
 			if(!b.getPrinted()){
 				b.setPrinted(true);
-				writeToDebug("Barcode "+b.getBits()[0]+b.getBits()[1]+b.getBits()[2]+b.getBits()[3]+b.getBits()[4]+b.getBits()[5]+" with value "+b.getPossibleDecimal()+" added.");
+				writeToDebug("Barcode "+b.getReadBits()[0]+b.getReadBits()[1]+b.getReadBits()[2]+b.getReadBits()[3]+b.getReadBits()[4]+b.getReadBits()[5]+" with value "+b.getPossibleDecimal()+" added.");
 				if(b.getAction()!=null){
 				writeToDebug("Action: "+b.getAction().toString());
 				}
@@ -760,7 +767,174 @@ public class ContentPanel implements ActionListener {
 		}
 	}
 	
+
+	public enum Button {
+
+		UPCLASS(KeyEvent.VK_UP) {
+			@Override
+			void startAction() {
+				runningPanel.actionLabel.setText("The robot is going forward!");
+				runningPanel.upButton.setSelected(true);
+				try {
+					runningPanel.controller.moveForward();
+				} catch (CannotMoveException e1) {
+					runningPanel.actionLabel
+							.setText("The robot has encountered an obstacle");
+				}
+			}
+
+			@Override
+			void stopAction() {
+				runningPanel.actionLabel
+						.setText("The robot is doing nothing atm!");
+				runningPanel.upButton.setSelected(false);
+				runningPanel.controller.cancel();
+			}
+
+		},
+		LEFTCLASS(KeyEvent.VK_LEFT) {
+
+			@Override
+			void startAction() {
+				runningPanel.actionLabel.setText("The robot is turning left!");
+				runningPanel.leftButton.setSelected(true);
+				runningPanel.controller.rotateLeftNonBlocking();
+			}
+
+			@Override
+			void stopAction() {
+				runningPanel.actionLabel
+						.setText("The robot is doing nothing atm!");
+				runningPanel.leftButton.setSelected(false);
+				runningPanel.controller.cancel();
+			}
+		},
+		DOWNCLASS(KeyEvent.VK_DOWN) {
+			@Override
+			void startAction() {
+				runningPanel.actionLabel.setText("The robot is going back!");
+				runningPanel.downButton.setSelected(true);
+				runningPanel.controller.moveBack();
+			}
+
+			@Override
+			void stopAction() {
+				runningPanel.actionLabel
+						.setText("The robot is doing nothing atm!");
+				runningPanel.downButton.setSelected(false);
+				runningPanel.controller.cancel();
+			}
+		},
+		RIGHTCLASS(KeyEvent.VK_RIGHT) {
+			@Override
+			void startAction() {
+				runningPanel.actionLabel.setText("The robot is turning right!");
+				runningPanel.rightButton.setSelected(true);
+				runningPanel.controller.rotateRightNonBlocking();
+			}
+
+			@Override
+			void stopAction() {
+				runningPanel.actionLabel
+						.setText("The robot is doing nothing atm!");
+				runningPanel.rightButton.setSelected(false);
+				runningPanel.controller.cancel();
+			}
+		},
+		NONECLASS(Integer.MAX_VALUE) {
+			@Override
+			void stopAction() {
+				return;
+			}
+
+			@Override
+			void startAction() {
+				return;
+			}
+		};
+
+		private final int keyEventNumber;
+
+		Button(int keyEventNumber) {
+			timer.setRepeats(false);
+			this.keyEventNumber = keyEventNumber;
+		}
+
+		public static Button UP = UPCLASS, RIGHT = RIGHTCLASS,
+				DOWN = DOWNCLASS, LEFT = LEFTCLASS, NONE = NONECLASS;
+		public static Button[] allButtons = { UP, RIGHT, DOWN, LEFT };
+		private static final int LINUX_KEY_DELAY = 3;
+		boolean isAlreadyVirtuallyPressed = false;
+		boolean isReallyReleased = true;
+
+		ActionListener l = new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				isReallyReleased=true;
+				stopAction();
+			}
+		};
+
+		abstract void stopAction();
+
+		abstract void startAction();
+
+		Timer timer = new Timer(LINUX_KEY_DELAY, l);
+
+		public static Button getButton(int keyCode) {
+			for (Button b : allButtons) {
+				if (b.keyEventNumber == keyCode) {
+					return b;
+				}
+			}
+			return NONE;
+		}
+
+		public static boolean nonePressed() {
+			for (Button b : allButtons) {
+				if (b.isAlreadyVirtuallyPressed) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		public void virtualPress() {
+			if (!this.isAlreadyVirtuallyPressed) {
+				this.isAlreadyVirtuallyPressed = true;
+				if (this.isReallyReleased) {
+					this.startAction();
+				} else {
+					this.timer.stop();
+
+				}
+			}
+		}
+
+		public void virtualRelease() {
+			if (this.isAlreadyVirtuallyPressed) {
+				this.isAlreadyVirtuallyPressed = false;
+				this.isReallyReleased = false;
+				this.timer.start();
+			}
+		}
+
+	    }
 	
+	public void automaticConnection(){
+		controller.readMazeFromFile("test lauren/mazes/MergeTestMaze");
+    	drawingPanel.drawSimulatedWalls();
+    	try {
+			Thread.sleep(5000);
+	    	controller.teleport();
+	    	//controller.setReady(true);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 }
 
  

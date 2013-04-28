@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 import javax.bluetooth.BluetoothStateException;
@@ -25,7 +24,6 @@ import lejos.pc.comm.NXTCommException;
 import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTConnector;
 import lejos.pc.comm.NXTInfo;
-import lejos.util.PilotProps;
 
 public class BTCommPC  implements SpecialReplyCode {
 
@@ -162,7 +160,7 @@ public class BTCommPC  implements SpecialReplyCode {
 					return null;
 				}
 
-			}
+			}//TODO tot hier mss wegdoen
 
 			if (!sendingIsPossible()) {
 				if (command == CMD.GETPOSE || command == CMD.GETSENSORVALUES) {
@@ -205,13 +203,14 @@ public class BTCommPC  implements SpecialReplyCode {
 					throw new BluetoothStateException();
 				}
 			}
+			
 			int[] returnReply = new int[0];
 			int k = 2;
 			int numberOfSpecialReplies = 0;
 			if (reply != null && reply.length > 0 && reply[0] > 0) {
 				numberOfSpecialReplies = reply[0] - 1;
 
-				// reply[1] should containt the first ReplyLenght, and only the
+				// reply[1] should contain the first ReplyLenght, and only the
 				// first reply is an answer to this sendCommand call, the others
 				// are special replies
 				returnReply = new int[reply[1]];

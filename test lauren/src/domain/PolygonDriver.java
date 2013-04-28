@@ -1,12 +1,12 @@
 package domain;
 import domain.robots.CannotMoveException;
 //TODO uitmaken of deze klasse wel bruikbaar is.
-import domain.robots.Robot;
+import domain.robots.RobotPilot;
 
 public class PolygonDriver extends Thread {
-	Robot robot;
+	RobotPilot robot;
 	
-	public PolygonDriver(Robot robot) {
+	public PolygonDriver(RobotPilot robot) {
 	this.robot= robot;	
 	}
 	

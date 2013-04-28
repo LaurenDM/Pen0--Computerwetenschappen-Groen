@@ -1,34 +1,53 @@
 package domain.maze;
 
-import java.util.Collection;
+
 import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+import domain.Position.Pose;
 import domain.Position.Position;
-import domain.barcodes.Barcode;
+import domain.maze.barcodes.Barcode;
+import domain.maze.infrared.InfraredBeamer;
+import domain.robots.RobotPilot;
 
 public class Board {
 	
 	private static final int MAZECONSTANT = 40;
 	
+	
 	private HashMap<Position, Wall> walls;
-	private List<Wall> foundWalls;
+	private List<Barcode> barcodes;
+	private HashMap<Position, Seesaw> seesaws;
 	private List<Ball> balls;
-	private List<Barcode> simulatedBarcodes;
-	private List<Barcode> foundBarcodes;
+	private HashMap<Integer,Pose> initialPositions;
+	private final List<InfraredBeamer> infraBeamers;
+	
 	
 	
 	public Board(){
+		barcodes = new ArrayList<Barcode>();
 		walls = new HashMap<Position,Wall>();
-		simulatedBarcodes = new ArrayList<Barcode>();
-		foundBarcodes = new ArrayList<Barcode>();
-		foundWalls = new ArrayList<Wall>();
+		seesaws = new HashMap<Position, Seesaw>();
 		balls = new ArrayList<Ball>();
-		}
+		initialPositions = new HashMap<Integer,Pose>();
+		infraBeamers= new ArrayList<InfraredBeamer>();
+	}
 	
-	public synchronized void addWall(Wall wall){
-		walls.put(wall.getCenterPosition(),wall);
+	public void addInitialPosition(Pose pos, int nb){
+		System.out.println("init pos added: x:"+pos.getX()+" y:"+pos.getY()+" nb:"+nb);
+		initialPositions.put(nb, pos);
+	}
+	
+	public Pose getInitialPositionFromPlayer(int nb){
+		System.out.println("-----------------");
+		System.out.println("inpos");
+		for(int i =0; i<4; i++){
+			if(initialPositions.get(i)!=null)
+			System.out.println(initialPositions.get(i));			
+		}
+		System.out.println("-----------------");
+		return initialPositions.get(nb);
 	}
 	
 	public synchronized void addBall(Ball ball){
@@ -48,35 +67,27 @@ public class Board {
 		return ball2remove;
 	}
 	
-	public synchronized void foundNewWall(Wall wall){
-		foundWalls.add(wall);
-	}
-	
-	public List<Wall> getFoundWalls(){
-		return foundWalls;
-	}
-	public synchronized void addFoundBarcode(Barcode barcode){
-		foundBarcodes.add(barcode);
-	}
-	public synchronized void addSimulatedBarcode(Barcode barcode){
-		simulatedBarcodes.add(barcode);
-	}
-	
-	public List<Wall> getWalls(){
-		 return new ArrayList<Wall>(walls.values());
-	}
-	
-	public List<Barcode> getSimulatedBarcodes(){
-		return simulatedBarcodes;
-	}
-	public List<Barcode> getFoundBarcodes(){
-		return foundBarcodes;
-	}
-	
 	public List<Ball> getBalls(){
 		return balls;
 	}
 	
+	public synchronized void addWall(Wall wall){
+		walls.put(wall.getCenterPosition(), wall);
+	}
+	
+	public List<Wall> getWalls(){
+		return new ArrayList<Wall>(walls.values());
+	}
+	
+	public boolean findWallAt(Position middlePosition, Position position){
+		Wall wall = walls.get(middlePosition);
+		if(wall == null) {
+			return false;
+			}
+		else {
+			return wall.hasPosition(position);
+		}
+	}
 	
 	public synchronized boolean detectWallAt(Position position){
 		int x =(int) (Math.round((position.getX())/MAZECONSTANT))*MAZECONSTANT;
@@ -109,56 +120,92 @@ public class Board {
 		return false;
 	}
 	
-	private boolean findWallAt(Position middlePosition, Position position){
-		Wall wall = walls.get(middlePosition);
-		if(wall == null) {
-			return false;
-			}
-		else {
-			return wall.hasPosition(position);
-		}
+	public synchronized void addBarcode(Barcode barcode){
+		barcodes.add(barcode);
+	}
+//	public synchronized void removeFoundBarcode(Barcode barcode){
+//		foundBarcodes.remove(barcode);
+//	}
+	
+	public List<Barcode> getBarcodes(){
+		return barcodes;
 	}
 	
 	public synchronized boolean detectBarcodeAt(Position position){
-		for(Barcode barcode : foundBarcodes){
+		for(Barcode barcode : barcodes){
 			if(barcode.containsPosition(position)) return true;
 		}
 		return false;
 	}
 	
 	public Barcode getBarcodeAt(Position pos){
-		for(Barcode barcode : foundBarcodes){
+		for(Barcode barcode : barcodes){
 			if(barcode.containsPosition(pos)) return barcode;
 		}
 		return null;
 	}
 	
-	public synchronized boolean detectWhiteLineAt(Position position){
-		final int MARGE = 1; // TODO: hangt af van dikte lijnen
-		double x_mod = Math.abs(position.getX()%MAZECONSTANT);
-		if(Math.min(x_mod, MAZECONSTANT-x_mod) <MARGE) 
-			return true;
-		double y_mod = Math.abs(position.getY()%MAZECONSTANT);
-		if(Math.min(y_mod,  MAZECONSTANT - y_mod)<MARGE)
-			return true;
-		for(Barcode barcode : simulatedBarcodes){
-			if(barcode.isWhiteAt(position)){
-				return true;
-			}
-		}
-		return false;
-	}
 	
-	public synchronized boolean detectBlackLineAt(Position position){
-		for(Barcode barcode : simulatedBarcodes){
-			if(barcode.isBlackAt(position)){
-				//System.out.println("blackline");
-				return true;
+	public void rollSeeSawWithBarcode(int barcodenb){
+		for(Seesaw s : getSeesaws()){
+			if(s.hasBarcodeNb(barcodenb)){
+				s.rollOver();
 			}
 		}
-		return false;
 	}
 
+	// TODO checken of het wel goed is dat als er een seesaw wordt toegevoegd
+	// die al op dezelfde positie bestaat, dat die dan de andere vervangt
+	public void addSeesaw(Seesaw foundSeesaw){
+		seesaws.put(foundSeesaw.getCenterPosition(), foundSeesaw);
+	}
 	
+	public List<Seesaw> getSeesaws(){
+		return new ArrayList<Seesaw>(seesaws.values());
+	}
+	
+	public Seesaw getSeesaw(Position pos){
+		return seesaws.get(pos);
+	}
+	
+	public boolean hasSeesawAt(Position pos){
+		if(getSeesaw(pos) != null){
+			return true;
+		}
+		else {
+			for(Seesaw s : getSeesaws()){
+				if(s.hasPosition(pos)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	
+	//TODO Francis laten gebruiken
+	public void setLockForSeesawWithBarcode(int barcodenb, boolean lock) {
+		for (Seesaw s : getSeesaws()) {
+			if (s.hasBarcodeNb(barcodenb)) {
+				if(lock){
+				s.lock();
+				}
+				else{
+				s.unLock();
+				}
+			}
+		}
+	}
+
+	public List<InfraredBeamer> getInfraredBeamers() {
+		return infraBeamers;
+	}
+
+	public void addInfraBeamer(InfraredBeamer infraredBeamer) {
+		infraBeamers.add(infraredBeamer);
+	}
 
 }
+
+
+

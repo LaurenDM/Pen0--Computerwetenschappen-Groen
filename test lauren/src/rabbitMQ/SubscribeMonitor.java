@@ -11,18 +11,17 @@ import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
 
 import controller.Controller;
-import domain.robots.Robot;
 
 /**
- * A program that monitors "race.*" messages
+ * A program that monitors "race.groen.*" messages
  * 
  * @author bart.vanbrabant@cs.kuleuven.be
  *
  */
 public class SubscribeMonitor {
-	public static final String MONITOR_KEY = "race.*";
+	public static final String MONITOR_KEY = "race.groen.*";
 	public Controller controller;
-	private MessageParser mp;
+	private MessageParser mp; 
 	
 	public SubscribeMonitor(Controller controller) {
 		this.controller = controller;

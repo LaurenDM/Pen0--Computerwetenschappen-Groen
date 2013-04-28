@@ -4,13 +4,6 @@ package domain.robots;
 import java.io.IOException;
 import lejos.nxt.LightSensor;
 import lejos.nxt.Motor;
-import lejos.nxt.SensorPort;
-import lejos.nxt.remote.NXTCommand;
-import lejos.pc.comm.NXTComm;
-import lejos.pc.comm.NXTCommFactory;
-import lejos.pc.comm.NXTCommandConnector;
-import lejos.pc.comm.NXTConnector;
-import lejos.pc.comm.NXTInfo;
 import lejos.robotics.navigation.DifferentialPilot;
 
 //TODO verbeteren naar nieuwe verbinding

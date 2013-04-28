@@ -11,12 +11,12 @@ public class GUI{
     static ContentPanel contentPanel;
     static int totalXDimensions = 1100;
     static int totalYDimensions = 750;
-  
+    static String gameID;
+    static String playerID;
     
     //Definition of creation of new GUI.
     //Defines both variable and content panel.
     public static void createAndShowGUI() {
-
         JFrame.setDefaultLookAndFeelDecorated(true);
         contentPanel = new ContentPanel();
         frame.setContentPane(contentPanel.getTotalGuiPanel());
@@ -25,12 +25,30 @@ public class GUI{
         frame.setVisible(true);
         contentPanel.setFocusButtons();
     }
+
     
     
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
+    public static void main(final String[] args) {
+
+    	if(args.length>0){
+    	try {
+    		gameID=args[1];
+    		playerID=args[2];
+			Thread.sleep(Integer.parseInt(args[0]));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    	}
+
+    	SwingUtilities.invokeLater(new Runnable() {
+            @Override
+			public void run() {
                 createAndShowGUI();
+            	//if(args.length>0){
+                contentPanel.automaticConnection();
+            	// }
             }
         });
     }
@@ -67,7 +85,15 @@ public class GUI{
      * Write a new line to the debug info panel
      */
     public void writeToDebug(String debugInfo){
-    	contentPanel.writeToDebug(debugInfo);
+    	ContentPanel.writeToDebug(debugInfo);
+    }
+    
+    public static String getGameID(){
+    	return gameID;
+    }
+    
+    public static String getPlayerID(){
+    	return playerID;
     }
     
     

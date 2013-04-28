@@ -5,9 +5,19 @@ import domain.Position.Position;
 public class Ball extends MazeElement{
 	
 	private Position position;
+	private Number number;
 
-	public Ball(Position pos){
+	public Ball(Position pos, Number number){
 		this.position = pos;
+		this.number = number;
+	}
+	
+	public Ball(int number){
+		this.number = number;
+	}
+	
+	public Ball(Position pos){
+		this(pos, 0);
 	}
 	
 	public Ball(){

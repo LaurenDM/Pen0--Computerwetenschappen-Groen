@@ -3,6 +3,7 @@ package domain.maze.graph;
 import java.util.HashMap;
 
 import domain.maze.Orientation;
+import domain.maze.Token;
 
 public class TileNode extends MazeNode {
 	private HashMap<Orientation,MazeNode> connectedNodes;
@@ -12,6 +13,10 @@ public class TileNode extends MazeNode {
 	private int y;
 	private boolean checkpoint = false;
 	private boolean visited = false;
+	private int barcodeNumber = -1;
+	private boolean hasBarcode = false;
+	private int blockNavigationCount = 0;
+	private boolean permInaccessible = false;
 	
 	public TileNode(TileNode currentNode, Orientation orientationToCurrentNode){
 		connectedNodes = new HashMap<Orientation,MazeNode>();
@@ -49,16 +54,20 @@ public class TileNode extends MazeNode {
 	
 	public void setNodeAt(Orientation currentRobotOrientation, MazeNode mazeNode) {
 		getConnectedNodes().put(currentRobotOrientation, mazeNode);
+		if(mazeNode==null){
+			this.fullyExpanded=false;
+		}
 	}
 	
 	private HashMap<Orientation, MazeNode> getConnectedNodes() {
 		return connectedNodes;
 	}
 
-	public void setFinish() {
-		finish = true;
+	public void setFinish(boolean finish) {
+		this.finish = finish;
 	}
 
+	@Override
 	public boolean isFinish() {
 		return finish;
 	}
@@ -79,6 +88,7 @@ public class TileNode extends MazeNode {
 		return y;
 	}
 	
+	@Override
 	public String toString(){
 		return "Tile("+x+","+y+","+(connectedNodes.get(Orientation.NORTH)!=null)+","+(connectedNodes.get(Orientation.EAST)!=null)+","+(connectedNodes.get(Orientation.SOUTH)!=null)+","+(connectedNodes.get(Orientation.WEST)!=null)+")";
 	}
@@ -106,6 +116,98 @@ public class TileNode extends MazeNode {
 			if(node!=null) ret++;
 		}
 		return ret;
+	}
+	
+	public Orientation relativeOrientationTo(TileNode otherTile) {
+		Orientation rOrientation = null;
+		if(otherTile==null){
+			System.out.println("Warning! Tried to calculate relative orientation to null!");
+		} else if(otherTile.getX()!=this.getX()&&otherTile.getY()!=otherTile.getY()){
+			throw new IllegalArgumentException("Invalid relative tile location.");
+		} else if(otherTile.getX()==this.getX()) {
+			int yDist = otherTile.getY()-this.getY();
+			for(Orientation o : Orientation.values()){
+				if(yDist/Math.abs(yDist)==o.getYValue()){
+					rOrientation = o;
+				}
+			}
+		} else if(otherTile.getY()==this.getY()) {
+			int xDist = otherTile.getX()-this.getX();
+			for(Orientation o : Orientation.values()){
+				if(xDist/Math.abs(xDist)==o.getYValue()){
+					rOrientation = o;
+				}
+			}
+		}
+		return rOrientation;
+	}
+	
+	public boolean isAccessible() {
+		return getBlockNavigationCount()==0 && !permInaccessible;
+	}
+	
+	public void setAccessible(boolean accessible) {
+		if(accessible){
+			this.setBlockNavigationCount(0);
+		} else {
+			this.setBlockNavigationCount(1); 
+		}
+	}
+
+	public int getBlockNavigationCount() {
+		return blockNavigationCount;
+	}
+
+	protected void setBlockNavigationCount(int blockNavigationCount) {
+		this.blockNavigationCount = blockNavigationCount;
+		if(blockNavigationCount > 50){
+			permInaccessible = true;
+		}
+	}
+	
+	public void decreaseBlockNavigationCount() {
+		if(getBlockNavigationCount()>0){
+			setBlockNavigationCount(getBlockNavigationCount()-1);
+		}
+	}
+
+	public String getToken() {
+		return Token.match(this);
+	}
+
+	public void setBarcode(int barcodeNumber) {
+		setHasBarcode(true);
+		setBarcodeNumber(barcodeNumber);
+	}
+
+	private void setHasBarcode(boolean b) {
+		this.hasBarcode=b;
+	}
+	
+	public boolean hasBarcode(){
+		return this.hasBarcode;
+	}
+
+	private void setBarcodeNumber(int barcodeNumber) {
+		this.barcodeNumber = barcodeNumber;
+	}
+	
+	public int getBarcodeNumber() {
+		return this.barcodeNumber;
+	}
+	
+	@Override
+	public boolean equals(Object o){
+		if(o==null){
+			return false;
+		} else {
+			if(this.getClass().isAssignableFrom(o.getClass())){
+				if((((TileNode) o).getX())==getX() && (((TileNode)o).getY())==getY()){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 }
