@@ -922,7 +922,7 @@ public class ContentPanel implements ActionListener {
 		controller.readMazeFromFile("test lauren/mazes/MergeTestMaze");
     	drawingPanel.drawSimulatedWalls();
     	try {
-			Thread.sleep(4000);
+			Thread.sleep(5000);
 	    	controller.teleport();
 	    	//controller.setReady(true);
 		} catch (InterruptedException e) {
