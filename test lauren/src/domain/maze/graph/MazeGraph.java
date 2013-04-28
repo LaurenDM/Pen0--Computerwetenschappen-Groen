@@ -168,7 +168,7 @@ public class MazeGraph {
 		MazeNode nextNode = getCurrentTile().getNodeAt(getCurrentRobotOrientation());
 		if(nextNode != null && (nextNode.getClass().equals(TileNode.class) || nextNode.getClass().equals(SeesawNode.class))){
 			setCurrentTile((TileNode) nextNode);
-			decreaseAllBlockNavigationCounts(); //Eventually unblocks blocked tiles.
+		//	decreaseAllBlockNavigationCounts(); //Eventually unblocks blocked tiles.
 		} else {
 //			throw new RuntimeException("There is no node there or it's a WallNode.");
 		}
@@ -195,7 +195,7 @@ public class MazeGraph {
 		setCurrentRobotOrientation(getCurrentRobotOrientation().getBack());
 	}
 
-	private void decreaseAllBlockNavigationCounts() {
+	public void decreaseAllBlockNavigationCounts() {
 		for(TileNode t : tileNodes){
 			t.decreaseBlockNavigationCount();
 		}
@@ -687,7 +687,7 @@ public class MazeGraph {
 		}
 		if(getCurrentTile().getNodeAt(getCurrentRobotOrientation())!=null && getCurrentTile().getNodeAt(getCurrentRobotOrientation()).getClass().equals(TileNode.class)){
 			TileNode deadEndNode = (TileNode)getCurrentTile().getNodeAt(getCurrentRobotOrientation());
-			deadEndNode.setAccessible(accessible);
+			deadEndNode.setBlockNavigationCount(6);
 			generateWallNodeAt(deadEndNode, getCurrentRobotOrientation().getRelativeOrientation(Orientation.WEST));
 			generateWallNodeAt(deadEndNode, getCurrentRobotOrientation().getRelativeOrientation(Orientation.NORTH));
 			generateWallNodeAt(deadEndNode, getCurrentRobotOrientation().getRelativeOrientation(Orientation.EAST));

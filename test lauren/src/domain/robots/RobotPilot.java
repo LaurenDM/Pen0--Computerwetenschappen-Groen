@@ -466,7 +466,6 @@ public abstract class RobotPilot implements PlayerHandler{
 		setInitialPositionNumber(playerNumber);
 		Barcode.setBallNumber(objectNumber);
 		setReady(true);
-		teleportToStartPosition();
 	}
 
 	@Override

@@ -149,7 +149,7 @@ public class TileNode extends MazeNode {
 		if(accessible){
 			this.setBlockNavigationCount(0);
 		} else {
-			this.setBlockNavigationCount(3); // put a less arbitrary value here.
+			this.setBlockNavigationCount(2); // put a less arbitrary value here.
 		}
 	}
 

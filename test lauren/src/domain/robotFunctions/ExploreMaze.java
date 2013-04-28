@@ -89,6 +89,7 @@ public class ExploreMaze{
 			distances = checkDistances();
 			makeWall(distances);
 			if(!maze.isComplete()){
+				maze.decreaseAllBlockNavigationCounts();
 				//robot.setMovingSpeed(robot.getDefaultMovingSpeed());
 				checkForOtherRobots();
 				Direction direction = getNextDirection(distances);

@@ -924,7 +924,7 @@ public class ContentPanel implements ActionListener {
     	try {
 			Thread.sleep(4000);
 	    	controller.teleport();
-	    	controller.setReady(true);
+	    	//controller.setReady(true);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
