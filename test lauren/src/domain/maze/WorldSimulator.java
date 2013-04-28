@@ -207,19 +207,19 @@ public class WorldSimulator implements SpectatorHandler {
 
 	@Override
 	public void playerReady(String playerID, boolean isReady) {
-		printMessage("sh.playerReady");
+		printMessage("sh.playerReady: " + playerID);
 		//moeten wij niets met doen
 	}
 	
 	@Override
 	public void playerJoining(String playerID) {
-		printMessage("sh.PlayerJoining");
+		//printMessage("sh.PlayerJoining: " + playerID);
 		//moeten wij niets met doen
 	}
 	
 	@Override
 	public void playerJoined(String playerID) {
-		printMessage("sh.playerJoined");
+		printMessage("sh.playerJoined: " + playerID);
 //		htttpImplementation.updateOtherPlayers(playerID);
 	}
 	
@@ -231,7 +231,7 @@ public class WorldSimulator implements SpectatorHandler {
 	
 	@Override
 	public void playerDisconnected(String playerID, DisconnectReason reason) {
-		printMessage("sh.playerDisc");
+		printMessage("sh.playerDisc: " + playerID + ", " + reason);
 		//moeten wij niets met doen
 	}
 	
@@ -290,13 +290,13 @@ public class WorldSimulator implements SpectatorHandler {
 
 	@Override
 	public void lockedSeesaw(String playerID, int playerNumber, int barcode) {
-		printMessage("sh.lockedSeesaw by player ID: " + playerID + " no: " + playerNumber);
+		//printMessage("sh.lockedSeesaw by player ID: " + playerID + " no: " + playerNumber);
 		rollSeeSawWithBarcode(barcode);
 	}
 
 	@Override
 	public void unlockedSeesaw(String playerID, int playerNumber, int barcode) {
-		printMessage("sh.unlockedSeesaw by player ID: " + playerID + " no: " + playerNumber);
+	//	printMessage("sh.unlockedSeesaw by player ID: " + playerID + " no: " + playerNumber);
 		unlockSeesawWithBarcode(barcode);
 	}
 	

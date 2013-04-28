@@ -412,51 +412,51 @@ public abstract class RobotPilot implements PlayerHandler{
 	
 	@Override
 	public void playerReady(String playerID, boolean isReady) {
-		printMessage("ph.playerReady: "+playerID+" is ready");
+		//printMessage("ph.playerReady: "+playerID+" is ready");
 		//moeten wij niets met doen
 	}
 	
 	@Override
 	public void playerJoining(String playerID) {
-		printMessage("ph.playerJoining: "+playerID+" is joining");
+		//printMessage("ph.playerJoining: "+playerID+" is joining");
 		//moeten wij niets met doen
 	}
 	
 	@Override
 	public void playerJoined(String playerID) {
-		printMessage("ph.playerJoined: "+playerID+" joined");
+		//printMessage("ph.playerJoined: "+playerID+" joined");
 		//moeten wij niets met doen
 	}
 	
 	@Override
 	public void playerFoundObject(String playerID, int playerNumber) {
-		printMessage("ph.playerFoundObj: "+playerID+" number:"+playerNumber+" found object");
+		//printMessage("ph.playerFoundObj: "+playerID+" number:"+playerNumber+" found object");
 		//moeten we zelf checken of dit teammate is?
 	}
 	
 	@Override
 	public void playerDisconnected(String playerID, DisconnectReason reason) {
-		printMessage("ph.playerdisc: "+playerID+" disconnected, reason: "+reason);				
+		//printMessage("ph.playerdisc: "+playerID+" disconnected, reason: "+reason);				
 		//moeten wij niets met doen
 	}
 	
 	@Override
 	public void gameStopped() {
-		printMessage("ph.gameStopped");
+		//printMessage("ph.gameStopped");
 	//	htttpImplementation.getController().cancel();
 		//TODO: ik zou reset doen
 	}
 	
 	@Override
 	public void gameStarted() {
-		printMessage("ph.gameStarted, starting to send position");
+	//	printMessage("ph.gameStarted, starting to send position");
 		updatePosition(0,0,0);
 //		startSendingPositionsThread();
 	}
 	
 	@Override
 	public void gamePaused() {
-		printMessage("ph.gamePaused");
+	//	printMessage("ph.gamePaused");
 	//	htttpImplementation.getController().cancel();
 	}
 	
@@ -506,7 +506,7 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	@Override
 	public void gameWon(int teamNumber) {
-		printMessage("ph.GameWon by Team " + teamNumber);
+		//printMessage("ph.GameWon by Team " + teamNumber);
 	}
 
 	@Override
