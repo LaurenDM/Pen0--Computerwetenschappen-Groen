@@ -72,9 +72,8 @@ public class Barcode extends MazeElement{
 	}
 	
 	private static boolean isOtherBallNumber(int number){
-		for (int n : otherBallNumbers) {
-			if(n == number)
-				return true;
+		if(number<8 && number%4!=ownBallNumber){
+			return true;
 		}
 		return false;
 	}
@@ -105,11 +104,8 @@ public class Barcode extends MazeElement{
 	
 	public Action getAction(int number){
 		if((number<8) && (ownBallNumber == number%4)){
-			if(number%4==number){
-				return new FetchBallAction(0);
-			} else {
-				return new FetchBallAction(1);
-			}
+			int teamNb = readBits[2];
+			return new FetchBallAction(teamNb);
 		}
 		if(isOtherBallNumber(number)){
 			return new DoNothingAction();

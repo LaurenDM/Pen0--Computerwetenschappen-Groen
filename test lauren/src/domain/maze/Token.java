@@ -96,7 +96,7 @@ public enum Token {
 		return null;
 	}
 
-	private Boolean hasWallAt(Orientation orientation) {
+	public Boolean hasWallAt(Orientation orientation) {
 		return walls.get(orientation);
 	}
 	

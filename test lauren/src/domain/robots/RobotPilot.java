@@ -21,7 +21,7 @@ import peno.htttp.PlayerClient;
 import peno.htttp.PlayerHandler;
 import peno.htttp.Tile;
 
-import domain.Position.InitialPosition;
+import domain.Position.Pose;
 import domain.Position.Position;
 import domain.maze.Ball;
 import domain.maze.Board;
@@ -60,6 +60,10 @@ public abstract class RobotPilot implements PlayerHandler{
 		this.robotPolygon=new RobotPolygon(this);
 		this.playerID = playerID;
 		
+	}
+	
+	public Pose getInitialPosition(){
+		return initialPosition;
 	}
 	
 	public void setPlayerClient(PlayerClient playerClient){
@@ -275,8 +279,8 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	public abstract void fetchBall();
 	
-	public void indicateDeadEnd() {
-		getMaze().setNextTileToDeadEnd();
+	public void indicateDeadEnd(boolean accessible) {
+		getMaze().setNextTileToDeadEnd(accessible);
 	}
 	
 	public void foundBall(){
@@ -369,7 +373,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	public abstract void turnUltrasonicSensorTo(int angle);
 	
 	
-	InitialPosition initialPosition;
+	Pose initialPosition;
 	int playerNb;
 	public void setInitialPositionNumber(int playernb){
 		this.playerNb = playernb;
@@ -379,8 +383,10 @@ public abstract class RobotPilot implements PlayerHandler{
 	
 	public void teleportToStartPosition(){
 		initialPosition = getWorldSimulator().getInitialPositionFromPlayer(playerNb);
-		System.out.println("Setting initial pos to:"+initialPosition.getX()+" y:"+initialPosition.getY());
-		setPose(initialPosition.getOrientation().getAngleToHorizontal(), (int) initialPosition.getX(), (int) initialPosition.getY());
+		if(initialPosition != null){
+			System.out.println("Setting initial pos to:"+initialPosition.getX()+" y:"+initialPosition.getY());
+			setPose(initialPosition.getOrientation().getAngleToHorizontal(), (int) initialPosition.getX(), (int) initialPosition.getY());
+		}
 	}
 	
 	public ArrayList<peno.htttp.Tile> getFoundTilesList(){
@@ -444,9 +450,8 @@ public abstract class RobotPilot implements PlayerHandler{
 	@Override
 	public void gameStarted() {
 		printMessage("ph.gameStarted, starting to send position");
+		updatePosition(0,0,0);
 //		startSendingPositionsThread();
-		//TODO: verkenalgoritme starten, ik stel voor dit handmatig te doen
-		// waarom?
 	}
 	
 	@Override
@@ -460,6 +465,8 @@ public abstract class RobotPilot implements PlayerHandler{
 		printMessage("ph.gameRolled: playerNumber:"+playerNumber+" objectNumber:"+objectNumber);
 		setInitialPositionNumber(playerNumber);
 		Barcode.setBallNumber(objectNumber);
+		setReady(true);
+		teleportToStartPosition();
 	}
 
 	@Override
@@ -487,6 +494,9 @@ public abstract class RobotPilot implements PlayerHandler{
 		System.out.println("Merged");
 		MazeInterpreter MI = new MazeInterpreter(board);
 		MI.readMap(matcher.getResultMap());
+		//maze.updateWithMap(matcher.getResultMap());
+		//int partnerX = 0; int partnerY = 0; //TODO update to code retrieving actual location tile
+		//maze.setPartnerPosition(partnerX, partnerY);
 		System.out.println("Maps merged and imported");
 	}
 	
@@ -502,6 +512,10 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	@Override
 	public void teamPosition(double x, double y, double angle) {
+
+		int partnerX = (int)x/40; int partnerY = (int)y/40; //TODO update to code retrieving actual location tile
+		maze.setPartnerPosition(partnerX, partnerY);
+
 		// TODO: something clever --> Koen ;)
 	}
 	

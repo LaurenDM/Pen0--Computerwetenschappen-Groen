@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import domain.Position.InitialPosition;
+import domain.Position.Pose;
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
 import domain.robots.RobotPilot;
@@ -32,11 +32,11 @@ public class WorldSimulator implements SpectatorHandler {
 		return this.simulatorBoard;
 	}
 	
-	public void addInitialPosition(InitialPosition pos, int nb){
+	public void addInitialPosition(Pose pos, int nb){
 		simulatorBoard.addInitialPosition(pos, nb);
 	}
 	
-	public InitialPosition getInitialPositionFromPlayer(int nb){
+	public Pose getInitialPositionFromPlayer(int nb){
 		return simulatorBoard.getInitialPositionFromPlayer(nb);
 	}
 	
@@ -175,7 +175,7 @@ public class WorldSimulator implements SpectatorHandler {
 		final int MARGE = 20;
 		if(otherRobots!=null)
 			for(RobotPilot robot2 : otherRobots.values()){
-				if(robot2.getPosition().getDistance(robot.getPosition())<MARGE){
+				if(robot2.getPosition().getDistance(pos)<MARGE){
 					return true;
 				}
 			}
@@ -269,9 +269,9 @@ public class WorldSimulator implements SpectatorHandler {
 //		printMessage("sh.updatedPlayer ID: "+playerID+" no:"+playerNumber+" x:"+x+" y:"+y);
 		RobotPilot robot = otherRobots.get(playerID);
 		if(robot!=null){
-			InitialPosition initialPose = getInitialPositionFromPlayer(playerNumber);
-			InitialPosition relativePose = new InitialPosition(40*x+20,40*y+20,Orientation.getOrientation(angle));
-			InitialPosition newPose = Position.getAbsolutePose(initialPose, relativePose);
+			Pose initialPose = getInitialPositionFromPlayer(playerNumber);
+			Pose relativePose = new Pose(40*x,40*y,Orientation.getOrientation(angle));
+			Pose newPose = Position.getAbsolutePose(initialPose, relativePose);
 			robot.setPose(newPose.getOrientation().getAngleToHorizontal(), (int)newPose.getX(), (int)newPose.getY());
 			if(foundObject)
 				robot.setFoundBall(playerNumber);

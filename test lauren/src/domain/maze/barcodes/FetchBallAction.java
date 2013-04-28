@@ -19,10 +19,6 @@ public class FetchBallAction implements Action {
 		return teamNumber;
 	}
 
-	private void setTeamNumber(int teamNumber) {
-		this.teamNumber = teamNumber;
-	}
-
 	public FetchBallAction(int teamNumber){
 		this.teamNumber=teamNumber;
 	}

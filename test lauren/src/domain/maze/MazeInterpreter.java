@@ -13,7 +13,7 @@ import java.util.List;
 import javax.crypto.spec.PSource;
 
 
-import domain.Position.InitialPosition;
+import domain.Position.Pose;
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
 
@@ -31,12 +31,39 @@ public class MazeInterpreter {
 	}
 	
 	public void readMap(String[][] map){
+		map = eliminateDummies(map);
 		firstLine = 0;
 		for(int x = 0; x<map.length; x++){
 			for(int y = 0; y<map[x].length; y++){
 				readCommand(map[x][y], x, y);
+				System.out.println(x + "    " + y + "    " + map[x][y]);
 			}
 		}
+	}
+	
+	private String[][] eliminateDummies(String[][] map){
+		int firstX=0, firstY = 0;
+		for(int x=0; x<map.length; x++){
+			for(int y = 0; y<map[x].length; y++){
+				if(!map[x][y].contains("dummy")){
+					firstX=x;
+				}
+			}
+		}
+		for(int y=0; y<map[0].length; y++){
+			for(int x =0; x<map.length; x++){
+				if(!map[x][y].contains("dummy")){
+					firstY=y;
+				}
+			}
+		}
+		String[][] newMap = new String[map.length-firstX][map[0].length-firstY];
+		for(int x = 0; x<newMap.length ; x++){
+			for(int y= 0; y<newMap[x].length; y++){
+				newMap[x][y] = map[x+firstX][y+firstY];
+			}
+		}
+		return newMap;
 	}
 	
 	public void readFile(String fileLocation){
@@ -146,7 +173,7 @@ public class MazeInterpreter {
 		YCoo = YCoo*MAZECONSTANT + MAZECONSTANT/2;
 		Orientation orientation = Orientation.getOrientation(orientString);
 		System.out.println("1 Xcoo "+XCoo+" YCoo"+YCoo);
-		InitialPosition pos = new InitialPosition(XCoo,YCoo,orientation);
+		Pose pos = new Pose(XCoo,YCoo,orientation);
 		board.addInitialPosition(pos, playernb);
 	}
 	
