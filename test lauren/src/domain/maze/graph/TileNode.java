@@ -53,14 +53,17 @@ public class TileNode extends MazeNode {
 	
 	public void setNodeAt(Orientation currentRobotOrientation, MazeNode mazeNode) {
 		getConnectedNodes().put(currentRobotOrientation, mazeNode);
+		if(mazeNode==null){
+			this.fullyExpanded=false;
+		}
 	}
 	
 	private HashMap<Orientation, MazeNode> getConnectedNodes() {
 		return connectedNodes;
 	}
 
-	public void setFinish() {
-		finish = true;
+	public void setFinish(boolean finish) {
+		this.finish = finish;
 	}
 
 	@Override
@@ -146,7 +149,7 @@ public class TileNode extends MazeNode {
 		if(accessible){
 			this.setBlockNavigationCount(0);
 		} else {
-			this.setBlockNavigationCount(3); //TODO put a less arbitrary value here.
+			this.setBlockNavigationCount(3); // put a less arbitrary value here.
 		}
 	}
 

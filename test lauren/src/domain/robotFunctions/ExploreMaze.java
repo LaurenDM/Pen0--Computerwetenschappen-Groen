@@ -5,10 +5,11 @@ import gui.ContentPanel;
 import java.util.ArrayList;
 
 import peno.htttp.Tile;
-import sun.invoke.util.BytecodeName;
+
 
 import controller.Controller;
 
+import domain.Position.Pose;
 import domain.Position.Position;
 import domain.maze.Orientation;
 import domain.maze.Wall;
@@ -32,7 +33,9 @@ public class ExploreMaze{
 	    }
 	}
 	private RobotPilot robot;
-	private final int valuedDistance = 27;
+	private final int sideValuedDistance = 32;
+	private final int frontValuedDistance = 27;
+
 	private final int distanceBlocks = 40;
 	private final int MAZECONSTANT = 40;
 	private ArrayList<Wall> wallList = new ArrayList<Wall>();
@@ -52,7 +55,7 @@ public class ExploreMaze{
 	
 	public void start(){
 		initialSetup();
-		continueExploring(0,0,Orientation.NORTH);
+		continueExploring(0,0,maze.getInitialOrientation());
 	}
 	
 	private void initialSetup(){
@@ -62,13 +65,13 @@ public class ExploreMaze{
 		robot.turnLeft();
 		robot.turnSensorLeft();
 		double backValue = robot.readUltrasonicValue();
-		if(backValue < valuedDistance){
-			maze.generateWallNodeAt(Orientation.SOUTH);
+		if(backValue < sideValuedDistance){
+			maze.generateWallNodeAt(Orientation.SOUTH); //Relative!
 			double x = robot.getPosition().getX();
 			double y = robot.getPosition().getY();
 			calculateWall(x, y, robot.getOrientation(), Direction.LEFT);
 		}else{
-			maze.generateTileNodeAt(Orientation.SOUTH);
+			maze.generateTileNodeAt(Orientation.SOUTH); //Relative!
 		}
 		robot.turnSensorForward();
 		robot.turnRight();
@@ -76,29 +79,43 @@ public class ExploreMaze{
 	
 	public void resumeExplore(int x, int y, Orientation o){
 		interrupted = false;
-		continueExploring(0,0,null);
+		continueExploring(0,0,o);
 	}
 	
 	private void continueExploring(int x, int y, Orientation o){
 		maze.continueExploring(x,y,o);
-		while(!maze.isComplete() && Controller.isStopped()==false){
+		while(!maze.isComplete() && !Controller.isStopped() && !interrupted){
 			double[] distances = new double[3];
 			distances = checkDistances();
 			makeWall(distances);
 			if(!maze.isComplete()){
 				//robot.setMovingSpeed(robot.getDefaultMovingSpeed());
-					checkForOtherRobots();
-		
+				checkForOtherRobots();
 				Direction direction = getNextDirection(distances);
 				updatePosition(direction);
-				if(checkBadPosition(distances)){
-					adjustRotation(distances);
+				if(direction == null){
+					stopExploring();	
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						// Auto-generated catch block
+						e.printStackTrace();
+					}
+					resumeExplore(0, 0, null);
+					break;
+				}
+				else if(checkBadPosition(distances)){
+					if(!closeSideWalls(distances)||direction.getOffset()==Direction.LEFT.getOffset()||direction.getOffset()==Direction.RIGHT.getOffset()){
+						moveWithStraighten(direction);
+					}else{
+					adjustRotation(distances, direction);
 					if(checkVeryBadPosition(distances)){
 						moveWithStraighten(direction);
 					}
 					else{
 						move(direction);
 						robot.snapPoseToTileMid();
+					}
 					}
 				}
 				else{
@@ -115,7 +132,14 @@ public class ExploreMaze{
 		}
 	}
 
-	private void adjustRotation(double[] distances) {
+	private boolean closeSideWalls(double[] distances) {
+		double leftDistance=distances[0];
+		double rightDistance=distances[2];
+		return leftDistance<MAZECONSTANT && rightDistance<MAZECONSTANT;
+	}
+
+	private void adjustRotation(double[] distances,Direction direction) {
+		
 		double leftDistance=distances[0];
 		double rightDistance=distances[2];
 		double tooMuchLeft=-(rightDistance%MAZECONSTANT-MAZECONSTANT/2);
@@ -124,26 +148,37 @@ public class ExploreMaze{
 		}
 		
 		double rotation=2*(Math.min(5, (180/Math.PI)*Math.abs(Math.atan(tooMuchLeft/MAZECONSTANT/2))) * -Math.signum(tooMuchLeft));
+		switch (direction) {
+		case BACKWARD:
+			rotation=-rotation;
+			break;
+		default:
+			break;
+		}
 		robot.turn(rotation);
 	}
 
 	public void checkForOtherRobots(){
 		if(Controller.interconnected){
 		for(Orientation o : Orientation.values()){
-			TileNode node = (TileNode) maze.getCurrentNode();
-			while(TileNode.class.isAssignableFrom(node.getNodeAt(o).getClass())){
+			TileNode node = (TileNode) maze.getCurrentTile();
+			while(node.getNodeAt(o)!=null && TileNode.class.isAssignableFrom(node.getNodeAt(o).getClass())){
 				node = (TileNode) node.getNodeAt(o);
-				Position pos = new Position(node.getX()*40+20,node.getY()*40+20);
-				node.setAccessible(robot.checkRobotSensor(pos));
+				Pose relativePose = new Pose(node.getX()*40.0,node.getY()*40.0,maze.getCurrentRobotOrientation());
+				Position pos = Position.getAbsolutePose(robot.getInitialPosition(), relativePose);	
+				node.setAccessible(!robot.checkRobotSensor(pos));
 			}
 		}
 		}
 	}
 	
 	public void updatePosition(Direction direction){
+		if(direction==null){
+			robot.updatePosition(maze.getCurrentTile().getX(), maze.getCurrentTile().getY(), maze.getCurrentRobotOrientation().getAngleToHorizontal());
+			return;
+		}
 		Orientation nextOrientation = maze.getCurrentRobotOrientation().getOffset(direction.getOffset());
-		TileNode nextNode = (TileNode) maze.getCurrentNode().getNodeAt(nextOrientation);
-		
+		TileNode nextNode = (TileNode) maze.getCurrentTile().getNodeAt(nextOrientation);
 		robot.updatePosition(nextNode.getX(), nextNode.getY(), nextOrientation.getAngleToHorizontal());
 
 	}
@@ -165,8 +200,9 @@ public class ExploreMaze{
 	private boolean checkVeryBadPosition(double[] distances){
 		double leftDistance=distances[0];
 		double rightDistance=distances[2];
+		double frontDistance=distances[1];
 		double tooMuchLeft=leftDistance%MAZECONSTANT-rightDistance%MAZECONSTANT;
-		return Math.abs(tooMuchLeft)>6;
+		return Math.abs(tooMuchLeft)>6||Math.abs(frontDistance%MAZECONSTANT-MAZECONSTANT/2)>4;
 	}
 	
 	/**
@@ -190,8 +226,12 @@ public class ExploreMaze{
 	 * These walls are added in the graph and in the GUI.
 	 */
 	public void setNextTileToDeadEnd(){
+		setNextTileToDeadEnd(true);
+	}
+	
+	public void setNextTileToDeadEnd(boolean accessible){
 		this.atDeadEnd = true;
-		maze.setNextTileToDeadEnd();
+		maze.setNextTileToDeadEnd(accessible);
 		double orientation = robot.getOrientation();
 		double deadEndX = robot.getPosition().getX()+Math.cos(orientation/180*Math.PI)*MAZECONSTANT;
 		double deadEndY = robot.getPosition().getY()+Math.sin(orientation/180*Math.PI)*MAZECONSTANT;
@@ -255,7 +295,7 @@ public class ExploreMaze{
 		double x = robot.getPosition().getX();
 		double y = robot.getPosition().getY();
 		double orientation = robot.getOrientation();
-		if(distances[0] < valuedDistance){
+		if(distances[0] < sideValuedDistance){
 			if(maze.generateWallNodeAt(Orientation.WEST)){
 				calculateWall(x,y,orientation,Direction.LEFT);
 			}
@@ -263,7 +303,7 @@ public class ExploreMaze{
 			maze.generateTileNodeAt(Orientation.WEST);
 		}
 			
-		if(distances[1] < valuedDistance){
+		if(distances[1] < frontValuedDistance){
 			if(maze.generateWallNodeAt(Orientation.NORTH)){
 				calculateWall(x,y,orientation,Direction.FORWARD);
 			}
@@ -271,7 +311,7 @@ public class ExploreMaze{
 			maze.generateTileNodeAt(Orientation.NORTH);
 		}
 			
-		if(distances[2] < valuedDistance){
+		if(distances[2] < sideValuedDistance){
 			if(maze.generateWallNodeAt(Orientation.EAST)){
 				calculateWall(x,y,orientation,Direction.RIGHT);
 			}			
@@ -389,6 +429,9 @@ public class ExploreMaze{
 			return Direction.FORWARD;
 		else if(next == Orientation.EAST)
 			return Direction.RIGHT;
+		else if(next == null){
+			return null;
+		}
 		return Direction.BACKWARD;
 	}
 	
@@ -418,12 +461,12 @@ public class ExploreMaze{
 	}
 
 	public void driveOverSeesaw() {
-		if(maze.getCurrentNode().getNodeAt(maze.getCurrentRobotOrientation()).isAccessible()){
+		if(maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()).isAccessible()){
 			maze.move();
 			maze.move();
 			maze.move();
-			((SeesawNode)maze.getCurrentNode().getNodeAt(maze.getCurrentRobotOrientation().getBack())).setUp(false);
-			System.out.println("The node after the seesaw is "+maze.getCurrentNode());
+			((SeesawNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation().getBack())).setUp(false);
+			System.out.println("The node after the seesaw is "+maze.getCurrentTile());
 		}
 	}
 
@@ -437,6 +480,15 @@ public class ExploreMaze{
 		calculateWall(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation(), Direction.RIGHT);
 		calculateWall(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation(), Direction.LEFT);
 		maze.setCurrentTileBarcode(barcodeNumber);
+	}
+
+
+	public void updateWithMap(String[][] resultMap) {
+		maze.updateWithMap(resultMap);		
+	}
+
+	public void setPartnerPosition(int partnerX, int partnerY) {
+		maze.setPartnerPosition(partnerX, partnerY);
 	}
 
 	public Position findMostNegativePosition() {

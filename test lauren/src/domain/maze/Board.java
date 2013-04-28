@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.ArrayList;
 
-import domain.Position.InitialPosition;
+import domain.Position.Pose;
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
 import domain.maze.infrared.InfraredBeamer;
@@ -20,7 +20,7 @@ public class Board {
 	private List<Barcode> barcodes;
 	private HashMap<Position, Seesaw> seesaws;
 	private List<Ball> balls;
-	private HashMap<Integer,InitialPosition> initialPositions;
+	private HashMap<Integer,Pose> initialPositions;
 	private final List<InfraredBeamer> infraBeamers;
 	
 	
@@ -30,16 +30,16 @@ public class Board {
 		walls = new HashMap<Position,Wall>();
 		seesaws = new HashMap<Position, Seesaw>();
 		balls = new ArrayList<Ball>();
-		initialPositions = new HashMap<Integer,InitialPosition>();
+		initialPositions = new HashMap<Integer,Pose>();
 		infraBeamers= new ArrayList<InfraredBeamer>();
 	}
 	
-	public void addInitialPosition(InitialPosition pos, int nb){
+	public void addInitialPosition(Pose pos, int nb){
 		System.out.println("init pos added: x:"+pos.getX()+" y:"+pos.getY()+" nb:"+nb);
 		initialPositions.put(nb, pos);
 	}
 	
-	public InitialPosition getInitialPositionFromPlayer(int nb){
+	public Pose getInitialPositionFromPlayer(int nb){
 		System.out.println("-----------------");
 		System.out.println("inpos");
 		for(int i =0; i<4; i++){

@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+<project name="Lauren test" default="execute">
+ 
+
+    
+      <path id="project.class.path"> 
+		<fileset dir="test lauren">
+        <include name="**/*.jar"/>
+      	</fileset>
+      </path>  
+ 
+    <target name="execute">
+        <echo>Starting the execution process</echo>
+        	<sequential >
+        	    <tstamp>
+        	        <format property="current.time" pattern="hhmmss"/>
+        	    </tstamp>
+        	    <echo message="RUN_TIME: ${current.time}"/>
+        	    </sequential>
+		<parallel>
+        <java classname="gui.GUI" classpath="bin" fork="true" classpathref="project.class.path">
+			    <arg value="0000"/>
+        		<arg value="${current.time}"/>
+        		<arg value="player0"/>
+	        	<redirector output="output0.txt" alwayslog="true"/>           
+		</java>
+		<java classname="gui.GUI" classpath="bin" fork="true" classpathref="project.class.path">
+			    <arg value="500"/>
+	        	<arg value="${current.time}"/>
+	            <arg value="player1"/>
+				<redirector output="output1.txt" alwayslog="true"/>           
+		</java>
+		<java classname="gui.GUI" classpath="bin" fork="true" classpathref="project.class.path">
+			    <arg value="1000"/>
+				<arg value="${current.time}"/>
+				<arg value="player2"/>
+				<redirector output="output2.txt" alwayslog="true"/>           
+		</java>
+		<java classname="gui.GUI" classpath="bin" fork="true" classpathref="project.class.path">
+			    <arg value="1500"/>
+				<arg value="${current.time}"/>
+        		<arg value="player3"/>
+				<redirector output="output3.txt" alwayslog="true"/>           
+		</java>
+		</parallel>
+    </target>
+
+ 
+</project>

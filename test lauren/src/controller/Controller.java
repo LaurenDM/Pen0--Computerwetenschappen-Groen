@@ -1,6 +1,7 @@
 package controller;
 
 import groen.htttp.HtttpImplementation;
+import gui.GUI;
 
 import java.awt.Robot;
 import java.util.ArrayList;
@@ -52,7 +53,9 @@ public class Controller {
 		int random = (int) (Math.random()*1000000);
 //	    random =1;
 		this.playerID = "playerIDGroen"+random;
-		
+		if(GUI.getPlayerID()!=null){
+	    	playerID = GUI.getPlayerID();
+	    }
 		
 		
 		
