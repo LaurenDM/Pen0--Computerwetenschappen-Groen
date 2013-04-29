@@ -20,7 +20,6 @@ public class MazeGraph {
 	private Orientation currentRobotOrientation;
 	private TileNode startNode;
 	private TileNode currentTile;
-	private int tileCounter;
 	private MazePath shortestPath;
 	private boolean drivingToPartner = false;
 	private boolean objectFound = false;
@@ -39,59 +38,13 @@ public class MazeGraph {
 		System.out.println("");
 	}
 	
-	/**
-	 * Calculates the shortest path to the finish and makes the given RobotPilot drive there.
-	 * @param robotPilot
-	 */
-	public void driveToFinish(RobotPilot robotPilot){
-		shortestPath = findShortestPathToFinish();
-		Iterator<TileNode> tileIt = shortestPath.iterator();
-		boolean first = true;
-		if(tileIt.hasNext()){
-			tileIt.next();
-			while(tileIt.hasNext()){
-				TileNode nextNode = tileIt.next();
-				//System.out.println("NEXTNODE"+nextNode.getX()+" "+nextNode.getY());
-				Orientation nextOrientation = null;
-				for(Orientation o:Orientation.values()){
-					if(getCurrentTile().getNodeAt(o)!=null && getCurrentTile().getNodeAt(o).equals(nextNode)){
-						nextOrientation = o;
-					}
-				}
-				//For the first turn in the path the robot is allowed to turn back but in all other cases it's nonsensical.
-				if((nextOrientation==null || nextOrientation.getBack().equals(getCurrentRobotOrientation())) && !first){
-					//Do nothing, see if we can't reach any of the next tiles in the list (handy when driving over seesaws on the way to the finish).
-				} else {
-					turnToNextOrientation(robotPilot, getCurrentRobotOrientation(), nextOrientation);
-					try {
-						if(tileCounter%2==0){
-							robotPilot.straighten();
-							robotPilot.move(20);
-						} else {
-							double distance = robotPilot.readUltrasonicValue();
-							if(distance!=255 &&(distance< 17 || distance%40 > 22)){
-								robotPilot.straighten();
-								robotPilot.move(20);
-							}
-							else{
-								robotPilot.move(40);
-							}
-						}
-						tileCounter++;
-						this.move();
-					} catch (Throwable e) {
-						System.out.println("Could not move");
-					}
-				}
-				first = false;
-			}
-		} else {
-			throw new NullPointerException("Finish has not yet been found or no path can be found.");
-		}
-		ContentPanel.writeToDebug("Finish (or starting point) reached!");
+	public TileNode getStartNode(){
+		return startNode;
 	}
 	
-	private void turnToNextOrientation(RobotPilot robotPilot, Orientation currentOrientation, Orientation nextOrientation) {
+	
+	
+	public void turnToNextOrientation(RobotPilot robotPilot, Orientation currentOrientation, Orientation nextOrientation) {
 		if(currentOrientation==null){
 			throw new IllegalArgumentException();
 		}
@@ -168,7 +121,7 @@ public class MazeGraph {
 		MazeNode nextNode = getCurrentTile().getNodeAt(getCurrentRobotOrientation());
 		if(nextNode != null && (nextNode.getClass().equals(TileNode.class) || nextNode.getClass().equals(SeesawNode.class))){
 			setCurrentTile((TileNode) nextNode);
-			decreaseAllBlockNavigationCounts(); //Eventually unblocks blocked tiles.
+		//	decreaseAllBlockNavigationCounts(); //Eventually unblocks blocked tiles.
 		} else {
 //			throw new RuntimeException("There is no node there or it's a WallNode.");
 		}
@@ -195,7 +148,7 @@ public class MazeGraph {
 		setCurrentRobotOrientation(getCurrentRobotOrientation().getBack());
 	}
 
-	private void decreaseAllBlockNavigationCounts() {
+	public void decreaseAllBlockNavigationCounts() {
 		for(TileNode t : tileNodes){
 			t.decreaseBlockNavigationCount();
 		}
@@ -232,19 +185,19 @@ public class MazeGraph {
 		}
 		//If the current tile is unexplored return null so the walls are checked again.
 		if(unexpanded.contains(getCurrentTile())){
-			System.out.println("MG.unexpanded contains current tile");
+			//System.out.println("MG.unexpanded contains current tile");
 			return null;
 		}
 		//TODO add code so that the robot will attempt to follow the most sensible path it can if no path to a goal is found
 		MazePath lastPath = null;
 		//Fill a new SortedPathSet with paths containing only the current tile and having the unexpanded tiles as finish
-		System.out.println("MG.Unexpanded size = " + unexpanded.size());
+		//System.out.println("MG.Unexpanded size = " + unexpanded.size());
 		if(unexpanded.size()!=0){
 			SortedPathSet possiblePaths = new SortedPathSet();
 			for(TileNode node : unexpanded){
 				possiblePaths.add(new MazePath(getCurrentTile(),getCurrentRobotOrientation(),node));
 			}
-			System.out.println("MG.possiblepaths size1 = "+ possiblePaths.size());
+			//System.out.println("MG.possiblepaths size1 = "+ possiblePaths.size());
 			int shortestFound = Integer.MAX_VALUE;
 			ArrayList<MazePath> candidates = new ArrayList<MazePath>();
 			do{
@@ -259,7 +212,7 @@ public class MazeGraph {
 				}
 				//In the while condition the path will only get added if it's valid but it'll always be removed from possiblePaths.
 			}while( possiblePaths.size()>0 && possiblePaths.first().getCurrentLength()<=shortestFound);
-			System.out.println("MG.candidates size 1 = "+ candidates.size());
+			//System.out.println("MG.candidates size 1 = "+ candidates.size());
 			Iterator<MazePath> it = candidates.iterator();
 			while(it.hasNext()){
 				MazePath path = it.next();
@@ -267,7 +220,7 @@ public class MazeGraph {
 					it.remove();
 				}
 			}
-			System.out.println("MG.candidates size 2 = "+ candidates.size());
+			//System.out.println("MG.candidates size 2 = "+ candidates.size());
 			ArrayList<Orientation> orderedOrientations = new ArrayList<Orientation>();
 			//The order of the following lines determines the order in which we'll consider possible paths
 			orderedOrientations.add(Orientation.WEST);
@@ -280,7 +233,7 @@ public class MazeGraph {
 					if(nodeAtO!=null && path.contains(nodeAtO)){
 						return o;
 					} else if (nodeAtO==null){
-						System.out.println("MG.nodeAtO null");
+						//System.out.println("MG.nodeAtO null");
 						return null;
 						
 					}
@@ -288,8 +241,9 @@ public class MazeGraph {
 			}
 		}
 		MazeNode frontNode = getCurrentTile().getNodeAt(getCurrentRobotOrientation());
-		System.out.println("MG.Frontnode");
-		return frontNode!=null?(frontNode.isAccessible()?Orientation.NORTH:null):null;
+		//System.out.println("MG.Frontnode");
+		//return frontNode!=null?(frontNode.isAccessible()?Orientation.NORTH:null):null;
+		return null;
 	}
 	
 	/**
@@ -603,7 +557,8 @@ public class MazeGraph {
 		}
 		if(searchSet.isEmpty()){
 			System.out.println("No path found...");
-			return new MazePath(getCurrentTile(),getCurrentRobotOrientation(),finishNode);
+			//return new MazePath(getCurrentTile(),getCurrentRobotOrientation(),finishNode);
+			return null;
 		} else {
 			System.out.println(searchSet.first());
 			return searchSet.first();
@@ -613,6 +568,21 @@ public class MazeGraph {
 	private TileNode getFinishNode() {
 		for(TileNode node: tileNodes){
 			if(node.isFinish()) return node;
+		}
+		return null;
+	}
+	
+	public TileNode getDeadEndNode(){
+		ArrayList<TileNode> deadEnds = new ArrayList<TileNode>();
+		for(TileNode node : tileNodes){
+			if(node.isDeadEnd()){
+				deadEnds.add(node);
+			}
+		}
+		for(TileNode node : deadEnds){
+			if(findShortestPathFromTo(getCurrentTile(),node) != null && node.isAccessible()){
+				return node;
+			}
 		}
 		return null;
 	}
@@ -687,7 +657,9 @@ public class MazeGraph {
 		}
 		if(getCurrentTile().getNodeAt(getCurrentRobotOrientation())!=null && getCurrentTile().getNodeAt(getCurrentRobotOrientation()).getClass().equals(TileNode.class)){
 			TileNode deadEndNode = (TileNode)getCurrentTile().getNodeAt(getCurrentRobotOrientation());
-			deadEndNode.setAccessible(accessible);
+			if(!accessible){
+				deadEndNode.setBlockNavigationCount(100);
+			}
 			generateWallNodeAt(deadEndNode, getCurrentRobotOrientation().getRelativeOrientation(Orientation.WEST));
 			generateWallNodeAt(deadEndNode, getCurrentRobotOrientation().getRelativeOrientation(Orientation.NORTH));
 			generateWallNodeAt(deadEndNode, getCurrentRobotOrientation().getRelativeOrientation(Orientation.EAST));

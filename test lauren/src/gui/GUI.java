@@ -46,9 +46,9 @@ public class GUI{
             @Override
 			public void run() {
                 createAndShowGUI();
-            	if(args.length>0){
+            	//if(args.length>0){
                 contentPanel.automaticConnection();
-            	}
+            	// }
             }
         });
     }

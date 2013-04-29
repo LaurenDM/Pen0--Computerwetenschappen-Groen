@@ -426,51 +426,51 @@ public abstract class RobotPilot implements PlayerHandler{
 	
 	@Override
 	public void playerReady(String playerID, boolean isReady) {
-		printMessage("ph.playerReady: "+playerID+" is ready");
+		//printMessage("ph.playerReady: "+playerID+" is ready");
 		//moeten wij niets met doen
 	}
 	
 	@Override
 	public void playerJoining(String playerID) {
-		printMessage("ph.playerJoining: "+playerID+" is joining");
+		//printMessage("ph.playerJoining: "+playerID+" is joining");
 		//moeten wij niets met doen
 	}
 	
 	@Override
 	public void playerJoined(String playerID) {
-		printMessage("ph.playerJoined: "+playerID+" joined");
+		//printMessage("ph.playerJoined: "+playerID+" joined");
 		//moeten wij niets met doen
 	}
 	
 	@Override
 	public void playerFoundObject(String playerID, int playerNumber) {
-		printMessage("ph.playerFoundObj: "+playerID+" number:"+playerNumber+" found object");
+		//printMessage("ph.playerFoundObj: "+playerID+" number:"+playerNumber+" found object");
 		//moeten we zelf checken of dit teammate is?
 	}
 	
 	@Override
 	public void playerDisconnected(String playerID, DisconnectReason reason) {
-		printMessage("ph.playerdisc: "+playerID+" disconnected, reason: "+reason);				
+		//printMessage("ph.playerdisc: "+playerID+" disconnected, reason: "+reason);				
 		//moeten wij niets met doen
 	}
 	
 	@Override
 	public void gameStopped() {
-		printMessage("ph.gameStopped");
+		//printMessage("ph.gameStopped");
 	//	htttpImplementation.getController().cancel();
 		//TODO: ik zou reset doen
 	}
 	
 	@Override
 	public void gameStarted() {
-		printMessage("ph.gameStarted, starting to send position");
+	//	printMessage("ph.gameStarted, starting to send position");
 		updatePosition(0,0,0);
 //		startSendingPositionsThread();
 	}
 	
 	@Override
 	public void gamePaused() {
-		printMessage("ph.gamePaused");
+	//	printMessage("ph.gamePaused");
 	//	htttpImplementation.getController().cancel();
 	}
 	
@@ -480,7 +480,6 @@ public abstract class RobotPilot implements PlayerHandler{
 		setInitialPositionNumber(playerNumber);
 		Barcode.setBallNumber(objectNumber);
 		setReady(true);
-		teleportToStartPosition();
 	}
 
 	@Override
@@ -521,16 +520,16 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	@Override
 	public void gameWon(int teamNumber) {
-		printMessage("ph.GameWon by Team " + teamNumber);
+		//printMessage("ph.GameWon by Team " + teamNumber);
 	}
 
 	@Override
 	public void teamPosition(long x, long y, double angle) {
+		printMessage("ph.teamPosition: (" + x + "," + y +")");
+	//	int partnerX = (int)x/40; int partnerY = (int)y/40; 
+		maze.setPartnerPosition((int) x, (int) y);
+		//TODO update to code retrieving actual location tile
 
-		int partnerX = (int)x/40; int partnerY = (int)y/40; //TODO update to code retrieving actual location tile
-		maze.setPartnerPosition(partnerX, partnerY);
-
-		// TODO: something clever --> Koen ;)
 	}
 	
 	public void setReady(boolean ready) {
@@ -558,30 +557,5 @@ public abstract class RobotPilot implements PlayerHandler{
 	//ATtention This method is not used for the simrobot, only has an effect on the real robot
 	public abstract void snapPoseToTileMid();
 	
-//	private void sendPositions(){
-//		int x = (int) getPosition().getX()/Barcode.getMazeConstant();
-//		int y = (int) getPosition().getY()/Barcode.getMazeConstant();
-//		try {
-//			playerClient.updatePosition(x,y, getOrientation());
-//		} catch (IllegalStateException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//	
-//	public void startSendingPositionsThread(){
-//		
-//		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-//		executor.scheduleAtFixedRate(new Runnable() {
-//
-//			@Override
-//			public void run() {
-//				sendPositions();
-//			}
-//			
-//		}, 0, 1000, TimeUnit.MILLISECONDS);
-//
-//	}
 	
 }

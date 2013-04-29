@@ -16,6 +16,7 @@ public class TileNode extends MazeNode {
 	private int barcodeNumber = -1;
 	private boolean hasBarcode = false;
 	private int blockNavigationCount = 0;
+	private boolean permInaccessible = false;
 	
 	public TileNode(TileNode currentNode, Orientation orientationToCurrentNode){
 		connectedNodes = new HashMap<Orientation,MazeNode>();
@@ -142,14 +143,14 @@ public class TileNode extends MazeNode {
 	}
 	
 	public boolean isAccessible() {
-		return getBlockNavigationCount()==0;
+		return getBlockNavigationCount()==0 && !permInaccessible;
 	}
 	
 	public void setAccessible(boolean accessible) {
 		if(accessible){
 			this.setBlockNavigationCount(0);
 		} else {
-			this.setBlockNavigationCount(3); // put a less arbitrary value here.
+			this.setBlockNavigationCount(1); 
 		}
 	}
 
@@ -159,6 +160,9 @@ public class TileNode extends MazeNode {
 
 	protected void setBlockNavigationCount(int blockNavigationCount) {
 		this.blockNavigationCount = blockNavigationCount;
+		if(blockNavigationCount > 50){
+			permInaccessible = true;
+		}
 	}
 	
 	public void decreaseBlockNavigationCount() {
@@ -204,6 +208,16 @@ public class TileNode extends MazeNode {
 			}
 		}
 		return false;
+	}
+	
+	public boolean isDeadEnd(){
+		int amountWalls = 0;
+		for(Orientation o : Orientation.values()){
+			if(getNodeAt(o)!=null && WallNode.class.isAssignableFrom(getNodeAt(o).getClass())){
+				amountWalls++;
+			}
+		}
+		return (amountWalls==3);
 	}
 	
 }
