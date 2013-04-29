@@ -3,6 +3,7 @@ package domain.robotFunctions;
 import gui.ContentPanel;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import peno.htttp.Tile;
 
@@ -36,13 +37,14 @@ public class ExploreMaze{
 	private final int sideValuedDistance = 32;
 	private final int frontValuedDistance = 27;
 
+	private int tileCounter;
 	private final int distanceBlocks = 40;
 	private final int MAZECONSTANT = 40;
 	private ArrayList<Wall> wallList = new ArrayList<Wall>();
 	private MazeGraph maze = new MazeGraph();
 	private boolean backWall = false;
 	private boolean interrupted = false;
-	
+	private int countAtSamePos = 0;
 	private boolean atDeadEnd = false;
 	
 	public ExploreMaze(RobotPilot simRobotPilot){
@@ -95,7 +97,20 @@ public class ExploreMaze{
 				Direction direction = getNextDirection(distances);
 				updatePosition(direction);
 				if(direction == null){
-					stopExploring();	
+					countAtSamePos++;
+					if(countAtSamePos > 5){
+						System.out.println("EM.Fixing possible deadlock");
+						getOutOfWay();
+						countAtSamePos = 0;
+						try{
+							Thread.sleep(5000);
+						} catch (InterruptedException e){
+							e.printStackTrace();
+						}
+					}
+					else{
+						stopExploring();
+					}
 					try {
 						Thread.sleep(5000);
 					} catch (InterruptedException e) {
@@ -123,13 +138,29 @@ public class ExploreMaze{
 					move(direction);
 					robot.snapPoseToTileMid();
 				}
+				countAtSamePos = 0;
 				//System.out.println("Now at "+maze.getCurrentNode().getX()+" "+maze.getCurrentNode().getY());
 			}
 		}
 		if(Controller.isStopped()==false){
 			ContentPanel.writeToDebug("Maze completed.");
 			robot.setDriveToFinishSpeed();
-			maze.driveToFinish(robot);
+			driveToFinish(robot);
+		}
+	}
+	
+	public void getOutOfWay(){
+		TileNode deadEnd = maze.getDeadEndNode();
+		MazePath path = maze.findShortestPathFromTo(maze.getCurrentTile(), deadEnd);
+		if(path != null){
+			driveMazePath(robot, path);
+			updatePosition(deadEnd, maze.getCurrentRobotOrientation());
+		}
+		else{
+			path = maze.findShortestPathFromTo(maze.getCurrentTile(), maze.getStartNode());
+			if(path != null) {
+				driveMazePath(robot,path);
+			}
 		}
 	}
 
@@ -181,8 +212,14 @@ public class ExploreMaze{
 		Orientation nextOrientation = maze.getCurrentRobotOrientation().getOffset(direction.getOffset());
 		TileNode nextNode = (TileNode) maze.getCurrentTile().getNodeAt(nextOrientation);
 		robot.updatePosition(nextNode.getX(), nextNode.getY(), nextOrientation.getAngleToHorizontal());
-
 	}
+	
+	public void updatePosition(TileNode node, Orientation orientation){
+		if(node != null){
+			robot.updatePosition(node.getX(), node.getY(), orientation.getAngleToHorizontal());
+		}
+	}
+	
 	private boolean nextTileIsSeesaw(){
 		return maze.nextTileIsSeesaw();
 	}
@@ -450,7 +487,63 @@ public class ExploreMaze{
 
 	public void driveToFinish() {
 		interrupted = true;
-		maze.driveToFinish(robot);
+		driveToFinish(robot);
+	}
+	
+	/**
+	 * Calculates the shortest path to the finish and makes the given RobotPilot drive there.
+	 * @param robotPilot
+	 */
+	public void driveToFinish(RobotPilot robotPilot){
+		driveMazePath(robotPilot, maze.findShortestPathToFinish());
+		ContentPanel.writeToDebug("Finish (or starting point) reached!");
+	}
+	
+	public void driveMazePath(RobotPilot robot, MazePath path){
+		Iterator<TileNode> it = path.iterator();
+		boolean first = true;
+		if(it.hasNext()){
+			it.next();
+			while(it.hasNext()){
+				TileNode nextNode = it.next();
+				//System.out.println("NEXTNODE"+nextNode.getX()+" "+nextNode.getY());
+				Orientation nextOrientation = null;
+				for(Orientation o:Orientation.values()){
+					if(maze.getCurrentTile().getNodeAt(o)!=null && maze.getCurrentTile().getNodeAt(o).equals(nextNode)){
+						nextOrientation = o;
+					}
+				}
+				//For the first turn in the path the robot is allowed to turn back but in all other cases it's nonsensical.
+				if((nextOrientation==null || nextOrientation.getBack().equals(maze.getCurrentRobotOrientation())) && !first){
+					//Do nothing, see if we can't reach any of the next tiles in the list (handy when driving over seesaws on the way to the finish).
+				} else {
+					updatePosition(nextNode, nextOrientation);
+					maze.turnToNextOrientation(robot, maze.getCurrentRobotOrientation(), nextOrientation);
+					try {
+						if(tileCounter%2==0){
+							robot.straighten();
+							robot.move(20);
+						} else {
+							double distance = robot.readUltrasonicValue();
+							if(distance!=255 &&(distance< 17 || distance%40 > 22)){
+								robot.straighten();
+								robot.move(20);
+							}
+							else{
+								robot.move(40);
+							}
+						}
+						tileCounter++;
+						maze.move();
+					} catch (Throwable e) {
+						System.out.println("Could not move");
+					}
+				}
+				first = false;
+			}
+		} else {
+			throw new NullPointerException("No path can be found.");
+		}
 	}
 	
 	public synchronized void stopExploring(){
