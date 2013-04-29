@@ -210,4 +210,14 @@ public class TileNode extends MazeNode {
 		return false;
 	}
 	
+	public boolean isDeadEnd(){
+		int amountWalls = 0;
+		for(Orientation o : Orientation.values()){
+			if(getNodeAt(o)!=null && WallNode.class.isAssignableFrom(getNodeAt(o).getClass())){
+				amountWalls++;
+			}
+		}
+		return (amountWalls==3);
+	}
+	
 }
