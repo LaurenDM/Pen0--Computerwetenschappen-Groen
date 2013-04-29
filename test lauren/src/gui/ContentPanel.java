@@ -499,7 +499,6 @@ public class ContentPanel implements ActionListener {
         	if(getConnected() == true ){
         		setConnected(false);
         		controller.connectNewSimRobot(0, new Position(20,20), controller.getPlayerID());
-        		controller.setPlayerClient();
         	}
         	else{
         		try{
@@ -507,8 +506,7 @@ public class ContentPanel implements ActionListener {
                 	actionLabel.setText("The lightsensor is being calibrated.");
                 	calibrateButton.setSelected(false);
         		controller.connectNewBtRobot();
-        		if(Controller.interconnected){
-        		controller.setPlayerClient();}
+        		if(Controller.interconnected)
         		drawingPanel.clear();
         		setConnected(true);
         		
@@ -922,9 +920,9 @@ public class ContentPanel implements ActionListener {
 		controller.readMazeFromFile("test lauren/mazes/MergeTestMaze");
     	drawingPanel.drawSimulatedWalls();
     	try {
-			Thread.sleep(4000);
+			Thread.sleep(5000);
 	    	controller.teleport();
-	    	controller.setReady(true);
+	    	//controller.setReady(true);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

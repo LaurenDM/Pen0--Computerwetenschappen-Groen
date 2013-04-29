@@ -18,7 +18,9 @@ import controller.Controller;
 
 import peno.htttp.DisconnectReason;
 import peno.htttp.PlayerClient;
+import peno.htttp.PlayerDetails;
 import peno.htttp.PlayerHandler;
+import peno.htttp.PlayerType;
 import peno.htttp.Tile;
 
 import domain.Position.Pose;
@@ -53,24 +55,36 @@ public abstract class RobotPilot implements PlayerHandler{
 	private String playerID;
 	
 	private PlayerClient playerClient;
+	private final int WIDTH = 20;
+	private final int HEIGHT = 20; // TODO values?
 	
 	public RobotPilot(String playerID){
 		this.worldSimulator=new WorldSimulator(this);
 		this.movement=MoveType.STOPPED;
 		this.robotPolygon=new RobotPolygon(this);
-		this.playerID = playerID;
-		
 	}
+	
+	public abstract PlayerType getPlayerType();
 	
 	public Pose getInitialPosition(){
 		return initialPosition;
 	}
 	
+	public int getWidth(){
+		return this.WIDTH;
+	}
+	
+	public int getHeight(){
+		return this.HEIGHT;
+	}
+	
+	public PlayerDetails getPlayerDetails(){
+		return new PlayerDetails(getPlayerID(), getPlayerType(), getWidth(), getHeight()); 
+	}
+	
 	public void setPlayerClient(PlayerClient playerClient){
 		this.playerClient = playerClient;
 	}
-	
-	
 	
 	public void setWorldSimulator(WorldSimulator ws){
 		this.worldSimulator = ws;
@@ -511,7 +525,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	}
 
 	@Override
-	public void teamPosition(double x, double y, double angle) {
+	public void teamPosition(long x, long y, double angle) {
 
 		int partnerX = (int)x/40; int partnerY = (int)y/40; //TODO update to code retrieving actual location tile
 		maze.setPartnerPosition(partnerX, partnerY);
