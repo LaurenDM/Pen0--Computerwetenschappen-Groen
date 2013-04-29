@@ -511,11 +511,11 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	@Override
 	public void teamPosition(double x, double y, double angle) {
+		printMessage("ph.teamPosition: (" + x + "," + y +")");
+	//	int partnerX = (int)x/40; int partnerY = (int)y/40; 
+		maze.setPartnerPosition((int) x, (int) y);
+		//TODO update to code retrieving actual location tile
 
-		int partnerX = (int)x/40; int partnerY = (int)y/40; //TODO update to code retrieving actual location tile
-		maze.setPartnerPosition(partnerX, partnerY);
-
-		// TODO: something clever --> Koen ;)
 	}
 	
 	public void setReady(boolean ready) {
@@ -543,30 +543,5 @@ public abstract class RobotPilot implements PlayerHandler{
 	//ATtention This method is not used for the simrobot, only has an effect on the real robot
 	public abstract void snapPoseToTileMid();
 	
-//	private void sendPositions(){
-//		int x = (int) getPosition().getX()/Barcode.getMazeConstant();
-//		int y = (int) getPosition().getY()/Barcode.getMazeConstant();
-//		try {
-//			playerClient.updatePosition(x,y, getOrientation());
-//		} catch (IllegalStateException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//	
-//	public void startSendingPositionsThread(){
-//		
-//		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-//		executor.scheduleAtFixedRate(new Runnable() {
-//
-//			@Override
-//			public void run() {
-//				sendPositions();
-//			}
-//			
-//		}, 0, 1000, TimeUnit.MILLISECONDS);
-//
-//	}
 	
 }
