@@ -1,6 +1,7 @@
 package domain.robots;
 
 
+import peno.htttp.PlayerType;
 import bluetooth.BTCommPC;
 import bluetooth.CMD;
 import domain.Position.Position;
@@ -27,7 +28,7 @@ public class BTRobotPilot extends RobotPilot  {
 	private final double defaultTravelSpeed = 10;
 	private final double defaultTurnSpeed = 200;
 	
-
+	private final PlayerType TYPE = PlayerType.PHYSICAL;
 	
 	private  final float wheelsDiameter = 5.43F;
 	//	private static final float wheelDiameterLeft = 5.43F;
@@ -61,6 +62,11 @@ public class BTRobotPilot extends RobotPilot  {
 
 		}
 		setBoard(new Board());
+	}
+	
+	@Override
+	public PlayerType getPlayerType(){
+		return this.TYPE;
 	}
 
 

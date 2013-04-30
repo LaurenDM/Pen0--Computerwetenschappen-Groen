@@ -63,7 +63,7 @@ public class HtttpImplementation {
 	    
 		try {
 			connection = factory.newConnection();
-			playerClient = new PlayerClient(connection, controller.getRobot(), gameID, playerID);
+			playerClient = new PlayerClient(connection, controller.getRobot(), gameID, controller.getPlayerDetails());
 			spectatorClient = new SpectatorClient(connection, controller.getWorldSimulator(), gameID);
 			spectatorClient.start();
 			
@@ -118,31 +118,7 @@ public class HtttpImplementation {
 	
 
 	
-//	private void sendPositions(){
-//		PlayerClient playerClient = getPlayerClient();
-//		RobotPilot robot = getController().getRobot();
-//		try {
-//			playerClient.updatePosition(robot.getPosition().getX(), robot.getPosition().getY(), robot.getOrientation());
-//		} catch (IllegalStateException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//	
-//	public void startSendingPositionsThread(){
-//		
-//		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-//		executor.scheduleAtFixedRate(new Runnable() {
-//
-//			@Override
-//			public void run() {
-//				sendPositions();
-//			}
-//			
-//		}, 0, 1000, TimeUnit.MILLISECONDS);
-//
-//	}
+
 	
 	
 

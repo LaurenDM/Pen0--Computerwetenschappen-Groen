@@ -6,6 +6,21 @@ package peno.htttp;
 public interface SpectatorHandler extends GameHandler {
 
 	/**
+	 * Invoked when a player has determined their player number.
+	 * 
+	 * <p>
+	 * Listening spectators simulating the world can use this to position the
+	 * player on its starting position in the world before starting the game.
+	 * </p>
+	 * 
+	 * @param playerDetails
+	 *            The player details.
+	 * @param playerNumber
+	 *            The player number.
+	 */
+	public void playerRolled(PlayerDetails playerDetails, int playerNumber);
+
+	/**
 	 * Invoked when a player updates its state.
 	 * 
 	 * <p>
@@ -21,8 +36,8 @@ public interface SpectatorHandler extends GameHandler {
 	 * the player number from the maze file.
 	 * </p>
 	 * 
-	 * @param playerID
-	 *            The player identifier.
+	 * @param playerDetails
+	 *            The player details.
 	 * @param playerNumber
 	 *            The player number.
 	 * @param x
@@ -34,7 +49,8 @@ public interface SpectatorHandler extends GameHandler {
 	 * @param foundObject
 	 *            True if the player has found their object.
 	 */
-	public void playerUpdate(String playerID, int playerNumber, double x, double y, double angle, boolean foundObject);
+	public void playerUpdate(PlayerDetails playerDetails, int playerNumber, long x, long y, double angle,
+			boolean foundObject);
 
 	/**
 	 * Invoked when a player is about to travel over a seesaw.

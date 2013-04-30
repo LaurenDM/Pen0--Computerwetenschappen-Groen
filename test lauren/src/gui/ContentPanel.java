@@ -482,7 +482,6 @@ public class ContentPanel implements ActionListener {
         	if(getConnected() == true ){
         		setConnected(false);
         		controller.connectNewSimRobot(0, new Position(20,20), controller.getPlayerID());
-        		controller.setPlayerClient();
         	}
         	else{
         		try{
@@ -490,8 +489,7 @@ public class ContentPanel implements ActionListener {
 //                	actionLabel.setText("The lightsensor is being calibrated.");
 //                	calibrateButton.setSelected(false);
         		controller.connectNewBtRobot();
-        		if(Controller.interconnected){
-        		controller.setPlayerClient();}
+        		if(Controller.interconnected)
         		drawingPanel.clear();
         		setConnected(true);
         		

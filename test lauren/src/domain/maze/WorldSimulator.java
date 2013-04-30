@@ -12,6 +12,7 @@ import domain.maze.barcodes.Barcode;
 import domain.robots.RobotPilot;
 import domain.robots.SimRobotPilot;
 import peno.htttp.DisconnectReason;
+import peno.htttp.PlayerDetails;
 import peno.htttp.SpectatorHandler;
 
 public class WorldSimulator implements SpectatorHandler {
@@ -259,15 +260,15 @@ public class WorldSimulator implements SpectatorHandler {
 	}
 
 	@Override
-	public void playerUpdate(String playerID, int playerNumber, double x,double y, double angle, boolean foundObject) {
-		if(!otherRobots.containsKey(playerID) && !robot.getPlayerID().equals(playerID)){
+	public void playerUpdate(PlayerDetails playerDetails, int playerNumber, long x,long y, double angle, boolean foundObject) {
+		if(!otherRobots.containsKey(playerDetails.getPlayerID()) && !robot.getPlayerID().equals(playerDetails.getPlayerID())){
 			//ID not yet in system and not your own ID
-			connectExternalSimRobot(angle, new Position(x,y), playerID);
-			System.out.println("NEW ROBOT ADDED "+playerID);
+			connectExternalSimRobot(angle, new Position(x,y), playerDetails.getPlayerID());
+			System.out.println("NEW ROBOT ADDED "+playerDetails.getPlayerID());
 		}
 		
 //		printMessage("sh.updatedPlayer ID: "+playerID+" no:"+playerNumber+" x:"+x+" y:"+y);
-		RobotPilot robot = otherRobots.get(playerID);
+		RobotPilot robot = otherRobots.get(playerDetails.getPlayerID());
 		if(robot!=null){
 			Pose initialPose = getInitialPositionFromPlayer(playerNumber);
 			Pose relativePose = new Pose(40*x,40*y,Orientation.getOrientation(angle));
@@ -303,6 +304,15 @@ public class WorldSimulator implements SpectatorHandler {
 	private void printMessage(String message){
 		System.out.println(message);
 		ContentPanel.writeToDebug(message);
+	}
+
+	@Override
+	public void playerRolled(PlayerDetails playerDetails, int playerNumber) {
+		RobotPilot robot = otherRobots.get(playerDetails.getPlayerID());
+		if(robot!=null){
+			Pose initialPose = getInitialPositionFromPlayer(playerNumber);
+			robot.setPose(initialPose.getOrientation().getAngleToHorizontal(), (int)initialPose.getX(), (int)initialPose.getY());
+		}
 	}
 	
 	
