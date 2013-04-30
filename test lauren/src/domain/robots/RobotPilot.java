@@ -29,6 +29,7 @@ import domain.maze.Ball;
 import domain.maze.Board;
 import domain.maze.MazeElement;
 import domain.maze.MazeInterpreter;
+import domain.maze.Orientation;
 import domain.maze.Seesaw;
 import domain.maze.Wall;
 import domain.maze.WorldSimulator;
@@ -536,7 +537,8 @@ public abstract class RobotPilot implements PlayerHandler{
 		matcher.merge();
 		System.out.println("Merged");
 		MazeInterpreter MI = new MazeInterpreter(board);
-		MI.readMap(matcher.getResultMap());
+		Orientation orientation = this.getInitialPosition().getOrientation();
+		MI.readMap(matcher.getResultMap(), orientation);
 		//maze.updateWithMap(matcher.getResultMap());
 		//int partnerX = 0; int partnerY = 0; //TODO update to code retrieving actual location tile
 		//maze.setPartnerPosition(partnerX, partnerY);

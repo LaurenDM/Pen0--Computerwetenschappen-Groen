@@ -34,13 +34,13 @@ public class MazeInterpreter {
 		barcodePositions = new HashMap<Position,Integer>();
 	}
 	
-	public void readMap(String[][] map){
-		map = correctOrientation(map);
-		System.out.println(MatchMap.matrixToString(map));
+	public void readMap(String[][] map, Orientation orientation){
+		map = correctOrientation(map, orientation);
+	//	System.out.println(MatchMap.matrixToString(map));
 		map = eliminateDummies(map);
-		System.out.println(MatchMap.matrixToString(map));
+	//	System.out.println(MatchMap.matrixToString(map));
 		map = addCrosses(map);
-		System.out.println(MatchMap.matrixToString(map));
+	//	System.out.println(MatchMap.matrixToString(map));
 		firstLine = 0;
 		for(int x = 0; x<map.length; x++){
 			for(int y = 0; y<map[x].length; y++){
@@ -50,8 +50,13 @@ public class MazeInterpreter {
 		}
 	}
 	
-	private String[][] correctOrientation(String[][] map){
-		return MatchMap.get270Permutation(map);
+	private String[][] correctOrientation(String[][] map,Orientation orientation){
+		switch(orientation){
+		case NORTH: return MatchMap.get270Permutation(map);
+		case WEST: return MatchMap.get180Permutation(map); 
+		case SOUTH: return MatchMap.get90Permutation(map);
+		default: return map;
+		}
 	}
 	
 	private String[][] eliminateDummies(String[][] map){
@@ -80,7 +85,7 @@ public class MazeInterpreter {
 	}
 	
 	private String[][] addCrosses(String[][] map){
-		System.out.println("X,Y = " + startX + " " + startY);
+		//System.out.println("X,Y = " + startX + " " + startY);
 		String[][] newMap = new String[map.length+startX][map[0].length+startY];
 		for(int x=0; x<startX;x++){
 			for(int y=0; y<newMap[x].length;y++){

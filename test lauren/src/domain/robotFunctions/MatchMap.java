@@ -254,13 +254,13 @@ public class MatchMap {
 		set180Degree(get180Permutation(getOriginal()));
 		
 	}
-	private static String[][] get180Permutation(String[][] original2) {
+	public static String[][] get180Permutation(String[][] original2) {
 		return get90Permutation(get90Permutation(original2));
 	}
 	public static String[][] get270Permutation(String[][] original2) {
 		return get180Permutation(get90Permutation(original2));
 	}
-	private static String[][] get90Permutation(String[][] original) {
+	public static String[][] get90Permutation(String[][] original) {
 		int xLength = original.length;
 		int yLength = original[0].length;
 		String[][] permList = new String[yLength][xLength];
