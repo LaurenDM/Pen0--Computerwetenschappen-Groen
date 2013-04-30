@@ -224,13 +224,13 @@ public abstract class RobotPilot implements PlayerHandler{
 
 
 				if (littleRightDist >MazeElement.getMazeConstant()) {
-					mostAccurateDist = Math.round(Math.cos(extraAngle/2)
+					mostAccurateDist = Math.round(Math.cos(extraAngle)
 							* littleRightDist);
 				}
 			}
 			else{
 				turnUltrasonicSensorTo(-extraAngle);
-				mostAccurateDist=littleLeftDist*Math.cos(extraAngle/2);
+				mostAccurateDist=littleLeftDist*Math.cos(extraAngle);
 				
 			}
 		}
