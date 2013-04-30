@@ -121,7 +121,7 @@ public class ExploreMaze{
 					break;
 				}
 				else if(checkBadPosition(distances)){
-					if(!closeSideWalls(distances)||direction.getOffset()==Direction.LEFT.getOffset()||direction.getOffset()==Direction.RIGHT.getOffset()){
+					if(!closeSideWalls(distances)||direction.getOffset()!=Direction.FORWARD.getOffset()){
 						moveWithStraighten(direction);
 					}else{
 					adjustRotation(distances, direction);
@@ -184,7 +184,7 @@ public class ExploreMaze{
 		double rotation=2*(Math.min(5, (180/Math.PI)*Math.abs(Math.atan(tooMuchLeft/MAZECONSTANT/2))) * -Math.signum(tooMuchLeft));
 		switch (direction) {
 		case BACKWARD:
-			rotation=-rotation;
+			rotation=0;
 			break;
 		default:
 			break;
