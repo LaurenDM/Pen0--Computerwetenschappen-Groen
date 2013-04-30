@@ -291,14 +291,18 @@ public class WorldSimulator implements SpectatorHandler {
 
 	@Override
 	public void lockedSeesaw(String playerID, int playerNumber, int barcode) {
-		//printMessage("sh.lockedSeesaw by player ID: " + playerID + " no: " + playerNumber);
+		printMessage("sh.lockedSeesaw by player ID: " + playerID + " no: " + playerNumber);
+		if(!robot.getPlayerID().equals(playerID)){
 		rollSeeSawWithBarcode(barcode);
+		}
 	}
 
 	@Override
 	public void unlockedSeesaw(String playerID, int playerNumber, int barcode) {
-	//	printMessage("sh.unlockedSeesaw by player ID: " + playerID + " no: " + playerNumber);
+		printMessage("sh.unlockedSeesaw by player ID: " + playerID + " no: " + playerNumber);
+		if(!robot.getPlayerID().equals(playerID)){
 		unlockSeesawWithBarcode(barcode);
+		}
 	}
 	
 	private void printMessage(String message){
