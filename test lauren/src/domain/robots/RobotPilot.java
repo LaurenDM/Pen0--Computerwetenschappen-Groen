@@ -220,7 +220,7 @@ public abstract class RobotPilot implements PlayerHandler{
 			if (littleLeftDist < MazeElement.getMazeConstant()) {
 				turnUltrasonicSensor(-2*extraAngle);
 				double littleRightDist = readUltrasonicValue();
-				turnUltrasonicSensorTo(extraAngle);
+				turnUltrasonicSensor(extraAngle);
 
 
 				if (littleRightDist >MazeElement.getMazeConstant()) {
@@ -229,7 +229,7 @@ public abstract class RobotPilot implements PlayerHandler{
 				}
 			}
 			else{
-				turnUltrasonicSensorTo(-extraAngle);
+				turnUltrasonicSensor(-extraAngle);
 				mostAccurateDist=littleLeftDist*Math.cos(extraAngle);
 				
 			}
