@@ -211,9 +211,8 @@ public abstract class RobotPilot implements PlayerHandler{
 	
 	public double readLongestUltrasonicValue(int extraAngle){
 		extraAngle=Math.abs(extraAngle);
-		double normalDist = readUltrasonicValue();
-		double mostAccurateDist = normalDist;
-		if (normalDist < MazeElement.getMazeConstant()) {
+		double mostAccurateDist = readUltrasonicValue();
+		if (mostAccurateDist < MazeElement.getMazeConstant()) {
 			turnUltrasonicSensor(extraAngle);
 			
 			double littleLeftDist = readUltrasonicValue();
@@ -587,6 +586,11 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	//ATtention This method is not used for the simrobot, only has an effect on the real robot
 	public abstract void snapPoseToTileMid();
+
+	public double readLongestUltrasonicValue() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 	
 }

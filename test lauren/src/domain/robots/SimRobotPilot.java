@@ -88,6 +88,10 @@ public class SimRobotPilot extends RobotPilot {
 		this.infraDetector=new InfraredDetector(this);
 	}
 	
+	@Override
+	public double readLongestUltrasonicValue(int extraAngle){
+		return readUltrasonicValue();
+	};
 	
 
 	void setOrientation(double orientation) {
