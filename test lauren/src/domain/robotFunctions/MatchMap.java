@@ -257,7 +257,7 @@ public class MatchMap {
 	private static String[][] get180Permutation(String[][] original2) {
 		return get90Permutation(get90Permutation(original2));
 	}
-	private static String[][] get270Permutation(String[][] original2) {
+	public static String[][] get270Permutation(String[][] original2) {
 		return get180Permutation(get90Permutation(original2));
 	}
 	private static String[][] get90Permutation(String[][] original) {
@@ -375,20 +375,20 @@ public class MatchMap {
 	
 	public static void merge(){
 		//TODO debug
-		System.out.println("______________________________________________");
-		System.out.println("______________________________________________");
-		System.out.println("ourmaze1");
-		System.out.println(matrixToString(getOurMaze()));
-		System.out.println("_________________________");
+//		System.out.println("______________________________________________");
+//		System.out.println("______________________________________________");
+//		System.out.println("ourmaze1");
+//		System.out.println(matrixToString(getOurMaze()));
+//		System.out.println("_________________________");
 		if(hasMutualSeeSaw()){
 			permutationBySeeSaw();
 			mergeMaps(getMergedMaps(getPermutatedDirection()));
 		}
 		else if(hasMutualBarcode()){
 			permutationByBarcode();
-			System.out.println(getPermutatedDirection() +"   perm");
-			System.out.println("merging on : "+getOurMaze()[ourStartMergeX][ourStartMergeY]+"    "+ourStartMergeX+"   "+ourStartMergeY);
-			System.out.println("merging on : "+getMergedMaps(getPermutatedDirection())[otherStartMergeX][otherStartMergeY]+"    "+otherStartMergeX+"   "+otherStartMergeY);
+//			System.out.println(getPermutatedDirection() +"   perm");
+//			System.out.println("merging on : "+getOurMaze()[ourStartMergeX][ourStartMergeY]+"    "+ourStartMergeX+"   "+ourStartMergeY);
+//			System.out.println("merging on : "+getMergedMaps(getPermutatedDirection())[otherStartMergeX][otherStartMergeY]+"    "+otherStartMergeX+"   "+otherStartMergeY);
 			mergeMaps(getMergedMaps(getPermutatedDirection()));
 		}
 		else 
@@ -402,13 +402,13 @@ public class MatchMap {
 	
 	private static void mergeMaps(String[][] mergeMaps) {
 		String[][] originList = getOurMaze();
-		System.out.println("_________________________________________");
-		System.out.println(matrixToString(originList));
-		System.out.println("_________________________________________");
+//		System.out.println("_________________________________________");
+//		System.out.println(matrixToString(originList));
+//		System.out.println("_________________________________________");
 		
 		String[][] permList = mergeMaps;
-		System.out.println(matrixToString(permList));
-		System.out.println("_________________________________________");
+//		System.out.println(matrixToString(permList));
+//		System.out.println("_________________________________________");
 		String[][] resultList = new String[(originList.length+permList.length) * 2][(originList[0].length+permList[0].length) * 2];
 		
 		startX = originList.length+permList.length;
@@ -432,20 +432,20 @@ public class MatchMap {
 			b = 0;
 			a++;
 		}
-		System.out.println("firstStart");
-		System.out.println(matrixToString(resultList));
+//		System.out.println("firstStart");
+//		System.out.println(matrixToString(resultList));
 		resultList = mergeRightUp(resultList,permList);
-		System.out.println("firstmerge right up");
-		System.out.println(matrixToString(resultList));
+//		System.out.println("firstmerge right up");
+//		System.out.println(matrixToString(resultList));
 		resultList = mergeLeftUp(resultList, permList);
-		System.out.println("secondMerge left up");
-		System.out.println(matrixToString(resultList));
+//		System.out.println("secondMerge left up");
+//		System.out.println(matrixToString(resultList));
 		resultList = mergeRightDown(resultList,permList);
-		System.out.println("thirdmerge right down");
-		System.out.println(matrixToString(resultList));
+//		System.out.println("thirdmerge right down");
+//		System.out.println(matrixToString(resultList));
 		resultList = mergeLeftDown(resultList,permList);
-		System.out.println("firstStart left down");
-		System.out.println(matrixToString(resultList));
+//		System.out.println("firstStart left down");
+//		System.out.println(matrixToString(resultList));
 		setResultMap(resultList);
 	}
 	

@@ -16,6 +16,7 @@ import javax.crypto.spec.PSource;
 import domain.Position.Pose;
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
+import domain.robotFunctions.MatchMap;
 
 public class MazeInterpreter {
 	
@@ -31,38 +32,44 @@ public class MazeInterpreter {
 	}
 	
 	public void readMap(String[][] map){
+		map = correctOrientation(map);
 		map = eliminateDummies(map);
+		System.out.println(MatchMap.matrixToString(map));
 		firstLine = 0;
 		for(int x = 0; x<map.length; x++){
 			for(int y = 0; y<map[x].length; y++){
 				readCommand(map[x][y], x, y);
-				System.out.println(x + "    " + y + "    " + map[x][y]);
+			//	System.out.println(x + "    " + y + "    " + map[x][y]);
 			}
 		}
 	}
 	
+	private String[][] correctOrientation(String[][] map){
+		return MatchMap.get270Permutation(map);
+	}
+	
 	private String[][] eliminateDummies(String[][] map){
-		int firstX=0, firstY = 0;
+		int firstX=-1, lastY = -1;
 		for(int x=0; x<map.length; x++){
 			for(int y = 0; y<map[x].length; y++){
 				if(!map[x][y].contains("dummy")){
-					firstX=x;
+					firstX=(firstX==-1)?x:firstX;
 				}
 			}
 		}
-		for(int y=0; y<map[0].length; y++){
+		for(int y=map[0].length-1; y>=0; y--){
 			for(int x =0; x<map.length; x++){
 				if(!map[x][y].contains("dummy")){
-					firstY=y;
+					lastY=(lastY==-1)?y:lastY;
 				}
 			}
 		}
-		String[][] newMap = new String[map.length-firstX][map[0].length-firstY];
+		String[][] newMap = new String[map.length-firstX][map[0].length-lastY];
 		for(int x = 0; x<newMap.length ; x++){
 			for(int y= 0; y<newMap[x].length; y++){
-				newMap[x][y] = map[x+firstX][y+firstY];
+				newMap[x][y] = map[x+firstX][lastY-y];
 			}
-		}
+		}	
 		return newMap;
 	}
 	

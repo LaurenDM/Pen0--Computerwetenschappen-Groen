@@ -587,7 +587,7 @@ public class ExploreMaze{
 
 	public void updateWithMap(String[][] resultMap) {
 		maze.updateWithMap(resultMap);		
-	}
+	} //TODO oproepen
 
 	public void setPartnerPosition(int partnerX, int partnerY) {
 		maze.setPartnerPosition(partnerX, partnerY);
