@@ -25,6 +25,9 @@ public class MazeInterpreter {
 	
 	private HashMap<Position,Integer> barcodePositions;
 	
+	private static int startX = Integer.MAX_VALUE;
+	private static int startY = Integer.MAX_VALUE;
+	
 	
 	public MazeInterpreter(Board board){
 		this.board = board;
@@ -33,7 +36,10 @@ public class MazeInterpreter {
 	
 	public void readMap(String[][] map){
 		map = correctOrientation(map);
+		System.out.println(MatchMap.matrixToString(map));
 		map = eliminateDummies(map);
+		System.out.println(MatchMap.matrixToString(map));
+		map = addCrosses(map);
 		System.out.println(MatchMap.matrixToString(map));
 		firstLine = 0;
 		for(int x = 0; x<map.length; x++){
@@ -73,6 +79,28 @@ public class MazeInterpreter {
 		return newMap;
 	}
 	
+	private String[][] addCrosses(String[][] map){
+		System.out.println("X,Y = " + startX + " " + startY);
+		String[][] newMap = new String[map.length+startX][map[0].length+startY];
+		for(int x=0; x<startX;x++){
+			for(int y=0; y<newMap[x].length;y++){
+				newMap[x][y] = "Cross";
+			}
+		}
+		for(int y=0; y<startY; y++){
+			for(int x=0; x<newMap.length ; x++){
+				newMap[x][y] = "Cross";
+			}
+		}
+		for(int x = startX; x<newMap.length;x++){
+			for (int y=startY ;y<newMap[x].length; y++){
+				System.out.println("xy = " + x + ", " + y);
+				newMap[x][y] = map[x-startX][y-startY];
+			}
+		}
+		return newMap;
+	}
+	
 	public void readFile(String fileLocation){
 	try{
 		firstLine = -1;
@@ -81,7 +109,6 @@ public class MazeInterpreter {
 		  BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		  String strLine;
 		  int lineCounter = 0;
-
 		  while ((strLine = br.readLine()) != null)   {
 //		  	System.out.println (strLine);
 			  readline(strLine, lineCounter);
@@ -93,7 +120,9 @@ public class MazeInterpreter {
 		e.printStackTrace();
 		  System.err.println("Error reading maze.");
 		  }
+	System.out.println("X,Y = " + startX + " " + startY);
 	}
+	
 	
 	public void readline(String strLine, int numberOfLine){
 		if((strLine.startsWith("DeadEnd") || strLine.startsWith("Corner")
@@ -131,6 +160,10 @@ public class MazeInterpreter {
 	public void readCommand(String command, int XCoo, int YCoo){
 		YCoo = YCoo - firstLine;
 		String[] commandSplit = command.split("\\.");
+		if(!commandSplit[0].equals("Cross")){
+			startX = Math.min(startX,XCoo);
+			startY = Math.min(startY,YCoo);
+		}
 		
 		if(commandSplit[0].equals("DeadEnd")){
 			createDeadEnd(XCoo, YCoo, Orientation.getOrientation(commandSplit[1]));
