@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import peno.htttp.PlayerDetails;
 import peno.htttp.Tile;
 
 import rabbitMQ.EventPusher;
@@ -57,10 +58,11 @@ public class Controller {
 	    	playerID = GUI.getPlayerID();
 	    }
 		
-		
-		
 		connectNewSimRobot(0, new Position(20,20), playerID);
 		
+	}
+	
+	public void htttpImplementation(){
 		try{
 			htttpImplementation = new HtttpImplementation(this);
 			setPlayerClient();
@@ -68,10 +70,7 @@ public class Controller {
 		} catch(Exception e){
 			System.out.println("Couldn't connect to the remote server.");
 		}
-		
-		
 	}
-
 
 	  
 	public void connectNewBtRobot() {
@@ -80,6 +79,7 @@ public class Controller {
 		currentRobot=btRobot;
 		currentRobot.setBoard(new Board());
 		robotChangeNotHandledByGUI=true;
+		htttpImplementation();
 	}
 	
 	//This is used to set the robot controlled by this GUI
@@ -88,11 +88,15 @@ public class Controller {
 		currentRobot = simRobot ;
 		currentRobot.setBoard(new Board());
 		robotChangeNotHandledByGUI=true;
-
+		htttpImplementation();
 	}
 	
 	public void setPlayerClient(){
 		currentRobot.setPlayerClient(htttpImplementation.getPlayerClient());
+	}
+	
+	public PlayerDetails getPlayerDetails(){
+		return currentRobot.getPlayerDetails();
 	}
 	
 	public WorldSimulator getWorldSimulator(){

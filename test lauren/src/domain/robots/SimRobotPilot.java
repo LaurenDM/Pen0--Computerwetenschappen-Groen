@@ -9,6 +9,8 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
+import peno.htttp.PlayerType;
+
 import lejos.nxt.addon.AngleSensor;
 
 import domain.Position.Position;
@@ -38,6 +40,7 @@ public class SimRobotPilot extends RobotPilot {
 	private final InfraredBeamer infraBeamer;
 	private final InfraredDetector infraDetector;
 
+	private final PlayerType TYPE = PlayerType.VIRTUAL;
 	
 
 	//The wanted rotation Speed of the robot.
@@ -59,6 +62,11 @@ public class SimRobotPilot extends RobotPilot {
 	 */
 	public SimRobotPilot(String playerID){
 		this(0, new Position(20,20),playerID);
+	}
+	
+	@Override
+	public PlayerType getPlayerType(){
+		return this.TYPE;
 	}
 	
 	
