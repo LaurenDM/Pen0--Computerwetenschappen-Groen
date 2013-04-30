@@ -27,6 +27,7 @@ import domain.Position.Pose;
 import domain.Position.Position;
 import domain.maze.Ball;
 import domain.maze.Board;
+import domain.maze.MazeElement;
 import domain.maze.MazeInterpreter;
 import domain.maze.Seesaw;
 import domain.maze.Wall;
@@ -207,6 +208,35 @@ public abstract class RobotPilot implements PlayerHandler{
 	public abstract double readLightValue();
 	
 	public abstract double readUltrasonicValue();
+	
+	public double readLongestUltrasonicValue(int extraAngle){
+		extraAngle=Math.abs(extraAngle);
+		double normalDist = readUltrasonicValue();
+		double mostAccurateDist = normalDist;
+		if (normalDist < MazeElement.getMazeConstant()) {
+			turnUltrasonicSensor(extraAngle);
+			
+			double littleLeftDist = readUltrasonicValue();
+			if (littleLeftDist < MazeElement.getMazeConstant()) {
+				turnUltrasonicSensor(-2*extraAngle);
+				double littleRightDist = readUltrasonicValue();
+				turnUltrasonicSensorTo(extraAngle);
+
+
+				if (littleRightDist >MazeElement.getMazeConstant()) {
+					mostAccurateDist = Math.round(Math.cos(extraAngle/2)
+							* littleRightDist);
+				}
+			}
+			else{
+				turnUltrasonicSensorTo(-extraAngle);
+				mostAccurateDist=littleLeftDist*Math.cos(extraAngle/2);
+				
+			}
+		}
+		return mostAccurateDist;
+
+	}
 	
 	public abstract void calibrateLightHigh();
 	

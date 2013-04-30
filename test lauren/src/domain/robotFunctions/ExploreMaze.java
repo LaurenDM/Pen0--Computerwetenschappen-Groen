@@ -476,13 +476,19 @@ public class ExploreMaze{
 	}
 	
 	private double[] checkDistances(){
+		
 		double[] distances = new double[3];
 		robot.turnSensorLeft();
-		distances[0] = robot.readUltrasonicValue();
+		distances[0] = robot.readLongestUltrasonicValue(10);
+		
+		
+		
 		robot.turnSensorForward();
-		distances[1] = robot.readUltrasonicValue();
+		distances[1] = robot.readLongestUltrasonicValue(10);
+		
+		
 		robot.turnSensorRight();
-		distances[2] = robot.readUltrasonicValue();
+		distances[2] = robot.readLongestUltrasonicValue(10);
 		robot.turnSensorForward();
 		return distances;
 	}
