@@ -375,11 +375,11 @@ public class MatchMap {
 	
 	public static void merge(){
 		//TODO debug
+		System.out.println("______________________________________________");
+		System.out.println("______________________________________________");
 		System.out.println("ourmaze1");
 		System.out.println(matrixToString(getOurMaze()));
 		System.out.println("_________________________");
-		System.out.println("getOri");
-		System.out.println(matrixToString(getOriginal()));
 		if(hasMutualSeeSaw()){
 			permutationBySeeSaw();
 			mergeMaps(getMergedMaps(getPermutatedDirection()));
@@ -387,7 +387,8 @@ public class MatchMap {
 		else if(hasMutualBarcode()){
 			permutationByBarcode();
 			System.out.println(getPermutatedDirection() +"   perm");
-			System.out.println("merging on : "+getOurMaze()[ourStartMergeX][ourStartMergeY]);
+			System.out.println("merging on : "+getOurMaze()[ourStartMergeX][ourStartMergeY]+"    "+ourStartMergeX+"   "+ourStartMergeY);
+			System.out.println("merging on : "+getMergedMaps(getPermutatedDirection())[otherStartMergeX][otherStartMergeY]+"    "+otherStartMergeX+"   "+otherStartMergeY);
 			mergeMaps(getMergedMaps(getPermutatedDirection()));
 		}
 		else 
@@ -401,8 +402,13 @@ public class MatchMap {
 	
 	private static void mergeMaps(String[][] mergeMaps) {
 		String[][] originList = getOurMaze();
+		System.out.println("_________________________________________");
 		System.out.println(matrixToString(originList));
+		System.out.println("_________________________________________");
+		
 		String[][] permList = mergeMaps;
+		System.out.println(matrixToString(permList));
+		System.out.println("_________________________________________");
 		String[][] resultList = new String[(originList.length+permList.length) * 2][(originList[0].length+permList[0].length) * 2];
 		
 		startX = originList.length+permList.length;
@@ -446,9 +452,10 @@ public class MatchMap {
 	private static String[][] mergeLeftDown(String[][] resultList, String[][] permList) {
 		int permX = otherMergePointX;
 		int permY = otherMergePointY;
-		for (int i = startX; i >= 0; i--) {
-			for (int j = startY; j >= 0; j--) {
+		for (int i = startX  + ourStartMergeX; i >= 0; i--) {
+			for (int j = startY  + ourStartMergeY; j >= 0; j--) {
 				try {
+					if(resultList[i][j].equals(dummyString) && ! permList[permX][permY].equals(dummyString))
 					resultList[i][j] = permList[permX][permY];
 				} catch (Exception e) {}
 				
@@ -498,9 +505,10 @@ public class MatchMap {
 	private static String[][] mergeRightDown(String[][] resultList, String[][] permList) {
 		int permX = otherMergePointX;
 		int permY = otherMergePointY;
-		for (int i = startX; i < resultList.length; i++) {
-			for (int j = startY; j >= 0; j--) {
+		for (int i = startX + ourStartMergeX; i < resultList.length; i++) {
+			for (int j = startY + ourStartMergeY; j >= 0; j--) {
 				try {
+					if(resultList[i][j].equals(dummyString) && ! permList[permX][permY].equals(dummyString))
 					resultList[i][j] = permList[permX][permY];
 				} catch (Exception e) {}
 				permY--;
@@ -539,10 +547,10 @@ public class MatchMap {
 	private static String[][] mergeLeftUp(String[][] resultList, String[][] permList) {
 		int permX = otherMergePointX;
 		int permY = otherMergePointY;
-		for (int i = startX; i >= 0; i--) {
-			for (int j = startY; j < resultList[0].length; j++) {
+		for (int i = startX + ourStartMergeX; i >= 0; i--) {
+			for (int j = startY + ourStartMergeY; j < resultList[0].length; j++) {
 				try {
-					System.out.println(i+"   "+j+"   "+permX+"   "+permY+"    "+permList[permX][permY]);
+					if(resultList[i][j].equals(dummyString) && ! permList[permX][permY].equals(dummyString))
 					resultList[i][j] = permList[permX][permY];
 				} catch (Exception e) {}
 				permY++;
@@ -585,8 +593,8 @@ public class MatchMap {
 	private static String[][] mergeRightUp(String[][] resultList, String[][] permList){
 		int permX = otherMergePointX;
 		int permY = otherMergePointY;
-		for (int i = startX; i < resultList.length; i++) {
-			for (int j = startY; j < resultList[0].length; j++) {
+		for (int i = startX + ourStartMergeX; i < resultList.length; i++) {
+			for (int j = startY + ourStartMergeY; j < resultList[0].length; j++) {
 				try {
 					if(resultList[i][j].equals(dummyString) && ! permList[permX][permY].equals(dummyString))
 					resultList[i][j] = permList[permX][permY];
