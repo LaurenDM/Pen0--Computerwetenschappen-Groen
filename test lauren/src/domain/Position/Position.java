@@ -131,7 +131,9 @@ public class Position implements Cloneable {
 	public static Pose getAbsolutePose(Pose initialPose, Pose relativePose){
 		// everything with 'relative' means in the other's board
 		// everything without 'relative' is in our board
-		
+		if(initialPose == null){
+			return relativePose;
+		}
 		Orientation startOrient = initialPose.getOrientation();
 		Orientation relativeStartOrient = MazeGraph.getInitialOrientation();
 		
