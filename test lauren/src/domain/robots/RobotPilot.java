@@ -62,6 +62,7 @@ public abstract class RobotPilot implements PlayerHandler{
 		this.worldSimulator=new WorldSimulator(this);
 		this.movement=MoveType.STOPPED;
 		this.robotPolygon=new RobotPolygon(this);
+		this.playerID = playerID;
 	}
 	
 	public abstract PlayerType getPlayerType();

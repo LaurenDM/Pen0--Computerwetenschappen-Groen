@@ -151,15 +151,17 @@ public class ExploreMaze{
 	
 	public void getOutOfWay(){
 		TileNode deadEnd = maze.getDeadEndNode();
-		MazePath path = maze.findShortestPathFromTo(maze.getCurrentTile(), deadEnd);
-		if(path != null){
-			driveMazePath(robot, path);
-			updatePosition(deadEnd, maze.getCurrentRobotOrientation());
-		}
-		else{
-			path = maze.findShortestPathFromTo(maze.getCurrentTile(), maze.getStartNode());
-			if(path != null) {
-				driveMazePath(robot,path);
+		if(deadEnd != null){
+			MazePath path = maze.findShortestPathFromTo(maze.getCurrentTile(), deadEnd);
+			if(path != null){
+				driveMazePath(robot, path);
+				updatePosition(deadEnd, maze.getCurrentRobotOrientation());
+			}
+			else{
+				path = maze.findShortestPathFromTo(maze.getCurrentTile(), maze.getStartNode());
+				if(path != null) {
+					driveMazePath(robot,path);
+				}
 			}
 		}
 	}
