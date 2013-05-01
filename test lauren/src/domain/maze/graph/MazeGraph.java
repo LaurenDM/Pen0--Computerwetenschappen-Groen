@@ -169,6 +169,7 @@ public class MazeGraph {
 	public Orientation getNextMoveOrientation(){
 		//Just a safeguard so the robot will only drive forward on seesaws, this code should (in principle) never be called.
 		if(getCurrentTile().getClass().equals(SeesawNode.class)){
+			System.out.println("ALARM Mazegraph lijn 172");
 			return Orientation.NORTH;
 		}
 		ArrayList<TileNode> unexpanded = new ArrayList<TileNode>();

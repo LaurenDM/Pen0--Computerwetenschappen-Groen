@@ -98,12 +98,12 @@ public class ExploreMaze{
 				updatePosition(direction);
 				if(direction == null){
 					countAtSamePos++;
-					if(countAtSamePos > 5){
+					if(countAtSamePos > 3){
 						System.out.println("EM.Fixing possible deadlock");
 						getOutOfWay();
 						countAtSamePos = 0;
 						try{
-							Thread.sleep(5000);
+							Thread.sleep(3000);
 						} catch (InterruptedException e){
 							e.printStackTrace();
 						}
@@ -112,7 +112,7 @@ public class ExploreMaze{
 						stopExploring();
 					}
 					try {
-						Thread.sleep(5000);
+						Thread.sleep(3000);
 					} catch (InterruptedException e) {
 						// Auto-generated catch block
 						e.printStackTrace();
