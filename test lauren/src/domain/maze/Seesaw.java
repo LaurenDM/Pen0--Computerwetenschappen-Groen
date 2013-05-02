@@ -142,11 +142,11 @@ public class Seesaw extends MazeElement {
 	}
 	
 	public void setInfrared(int infrared){
-		try{
-		//System.out.println("We are setting a " + !isFromTXTfile  + " Seesaw's infrared-position from " + getInfrareds()[this.infrared] + " To" + getInfrareds()[infrared]);
-		}catch(NullPointerException n){
-//			this means the setInfrared happens in the constructor
-		}
+//		try{
+//		//System.out.println("We are setting a " + !isFromTXTfile  + " Seesaw's infrared-position from " + getInfrareds()[this.infrared] + " To" + getInfrareds()[infrared]);
+//		}catch(NullPointerException n){
+////			this means the setInfrared happens in the constructor
+//		}
 		this.infrared = infrared;
 	}
 	
