@@ -4,7 +4,7 @@
 
     
       <path id="project.class.path"> 
-		<fileset dir="test lauren">
+		<fileset dir="">
         <include name="**/*.jar"/>
       	</fileset>
       </path>  

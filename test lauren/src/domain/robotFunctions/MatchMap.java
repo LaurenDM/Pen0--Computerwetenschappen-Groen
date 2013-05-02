@@ -9,26 +9,33 @@ public class MatchMap {
 		Tile tile1 = new Tile(0, 0, "DeadEnd.E");
 		Tile tile2 = new Tile(1, 0, "Cross");
 		Tile tile3 = new Tile(1, 1, "Straight.N.4");
-		Tile tile4 = new Tile(1, 2, "Cross");
-		Tile tile5 = new Tile(0, 2, "Straight.E");
-		Tile[] tileList = new Tile[5];
+		Tile tile4 = new Tile(1, 2, "Seesaw.S");
+		Tile tile5 = new Tile(1, 3, "Seesaw.N");
+		Tile tile6 = new Tile(1, 4, "Straight.N.3");
+		Tile[] tileList = new Tile[6];
 		tileList[0] = tile1;
 		tileList[1] = tile2;
 		tileList[2] = tile3;
 		tileList[3] = tile4;
 		tileList[4] = tile5;
+		tileList[5] = tile6;
 		
-		Tile _tile2 = new Tile(0, 1, "DeadEnd.E");
-		Tile _tile7 = new Tile(1, 0, "Straight.N");
-		Tile _tile3 = new Tile(1, 1, "Cross");
-		Tile _tile4 = new Tile(2, 1, "Straight.E.4");
-		Tile _tile8 = new Tile(1, 2, "Straight.N");
-		Tile[] _tileList = new Tile[5];
-		_tileList[0] = _tile2;
-		_tileList[1] = _tile3;
-		_tileList[2] = _tile4;
-		_tileList[3] = _tile7;
-		_tileList[4] = _tile8;
+		
+		Tile[] _tileList = new Tile[7];
+		Tile _tile1 = new Tile(0, 0, "Straight.E.4");
+		Tile _tile2 = new Tile(1, 0, "Seesaw.W");
+		Tile _tile3 = new Tile(2 ,0, "Seesaw.E");
+		Tile _tile4 = new Tile(3, 0, "Straight.E.3");
+		Tile _tile5 = new Tile(4, 0, "Cross");
+		Tile _tile6 = new Tile(4, 1, "Cross");
+		Tile _tile7 = new Tile(4, 2, "Straight.W.3");
+		_tileList[0] = _tile1;
+		_tileList[1] = _tile2;
+		_tileList[2] = _tile3;
+		_tileList[3] = _tile4;
+		_tileList[4] = _tile5;
+		_tileList[5] = _tile6;
+		_tileList[6] = _tile7;
 		setOurMazeTiles(tileList);
 		setOriginalTiles(_tileList);
 		merge();
@@ -380,22 +387,42 @@ public class MatchMap {
 //		System.out.println("ourmaze1");
 //		System.out.println(matrixToString(getOurMaze()));
 //		System.out.println("_________________________");
+		System.out.println("starting to merge");
 		if(hasMutualSeeSaw()){
+			System.out.println("trying to merge by seesaw");
 			permutationBySeeSaw();
-			mergeMaps(getMergedMaps(getPermutatedDirection()));
+			try {
+				mergeMaps(getMergedMaps(getPermutatedDirection()));
+			} catch (Exception e) {
+				throw new IllegalArgumentException("There was nothing base found to merge on");
+			}
+			
 		}
 		else if(hasMutualBarcode()){
+			System.out.println("trying to merge by barcode");
 			permutationByBarcode();
 //			System.out.println(getPermutatedDirection() +"   perm");
 //			System.out.println("merging on : "+getOurMaze()[ourStartMergeX][ourStartMergeY]+"    "+ourStartMergeX+"   "+ourStartMergeY);
 //			System.out.println("merging on : "+getMergedMaps(getPermutatedDirection())[otherStartMergeX][otherStartMergeY]+"    "+otherStartMergeX+"   "+otherStartMergeY);
-			mergeMaps(getMergedMaps(getPermutatedDirection()));
+			try {
+				mergeMaps(getMergedMaps(getPermutatedDirection()));
+			} catch (Exception e) {
+				throw new IllegalArgumentException("There was nothing base found to merge on");
+			}
+			
 		}
 		else 
 			throw new IllegalArgumentException("There was nothing base found to merge on");
 		//FOLLOWED BY MERGING THE SQUARES AND MAKING UP WHERE OUR TEAMMATE IS
-		getMergedMaps(getPermutatedDirection());
+		System.out.println("merged on : "+getOurMaze()[ourStartMergeX][ourStartMergeY]+"   "+ourStartMergeX+"   "+ourStartMergeY);
+		System.out.println("merged on : "+getMergedMaps(getPermutatedDirection())[otherMergePointX][otherMergePointY]+"   "+otherMergePointX+"   "+otherMergePointY);
 		System.out.println(matrixToString(resultMap));
+		System.out.println("______________________________________startmerge________________________________");
+		System.out.println("______________________________________________________________________");
+		System.out.println(matrixToString(getOurMaze()));
+		System.out.println(getPermutatedDirection());
+		System.out.println(matrixToString(getMergedMaps(getPermutatedDirection())));
+		System.out.println("______________________________________________________________________");
 	}
 	private static int startX = 0;
 	private static int startY = 0;
@@ -598,9 +625,7 @@ public class MatchMap {
 				try {
 					if(resultList[i][j].equals(dummyString) && ! permList[permX][permY].equals(dummyString))
 					resultList[i][j] = permList[permX][permY];
-				} catch (Exception e) {
-					System.out.println("catched on x "+i+"   y "+j);
-				}
+				} catch (Exception e) {	}
 				permY++;
 			}
 			permY = otherMergePointY;
@@ -805,14 +830,11 @@ public class MatchMap {
 	}
 	
 	private static boolean checkForBarcodePermutation(String[][] maze,String direction, int number,int originalX,int originalY) {
-		int test = 0;
 		for (int i = 0; i < maze.length; i++) {
 			for (int j = 0; j < maze[0].length; j++) {
 				//String[] str = maze[i][j].split(regex);
 				try {
 					if (getBarcodeValue(maze[i][j]) == number){
-						test++;
-						System.out.println("tested : "+test);
 						if(checkBarcodeSurrounding(maze,originalX,originalY,i,j)) {
 						System.out.println("equality found on");
 						otherMergePointX = i;
