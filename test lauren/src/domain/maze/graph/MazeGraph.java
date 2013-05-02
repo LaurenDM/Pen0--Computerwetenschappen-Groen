@@ -20,6 +20,7 @@ public class MazeGraph {
 	private Orientation currentRobotOrientation;
 	private TileNode startNode;
 	private TileNode currentTile;
+	private TileNode lastTile;
 	private MazePath shortestPath;
 	private boolean drivingToPartner = false;
 	private boolean objectFound = false;
@@ -120,6 +121,7 @@ public class MazeGraph {
 	public void move(){
 		MazeNode nextNode = getCurrentTile().getNodeAt(getCurrentRobotOrientation());
 		if(nextNode != null && (nextNode.getClass().equals(TileNode.class) || nextNode.getClass().equals(SeesawNode.class))){
+			setLastTile(getCurrentTile());
 			setCurrentTile((TileNode) nextNode);
 		//	decreaseAllBlockNavigationCounts(); //Eventually unblocks blocked tiles.
 		} else {
@@ -597,12 +599,20 @@ public class MazeGraph {
 		this.currentTile = currentNode;
 	}
 	
+	private void setLastTile(TileNode lastNode){
+		this.lastTile = lastNode;
+	}
+	
 	/**
 	 * Returns the TileNode the robot's currently on.
 	 * @return
 	 */
 	public TileNode getCurrentTile(){
 		return currentTile;
+	}
+	
+	public TileNode getLastTile(){
+		return lastTile;
 	}
 
 	/**

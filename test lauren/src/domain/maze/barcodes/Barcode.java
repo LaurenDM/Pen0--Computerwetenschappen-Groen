@@ -22,7 +22,8 @@ public class Barcode extends MazeElement{
 		fillLegals();
 		readBits = getBinary(decimal);
 		if(!legalInts.contains(decimal)){
-			this.decimal = getDecimal(getmirroredBits());
+			readBits = getmirroredBits();
+			this.decimal = getDecimal(readBits);
 		}else{
 			this.decimal=decimal;
 		}
@@ -42,7 +43,8 @@ public class Barcode extends MazeElement{
 		}
 		int calculatedDecimal=getDecimal(bits);
 		if(!legalInts.contains(calculatedDecimal)){
-			this.decimal = getDecimal(getmirroredBits());
+			readBits = getmirroredBits();
+			this.decimal = getDecimal(readBits);
 		}else{
 			this.decimal = calculatedDecimal;
 		}
@@ -104,7 +106,8 @@ public class Barcode extends MazeElement{
 	
 	public Action getAction(int number){
 		if((number<8) && (ownBallNumber == number%4)){
-			int teamNb = readBits[3];
+			System.out.println("BallBarcodebits: " + readBits[0]+readBits[1]+readBits[2]+readBits[3]+readBits[4]+readBits[5]);
+			int teamNb = readBits[2];
 			return new FetchBallAction(teamNb);
 		}
 		if(isOtherBallNumber(number)){

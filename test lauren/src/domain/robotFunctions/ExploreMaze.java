@@ -99,14 +99,7 @@ public class ExploreMaze{
 				if(direction == null){
 					countAtSamePos++;
 					if(countAtSamePos > 3){
-						System.out.println("EM.Fixing possible deadlock");
-						getOutOfWay();
-						countAtSamePos = 0;
-						try{
-							Thread.sleep(5000);
-						} catch (InterruptedException e){
-							e.printStackTrace();
-						}
+						fixDeadlock1();
 					}
 					else{
 						stopExploring();
@@ -148,6 +141,25 @@ public class ExploreMaze{
 			driveToFinish(robot);
 		}
 	}
+	
+	public void fixDeadlock1(){
+		System.out.println("EM.Fixing possible deadlock");
+		getOutOfWay();
+		countAtSamePos = 0;
+		try{
+			Thread.sleep(5000);
+		} catch (InterruptedException e){
+			e.printStackTrace();
+		}
+	}
+	
+//	public boolean checkDeadlock2(){
+//		return (maze.getCurrentTile().getNodeAt(maze.getNextMoveOrientation()).equals(maze.getLastTile()));
+//	}
+//	
+//	public void fixDeadlock2(){
+//		// TO DO if necessary
+//	}
 	
 	public void getOutOfWay(){
 		TileNode deadEnd = maze.getDeadEndNode();
