@@ -18,7 +18,6 @@ import domain.maze.Board;
 import domain.maze.Orientation;
 import domain.maze.Wall;
 import domain.maze.graph.MazePath;
-import domain.maze.infrared.InfraredBeamer;
 import domain.maze.infrared.InfraredDetector;
 import domain.maze.infrared.RobotIBeamer;
 import domain.robotFunctions.BarcodeGenerator;
@@ -37,7 +36,7 @@ public class SimRobotPilot extends RobotPilot {
 	private boolean isScanningBarcode;
 	private boolean turningError = true;
 	//De onderstaande variable wordt momenteel niet gebruikt maar is goed voor debuggen
-	private final InfraredBeamer infraBeamer;
+//	private final InfraredBeamer infraBeamer;
 	private final InfraredDetector infraDetector;
 
 	private final PlayerType TYPE = PlayerType.VIRTUAL;
@@ -84,7 +83,7 @@ public class SimRobotPilot extends RobotPilot {
 		this.setTurningSpeed(defaultTurningSpeed);
 		this.sensorAngle = 0;
 		setBoard(new Board());
-		this.infraBeamer= new RobotIBeamer(this);
+//		this.infraBeamer= new RobotIBeamer(this);
 		this.infraDetector=new InfraredDetector(this);
 	}
 	

@@ -100,7 +100,7 @@ public class Position implements Cloneable {
 	}
 	
 	public double getAngleTo(Position toCheckPos){
-		double toCheckYDiff = toCheckPos.getY() - this.getY();
+		double toCheckYDiff = this.getY()-toCheckPos.getY();
 		double toCheckXDiff = toCheckPos.getX() - this.getX();
 
 		double tanToCheck = (toCheckYDiff) / (toCheckXDiff);
