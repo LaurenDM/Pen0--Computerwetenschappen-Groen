@@ -332,15 +332,17 @@ public abstract class RobotPilot implements PlayerHandler{
 		try {
 			playerClient.foundObject();
 			playerClient.joinTeam(getTeamNumber());
+			System.out.println("PLAYER "  + playerNb + " JOINS TEAM " + getTeamNumber());
+			System.out.println("PlayerID = "+ getPlayerID());
 		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
+			//  Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			//  Auto-generated catch block
 			e.printStackTrace();
 		}
 		catch(NullPointerException e){
-			//voor wanneer er geen htttp gebruikt wordt
+			e.printStackTrace();
 		}
 	}
 
@@ -363,6 +365,7 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	public void setTeamNumber(int teamNumber) {
 		this.teamNumber = teamNumber;
+		System.out.println("RobotPilot: teamNumber = " + teamNumber);
 	}
 	
 	public int getTeamNumber(){
@@ -515,7 +518,7 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	@Override
 	public void teamConnected(String partnerID) {
-		System.out.println("RP.teamConnected");
+	//	System.out.println("RP.teamConnected");
 		printMessage("ph.teamconnected: "+partnerID);
 		try {
 			playerClient.sendTiles(getFoundTilesList());

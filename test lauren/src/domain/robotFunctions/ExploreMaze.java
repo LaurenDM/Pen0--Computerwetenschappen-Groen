@@ -103,7 +103,7 @@ public class ExploreMaze{
 						getOutOfWay();
 						countAtSamePos = 0;
 						try{
-							Thread.sleep(3000);
+							Thread.sleep(5000);
 						} catch (InterruptedException e){
 							e.printStackTrace();
 						}
@@ -112,7 +112,7 @@ public class ExploreMaze{
 						stopExploring();
 					}
 					try {
-						Thread.sleep(3000);
+						Thread.sleep(2000);
 					} catch (InterruptedException e) {
 						// Auto-generated catch block
 						e.printStackTrace();

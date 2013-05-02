@@ -21,25 +21,25 @@
         <java classname="gui.GUI" classpath="bin" fork="true" classpathref="project.class.path">
 			    <arg value="0000"/>
         		<arg value="${current.time}"/>
-        		<arg value="player0"/>
+        		<arg value="playerID0"/>
 	        	<redirector output="output0.txt" alwayslog="true"/>           
 		</java>
 		<java classname="gui.GUI" classpath="bin" fork="true" classpathref="project.class.path">
 			    <arg value="500"/>
 	        	<arg value="${current.time}"/>
-	            <arg value="player1"/>
+	            <arg value="playerID1"/>
 				<redirector output="output1.txt" alwayslog="true"/>           
 		</java>
 		<java classname="gui.GUI" classpath="bin" fork="true" classpathref="project.class.path">
 			    <arg value="1000"/>
 				<arg value="${current.time}"/>
-				<arg value="player2"/>
+				<arg value="playerID2"/>
 				<redirector output="output2.txt" alwayslog="true"/>           
 		</java>
 		<java classname="gui.GUI" classpath="bin" fork="true" classpathref="project.class.path">
 			    <arg value="1500"/>
 				<arg value="${current.time}"/>
-        		<arg value="player3"/>
+        		<arg value="playerID3"/>
 				<redirector output="output3.txt" alwayslog="true"/>           
 		</java>
 		</parallel>

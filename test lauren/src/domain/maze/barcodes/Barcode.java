@@ -104,7 +104,7 @@ public class Barcode extends MazeElement{
 	
 	public Action getAction(int number){
 		if((number<8) && (ownBallNumber == number%4)){
-			int teamNb = readBits[2];
+			int teamNb = readBits[3];
 			return new FetchBallAction(teamNb);
 		}
 		if(isOtherBallNumber(number)){

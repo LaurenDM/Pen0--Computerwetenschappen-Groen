@@ -264,7 +264,7 @@ public class WorldSimulator implements SpectatorHandler {
 		if(!otherRobots.containsKey(playerDetails.getPlayerID()) && !robot.getPlayerID().equals(playerDetails.getPlayerID())){
 			//ID not yet in system and not your own ID
 			connectExternalSimRobot(angle, new Position(x,y), playerDetails.getPlayerID());
-			System.out.println("NEW ROBOT ADDED "+playerDetails.getPlayerID());
+			//System.out.println("NEW ROBOT ADDED "+playerDetails.getPlayerID());
 		}
 		
 //		printMessage("sh.updatedPlayer ID: "+playerID+" no:"+playerNumber+" x:"+x+" y:"+y);
