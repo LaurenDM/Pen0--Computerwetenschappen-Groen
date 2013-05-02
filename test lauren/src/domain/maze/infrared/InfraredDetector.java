@@ -28,8 +28,10 @@ public int getInfraredValue(){
 }
 //Bepaalt of de positie, kijkhoek en orientatie toelaten om een bepaalde positie te zien (houdt geen rekening met muren)
 private boolean coversPosition(Position toCheckPos){
+	Position thisPos=this.getPosition();
+	double thisOrientation=this.getOrientation();
 	
-	return Geometrics.fallsInCoveredArea(toCheckPos,this.getPosition(),getOrientation(), this.viewAngle );
+	return Geometrics.fallsInCoveredArea(toCheckPos,thisPos,thisOrientation, this.viewAngle );
 }
 
 public Position getPosition(){

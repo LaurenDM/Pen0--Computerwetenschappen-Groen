@@ -1,20 +1,10 @@
 package domain.robots;
 
-import groen.htttp.HtttpImplementation;
-import gui.ContentPanel;
-
-import java.util.ArrayList;
-
-import java.util.List;
 import gui.ContentPanel;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import controller.Controller;
 
 import peno.htttp.DisconnectReason;
 import peno.htttp.PlayerClient;
@@ -22,7 +12,7 @@ import peno.htttp.PlayerDetails;
 import peno.htttp.PlayerHandler;
 import peno.htttp.PlayerType;
 import peno.htttp.Tile;
-
+import controller.Controller;
 import domain.Position.Pose;
 import domain.Position.Position;
 import domain.maze.Ball;
@@ -35,8 +25,6 @@ import domain.maze.Wall;
 import domain.maze.WorldSimulator;
 import domain.maze.barcodes.Barcode;
 import domain.maze.graph.MazePath;
-import domain.maze.infrared.InfraredBeamer;
-import domain.maze.infrared.RobotIBeamer;
 import domain.polygons.RobotPolygon;
 import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.MatchMap;
@@ -332,15 +320,17 @@ public abstract class RobotPilot implements PlayerHandler{
 		try {
 			playerClient.foundObject();
 			playerClient.joinTeam(getTeamNumber());
+			System.out.println("PLAYER "  + playerNb + " JOINS TEAM " + getTeamNumber());
+			System.out.println("PlayerID = "+ getPlayerID());
 		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
+			//  Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			//  Auto-generated catch block
 			e.printStackTrace();
 		}
 		catch(NullPointerException e){
-			//voor wanneer er geen htttp gebruikt wordt
+			e.printStackTrace();
 		}
 	}
 
@@ -363,6 +353,7 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	public void setTeamNumber(int teamNumber) {
 		this.teamNumber = teamNumber;
+		System.out.println("RobotPilot: teamNumber = " + teamNumber);
 	}
 	
 	public int getTeamNumber(){
@@ -515,7 +506,7 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	@Override
 	public void teamConnected(String partnerID) {
-		System.out.println("RP.teamConnected");
+	//	System.out.println("RP.teamConnected");
 		printMessage("ph.teamconnected: "+partnerID);
 		try {
 			playerClient.sendTiles(getFoundTilesList());

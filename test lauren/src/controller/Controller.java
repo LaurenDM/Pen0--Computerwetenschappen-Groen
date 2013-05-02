@@ -480,4 +480,8 @@ public class Controller {
 		}
 	}
 	
+	public void throwException() throws Exception{
+		throw new Exception();
+	}
+	
 }
