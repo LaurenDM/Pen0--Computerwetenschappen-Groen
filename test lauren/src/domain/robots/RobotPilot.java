@@ -1,20 +1,10 @@
 package domain.robots;
 
-import groen.htttp.HtttpImplementation;
-import gui.ContentPanel;
-
-import java.util.ArrayList;
-
-import java.util.List;
 import gui.ContentPanel;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import controller.Controller;
 
 import peno.htttp.DisconnectReason;
 import peno.htttp.PlayerClient;
@@ -22,7 +12,7 @@ import peno.htttp.PlayerDetails;
 import peno.htttp.PlayerHandler;
 import peno.htttp.PlayerType;
 import peno.htttp.Tile;
-
+import controller.Controller;
 import domain.Position.Pose;
 import domain.Position.Position;
 import domain.maze.Ball;
@@ -35,8 +25,6 @@ import domain.maze.Wall;
 import domain.maze.WorldSimulator;
 import domain.maze.barcodes.Barcode;
 import domain.maze.graph.MazePath;
-import domain.maze.infrared.InfraredBeamer;
-import domain.maze.infrared.RobotIBeamer;
 import domain.polygons.RobotPolygon;
 import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.MatchMap;

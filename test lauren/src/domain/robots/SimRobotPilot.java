@@ -19,7 +19,6 @@ import domain.maze.Orientation;
 import domain.maze.Wall;
 import domain.maze.graph.MazePath;
 import domain.maze.infrared.InfraredDetector;
-import domain.maze.infrared.RobotIBeamer;
 import domain.robotFunctions.BarcodeGenerator;
 import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.Straightener;
