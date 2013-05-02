@@ -12,6 +12,7 @@ import controller.Controller;
 
 import domain.Position.Pose;
 import domain.Position.Position;
+import domain.maze.Direction;
 import domain.maze.Orientation;
 import domain.maze.Wall;
 import domain.maze.graph.MazeGraph;
@@ -23,16 +24,7 @@ import domain.robots.RobotPilot;
 
 public class ExploreMaze{
 	
-	private enum Direction {
-	    LEFT(-1),FORWARD(0),RIGHT(1),BACKWARD(-2);
-	    private int offset;
-	    private Direction(int offset){
-	    	this.offset = offset;
-	    }
-	    public int getOffset(){
-	    	return this.offset;
-	    }
-	}
+	
 	private RobotPilot robot;
 	private final int sideValuedDistance = 32;
 	private final int frontValuedDistance = 27;
@@ -210,10 +202,12 @@ public class ExploreMaze{
 			TileNode node = (TileNode) maze.getCurrentTile();
 			while(node.getNodeAt(o)!=null && TileNode.class.isAssignableFrom(node.getNodeAt(o).getClass())){
 				node = (TileNode) node.getNodeAt(o);
-				Pose relativePose = new Pose(node.getX()*40.0,node.getY()*40.0,maze.getCurrentRobotOrientation());
+				Pose relativePose = new Pose(node.getX()*MAZECONSTANT,node.getY()*MAZECONSTANT,maze.getCurrentRobotOrientation());
 				Position pos = Position.getAbsolutePose(robot.getInitialPosition(), relativePose);	
 				node.setAccessible(!robot.checkRobotSensor(pos));
 			}
+			
+			
 		}
 		}
 	}
@@ -347,26 +341,39 @@ public class ExploreMaze{
 		double x = robot.getPosition().getX();
 		double y = robot.getPosition().getY();
 		double orientation = robot.getOrientation();
-		if(distances[0] < sideValuedDistance){
-			if(maze.generateWallNodeAt(Orientation.WEST)){
-				calculateWall(x,y,orientation,Direction.LEFT);
+		if (distances[0] < sideValuedDistance) {
+			if (!robot.detectsCloseRobotAt(Direction.LEFT)) {
+				if (maze.generateWallNodeAt(Orientation.WEST)) {
+					calculateWall(x, y, orientation, Direction.LEFT);
+				}
+			} else {
+				maze.generateTileNodeAt(Orientation.WEST).setAccessible(false);
 			}
 		} else {
 			maze.generateTileNodeAt(Orientation.WEST);
 		}
 			
 		if(distances[1] < frontValuedDistance){
+			if (!robot.detectsCloseRobotAt(Direction.FORWARD)) {
+
 			if(maze.generateWallNodeAt(Orientation.NORTH)){
 				calculateWall(x,y,orientation,Direction.FORWARD);
+			}
+			} else {
+				maze.generateTileNodeAt(Orientation.NORTH).setAccessible(false);
 			}
 		} else {
 			maze.generateTileNodeAt(Orientation.NORTH);
 		}
 			
 		if(distances[2] < sideValuedDistance){
+			if (!robot.detectsCloseRobotAt(Direction.RIGHT)) {
+
 			if(maze.generateWallNodeAt(Orientation.EAST)){
 				calculateWall(x,y,orientation,Direction.RIGHT);
-			}			
+			}	} else {
+				maze.generateTileNodeAt(Orientation.EAST).setAccessible(false);
+			}		
 		} else {
 			maze.generateTileNodeAt(Orientation.EAST);
 		}
