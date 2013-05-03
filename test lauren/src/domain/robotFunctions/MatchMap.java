@@ -544,7 +544,7 @@ public class MatchMap {
 						resultList[i][j] = resultList[i][j] + "." + special;
 					}
 				} catch (Exception e) {
-					System.out.println("There was a Exception code 3258");
+				//	System.out.println("There was a Exception code 3258");
 				}
 				
 				permY--;

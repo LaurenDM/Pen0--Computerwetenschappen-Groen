@@ -1,24 +1,24 @@
 sh.playerJoined: playerID3
 Deelname geslaagd.
-sh.playerJoined: playerID0
 Object
 BallBarcodebits: 001000
 Object
-1 Xcoo 2 YCoo2
-1 Xcoo 100 YCoo100
-init pos added: x:100.0 y:100.0 nb:3
-1 Xcoo 6 YCoo2
-1 Xcoo 260 YCoo100
-init pos added: x:260.0 y:100.0 nb:1
-1 Xcoo 2 YCoo4
-1 Xcoo 100 YCoo180
-init pos added: x:100.0 y:180.0 nb:4
-1 Xcoo 6 YCoo4
-1 Xcoo 260 YCoo180
-init pos added: x:260.0 y:180.0 nb:2
+1 Xcoo 1 YCoo2
+1 Xcoo 60 YCoo100
+init pos added: x:60.0 y:100.0 nb:3
+1 Xcoo 7 YCoo2
+1 Xcoo 300 YCoo100
+init pos added: x:300.0 y:100.0 nb:1
+1 Xcoo 1 YCoo4
+1 Xcoo 60 YCoo180
+init pos added: x:60.0 y:180.0 nb:4
+1 Xcoo 7 YCoo4
+1 Xcoo 300 YCoo180
+init pos added: x:300.0 y:180.0 nb:2
 Object
 Object
 X,Y = 1 0
+sh.playerJoined: playerID0
 sh.playerJoined: playerID1
 sh.playerJoined: playerID2
 ph.gameRolled: playerNumber:1 objectNumber:0
@@ -30,37 +30,18 @@ sh.gameStarted
 sh.gameStarted
 sh.gameStarted
 sh.gameStarted
-Setting initial pos to:260.0 y:100.0
+Setting initial pos to:300.0 y:100.0
 
-Current: (258.02292686905724,259.0370349500542), ori: -0.9501747115481132
-Dead End: (298.01742662813456,258.3737182676448)
-sh.playerFoundObj: player playerID0 found its ball
-Current: (100.79691711266109,263.2609728125367), ori: 177.4140444956483
-Dead End: (60.837650741593954,265.0656974691264)
+Current: (100.96911358956517,261.4120147692508), ori: 175.8121133137996
+Dead End: (61.075916039525936,264.33310861121197)
+Current: (258.2522791955252,262.2995035740691), ori: 4.948632337061952
+Dead End: (298.10317663087557,265.7500069572273)
+sh.playerFoundObj: player playerID2 found its ball
 sh.playerFoundObj: player playerID1 found its ball
-EM.Fixing possible deadlock
-(1,2)(0,2)(0,1)(0,0)
-(1,2)(0,2)(0,1)(0,0)
-EM.Fixing possible deadlock
-(0,0)
-(0,0)
-BallBarcodebits: 001000
-RobotPilot: teamNumber = 1
-Current: (100.78631373112282,21.010570332405443), ori: 179.39132997569524
-Dead End: (60.78857079824659,21.435494179170504)
-sh.playerFoundObj: player playerID3 found its ball
-PLAYER 1 JOINS TEAM 1
-PlayerID = playerID3
-Current: (258.09586946831956,21.535603238257732), ori: 3.6297209874200007
-Dead End: (298.01563038377526,24.067931900350736)
-tc 1
-EM.Fixing possible deadlock
-(-2,4)(-2,3)(-2,2)(-1,2)(0,2)(0,1)(0,0)
-(-2,4)(-2,3)(-2,2)(-1,2)(0,2)(0,1)(0,0)
-ph.GameWon by Team 0
-sh.GameWon by Team 0
-sh.playerReady: playerID2
 sh.gameStopped
-sh.playerReady: playerID1
+sh.GameWon by Team 0
+ph.GameWon by Team 0
 sh.playerReady: playerID0
 sh.playerReady: playerID3
+sh.playerReady: playerID2
+sh.playerReady: playerID1

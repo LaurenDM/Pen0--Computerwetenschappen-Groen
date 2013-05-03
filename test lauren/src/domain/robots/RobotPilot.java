@@ -682,10 +682,13 @@ public abstract class RobotPilot implements PlayerHandler{
 	
 	public boolean hasWon(Position teamPosition){
 		if(teamPosition.getDistance(getPosition())<=45){
-			double angle = getPosition().getAngleTo(teamPosition);
-			if(detectPartnerAtAngle(angle)){
-				return true;
-			}				
+			return true;
+//			double angle = getPosition().getAngleTo(teamPosition);
+//			System.out.println("ANGLE = " + angle);
+//			if(detectPartnerAtAngle(angle)){
+//				System.out.println("DETECTING PARTNER");
+//				return true;
+//			}				
 		}
 		return false;
 	}
