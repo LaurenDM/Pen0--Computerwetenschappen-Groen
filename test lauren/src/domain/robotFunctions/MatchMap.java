@@ -388,7 +388,7 @@ public class MatchMap {
 //		System.out.println(matrixToString(getOurMaze()));
 //		System.out.println("_________________________");
 		System.out.println("starting to merge");
-		if(hasMutualSeeSaw()){
+		if(false){//hasMutualSeeSaw()){
 			System.out.println("trying to merge by seesaw");
 			permutationBySeeSaw();
 			try {
@@ -872,12 +872,14 @@ public class MatchMap {
 			String[] str = getOurMaze()[originalX][originalY].split(regex);
 			String[] str2 = maze[permX][permY].split(regex);
 			if(str[0].equals(str2[0]))
+				if(!str[0].equals(dummyString) && !str2[0].equals(dummyString))
 				return 5;
 			else
 				return -1;
 		} catch (Exception e) {
 			return 0;
 		}
+		return -1;
 	}
 	
 	private static boolean isEqualOrientation(String or1, String or2){

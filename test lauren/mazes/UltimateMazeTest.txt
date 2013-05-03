@@ -1,8 +1,8 @@
 
 Cross	DeadEnd.W.V	Straight.W.4	Straight.W	T.N		Straight.W	Straight.W.1	DeadEnd.E.V
-Cross	Cross		Straight.N	Cross		Straight.N.13	Cross		Cross		Cross
-Cross	DeadEnd.W.S3N	Cross		DeadEnd.E	Seesaw.N	DeadEnd.W	T.N		DeadEnd.E.S1N	
-Cross	Cross		Straight.N	Cross		Seesaw.S	Cross		Straight.N	Cross
-Cross	DeadEnd.W.S4N	Cross		Straight.W	Straight.N.11	Straight.W	Cross		DeadEnd.E.S2N	
+Cross	Cross		Straight.N	Cross		Straight.N	Cross		Cross		Cross
+Cross	DeadEnd.W.S3N	Cross		DeadEnd.E	Straight.N.47	DeadEnd.W	T.N		DeadEnd.E.S1N	
+Cross	Cross		Straight.N.43	Cross		Straight.N	Cross		Straight.N	Cross
+Cross	DeadEnd.W.S4N	Cross		Straight.W	Straight.N.55	Straight.W	Cross		DeadEnd.E.S2N	
 Cross	Cross		T.W		Cross		Cross		Cross		T.E		Cross
 Cross	DeadEnd.W.V	Straight.W.3	Straight.W	T.S		Straight.W	Straight.W.6	DeadEnd.E.V

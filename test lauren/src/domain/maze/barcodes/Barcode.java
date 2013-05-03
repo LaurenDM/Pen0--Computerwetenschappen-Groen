@@ -331,4 +331,8 @@ public class Barcode extends MazeElement{
 	public boolean sameFirstReadOrientation(double robotOrientationToCompare) {
 			return(Orientation.getOrientation(robotOrientationToCompare).equals(getOrientation()));
 	}
+	
+	public int getDecimal(){
+		return decimal;
+	}
 }
