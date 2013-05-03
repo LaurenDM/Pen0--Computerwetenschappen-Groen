@@ -45,10 +45,11 @@ public class MazeInterpreter {
 		System.out.println("adCrosses:");
 		System.out.println(MatchMap.matrixToString(map));
 		firstLine = 0;
+		System.out.println("READMAP");
 		for(int x = 0; x<map.length; x++){
 			for(int y = 0; y<map[x].length; y++){
 				readCommand(map[x][y], x, y);
-			//	System.out.println(x + "    " + y + "    " + map[x][y]);
+				System.out.println(x + "    " + y + "    " + map[x][y]);
 			}
 		}
 	}

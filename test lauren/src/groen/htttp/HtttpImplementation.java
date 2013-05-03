@@ -73,7 +73,6 @@ public class HtttpImplementation {
 		
 		
 		
-		
 		try {
 			playerClient.join(new Callback<Void>() {
 				@Override

@@ -47,8 +47,8 @@ public abstract class RobotPilot implements PlayerHandler{
 	private String playerID;
 	
 	private PlayerClient playerClient;
-	private final int WIDTH = 20;
-	private final int HEIGHT = 20; // TODO values?
+	private final int WIDTH = 17;
+	private final int HEIGHT = 18; // TODO values?
 	
 	public RobotPilot(String playerID){
 		this.worldSimulator=new WorldSimulator(this);
@@ -532,7 +532,6 @@ public abstract class RobotPilot implements PlayerHandler{
 	public void mergeMazes(){
 		matcher = new MatchMap();
 		List<Tile> ourTiles = getFoundTilesList();
-		// TODO: koen, methodes in MatchMap niet meer static maken
 		matcher.setOurMazeTiles(ourTiles);
 		matcher.setOriginalTiles(teamTiles);
 		matcher.merge();
@@ -582,7 +581,7 @@ public abstract class RobotPilot implements PlayerHandler{
 		relativePose = Position.getRelativePose(getInitialPosition(), absolutePose);
 		maze.setPartnerPosition((int) relativePose.getX()/40, (int) relativePose.getY()/40);
 		Position teamPosition = absolutePose.getPosition();
-		if(teamPosition.getDistance(getPosition())<50){
+		if(hasWon(teamPosition)){
 			won();
 		}
 		}
@@ -640,7 +639,29 @@ public abstract class RobotPilot implements PlayerHandler{
 		else{
 			return checkRobotSensor(wallPos.getNewRoundPosition(viewOr, 20));
 		}
-		
+	}
+	
+	public boolean detectPartnerAtAngle(double angle){
+		double viewOr=angle;
+		Position snappedRPos=this.getPosition().clone();
+		snappedRPos.snapTo(40, 20, 20);
+		Position wallPos=snappedRPos.getNewRoundPosition(viewOr, 20);
+		if(getWorldSimulator().detectWallAt(wallPos)){
+			return false;
+		}
+		else{
+			return checkRobotSensor(wallPos.getNewRoundPosition(viewOr, 20));
+		}
+	}
+	
+	public boolean hasWon(Position teamPosition){
+		if(teamPosition.getDistance(getPosition())<=40){
+			double angle = getPosition().getAngleTo(teamPosition);
+			if(detectPartnerAtAngle(angle)){
+				return true;
+			}				
+		}
+		return false;
 	}
 	
 	
