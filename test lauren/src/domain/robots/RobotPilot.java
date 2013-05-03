@@ -362,6 +362,14 @@ public abstract class RobotPilot implements PlayerHandler{
 		return teamNumber;
 	}
 	
+	public void handleSeesaw(int barcodeNb){
+		Barcode barcode = board.getBarcodeAt(getPosition());
+		if(barcode.getDecimal()!=barcodeNb){
+			throw new IllegalArgumentException();
+		}
+		barcode.getAction().run(this);
+	}
+	
 	
 	public void handleSeesaw(int barcodeNb,Seesaw foundSeesaw){
 		boolean upAtThisSide = detectInfrared();

@@ -227,7 +227,7 @@ public class ExploreMaze{
 		TileNode nextNode = (TileNode) maze.getCurrentTile().getNodeAt(nextOrientation);
 		robot.updatePosition(nextNode.getX(), nextNode.getY(), nextOrientation.getAngleToHorizontal());
 		if(Seesaw.class.isAssignableFrom(nextNode.getClass())){
-			driveOverSeesaw();
+			robot.handleSeesaw(maze.getCurrentTile().getBarcodeNumber());
 		}
 	}
 	
