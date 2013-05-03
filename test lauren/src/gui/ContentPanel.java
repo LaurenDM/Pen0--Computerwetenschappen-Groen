@@ -578,6 +578,9 @@ public class ContentPanel implements ActionListener {
 		} else if(e.getSource() == recoverButton){
 			controller.recoverToLastUpdatedPose();
 			buttonPanel.requestFocusInWindow();
+		} else if(e.getSource() == recoverButton){
+			controller.recoverToLastUpdatedPose();
+			buttonPanel.requestFocusInWindow();
 		}
         
     }
