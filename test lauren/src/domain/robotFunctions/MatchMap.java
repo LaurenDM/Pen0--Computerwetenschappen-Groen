@@ -1086,7 +1086,7 @@ public class MatchMap {
 		try {
 			return Integer.parseInt(parsedString[2]);
 		} catch (Exception e) {
-			System.out.println("There was a Exception code 87574");
+			//System.out.println("There was a Exception code 87574");
 
 			return 0;
 		}

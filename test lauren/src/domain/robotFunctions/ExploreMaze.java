@@ -14,6 +14,7 @@ import domain.Position.Pose;
 import domain.Position.Position;
 import domain.maze.Direction;
 import domain.maze.Orientation;
+import domain.maze.Seesaw;
 import domain.maze.Wall;
 import domain.maze.graph.MazeGraph;
 import domain.maze.graph.MazePath;
@@ -225,6 +226,9 @@ public class ExploreMaze{
 		Orientation nextOrientation = maze.getCurrentRobotOrientation().getOffset(direction.getOffset());
 		TileNode nextNode = (TileNode) maze.getCurrentTile().getNodeAt(nextOrientation);
 		robot.updatePosition(nextNode.getX(), nextNode.getY(), nextOrientation.getAngleToHorizontal());
+		if(Seesaw.class.isAssignableFrom(nextNode.getClass())){
+			robot.handleSeesaw(maze.getCurrentTile().getBarcodeNumber());
+		}
 	}
 	
 	public void updatePosition(TileNode node, Orientation orientation){
@@ -592,8 +596,11 @@ public class ExploreMaze{
 
 	public void driveOverSeesaw() {
 		if(maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()).isAccessible()){
+			updatePosition((TileNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()),maze.getCurrentRobotOrientation());
 			maze.move();
+			updatePosition((TileNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()),maze.getCurrentRobotOrientation());
 			maze.move();
+			updatePosition((TileNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()),maze.getCurrentRobotOrientation());
 			maze.move();
 			((SeesawNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation().getBack())).setUp(false);
 			System.out.println("The node after the seesaw is "+maze.getCurrentTile());

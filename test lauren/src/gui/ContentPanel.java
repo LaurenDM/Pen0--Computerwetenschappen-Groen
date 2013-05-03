@@ -923,7 +923,7 @@ public class ContentPanel implements ActionListener {
 	    }
 	
 	public void automaticConnection(){
-		controller.readMazeFromFile("mazes/sem2demo2maze");
+		controller.readMazeFromFile("test lauren/mazes/MergeTestMaze");
     	drawingPanel.drawSimulatedWalls();
     	try {
 			Thread.sleep(5000);

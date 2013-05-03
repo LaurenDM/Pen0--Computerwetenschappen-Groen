@@ -1,265 +1,1946 @@
 Object
-1 Xcoo 6 YCoo0
-1 Xcoo 260 YCoo20
-init pos added: x:260.0 y:20.0 nb:1
-Object
 BallBarcodebits: 001000
+Object
 1 Xcoo 2 YCoo2
 1 Xcoo 100 YCoo100
 init pos added: x:100.0 y:100.0 nb:3
+1 Xcoo 6 YCoo2
+1 Xcoo 260 YCoo100
+init pos added: x:260.0 y:100.0 nb:1
+1 Xcoo 2 YCoo4
+1 Xcoo 100 YCoo180
+init pos added: x:100.0 y:180.0 nb:4
+1 Xcoo 6 YCoo4
+1 Xcoo 260 YCoo180
+init pos added: x:260.0 y:180.0 nb:2
 Object
-1 Xcoo 2 YCoo6
-1 Xcoo 100 YCoo260
-init pos added: x:100.0 y:260.0 nb:4
-1 Xcoo 6 YCoo7
-1 Xcoo 260 YCoo300
-init pos added: x:260.0 y:300.0 nb:2
 Object
-X,Y = 0 0
+X,Y = 1 0
 sh.playerJoined: playerID3
 sh.playerJoined: playerID0
 Deelname geslaagd.
 sh.playerJoined: playerID1
 sh.playerJoined: playerID2
-ph.gameRolled: playerNumber:3 objectNumber:2
-sh.playerReady: playerID0
+ph.gameRolled: playerNumber:4 objectNumber:3
 sh.playerReady: playerID2
+sh.playerReady: playerID0
 sh.playerReady: playerID1
 sh.playerReady: playerID3
 sh.gameStarted
 sh.gameStarted
 sh.gameStarted
 sh.gameStarted
-Setting initial pos to:100.0 y:100.0
+Setting initial pos to:100.0 y:180.0
 
-sh.lockedSeesaw by player ID: playerID2 no: 2
-sh.playerFoundObj: player playerID1 found its ball
-Current: (137.3525104659853,60.83822410868416), ori: -94.92550799164052
-Dead End: (133.9180910248216,20.985937309779416)
-sh.unlockedSeesaw by player ID: playerID2 no: 2
-sh.lockedSeesaw by player ID: playerID3 no: 1
-sh.unlockedSeesaw by player ID: playerID3 no: 1
-Current: (300.7691659471587,60.99948341731647), ori: -89.64890575587123
-Dead End: (301.0142744350028,21.000234401501345)
-Tile(-2,-4,true,true,true,true),Tile(-3,-4,true,true,true,true)
-BallBarcodebits: 011000
-RobotPilot: teamNumber = 1
-Current: (338.4985483463161,298.96946175554206), ori: 0.5355810577434141
-Dead End: (378.49680078675794,299.3433624250903)
+Current: (258.12190963573534,264.4277008527005), ori: 5.407970998470304
+Dead End: (297.94386413991543,268.1975734589049)
+BallBarcodebits: 110000
+RobotPilot: teamNumber = 0
+Current: (100.56520575183094,258.36515297912274), ori: -175.37004869041766
+Dead End: (60.69573301742521,255.1363538400498)
 sh.playerFoundObj: player playerID0 found its ball
-PLAYER 3 JOINS TEAM 1
+PLAYER 4 JOINS TEAM 0
 PlayerID = playerID0
-sh.lockedSeesaw by player ID: playerID3 no: 1
-Current: (60.5354016397925,259.1523424279103), ori: -176.89460009024128
-Dead End: (20.594138873045637,256.98542558647847)
-sh.unlockedSeesaw by player ID: playerID3 no: 1
-Tile(-3,-1,true,true,true,true),Tile(-2,-1,true,true,true,true)
-sh.lockedSeesaw by player ID: playerID3 no: 1
-sh.unlockedSeesaw by player ID: playerID3 no: 1
-EM.Fixing possible deadlock
-No path found...
-(0,-1)(0,-2)(-1,-2)(-2,-2)
-(0,-1)(0,-2)(-1,-2)(-2,-2)
-tc 1
-sh.playerFoundObj: player playerID2 found its ball
-sh.lockedSeesaw by player ID: playerID2 no: 2
-sh.unlockedSeesaw by player ID: playerID2 no: 2
-sh.playerFoundObj: player playerID3 found its ball
-ph.teamconnected: playerID3
+Current: (101.02914482047986,17.104996610221868), ori: -173.47741672772437
+Dead End: (61.288058453514516,12.561203660119348)
+sh.playerFoundObj: player playerID1 found its ball
+ph.teamconnected: playerID1
 RP.teamTilesReceived
 ph.Tiles recieved 'List<Tile>
 starting to merge
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
 trying to merge by barcode
+There was a Exception code 87574
 ___________________
 ori
-coord of merge   0    0
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
 90
 
-dummy               DeadEnd.N           dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               Straight.N.3        dummy               dummy               dummy               dummy               dummy               dummy               
-Corner.N            Corner.S            dummy               dummy               dummy               Corner.E            dummy               dummy               
-T.W                 Straight.E.11       Seesaw.W            Seesaw.E            dummy               Cross.N             dummy               dummy               
-Corner.W            T.N                 Corner.E            dummy               T.N                 Corner.S            dummy               dummy               
-Corner.N            Corner.S            Corner.W            Straight.E.55       T.S                 Corner.E            dummy               dummy               
-T.W                 Straight.E.17       Seesaw.W            Seesaw.E            Straight.E.15       Cross.N             Straight.E          DeadEnd.E.SPECIAL   
-T.W                 Corner.E            dummy               dummy               DeadEnd.W           T.S                 Straight.E.1        DeadEnd.E           
-Straight.N.6        Straight.N          dummy               dummy               dummy               dummy               dummy               dummy               
-coord of merge   0    0
+dummy               DeadEnd.W.SPECIAL   Straight.E          Cross.N             Straight.E          DeadEnd.E           dummy               
+dummy               dummy               dummy               Straight.N.47       dummy               dummy               dummy               
+dummy               DeadEnd.W           Straight.E          Cross.N             Straight.E          DeadEnd.E           dummy               
+dummy               dummy               dummy               Straight.N.47       dummy               dummy               dummy               
+DeadEnd.W           Straight.E.1        Straight.E          T.S                 Straight.E          Straight.E.4        DeadEnd.E           
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+180
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+270
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+___________________
+ori
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+90
+
+dummy               DeadEnd.W.SPECIAL   Straight.E          Cross.N             Straight.E          DeadEnd.E           dummy               
+dummy               dummy               dummy               Straight.N.47       dummy               dummy               dummy               
+dummy               DeadEnd.W           Straight.E          Cross.N             Straight.E          DeadEnd.E           dummy               
+dummy               dummy               dummy               Straight.N.47       dummy               dummy               dummy               
+DeadEnd.W           Straight.E.1        Straight.E          T.S                 Straight.E          Straight.E.4        DeadEnd.E           
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+180
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+270
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+___________________
+ori
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+There was a Exception code 87574
+coord of merge   1    3
 equality found on
 test
 MERGEPOINT HAS BEEN SET
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 96765
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 875674
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 934570
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 348956
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
+There was a Exception code 3258
 Merged
 correctOrient:
 
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               DeadEnd.N.SPECIAL   DeadEnd.N           dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Straight.S.4        dummy               dummy               Straight.S          Straight.S.1        dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Corner.N.START      Cross.S             Corner.E            Corner.N            Cross.S             T.E                 dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               DeadEnd.S           Straight.S.11       T.W                 T.E                 Straight.S.17       DeadEnd.S           dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Seesaw.N            DeadEnd.S           Straight.S.55       Seesaw.N            dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Seesaw.S            Corner.N            Corner.S            Seesaw.S            dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               DeadEnd.W           Straight.W.3        Corner.E            Straight.S.13       T.W                 Corner.E            Straight.N.17       Corner.N            Straight.W          dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Corner.W            T.S                 Corner.S            Corner.W            T.S                 T.S                 Straight.W.6        dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-elimDummys:
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               DeadEnd.W           Straight.W.4        Straight.W          T.N                 dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Straight.S.47       dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               DeadEnd.W           DeadEnd.W           Straight.W          Cross.S             Straight.W          Straight.W.1        DeadEnd.E           dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Straight.S.47       dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               DeadEnd.W.START     Straight.W          Cross.S             Straight.W          DeadEnd.E           dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Straight.S.47       dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               DeadEnd.W           Straight.W.3        Straight.W          T.S                 Straight.W          Straight.W.6.SPECIALDeadEnd.E           dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+resultmap after readmap
 
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               Corner.W            T.S                 Corner.S            Corner.W            T.S                 T.S                 Straight.W.6        dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-DeadEnd.W           Straight.W.3        Corner.E            Straight.S.13       T.W                 Corner.E            Straight.N.17       Corner.N            Straight.W          dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               Seesaw.S            Corner.N            Corner.S            Seesaw.S            dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               Seesaw.N            DeadEnd.S           Straight.S.55       Seesaw.N            dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               DeadEnd.S           Straight.S.11       T.W                 T.E                 Straight.S.17       DeadEnd.S           dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               Corner.N.START      Cross.S             Corner.E            Corner.N            Cross.S             T.E                 dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               Straight.S.4        dummy               dummy               Straight.S          Straight.S.1        dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               DeadEnd.N.SPECIAL   DeadEnd.N           dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-pos in ons coord:8 7
-pos in map:8 7
-adCrosses:
-
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               Corner.W            T.S                 Corner.S            Corner.W            T.S                 T.S                 Straight.W.6        dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-DeadEnd.W           Straight.W.3        Corner.E            Straight.S.13       T.W                 Corner.E            Straight.N.17       Corner.N            Straight.W          dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               Seesaw.S            Corner.N            Corner.S            Seesaw.S            dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               Seesaw.N            DeadEnd.S           Straight.S.55       Seesaw.N            dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               DeadEnd.S           Straight.S.11       T.W                 T.E                 Straight.S.17       DeadEnd.S           dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               Corner.N.START      Cross.S             Corner.E            Corner.N            Cross.S             T.E                 dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               Straight.S.4        dummy               dummy               Straight.S          Straight.S.1        dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               DeadEnd.N.SPECIAL   DeadEnd.N           dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
 READMAP
-0    0    dummy
-0    1    dummy
-0    2    dummy
-0    3    dummy
-0    4    dummy
-0    5    dummy
-0    6    DeadEnd.W
-0    7    dummy
-0    8    dummy
-0    9    dummy
-0    10    dummy
-0    11    dummy
-0    12    dummy
-0    13    dummy
-0    14    dummy
-0    15    dummy
-0    16    dummy
-0    17    dummy
-0    18    dummy
-0    19    dummy
-0    20    dummy
-0    21    dummy
-1    0    dummy
-1    1    dummy
-1    2    dummy
-1    3    dummy
-1    4    dummy
-1    5    dummy
-1    6    Straight.W.3
-1    7    dummy
-1    8    dummy
-1    9    dummy
-1    10    dummy
-1    11    dummy
-1    12    dummy
-1    13    dummy
-1    14    dummy
-1    15    dummy
-1    16    dummy
-1    17    dummy
-1    18    dummy
-1    19    dummy
-1    20    dummy
-1    21    dummy
-2    0    dummy
-2    1    dummy
+Maps merged and imported
 EM.Fixing possible deadlock
-(0,-1)(0,0)(-1,0)
-(0,-1)(0,0)(-1,0)
-Position: (99.80972515950295,110.03602176370967)
-TeamPosition: (99.99999999999999,139.99999999999997)
+No path found...
+No path found...
+No path found...
+No path found...
+No path found...
+EM.Fixing possible deadlock
+(1,-2)(0,-2)(0,-1)(0,0)
+(1,-2)(0,-2)(0,-1)(0,0)
+sh.playerFoundObj: player playerID3 found its ball
+EM.Fixing possible deadlock
+(-2,-3)(-2,-2)(-1,-2)(0,-2)(0,-1)(0,0)
+(-2,-3)(-2,-2)(-1,-2)(0,-2)(0,-1)(0,0)
+EM.Fixing possible deadlock
+(-2,-3)(-2,-2)(-1,-2)(0,-2)(0,-1)(0,0)
+(-2,-3)(-2,-2)(-1,-2)(0,-2)(0,-1)(0,0)
 GEWONNEN
 GEWONNEN!
-sh.GameWon by Team 1
-ph.GameWon by Team 1
+ph.GameWon by Team 0
+sh.GameWon by Team 0
 sh.gameStopped
-sh.playerReady: playerID0
-sh.playerReady: playerID3
 sh.playerReady: playerID2
 sh.playerReady: playerID1
-java.lang.IllegalStateException: Cannot update position when not playing.
-	at peno.htttp.PlayerClient.updatePosition(PlayerClient.java:938)
-	at domain.robots.RobotPilot.updatePosition(RobotPilot.java:619)
-	at domain.robotFunctions.ExploreMaze.updatePosition(ExploreMaze.java:232)
-	at domain.robotFunctions.ExploreMaze.getOutOfWay(ExploreMaze.java:166)
-	at domain.robotFunctions.ExploreMaze.fixDeadlock1(ExploreMaze.java:143)
-	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:98)
-	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:76)
-	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:109)
-	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:76)
-	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:109)
-	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:76)
-	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:109)
-	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:76)
-	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:109)
-	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:76)
-	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:109)
-	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:76)
-	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:109)
-	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:76)
-	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:109)
-	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:76)
-	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:109)
-	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:76)
-	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:109)
-	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:76)
-	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:109)
-	at domain.robotFunctions.ExploreMaze.start(ExploreMaze.java:52)
-	at domain.robots.RobotPilot.startExplore(RobotPilot.java:266)
-	at controller.Controller$3.run(Controller.java:307)
-	at java.lang.Thread.run(Thread.java:680)
+sh.playerReady: playerID0
+sh.playerReady: playerID3
