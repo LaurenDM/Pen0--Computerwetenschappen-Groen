@@ -42,7 +42,10 @@ public abstract class Consumer extends DefaultConsumer {
 		try {
 			getChannel().queueDelete(getQueue());
 		} catch (IOException e) {
+			System.out.println("there was an IOException code 09873254");
+
 		} catch (ShutdownSignalException e) {
+			System.out.println("there was an IOException code 09873254");
 		}
 	}
 

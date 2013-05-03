@@ -163,8 +163,6 @@ public class SimRobotPilot extends RobotPilot {
 		try {
 			Thread.sleep(correctionSleeptime);
 		} catch (InterruptedException e) {
-
-
 		}
 	}
 

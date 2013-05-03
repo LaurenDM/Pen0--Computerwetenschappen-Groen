@@ -379,6 +379,7 @@ public abstract class RobotPilot implements PlayerHandler{
 				// Auto-generated catch block
 				e.printStackTrace();
 			}catch(NullPointerException e){
+				System.out.println("There was a NullPointerException code 8");
 				//Dit wil wss zeggen dat we niet met htttp werken 
 			}
 			driveOverSeeSaw(barcodeNb);
@@ -392,6 +393,8 @@ public abstract class RobotPilot implements PlayerHandler{
 				// Auto-generated catch block
 				e.printStackTrace();
 			}catch(NullPointerException e){
+				System.out.println("There was a NullPointerException code 0896");
+
 				//Dit wil wss zeggen dat we niet met htttp werken 
 			}
 		}
@@ -613,7 +616,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	}
 	
 	public void updatePosition(int x, int y, double angle){
-		if(Controller.interconnected){
+		if(Controller.interconnected&&playerClient.isPlaying()){
 		try {
 			playerClient.updatePosition(x, y, angle);
 			setLastUpdatedPose(x,y,angle);

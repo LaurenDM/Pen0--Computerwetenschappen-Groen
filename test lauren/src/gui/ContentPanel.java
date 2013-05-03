@@ -500,6 +500,8 @@ public class ContentPanel implements ActionListener {
         		
         		}
         		catch(ConnectErrorException e1){
+    				System.out.println("There was a ConnectErrorException code 343458");
+
         		}
         		
         	}
@@ -572,6 +574,9 @@ public class ContentPanel implements ActionListener {
 			controller.reset();
 			drawingPanel.reset();
 			debugText.setText("");
+			buttonPanel.requestFocusInWindow();
+		} else if(e.getSource() == recoverButton){
+			controller.recoverToLastUpdatedPose();
 			buttonPanel.requestFocusInWindow();
 		} else if(e.getSource() == recoverButton){
 			controller.recoverToLastUpdatedPose();

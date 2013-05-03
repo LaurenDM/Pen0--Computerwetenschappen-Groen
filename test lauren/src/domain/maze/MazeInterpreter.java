@@ -151,6 +151,7 @@ public class MazeInterpreter {
 					
 				}
 				} catch (Exception e) {
+					System.out.println("There was an exception code 9843");
 				}
 			}
 		}

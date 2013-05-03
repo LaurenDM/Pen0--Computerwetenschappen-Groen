@@ -95,9 +95,10 @@ public class TestController {
 						meth.invoke(testDriver,doubleArgument);
 					}
 				} catch (IllegalAccessException e) {
-					
+					System.out.println("There was an illegalAccesException, code 239u");
 				} catch (InvocationTargetException e) {
-					
+					System.out.println("There was an InvocationTargetException, code 765u");
+
 				}
 			}
 		}

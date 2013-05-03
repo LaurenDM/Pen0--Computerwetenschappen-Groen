@@ -477,12 +477,18 @@ public class PlayerClient {
 		} catch (IOException e) {
 			throw e;
 		} catch (ShutdownSignalException e) {
+			System.out.println("there was an ShutdownSignalException code 385656");
+
 		} finally {
 			try {
 				// Shut down channel
 				channel.close();
 			} catch (IOException e) {
+				System.out.println("there was an IOException code 46325");
+
 			} catch (ShutdownSignalException e) {
+				System.out.println("there was an ShutdownSignalException code 8769");
+
 			} finally {
 				channel = null;
 			}
@@ -1233,6 +1239,8 @@ public class PlayerClient {
 					heartbeatCheck();
 				}
 			} catch (IOException e) {
+				System.out.println("there was an IOException code 34458");
+
 				// Bail out
 				heartbeatStop();
 			}
@@ -1721,6 +1729,8 @@ public class PlayerClient {
 				// Report success
 				callback.onSuccess(null);
 			} catch (IOException e) {
+				System.out.println("there was an IOException code 8329754");
+
 				callback.onFailure(e);
 			}
 		}
@@ -1731,6 +1741,8 @@ public class PlayerClient {
 				// Disconnect
 				disconnect(DisconnectReason.REJECT);
 			} catch (IOException e) {
+				System.out.println("there was an IOException code 34957021");
+
 				callback.onFailure(e);
 			}
 

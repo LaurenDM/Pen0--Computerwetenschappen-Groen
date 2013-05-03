@@ -109,6 +109,7 @@ public class DrawingPanel extends JPanel {
 			drawWall(w, false);
 			}
 		} catch (Exception e) {
+			System.out.println("there was an exception code 29384");
 			//Gets called if no wall is currently found -> nullpoint expected.
 		}
 		
@@ -374,11 +375,11 @@ public class DrawingPanel extends JPanel {
 			beginOrient = controller.getRobot().getOrientation();
 		}
 		catch(Exception e){
-			
+			System.out.println("there was an exception code 8375669");
 		}
 				
 		try{
-			
+			if(controller.getRobot().getMaze()!=null){
 			controller.getRobot().getPathToFinish();
 			if(controller.getRobot().getPathToFinish()!=null){
 				initPos = controller.getRobot().getPosition();
@@ -456,9 +457,10 @@ public class DrawingPanel extends JPanel {
 					}
 				}
 				}
-		}
+		}}
 		catch(Exception e){
-			
+			System.out.println("there was an exception code 8973245"+e.getCause()+ ", " + e.toString()+", "+e.getClass());
+			e.printStackTrace();
 		}
 		
 	}
@@ -480,7 +482,10 @@ public class DrawingPanel extends JPanel {
 		g.setColor(Color.white);
 		try {
 			g.fillOval((int)ball.getPosition().getX()-5+OFFSET, (int)ball.getPosition().getY()-5+OFFSET, 10, 10);
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			System.out.println("there was an exception code 9873466");
+
+		}
 		
 	}
 	

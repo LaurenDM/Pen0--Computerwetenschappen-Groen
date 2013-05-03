@@ -59,7 +59,7 @@ public class Controller {
 	    }
 		
 		connectNewSimRobot(0, new Position(20,20), playerID);
-		
+//		connectNewBtRobot();
 	}
 	
 	public void htttpImplementation(){
