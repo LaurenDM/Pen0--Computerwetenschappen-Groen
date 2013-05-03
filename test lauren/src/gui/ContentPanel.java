@@ -44,7 +44,7 @@ public class ContentPanel implements ActionListener {
     private JLabel xLabel, yLabel, speedLabel, angleLabel, infraredLabel, lineLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, connectButton, 
     calibrateButton, loadMazeButton, connectionButton,
-    rotateLittleLeft,rotateLittleRight,startButton, finishButton, resumeButton, resetButton, debugButton;
+    rotateLittleLeft,rotateLittleRight,startButton, finishButton, resumeButton, resetButton;
     private static JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
@@ -201,9 +201,6 @@ public class ContentPanel implements ActionListener {
           
         connectionButton = new JButton("OPEN CONNECTION PANEL");
         fixButtonLayout(buttonPanel, connectionButton, wideButtonWidth, allButtonHeight, 0, 4*allButtonHeight+1);
-        
-        debugButton = new JButton("START DEBUG");
-        fixButtonLayout(buttonPanel, debugButton, wideButtonWidth, allButtonHeight, 0, 6*allButtonHeight+1);
         
 //        startButton = new JButton("Start");
 ////        fixButtonLayout(buttonPanel, startButton, 20, 150, 0, 0);
@@ -547,13 +544,6 @@ public class ContentPanel implements ActionListener {
         else if(e.getSource() == connectionButton){
         	connectionFrame.setVisible(true);
         	buttonPanel.requestFocusInWindow();
-        }
-        else if(e.getSource() == debugButton){
-        	try{
-        		controller.throwException();
-        	} catch(Exception exc){
-        		exc.printStackTrace();
-        	}
         }
         else if(e.getSource() == rotateLittleRight){
         	controller.rotateAmount(rotateLittleAmount);

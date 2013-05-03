@@ -17,6 +17,7 @@ import domain.Position.Pose;
 import domain.Position.Position;
 import domain.maze.Ball;
 import domain.maze.Board;
+import domain.maze.Direction;
 import domain.maze.MazeElement;
 import domain.maze.MazeInterpreter;
 import domain.maze.Orientation;
@@ -31,6 +32,7 @@ import domain.robotFunctions.MatchMap;
 import domain.util.TimeStamp;
 
 public abstract class RobotPilot implements PlayerHandler{
+	
 	
 	RobotPolygon robotPolygon;
 	private MoveType movement;
@@ -627,9 +629,18 @@ public abstract class RobotPilot implements PlayerHandler{
 	//ATtention This method is not used for the simrobot, only has an effect on the real robot
 	public abstract void snapPoseToTileMid();
 
-	public double readLongestUltrasonicValue() {
-		// TODO Auto-generated method stub
-		return 0;
+	public boolean detectsCloseRobotAt(Direction dir) {
+		double viewOr=Orientation.getOrientation(this.getOrientation()).getOffset(dir.getOffset()).getAngleToHorizontal();
+		Position snappedRPos=this.getPosition().clone();
+		snappedRPos.snapTo(40, 20, 20);
+		Position wallPos=snappedRPos.getNewRoundPosition(viewOr, 20);
+		if(getWorldSimulator().detectWallAt(wallPos)){
+			return false;
+		}
+		else{
+			return checkRobotSensor(wallPos.getNewRoundPosition(viewOr, 20));
+		}
+		
 	}
 	
 	

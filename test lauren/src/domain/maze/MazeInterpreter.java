@@ -36,11 +36,14 @@ public class MazeInterpreter {
 	
 	public void readMap(String[][] map, Orientation orientation){
 		map = correctOrientation(map, orientation);
-	//	System.out.println(MatchMap.matrixToString(map));
+		System.out.println("correctOrient:");
+		System.out.println(MatchMap.matrixToString(map));
 		map = eliminateDummies(map);
-	//	System.out.println(MatchMap.matrixToString(map));
+		System.out.println("elimDummys:");
+		System.out.println(MatchMap.matrixToString(map));
 		map = addCrosses(map);
-	//	System.out.println(MatchMap.matrixToString(map));
+		System.out.println("adCrosses:");
+		System.out.println(MatchMap.matrixToString(map));
 		firstLine = 0;
 		for(int x = 0; x<map.length; x++){
 			for(int y = 0; y<map[x].length; y++){
@@ -75,7 +78,7 @@ public class MazeInterpreter {
 				}
 			}
 		}
-		String[][] newMap = new String[map.length-firstX][map[0].length-lastY];
+		String[][] newMap = new String[map.length-firstX][lastY];
 		for(int x = 0; x<newMap.length ; x++){
 			for(int y= 0; y<newMap[x].length; y++){
 				newMap[x][y] = map[x+firstX][lastY-y];
@@ -85,26 +88,81 @@ public class MazeInterpreter {
 	}
 	
 	private String[][] addCrosses(String[][] map){
-		//System.out.println("X,Y = " + startX + " " + startY);
-		String[][] newMap = new String[map.length+startX][map[0].length+startY];
-		for(int x=0; x<startX;x++){
+		int ourX=0;
+		int ourY=0;
+		int mapX=0;
+		int mapY=0;
+		List<Barcode> bc = board.getBarcodes();
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map.length; j++) {
+				try {
+				if(map[i][j].split("\\.")[2]!=null){
+					int barcodeNo = Integer.parseInt(map[i][j].split("\\.")[2]);
+					for(Barcode b: bc){
+						if(b.getDecimal()==barcodeNo){
+							ourX = (int)((b.getCenterPosition().getX()-20)/40);
+							ourY = (int)((b.getCenterPosition().getY()-20)/40);
+							mapX = i;
+							mapY = j;
+						}
+					}
+					
+				}
+				} catch (Exception e) {
+				}
+			}
+		}
+		int xOffset = ourX - mapX;
+		int yOffset = ourY - mapY;
+		
+		if(xOffset<0 || yOffset<0){
+			System.out.println("WARNING; offset less than zero! (mazeinterpreter addcrosses)");
+		}
+		
+		System.out.println("pos in ons coord:"+ ourX +" "+ ourY);
+		System.out.println("pos in map:"+ mapX +" "+ mapY);
+		
+		String[][] newMap = new String[map.length+xOffset][map[0].length+yOffset];
+		for(int x=0; x<xOffset;x++){
 			for(int y=0; y<newMap[x].length;y++){
 				newMap[x][y] = "Cross";
 			}
 		}
-		for(int y=0; y<startY; y++){
+		for(int y=0; y<yOffset; y++){
 			for(int x=0; x<newMap.length ; x++){
 				newMap[x][y] = "Cross";
 			}
 		}
-		for(int x = startX; x<newMap.length;x++){
-			for (int y=startY ;y<newMap[x].length; y++){
+		for(int x = xOffset; x<newMap.length;x++){
+			for (int y=yOffset ;y<newMap[x].length; y++){
 				System.out.println("xy = " + x + ", " + y);
-				newMap[x][y] = map[x-startX][y-startY];
+				newMap[x][y] = map[x-xOffset][y-yOffset];
 			}
 		}
 		return newMap;
+
 	}
+	
+//	private String[][] addCrosses(String[][] map){
+//		String[][] newMap = new String[map.length+startX][map[0].length+startY];
+//		for(int x=0; x<startX;x++){
+//			for(int y=0; y<newMap[x].length;y++){
+//				newMap[x][y] = "Cross";
+//			}
+//		}
+//		for(int y=0; y<startY; y++){
+//			for(int x=0; x<newMap.length ; x++){
+//				newMap[x][y] = "Cross";
+//			}
+//		}
+//		for(int x = startX; x<newMap.length;x++){
+//			for (int y=startY ;y<newMap[x].length; y++){
+//				System.out.println("xy = " + x + ", " + y);
+//				newMap[x][y] = map[x-startX][y-startY];
+//			}
+//		}
+//		return newMap;
+//	}
 	
 	public void readFile(String fileLocation){
 	try{

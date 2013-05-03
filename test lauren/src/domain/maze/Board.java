@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import domain.Position.Pose;
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
-import domain.maze.infrared.InfraredBeamer;
+import domain.maze.infrared.RayBeamer;
+import domain.maze.infrared.RobotHybridBeamer;
+import domain.maze.infrared.SeesawIBeamer;
 import domain.robots.RobotPilot;
 
 public class Board {
@@ -21,7 +23,8 @@ public class Board {
 	private HashMap<Position, Seesaw> seesaws;
 	private List<Ball> balls;
 	private HashMap<Integer,Pose> initialPositions;
-	private final List<InfraredBeamer> infraBeamers;
+	private final List<SeesawIBeamer> infraBeamers;
+	private final List<RobotHybridBeamer> hybridBeamers;
 	
 	
 	
@@ -31,7 +34,9 @@ public class Board {
 		seesaws = new HashMap<Position, Seesaw>();
 		balls = new ArrayList<Ball>();
 		initialPositions = new HashMap<Integer,Pose>();
-		infraBeamers= new ArrayList<InfraredBeamer>();
+		infraBeamers= new ArrayList<SeesawIBeamer>();
+		hybridBeamers= new ArrayList<RobotHybridBeamer>();
+
 	}
 	
 	public void addInitialPosition(Pose pos, int nb){
@@ -197,12 +202,21 @@ public class Board {
 		}
 	}
 
-	public List<InfraredBeamer> getInfraredBeamers() {
+	public List<SeesawIBeamer> getInfraredBeamers() {
+		return infraBeamers;
+	}
+	
+	public List<SeesawIBeamer> getHybridBeamers() {
 		return infraBeamers;
 	}
 
-	public void addInfraBeamer(InfraredBeamer infraredBeamer) {
+	
+	public void addInfraBeamer(SeesawIBeamer infraredBeamer) {
 		infraBeamers.add(infraredBeamer);
+	}
+
+	public void addHybridBeamer(RobotHybridBeamer robotHybridBeamer) {
+		hybridBeamers.add(robotHybridBeamer);
 	}
 
 }

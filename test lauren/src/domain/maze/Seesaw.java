@@ -3,7 +3,7 @@ package domain.maze;
 import domain.Position.Position;
 import domain.maze.barcodes.Action;
 import domain.maze.barcodes.Barcode;
-import domain.maze.infrared.InfraredBeamer;
+import domain.maze.infrared.RayBeamer;
 import domain.maze.infrared.SeesawIBeamer;
 import domain.robots.RobotPilot;
 
