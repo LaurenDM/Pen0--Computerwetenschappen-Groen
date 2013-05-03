@@ -427,15 +427,15 @@ public class MatchMap {
 		else 
 			throw new IllegalArgumentException("There was nothing base found to merge on");
 		//FOLLOWED BY MERGING THE SQUARES AND MAKING UP WHERE OUR TEAMMATE IS
-		System.out.println("merged on : "+getOurMaze()[ourStartMergeX][ourStartMergeY]+"   "+ourStartMergeX+"   "+ourStartMergeY);
-		System.out.println("merged on : "+getMergedMaps(getPermutatedDirection())[otherMergePointX][otherMergePointY]+"   "+otherMergePointX+"   "+otherMergePointY);
-		System.out.println(matrixToString(resultMap));
-		System.out.println("______________________________________startmerge________________________________");
-		System.out.println("______________________________________________________________________");
-		System.out.println(matrixToString(getOurMaze()));
-		System.out.println(getPermutatedDirection());
-		System.out.println(matrixToString(getMergedMaps(getPermutatedDirection())));
-		System.out.println("______________________________________________________________________");
+//		System.out.println("merged on : "+getOurMaze()[ourStartMergeX][ourStartMergeY]+"   "+ourStartMergeX+"   "+ourStartMergeY);
+//		System.out.println("merged on : "+getMergedMaps(getPermutatedDirection())[otherMergePointX][otherMergePointY]+"   "+otherMergePointX+"   "+otherMergePointY);
+//		System.out.println(matrixToString(resultMap));
+//		System.out.println("______________________________________startmerge________________________________");
+//		System.out.println("______________________________________________________________________");
+//		System.out.println(matrixToString(getOurMaze()));
+//		System.out.println(getPermutatedDirection());
+//		System.out.println(matrixToString(getMergedMaps(getPermutatedDirection())));
+//		System.out.println("______________________________________________________________________");
 	}
 	private static int startX = 0;
 	private static int startY = 0;
@@ -507,12 +507,12 @@ public class MatchMap {
 		for(int x=0;x<resultMap.length;x++){
 			for(int y=0;y<resultMap[x].length; y++){
 				if(resultMap[x][y].contains(special)){
-					System.out.println("SPECIAL: ("+ x+","+y+")");
+//					System.out.println("SPECIAL: ("+ x+","+y+")");
 					initialPose.setX(x);
 					initialPose.setY(y);
 				}
 				if(resultMap[x][y].contains(start)){
-					System.out.println("START: ("+ x+","+y+")");
+//					System.out.println("START: ("+ x+","+y+")");
 					ourInitialPose.setX(x);
 					ourInitialPose.setY(y);
 				}
@@ -521,7 +521,7 @@ public class MatchMap {
 		initialPose.setX(initialPose.getX()-ourInitialPose.getX());
 		initialPose.setY(initialPose.getY()-ourInitialPose.getY());
 		Permutation perm = getPermutatedDirection();
-		System.out.println("PERM = " + perm);
+//		System.out.println("PERM = " + perm);
 		switch(perm){
 		case ORIGINAL: initialPose.setOrientation(Orientation.EAST); break;
 		case DEGREES_90: initialPose.setOrientation(Orientation.SOUTH); break;
@@ -529,7 +529,7 @@ public class MatchMap {
 		case DEGREES_270: initialPose.setOrientation(Orientation.NORTH); break;
 		default: initialPose.setOrientation(Orientation.EAST); break;
 		}
-		System.out.println("TEAMINITIALPOS: " + initialPose);
+//		System.out.println("TEAMINITIALPOS: " + initialPose);
 	}
 
 	private static String[][] mergeLeftDown(String[][] resultList, String[][] permList) {
