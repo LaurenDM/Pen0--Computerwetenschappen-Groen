@@ -136,7 +136,10 @@ public class MazeInterpreter {
 		for(int x = xOffset; x<newMap.length;x++){
 			for (int y=yOffset ;y<newMap[x].length; y++){
 				System.out.println("xy = " + x + ", " + y);
-				newMap[x][y] = map[x-xOffset][y-yOffset];
+				if(map[x-xOffset][y-yOffset].equals(MatchMap.dummyString))
+					newMap[x][y] = "Cross";
+				else
+					newMap[x][y] = map[x-xOffset][y-yOffset];
 			}
 		}
 		return newMap;
