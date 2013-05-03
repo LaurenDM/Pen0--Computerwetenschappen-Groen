@@ -588,8 +588,11 @@ public class ExploreMaze{
 
 	public void driveOverSeesaw() {
 		if(maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()).isAccessible()){
+			updatePosition((TileNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()),maze.getCurrentRobotOrientation());
 			maze.move();
+			updatePosition((TileNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()),maze.getCurrentRobotOrientation());
 			maze.move();
+			updatePosition((TileNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()),maze.getCurrentRobotOrientation());
 			maze.move();
 			((SeesawNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation().getBack())).setUp(false);
 			System.out.println("The node after the seesaw is "+maze.getCurrentTile());

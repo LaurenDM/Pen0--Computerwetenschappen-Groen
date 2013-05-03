@@ -372,6 +372,7 @@ public abstract class RobotPilot implements PlayerHandler{
 		if (!foundSeesaw.isLocked() && !upAtThisSide) {
 			try {
 				playerClient.lockSeesaw(barcodeNb);
+				System.out.println("SEESAW LOCKED");
 			} catch (IllegalStateException e) {
 				// Auto-generated catch block
 				e.printStackTrace();
@@ -655,7 +656,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	}
 	
 	public boolean hasWon(Position teamPosition){
-		if(teamPosition.getDistance(getPosition())<=40){
+		if(teamPosition.getDistance(getPosition())<=45){
 			double angle = getPosition().getAngleTo(teamPosition);
 			if(detectPartnerAtAngle(angle)){
 				return true;
