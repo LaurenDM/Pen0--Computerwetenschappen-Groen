@@ -164,6 +164,9 @@ public class Position implements Cloneable {
 		Pose relativeStart = new Pose(0,0,MazeGraph.getInitialOrientation());
 		Position newPos = relativeStart.getNewPosition(xOrient.getAngleToHorizontal(), deltaX);
 		newPos = newPos.getNewPosition(xOrient.getOffset(-1).getAngleToHorizontal(), deltaY);
+//		System.out.println("ABSOLUTE: "+ absolutePose);
+//		System.out.println("INITIAL: " + initialPose);
+//		System.out.println("RELATIVE: " + new Pose(newPos, Orientation.EAST));
 		return new Pose(newPos, Orientation.EAST);
 	}
 	
