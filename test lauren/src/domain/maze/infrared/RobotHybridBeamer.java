@@ -6,11 +6,12 @@ import domain.maze.Seesaw;
 import domain.robots.RobotPilot;
 import domain.util.Geometrics;
 
-public class RobotHybridBeamer extends InfraredBeamer {
+public class RobotHybridBeamer extends RayBeamer {
 	private final int reach=80;
 	private domain.robots.RobotPilot robot;
 	public RobotHybridBeamer(RobotPilot robot){
 		super(robot.getWorldSimulator().getBoard());
+		simWorldBoard.addHybridBeamer(this);
 		this.robot=robot;
 	}
 	@Override

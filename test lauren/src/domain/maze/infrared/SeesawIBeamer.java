@@ -5,11 +5,12 @@ import domain.maze.Board;
 import domain.maze.Orientation;
 import domain.maze.Seesaw;
 
-public class SeesawIBeamer extends InfraredBeamer{
+public class SeesawIBeamer extends RayBeamer{
 	private final int reach=150;
 	private final Seesaw seesaw;
 	public SeesawIBeamer(Seesaw seesaw, Board simWorldBoard){
 		super(simWorldBoard);
+		simWorldBoard.addInfraBeamer(this);
 		this.seesaw=seesaw;
 	}
 	@Override

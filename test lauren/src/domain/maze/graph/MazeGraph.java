@@ -253,12 +253,13 @@ public class MazeGraph {
 	 * Make a new TileNode at the given orientation relative to the robot's current orientation.
 	 * @param orientation
 	 */
-	public void generateTileNodeAt(Orientation orientation){
+	public TileNode generateTileNodeAt(Orientation orientation){
 		Orientation absoluteOrientation = getCurrentRobotOrientation().getRelativeOrientation(orientation);
-		generateTileNodeAt(getCurrentTile(), absoluteOrientation);
+		return generateTileNodeAt(getCurrentTile(), absoluteOrientation);
+		
 	}
 	
-	private void generateTileNodeAt(TileNode tile, Orientation orientation){
+	private TileNode generateTileNodeAt(TileNode tile, Orientation orientation){
 		Orientation absoluteOrientation = orientation;
 		Orientation orientationToCurrent = absoluteOrientation.getBack();
 		TileNode newNode = new TileNode(tile,orientationToCurrent);
@@ -308,6 +309,7 @@ public class MazeGraph {
 			tile.setNodeAt(absoluteOrientation, newNode);
 			tileNodes.add(newNode);
 		}
+		return newNode;
 	}
 	
 	private TileNode getTileNodeAt(int x, int y){

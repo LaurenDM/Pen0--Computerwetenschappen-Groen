@@ -12,13 +12,12 @@ import domain.util.Geometrics;
  * @author duvimint
  *
  */
-public abstract class InfraredBeamer extends MazeElement{
+public abstract class RayBeamer extends MazeElement{
 	private int standardBeamAngle=150;
 	protected final Board simWorldBoard;
 
-	public InfraredBeamer(Board simWorldBoard){
+	public RayBeamer(Board simWorldBoard){
 		this.simWorldBoard=simWorldBoard;
-		simWorldBoard.addInfraBeamer(this);
 	}
 	protected abstract int getReach();
 	protected int getBeamAngle(){
