@@ -912,7 +912,7 @@ public class ContentPanel implements ActionListener {
 	    }
 	
 	public void automaticConnection(){
-		controller.readMazeFromFile("test lauren/mazes/KoenBug");
+		controller.readMazeFromFile("mazes/KoenBug");
     	drawingPanel.drawSimulatedWalls();
     	try {
 			Thread.sleep(5000);
