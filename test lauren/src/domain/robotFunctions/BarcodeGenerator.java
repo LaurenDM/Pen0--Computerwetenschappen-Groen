@@ -38,13 +38,14 @@ public class BarcodeGenerator {
 		try {
 			robot.move(0.5);
 		} catch (CannotMoveException e1) {
-			// nietsdoene
+			System.out.println("There was a CannotMoveException code 8754");
 		}
 		int[] bits = new int[32];
 		for(int i = 0; i<32; i++){
 			try {
 				robot.move(0.5);
 			} catch (CannotMoveException e) {
+				System.out.println("There was a CannotMoveException code 2341");
 
 			}
 			if(robot.detectBlackLine()){

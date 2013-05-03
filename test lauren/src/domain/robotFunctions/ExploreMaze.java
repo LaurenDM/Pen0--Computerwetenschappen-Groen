@@ -481,7 +481,11 @@ public class ExploreMaze{
 			try {
 				robot.move(-distanceBlocks/2);
 				System.out.println("Bumped, recovering.");
-			} catch (CannotMoveException e1) {}
+			} catch (CannotMoveException e1) {
+				
+				System.out.println("There was a CannotMoveException code 27334");
+
+			}
 			maze.recoverFromBump();
 		}
 	}

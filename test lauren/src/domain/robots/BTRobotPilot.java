@@ -33,12 +33,12 @@ public class BTRobotPilot extends RobotPilot  {
 	private  final float wheelsDiameter = 5.43F;
 	//	private static final float wheelDiameterLeft = 5.43F;
 	//	private static final float wheelDiameterRight = 5.43F;
-	private  final float trackWidth = 16.43F;
+	private  final float trackWidth = 16.9F;
 	private int prevLightValue;
 	private int prevUltrasonicValue;
 	private int prevIRValue;
 	private int prevSensorAngle;
-	private String bluetoothAdress="00:16:53:05:40:4c";
+	private String bluetoothAdress="00:16:53:05:40:4C";
 	private final BTCommPC btComm;	
 
 
@@ -326,6 +326,7 @@ public class BTRobotPilot extends RobotPilot  {
 		try {
 			forward();
 		} catch (CannotMoveException e) {
+			System.out.println("There was a Exception code 8758");
 			turnRight();
 		}
 		while(!found){

@@ -157,7 +157,7 @@ public class BTCommPC  implements SpecialReplyCode {
 								.println("Something has gone wrong, we forcibly denied a send request and alarmed a waitingObject");
 					}
 				} catch (InterruptedException e) {
-					return null;
+					System.out.println("interrupted exception:"+ e.getMessage());
 				}
 
 			}//TODO tot hier mss wegdoen
@@ -186,7 +186,7 @@ public class BTCommPC  implements SpecialReplyCode {
 					synchronized (waitObjectQueue) {
 						waitObjectQueue.remove(thisThreadsWaitObject);
 					}
-					return null;
+					System.out.println("There was an interrupt code 125i(random code Xp)");
 				}
 			}
 
@@ -230,7 +230,7 @@ public class BTCommPC  implements SpecialReplyCode {
 							try {
 								Thread.sleep(100);
 							} catch (InterruptedException e) {
-								break;
+								System.out.println("There was an interrupt exception, code 987e");
 							}
 							//TODO isMoving aanmaken in robot
 							robot.getOrientation();

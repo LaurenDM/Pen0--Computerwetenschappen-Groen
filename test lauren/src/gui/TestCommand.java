@@ -124,6 +124,8 @@ public enum TestCommand
         catch (Exception e)
         {
             l.exception(e);
+			System.out.println("there was an exception code 098754");
+
         }
     }
     

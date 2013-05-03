@@ -466,7 +466,11 @@ public class MatchMap {
 				try {
 					if(!originList[a][b].equals(dummyString) || !originList[a][b].equals(""))
 					resultList[i][j] = originList[a][b];
-				} catch (Exception e) {}
+				} catch (Exception e) {
+					
+					System.out.println("There was a Exception code 96765");
+
+				}
 				b++;
 			}
 			b = 0;
@@ -539,7 +543,9 @@ public class MatchMap {
 					if(permList[permX][permY].contains(special) && !resultList[i][j].contains(special)){
 						resultList[i][j] = resultList[i][j] + "." + special;
 					}
-				} catch (Exception e) {}
+				} catch (Exception e) {
+					System.out.println("There was a Exception code 3258");
+				}
 				
 				permY--;
 			}
@@ -595,7 +601,11 @@ public class MatchMap {
 					if(permList[permX][permY].contains(special) && !resultList[i][j].contains(special)){
 						resultList[i][j] = resultList[i][j] + "." + special;
 					}
-				} catch (Exception e) {}
+				} catch (Exception e) {
+					
+					System.out.println("There was a Exception code 348956");
+
+				}
 				permY--;
 			}
 			permY = otherMergePointY;
@@ -640,7 +650,11 @@ public class MatchMap {
 					if(permList[permX][permY].contains(special) && !resultList[i][j].contains(special)){
 						resultList[i][j] = resultList[i][j] + "." + special;
 					}
-				} catch (Exception e) {}
+				} catch (Exception e) {
+					
+					System.out.println("There was a Exception code 934570");
+
+				}
 				permY++;
 			}
 			permY = otherMergePointY;
@@ -689,7 +703,11 @@ public class MatchMap {
 					if(permList[permX][permY].contains(special) && !resultList[i][j].contains(special)){
 						resultList[i][j] = resultList[i][j] + "." + special;
 					}
-				} catch (Exception e) {	}
+				} catch (Exception e) {
+					
+					System.out.println("There was a Exception code 875674");
+
+				}
 				permY++;
 			}
 			permY = otherMergePointY;
@@ -738,6 +756,7 @@ public class MatchMap {
 						newList[i][j] = resultList[i][j];
 					} catch (Exception e) {
 						newList[i][j] = dummyString;
+						System.out.println("There was a Exception code 674732");
 					}
 					
 				}
@@ -778,6 +797,7 @@ public class MatchMap {
 						newList[i][j] = resultList[i][j];
 					} catch (Exception e) {
 						newList[i][j] = dummyString;
+						System.out.println("There was a Exception code 98686");
 					}
 					
 				}
@@ -794,6 +814,8 @@ public class MatchMap {
 						newList[i][j] = resultList[i][j];
 					} catch (Exception e) {
 						newList[i][j] = dummyString;
+						System.out.println("There was a Exception code 67543");
+
 					}
 				}
 			}
@@ -841,7 +863,7 @@ public class MatchMap {
 						i = getOurMaze().length;
 					}
 					} catch (Exception e) {
-						// TODO: handle exception
+						System.out.println("There was a Exception code 764653");
 					}
 					
 			}
@@ -909,7 +931,11 @@ public class MatchMap {
 					}
 						
 					}
-				} catch (Exception e) {}
+				} catch (Exception e) {
+					
+					System.out.println("There was a Exception code 347554");
+
+				}
 			}
 		}
 		return false;
@@ -941,7 +967,10 @@ public class MatchMap {
 			else
 				return -1;
 		} catch (Exception e) {
+			System.out.println("There was a Exception code 987534");
+
 			return 0;
+
 		}
 		return -1;
 	}
@@ -1057,6 +1086,8 @@ public class MatchMap {
 		try {
 			return Integer.parseInt(parsedString[2]);
 		} catch (Exception e) {
+			System.out.println("There was a Exception code 87574");
+
 			return 0;
 		}
 		

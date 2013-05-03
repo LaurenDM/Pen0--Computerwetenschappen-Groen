@@ -38,21 +38,62 @@ public class MazeInterpreter {
 		map = correctOrientation(map, orientation);
 		System.out.println("correctOrient:");
 		System.out.println(MatchMap.matrixToString(map));
-		map = eliminateDummies(map);
-		System.out.println("elimDummys:");
-		System.out.println(MatchMap.matrixToString(map));
-		map = addCrosses(map);
-		System.out.println("adCrosses:");
+		//map = eliminateDummies(map);
+		//System.out.println("elimDummys:");
+		//System.out.println(MatchMap.matrixToString(map));
+		//map = addCrosses(map);
+		//System.out.println("adCrosses:");
+		//System.out.println(MatchMap.matrixToString(map));
+		map = fixEntireMap(map);
+		System.out.println("resultmap after readmap");
 		System.out.println(MatchMap.matrixToString(map));
 		firstLine = 0;
 		System.out.println("READMAP");
 		for(int x = 0; x<map.length; x++){
 			for(int y = 0; y<map[x].length; y++){
 				readCommand(map[x][y], x, y);
-				System.out.println(x + "    " + y + "    " + map[x][y]);
 			}
 		}
 	}
+	
+	public String[][] fixEntireMap(String[][] map){
+		//Cut the column length
+		int startXPos = 0;
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[0].length; j++) {
+				if(! map[i][j].equals(MatchMap.dummyString)){
+					startXPos = j;
+				}
+				j = map[0].length;
+				i = map.length;
+			}
+		}
+		int startYPos = 0;
+		//Get the row heigth
+		for (int i = 0; i < map[0].length; i++) {
+			for (int j = 0; j < map.length; j++) {
+				if(! map[i][j].equals(MatchMap.dummyString)){
+					startYPos = j;
+				}
+				j = map.length;
+				i = map[0].length;
+			}
+		}
+		String[][] resultList = new String[map.length-startXPos][map[0].length-startYPos];
+		int x = 0;
+		int y = 0;
+		for (int i = startXPos; i < resultList.length; i++) {
+			for (int j = startYPos; j < resultList[0].length; j++) {
+				System.out.println("merging : "+map[startXPos][startYPos]);
+					resultList[x][y] = map[startXPos][startYPos];
+				y++;
+			}
+			y = 0;
+			x++;
+		}
+		return resultList;
+	}
+	
 	
 	private String[][] correctOrientation(String[][] map,Orientation orientation){
 		switch(orientation){
@@ -110,6 +151,7 @@ public class MazeInterpreter {
 					
 				}
 				} catch (Exception e) {
+					System.out.println("There was an exception code 9843");
 				}
 			}
 		}

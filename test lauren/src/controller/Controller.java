@@ -59,7 +59,7 @@ public class Controller {
 	    }
 		
 		connectNewSimRobot(0, new Position(20,20), playerID);
-		
+//		connectNewBtRobot();
 	}
 	
 	public void htttpImplementation(){
@@ -357,7 +357,14 @@ public class Controller {
 
 
 	public void autoCalibrateLight() {
-		currentRobot.autoCalibrateLight();}
+		currentRobot.autoCalibrateLight();
+	}
+	
+	public void recoverToLastUpdatedPose(){
+		cancel();
+		currentRobot.recoverToLastUpdatedPose();
+		resumeExplore();
+	}
 	
 //	public void disableError() {
 //		otherRobots.get(1).setPose(3, 100, 100); 
