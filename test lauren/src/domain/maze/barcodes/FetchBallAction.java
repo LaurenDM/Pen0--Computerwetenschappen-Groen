@@ -12,7 +12,6 @@ public class FetchBallAction implements Action {
 		robot.setTeamNumber(getTeamNumber());
 		robot.fetchBall();
 		robot.foundBall();
-		Controller.setStopped(true);
 	}
 	
 	private int getTeamNumber() {

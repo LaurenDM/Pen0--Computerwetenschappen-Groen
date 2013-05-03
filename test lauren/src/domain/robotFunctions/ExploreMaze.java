@@ -84,6 +84,10 @@ public class ExploreMaze{
 		continueExploring(0,0,o);
 	}
 	
+	public void setInterrupted(boolean interrupted){
+		this.interrupted = interrupted;
+	}
+	
 	private void continueExploring(int x, int y, Orientation o){
 		maze.continueExploring(x,y,o);
 		while(!maze.isComplete() && !Controller.isStopped() && !interrupted){
@@ -212,9 +216,10 @@ public class ExploreMaze{
 				node = (TileNode) node.getNodeAt(o);
 				Pose relativePose = new Pose(node.getX()*40.0,node.getY()*40.0,maze.getCurrentRobotOrientation());
 				Position pos = Position.getAbsolutePose(robot.getInitialPosition(), relativePose);	
-				node.setAccessible(!robot.checkRobotSensor(pos));
+				if(!SeesawNode.class.isAssignableFrom(node.getClass()))
+						node.setAccessible(!robot.checkRobotSensor(pos));
+				}
 			}
-		}
 		}
 	}
 	
@@ -602,8 +607,10 @@ public class ExploreMaze{
 	} //TODO oproepen
 
 	public void setPartnerPosition(int partnerX, int partnerY) {
+		ContentPanel.writeToDebug("Partner at (" + partnerX + "," + partnerY + ")");
 		maze.setPartnerPosition(partnerX, partnerY);
 	}
+	
 
 	public Position findMostNegativePosition() {
 		int minX = 0;

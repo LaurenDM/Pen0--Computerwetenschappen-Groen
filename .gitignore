@@ -6,3 +6,8 @@ bin/
 #ignore the '.classpath' file, doesn't matter in which folder is resides
 .classpath
 
+#ignore output files
+output0.txt
+output1.txt
+output2.txt
+output3.txt

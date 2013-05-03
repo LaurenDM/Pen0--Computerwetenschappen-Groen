@@ -152,6 +152,21 @@ public class Position implements Cloneable {
 		// Indien niet moeten lijnen 145 en 146 veranderd worden
 	}
 	
+	public static Pose getRelativePose(Pose initialPose, Pose absolutePose){
+		if(initialPose == null){
+			return absolutePose;
+		}
+		Orientation startOrient = initialPose.getOrientation();
+		int offset = startOrient.getOffsetTo(MazeGraph.getInitialOrientation());
+		Orientation xOrient = MazeGraph.getInitialOrientation().getOffset(offset);
+		double deltaY = initialPose.getY()-absolutePose.getY();
+		double deltaX = initialPose.getX()-absolutePose.getX();
+		Pose relativeStart = new Pose(0,0,MazeGraph.getInitialOrientation());
+		Position newPos = relativeStart.getNewPosition(xOrient.getAngleToHorizontal(), deltaX);
+		newPos = newPos.getNewPosition(xOrient.getOffset(-1).getAngleToHorizontal(), deltaY);
+		return new Pose(newPos, Orientation.EAST);
+	}
+	
 	
 	
 }

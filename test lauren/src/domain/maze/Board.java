@@ -40,13 +40,13 @@ public class Board {
 	}
 	
 	public Pose getInitialPositionFromPlayer(int nb){
-		System.out.println("-----------------");
-		System.out.println("inpos");
-		for(int i =0; i<4; i++){
-			if(initialPositions.get(i)!=null)
-			System.out.println(initialPositions.get(i));			
-		}
-		System.out.println("-----------------");
+//		System.out.println("-----------------");
+//		System.out.println("inpos");
+//		for(int i =0; i<4; i++){
+//			if(initialPositions.get(i)!=null)
+//			System.out.println(initialPositions.get(i));			
+//		}
+//		System.out.println("-----------------");
 		return initialPositions.get(nb);
 	}
 	

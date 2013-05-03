@@ -178,7 +178,11 @@ public class MazeGraph {
 		//If we're driving towards our teammate we'll only consider paths to their location.
 		//If not all unexpanded tiles are added to the list.
 		if(drivingToPartner){
-			unexpanded.add(getFinishNode());
+			//System.out.println("DRIVING TO PARTNER");
+			for(Orientation o : Orientation.values()){
+				if(getFinishNode().getNodeAt(o).isAccessible())
+					unexpanded.add((TileNode) getFinishNode().getNodeAt(o));
+			}
 		} else {
 			for(TileNode node : tileNodes){
 				if(!node.isFullyExpanded()){

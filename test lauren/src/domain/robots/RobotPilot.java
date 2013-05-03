@@ -428,10 +428,9 @@ public abstract class RobotPilot implements PlayerHandler{
 	public ArrayList<peno.htttp.Tile> getFoundTilesList(){
 		ArrayList<domain.maze.graph.TileNode> foundTiles = getMaze().getFoundTilesList();
 		ArrayList<peno.htttp.Tile> returnList = new ArrayList<peno.htttp.Tile>();
-		Position pos = getMaze().findMostNegativePosition();
 		for(domain.maze.graph.TileNode node : foundTiles){
 			if(node.isFullyExpanded()){
-				returnList.add(new Tile(node.getX()-(int)pos.getX(), node.getY()-(int)pos.getY(), node.getToken()));
+				returnList.add(new Tile(node.getX(), node.getY(), node.getToken()));
 			}
 		}
 		return returnList;
@@ -515,25 +514,46 @@ public abstract class RobotPilot implements PlayerHandler{
 			e.printStackTrace();
 		}
 	}
+	
+	private MatchMap matcher;
+	private List<Tile> teamTiles;
+	private boolean merged = false;
 
 	@Override
 	public void teamTilesReceived(List<Tile> tiles) {
 		System.out.println("RP.teamTilesReceived");
 		printMessage("ph.Tiles recieved 'List<Tile>");
-		MatchMap matcher = new MatchMap();
+		this.teamTiles = tiles;
+		mergeMazes();
+	}
+	
+	public void mergeMazes(){
+		matcher = new MatchMap();
 		List<Tile> ourTiles = getFoundTilesList();
 		// TODO: koen, methodes in MatchMap niet meer static maken
-		matcher.setOurMazeTiles(ourTiles.toArray(new Tile[ourTiles.size()]));
-		matcher.setOriginalTiles(tiles.toArray(new Tile[tiles.size()]));
+		matcher.setOurMazeTiles(ourTiles);
+		matcher.setOriginalTiles(teamTiles);
 		matcher.merge();
 		System.out.println("Merged");
+		merged = true;
 		MazeInterpreter MI = new MazeInterpreter(board);
 		Orientation orientation = this.getInitialPosition().getOrientation();
 		MI.readMap(matcher.getResultMap(), orientation);
 		//maze.updateWithMap(matcher.getResultMap());
-		//int partnerX = 0; int partnerY = 0; //TODO update to code retrieving actual location tile
-		//maze.setPartnerPosition(partnerX, partnerY);
-		System.out.println("Maps merged and imported");
+		System.out.println("Maps merged and imported");		
+	}
+	
+	private Pose teamInitialPose;
+	
+	private Pose getTeamInitialPose(){
+		if(teamInitialPose == null){
+			Pose initial = matcher.getInitialPosition();
+			initial.setX(initial.getX()*40); initial.setY(initial.getY()*40);
+			//System.out.println("RELATIVE TEAM INITAL = " + initial);
+			//System.out.println("STARTPOS = " + getInitialPosition());
+			teamInitialPose = Position.getAbsolutePose(getInitialPosition(), initial);
+		}
+		return teamInitialPose;
 	}
 	
 	private void printMessage(String message){
@@ -543,16 +563,43 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	@Override
 	public void gameWon(int teamNumber) {
-		//printMessage("ph.GameWon by Team " + teamNumber);
+		printMessage("ph.GameWon by Team " + teamNumber);
+		Controller.setStopped(true);
 	}
 
 	@Override
 	public void teamPosition(long x, long y, double angle) {
-		printMessage("ph.teamPosition: (" + x + "," + y +")");
-	//	int partnerX = (int)x/40; int partnerY = (int)y/40; 
-		maze.setPartnerPosition((int) x, (int) y);
-		//TODO update to code retrieving actual location tile
-
+		if(merged){
+		//System.out.println("ph.teamPosition: (" + x + "," + y +")");
+		//printMessage("ph.teamPosition: (" + x + "," + y +")");
+		Pose relativePose = new Pose(40*x,40*y,Orientation.getOrientation(angle));
+		//System.out.println("relative: " + relativePose);
+		//System.out.println("initial: " + getTeamInitialPose());
+		Pose absolutePose = Position.getAbsolutePose(getTeamInitialPose(), relativePose);
+		//System.out.println("absolute: " + absolutePose);
+		relativePose = Position.getRelativePose(getInitialPosition(), absolutePose);
+		maze.setPartnerPosition((int) relativePose.getX()/40, (int) relativePose.getY()/40);
+		Position teamPosition = absolutePose.getPosition();
+		if(teamPosition.getDistance(getPosition())<50){
+			won();
+		}
+		}
+	}
+	
+	private void won(){
+		System.out.println("GEWONNEN");
+		printMessage("GEWONNEN!");
+		try {
+			playerClient.win();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		maze.setInterrupted(true);
+		Controller.setStopped(true);
 	}
 	
 	public void setReady(boolean ready) {

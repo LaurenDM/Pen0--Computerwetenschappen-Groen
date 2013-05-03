@@ -22,5 +22,14 @@ public class Pose extends Position {
 	public Orientation getOrientation(){
 		return this.orientation;
 	}
+	
+	public void setOrientation(Orientation orient){
+		this.orientation = orient;
+	}
+	
+	@Override
+	public String toString(){
+		return "(" + getX() + "," + getY() + ")" + orientation.toString();
+	}
 
 }

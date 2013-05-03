@@ -49,10 +49,20 @@ public class SeesawNode extends TileNode {
 			pairedSeesawNode.setUp(!up);
 		}
 		if(up){
+			System.out.println("SEESAW SETUP");
 			setBlockNavigationCount(5);
 		} else {
 			setBlockNavigationCount(0);
 		}
+	}
+	
+	@Override
+	public void decreaseBlockNavigationCount() {
+		System.out.println("DECREASEBLOCKCOUNT SEESAW");
+		if(getBlockNavigationCount()>0){
+			setBlockNavigationCount(getBlockNavigationCount()-1);
+		}
+		System.out.println("BLOCKCOUNT = " + getBlockNavigationCount());
 	}
 
 	/**
@@ -76,7 +86,10 @@ public class SeesawNode extends TileNode {
 	 */
 	@Override
 	public boolean isAccessible() {
-		return !isUp()||getBlockNavigationCount()==0;
+		if(!isUp() || getBlockNavigationCount()==0){
+			System.out.println("SEESAW = ACCESSIBLE");
+		}
+		return !isUp() || getBlockNavigationCount()==0;
 	}
 	
 	public SeesawNode getPairedNode(){

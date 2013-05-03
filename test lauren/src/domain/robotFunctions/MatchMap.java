@@ -1,6 +1,12 @@
 package domain.robotFunctions;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import domain.Position.Pose;
+import domain.Position.Position;
 import domain.maze.*;
+import domain.maze.graph.TileNode;
 import peno.htttp.Tile;
 
 public class MatchMap {
@@ -29,8 +35,8 @@ public class MatchMap {
 		_tileList[2] = _tile4;
 		_tileList[3] = _tile7;
 		_tileList[4] = _tile8;
-		setOurMazeTiles(tileList);
-		setOriginalTiles(_tileList);
+		setOurMazeTiles(new ArrayList<Tile>(Arrays.asList(tileList)));
+		setOriginalTiles(new ArrayList<Tile>(Arrays.asList(_tileList)));
 		merge();
 		
     }
@@ -40,6 +46,9 @@ public class MatchMap {
 		ORIGINAL,DEGREES_90,DEGREES_180,DEGREES_270;
 		
 	}
+	
+	private final static String special = "SPECIAL";
+	private final static String start = "START";
 
 	
 	private final static String regex = "[.]";
@@ -109,7 +118,9 @@ public class MatchMap {
 		ourMaze = newMaze;
 		setOurBarcodes();
 	}
-	public static void setOurMazeTiles(Tile[] tiles){
+	public static void setOurMazeTiles(List<Tile> tileList){
+		tileList = shiftTiles(tileList,start);
+		Tile[] tiles = tileList.toArray(new Tile[tileList.size()]);
 		int maxX = 0;
 		int maxY = 0;
 		for (Tile tile : tiles) {
@@ -225,7 +236,9 @@ public class MatchMap {
 	//___________________________________________
 	//SETS ALL THE PERMUTATIONS
 	//___________________________________________
-	public static void setOriginalTiles(Tile[] tiles) {
+	public static void setOriginalTiles(List<Tile> tileList) {
+		tileList = shiftTiles(tileList,special);
+		Tile[] tiles = tileList.toArray(new Tile[tileList.size()]);
 		int maxX = 0;
 		int maxY = 0;
 		for (Tile tile : tiles) {
@@ -432,6 +445,7 @@ public class MatchMap {
 			b = 0;
 			a++;
 		}
+		
 //		System.out.println("firstStart");
 //		System.out.println(matrixToString(resultList));
 		resultList = mergeRightUp(resultList,permList);
@@ -447,8 +461,46 @@ public class MatchMap {
 //		System.out.println("firstStart left down");
 //		System.out.println(matrixToString(resultList));
 		setResultMap(resultList);
+		setInitialPosition();
 	}
 	
+	private static Pose initialPose;
+	
+	public static Pose getInitialPosition(){
+		return initialPose;
+	}
+	
+	private static void setInitialPosition() {
+		initialPose = new Pose(0,0,Orientation.EAST);
+		Pose ourInitialPose = new Pose(0,0,Orientation.EAST);
+		for(int x=0;x<resultMap.length;x++){
+			for(int y=0;y<resultMap[x].length; y++){
+				if(resultMap[x][y].contains(special)){
+					System.out.println("SPECIAL: ("+ x+","+y+")");
+					initialPose.setX(x);
+					initialPose.setY(y);
+				}
+				if(resultMap[x][y].contains(start)){
+					System.out.println("START: ("+ x+","+y+")");
+					ourInitialPose.setX(x);
+					ourInitialPose.setY(y);
+				}
+			}
+		}
+		initialPose.setX(initialPose.getX()-ourInitialPose.getX());
+		initialPose.setY(initialPose.getY()-ourInitialPose.getY());
+		Permutation perm = getPermutatedDirection();
+		System.out.println("PERM = " + perm);
+		switch(perm){
+		case ORIGINAL: initialPose.setOrientation(Orientation.EAST); break;
+		case DEGREES_90: initialPose.setOrientation(Orientation.SOUTH); break;
+		case DEGREES_180: initialPose.setOrientation(Orientation.WEST); break;
+		case DEGREES_270: initialPose.setOrientation(Orientation.NORTH); break;
+		default: initialPose.setOrientation(Orientation.EAST); break;
+		}
+		System.out.println("TEAMINITIALPOS: " + initialPose);
+	}
+
 	private static String[][] mergeLeftDown(String[][] resultList, String[][] permList) {
 		int permX = otherMergePointX;
 		int permY = otherMergePointY;
@@ -456,7 +508,10 @@ public class MatchMap {
 			for (int j = startY  + ourStartMergeY; j >= 0; j--) {
 				try {
 					if(resultList[i][j].equals(dummyString) && ! permList[permX][permY].equals(dummyString))
-					resultList[i][j] = permList[permX][permY];
+						resultList[i][j] = permList[permX][permY];
+					if(permList[permX][permY].contains(special) && !resultList[i][j].contains(special)){
+						resultList[i][j] = resultList[i][j] + "." + special;
+					}
 				} catch (Exception e) {}
 				
 				permY--;
@@ -509,7 +564,10 @@ public class MatchMap {
 			for (int j = startY + ourStartMergeY; j >= 0; j--) {
 				try {
 					if(resultList[i][j].equals(dummyString) && ! permList[permX][permY].equals(dummyString))
-					resultList[i][j] = permList[permX][permY];
+						resultList[i][j] = permList[permX][permY];
+					if(permList[permX][permY].contains(special) && !resultList[i][j].contains(special)){
+						resultList[i][j] = resultList[i][j] + "." + special;
+					}
 				} catch (Exception e) {}
 				permY--;
 			}
@@ -551,7 +609,10 @@ public class MatchMap {
 			for (int j = startY + ourStartMergeY; j < resultList[0].length; j++) {
 				try {
 					if(resultList[i][j].equals(dummyString) && ! permList[permX][permY].equals(dummyString))
-					resultList[i][j] = permList[permX][permY];
+						resultList[i][j] = permList[permX][permY];
+					if(permList[permX][permY].contains(special) && !resultList[i][j].contains(special)){
+						resultList[i][j] = resultList[i][j] + "." + special;
+					}
 				} catch (Exception e) {}
 				permY++;
 			}
@@ -597,7 +658,10 @@ public class MatchMap {
 			for (int j = startY + ourStartMergeY; j < resultList[0].length; j++) {
 				try {
 					if(resultList[i][j].equals(dummyString) && ! permList[permX][permY].equals(dummyString))
-					resultList[i][j] = permList[permX][permY];
+						resultList[i][j] = permList[permX][permY];
+					if(permList[permX][permY].contains(special) && !resultList[i][j].contains(special)){
+						resultList[i][j] = resultList[i][j] + "." + special;
+					}
 				} catch (Exception e) {
 					System.out.println("catched on x "+i+"   y "+j);
 				}
@@ -975,8 +1039,9 @@ public class MatchMap {
 	}
 	
 	//TODO
-	private static int[] convertCoordinate(int x, int y){
+	public static int[] convertCoordinate(int x, int y){
 		Permutation perm = getPermutatedDirection();
+		System.out.println("Permutation: " + perm);
 		switch (perm) {
 		case ORIGINAL:
 			return getOriginalVector(x,y);
@@ -1037,5 +1102,32 @@ public class MatchMap {
 	//___________________________________________
 	//END BASIC UTILS
 	//___________________________________________
+	
+	public static Position findMostNegativePosition(List<Tile> tiles) {
+		int minX = 0;
+		int minY = 0;
+		for(Tile t : tiles){
+			if(t.getX()<minX){
+				minX= (int) t.getX();
+			}
+			if(t.getY()<minY){
+				minY=(int) t.getY();
+			}
+		}
+		return new Position(minX,minY);
+	}
+	
+	public static List<Tile> shiftTiles(List<Tile> tiles, String init){
+		Position pos = findMostNegativePosition(tiles);
+		List<Tile> shiftedTiles = new ArrayList<Tile>();
+		for(Tile tile : tiles){
+			String token = tile.getToken();
+			if(tile.getX()==0 && tile.getY()==0){
+				token = token + "." + init;
+			}
+			shiftedTiles.add(new Tile((long) (tile.getX()-pos.getX()),(long) (tile.getY()-pos.getY()),token)); 
+		}
+		return shiftedTiles;
+	}
 	
 }
