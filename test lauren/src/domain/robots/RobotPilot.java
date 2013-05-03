@@ -29,6 +29,7 @@ import domain.maze.graph.MazePath;
 import domain.polygons.RobotPolygon;
 import domain.robotFunctions.ExploreMaze;
 import domain.robotFunctions.MatchMap;
+import domain.util.Angles;
 import domain.util.TimeStamp;
 
 public abstract class RobotPilot implements PlayerHandler{
@@ -592,7 +593,7 @@ public abstract class RobotPilot implements PlayerHandler{
 		Pose absolutePose = Position.getAbsolutePose(getTeamInitialPose(), relativePose);
 		//System.out.println("absolute: " + absolutePose);
 		relativePose = Position.getRelativePose(getInitialPosition(), absolutePose);
-		maze.setPartnerPosition((int) relativePose.getX()/40, (int) relativePose.getY()/40);
+		maze.setPartnerPosition(((int) Math.round(relativePose.getX()/40.0)),(int) Math.round(relativePose.getY()/40.0));
 		Position teamPosition = absolutePose.getPosition();
 		if(hasWon(teamPosition)){
 			won();
@@ -668,7 +669,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	}
 	
 	public boolean detectPartnerAtAngle(double angle){
-		double viewOr=angle;
+		double viewOr=Orientation.snapAngle(90, 0, angle);
 		Position snappedRPos=this.getPosition().clone();
 		snappedRPos.snapTo(40, 20, 20);
 		Position wallPos=snappedRPos.getNewRoundPosition(viewOr, 20);
