@@ -90,7 +90,11 @@ public class SpectatorClient {
 		try {
 			channel.close();
 		} catch (IOException e) {
+			System.out.println("there was an IOException code 034950");
+
 		} catch (ShutdownSignalException e) {
+			System.out.println("there was an IOException code 2193846");
+
 		} finally {
 			channel = null;
 		}

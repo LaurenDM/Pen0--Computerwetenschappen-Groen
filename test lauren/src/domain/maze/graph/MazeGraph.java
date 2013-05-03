@@ -780,7 +780,7 @@ public class MazeGraph {
 					setTileBarcode(tileNodeAt, barcode);
 				}
 			} catch(NumberFormatException e){
-				//Nothing
+				System.out.println("NumberFormatException code 879y ");
 			}
 		} else {
 			throw new IllegalArgumentException("The string given was not a valid tile type.");

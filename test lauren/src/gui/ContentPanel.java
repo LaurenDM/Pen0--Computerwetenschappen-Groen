@@ -497,6 +497,8 @@ public class ContentPanel implements ActionListener {
         		
         		}
         		catch(ConnectErrorException e1){
+    				System.out.println("There was a ConnectErrorException code 343458");
+
         		}
         		
         	}

@@ -45,6 +45,7 @@ public class MoveThread extends DriveThread {
 			try {
 				Thread.sleep(sleepTime);
 			} catch (InterruptedException e) {
+				
 				running = false;
 				break;
 			}

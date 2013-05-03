@@ -58,8 +58,8 @@ public class Controller {
 	    	playerID = GUI.getPlayerID();
 	    }
 		
-		connectNewSimRobot(0, new Position(20,20), playerID);
-		
+//		connectNewSimRobot(0, new Position(20,20), playerID);
+		connectNewBtRobot();
 	}
 	
 	public void htttpImplementation(){
