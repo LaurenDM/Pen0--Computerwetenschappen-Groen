@@ -14,6 +14,7 @@ import domain.Position.Pose;
 import domain.Position.Position;
 import domain.maze.Direction;
 import domain.maze.Orientation;
+import domain.maze.Seesaw;
 import domain.maze.Wall;
 import domain.maze.graph.MazeGraph;
 import domain.maze.graph.MazePath;
@@ -225,6 +226,9 @@ public class ExploreMaze{
 		Orientation nextOrientation = maze.getCurrentRobotOrientation().getOffset(direction.getOffset());
 		TileNode nextNode = (TileNode) maze.getCurrentTile().getNodeAt(nextOrientation);
 		robot.updatePosition(nextNode.getX(), nextNode.getY(), nextOrientation.getAngleToHorizontal());
+		if(Seesaw.class.isAssignableFrom(nextNode.getClass())){
+			driveOverSeesaw();
+		}
 	}
 	
 	public void updatePosition(TileNode node, Orientation orientation){

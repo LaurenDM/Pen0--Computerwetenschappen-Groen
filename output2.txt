@@ -1,45 +1,94 @@
-sh.playerDisc: playerID2, REJECT
-Fout bij deelname: Join request rejected
-sh.playerDisc: playerID1, REJECT
-sh.playerDisc: playerID1, REJECT
-sh.playerJoined: playerID2
-sh.plash.playerJoined: pla
-sh.playerReady: playerID0
-sh.playsh.playerReady: playerID1
-sh.playerReady: playerID0
-sh.playerReady: plash.gameStarted
-sh.gameStarted
-sh.gameStarted
-sh.gameStarted
-Object
-1 Xcoo 6 YCoo0
-1 Xcoo 260 YCoo20
-init pos added: x:260.0 y:20.0 nb:1
 Object
 BallBarcodebits: 001000
+Object
 1 Xcoo 2 YCoo2
 1 Xcoo 100 YCoo100
 init pos added: x:100.0 y:100.0 nb:3
+1 Xcoo 6 YCoo2
+1 Xcoo 260 YCoo100
+init pos added: x:260.0 y:100.0 nb:1
+1 Xcoo 2 YCoo4
+1 Xcoo 100 YCoo180
+init pos added: x:100.0 y:180.0 nb:4
+1 Xcoo 6 YCoo4
+1 Xcoo 260 YCoo180
+init pos added: x:260.0 y:180.0 nb:2
 Object
-1 Xcoo 2 YCoo6
-1 Xcoo 100 YCoo260
-init pos added: x:100.0 y:260.0 nb:4
-1 Xcoo 6 YCoo7
-1 Xcoo 260 YCoo300
-init pos added: x:260.0 y:300.0 nb:2
 Object
-X,Y = 0 0
-.0 y:300.0 nb:2
-Object
-X,Y = 0 0
-oo100
-init pos added: x:100.0 y:100.0 nb:3
-Object
-1 Xcoo 2 YCoo6
-1 Xcoo 100 YCoo260
-init pos added: x:100.0 y:260.0 nb:4
-1 Xcoo 6 YCoo7
-1 Xcoo 260 YCoo300
-init pos added: x:260.0 y:300.0 nb:2
-Object
-X,Y = 0 0
+X,Y = 1 0
+sh.playerJoined: playerID3
+sh.playerJoined: playerID0
+sh.playerJoined: playerID1
+sh.playerJoined: playerID2
+ph.gameRolled: playerNumber:3 objectNumber:2
+Deelname geslaagd.
+sh.playerReady: playerID2
+sh.playerReady: playerID0
+sh.playerReady: playerID1
+sh.playerReady: playerID3
+sh.gameStarted
+sh.gameStarted
+sh.gameStarted
+sh.gameStarted
+Setting initial pos to:100.0 y:100.0
+
+Current: (100.52187645289021,21.4502639568661), ori: 176.71321235202356
+Dead End: (60.58767388170352,23.743616307340467)
+sh.playerFoundObj: player playerID0 found its ball
+Wrong measurement. There can be no wall there.
+Current: (260.6891212550226,20.25942293900167), ori: 176.75176122156066
+Dead End: (220.75338474415128,22.525906853406923)
+EM.Fixing possible deadlock
+No path found...
+No path found...
+(2,-4)(2,-5)
+(2,-4)(2,-5)
+EM.Fixing possible deadlock
+No path found...
+No path found...
+(2,-5)
+(2,-5)
+sh.playerFoundObj: player playerID1 found its ball
+EM.Fixing possible deadlock
+No path found...
+No path found...
+(2,-5)
+(2,-5)
+EM.Fixing possible deadlock
+No path found...
+No path found...
+(2,-5)
+(2,-5)
+EM.Fixing possible deadlock
+No path found...
+No path found...
+(2,-5)
+(2,-5)
+sh.playerFoundObj: player playerID3 found its ball
+EM.Fixing possible deadlock
+No path found...
+No path found...
+(2,-5)
+(2,-5)
+EM.Fixing possible deadlock
+No path found...
+No path found...
+(2,-5)
+(2,-5)
+EM.Fixing possible deadlock
+No path found...
+No path found...
+(2,-5)
+(2,-5)
+EM.Fixing possible deadlock
+No path found...
+No path found...
+(2,-5)
+(2,-5)
+sh.GameWon by Team 0
+ph.GameWon by Team 0
+sh.gameStopped
+sh.playerReady: playerID2
+sh.playerReady: playerID1
+sh.playerReady: playerID0
+sh.playerReady: playerID3
