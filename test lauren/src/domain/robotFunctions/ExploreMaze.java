@@ -234,14 +234,15 @@ public class ExploreMaze{
 	public void updatePosition(TileNode node, Orientation orientation){
 		if(node != null){
 			robot.updatePosition(node.getX(), node.getY(), orientation.getAngleToHorizontal());
+			if(Seesaw.class.isAssignableFrom(node.getClass())){
+				robot.handleSeesaw(maze.getCurrentTile().getBarcodeNumber());
+			}
 		}
 	}
 	
 	private boolean nextTileIsSeesaw(){
 		return maze.nextTileIsSeesaw();
 	}
-	
-
 	
 	private boolean checkBadPosition(double[] distances){
 		for (int i = 0; i < distances.length; i++) {
