@@ -44,7 +44,7 @@ public class ContentPanel implements ActionListener {
     private JLabel xLabel, yLabel, speedLabel, angleLabel, infraredLabel, lineLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, connectButton, 
     calibrateButton, loadMazeButton, connectionButton,
-    rotateLittleLeft,rotateLittleRight,startButton, finishButton, resumeButton, resetButton;
+    rotateLittleLeft,rotateLittleRight,startButton, finishButton, resumeButton, resetButton, recoverButton;
     private static JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
@@ -213,16 +213,19 @@ public class ContentPanel implements ActionListener {
         bottomButtonPanel.addKeyListener(l);
         
         startButton = new JButton("Start exploring");
-        fixButtonLayout(bottomButtonPanel, startButton, 150, allButtonHeight, 0, 0);
+        fixButtonLayout(bottomButtonPanel, startButton, wideButtonWidth, allButtonHeight, 0, 0);
         
         resumeButton = new JButton("Resume exploring");
-        fixButtonLayout(bottomButtonPanel, resumeButton, 150, allButtonHeight, 170, 0);
+        fixButtonLayout(bottomButtonPanel, resumeButton, wideButtonWidth, allButtonHeight, 150, 0);
         
         finishButton = new JButton("Drive to finish");
-        fixButtonLayout(bottomButtonPanel, finishButton, 150, allButtonHeight, 340, 0);
+        fixButtonLayout(bottomButtonPanel, finishButton, wideButtonWidth, allButtonHeight, 300, 0);
         
         resetButton = new JButton("Reset");
-        fixButtonLayout(bottomButtonPanel, resetButton, 150, allButtonHeight, 510, 0);
+        fixButtonLayout(bottomButtonPanel, resetButton, moveButtonWidth, allButtonHeight, 450, 0);
+        
+        recoverButton = new JButton("Recover");
+        fixButtonLayout(bottomButtonPanel, recoverButton, moveButtonWidth, allButtonHeight, 3*wideButtonWidth+moveButtonWidth, 0);
         
         bottomButtonPanel.setFocusable(true);
         
@@ -569,6 +572,9 @@ public class ContentPanel implements ActionListener {
 			controller.reset();
 			drawingPanel.reset();
 			debugText.setText("");
+			buttonPanel.requestFocusInWindow();
+		} else if(e.getSource() == recoverButton){
+			controller.recoverToLastUpdatedPose();
 			buttonPanel.requestFocusInWindow();
 		}
         

@@ -357,7 +357,14 @@ public class Controller {
 
 
 	public void autoCalibrateLight() {
-		currentRobot.autoCalibrateLight();}
+		currentRobot.autoCalibrateLight();
+	}
+	
+	public void recoverToLastUpdatedPose(){
+		cancel();
+		currentRobot.recoverToLastUpdatedPose();
+		resumeExplore();
+	}
 	
 //	public void disableError() {
 //		otherRobots.get(1).setPose(3, 100, 100); 

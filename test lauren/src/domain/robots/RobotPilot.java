@@ -545,6 +545,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	}
 	
 	private Pose teamInitialPose;
+	private Pose lastUpdatedPose;
 	
 	private Pose getTeamInitialPose(){
 		if(teamInitialPose == null){
@@ -615,6 +616,7 @@ public abstract class RobotPilot implements PlayerHandler{
 		if(Controller.interconnected){
 		try {
 			playerClient.updatePosition(x, y, angle);
+			setLastUpdatedPose(x,y,angle);
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -625,8 +627,20 @@ public abstract class RobotPilot implements PlayerHandler{
 		}
 	}
 
+	private void setLastUpdatedPose(int x, int y, double angle) {
+		lastUpdatedPose=new Pose(x,y,Orientation.getOrientation(angle));
+	}
+	
+	private Pose getLastUpdatedPose() {
+		return lastUpdatedPose;
+	}
+
 	//ATtention This method is not used for the simrobot, only has an effect on the real robot
 	public abstract void snapPoseToTileMid();
+	
+	public void recoverToLastUpdatedPose(){
+		this.setPose(getLastUpdatedPose().getOrientation().getAngleToHorizontal(), (int)getLastUpdatedPose().getX(), (int)getLastUpdatedPose().getY());
+	}
 
 	public boolean detectsCloseRobotAt(Direction dir) {
 		double viewOr=Orientation.getOrientation(this.getOrientation()).getOffset(dir.getOffset()).getAngleToHorizontal();
