@@ -25,7 +25,9 @@ public class SeesawAction implements Action {
 
 	@Override
 	public void run(RobotPilot robot) {
-		Seesaw foundSeesaw=robot.getFoundBoard().getSeesaw(center);
+		Seesaw foundSeesaw = robot.getWorldSimulator().getBoard().getSeesaw(center);
+		robot.getFoundBoard().addSeesaw(foundSeesaw);
+		//Seesaw foundSeesaw=robot.getFoundBoard().getSeesaw(center);
 		
 		if (foundSeesaw == null) {
 			foundSeesaw = new Seesaw(center, orientation, barcodeNb, false, robot.getFoundBoard());

@@ -2,26 +2,26 @@ sh.playerJoined: playerID3
 Deelname geslaagd.
 sh.playerJoined: playerID0
 Object
-BallBarcodebits: 001000
+1 Xcoo 6 YCoo0
+1 Xcoo 260 YCoo20
+init pos added: x:260.0 y:20.0 nb:1
 Object
+BallBarcodebits: 001000
 1 Xcoo 2 YCoo2
 1 Xcoo 100 YCoo100
 init pos added: x:100.0 y:100.0 nb:3
-1 Xcoo 6 YCoo2
-1 Xcoo 260 YCoo100
-init pos added: x:260.0 y:100.0 nb:1
-1 Xcoo 2 YCoo4
-1 Xcoo 100 YCoo180
-init pos added: x:100.0 y:180.0 nb:4
-1 Xcoo 6 YCoo4
-1 Xcoo 260 YCoo180
-init pos added: x:260.0 y:180.0 nb:2
 Object
+1 Xcoo 2 YCoo6
+1 Xcoo 100 YCoo260
+init pos added: x:100.0 y:260.0 nb:4
+1 Xcoo 6 YCoo7
+1 Xcoo 260 YCoo300
+init pos added: x:260.0 y:300.0 nb:2
 Object
-X,Y = 1 0
+X,Y = 0 0
 sh.playerJoined: playerID1
 sh.playerJoined: playerID2
-ph.gameRolled: playerNumber:1 objectNumber:0
+ph.gameRolled: playerNumber:2 objectNumber:1
 sh.playerReady: playerID2
 sh.playerReady: playerID0
 sh.playerReady: playerID1
@@ -30,37 +30,82 @@ sh.gameStarted
 sh.gameStarted
 sh.gameStarted
 sh.gameStarted
-Setting initial pos to:260.0 y:100.0
+Setting initial pos to:260.0 y:300.0
 
-Current: (258.02292686905724,259.0370349500542), ori: -0.9501747115481132
-Dead End: (298.01742662813456,258.3737182676448)
-sh.playerFoundObj: player playerID0 found its ball
-Current: (100.79691711266109,263.2609728125367), ori: 177.4140444956483
-Dead End: (60.837650741593954,265.0656974691264)
 sh.playerFoundObj: player playerID1 found its ball
+Tile(0,2,true,true,true,true),Tile(0,3,true,true,true,true)
+SEESAW LOCKED
+sh.lockedSeesaw with barcodenb 15 by player ID: playerID3 no: 2
+The node after the seesaw is Tile(0,4,false,true,true,true)
+sh.unlockedSeesaw by player ID: playerID3 no: 2
+Tile(-3,3,true,true,true,true),Tile(-3,2,true,true,true,true)
+SEESAW LOCKED
+sh.lockedSeesaw with barcodenb 11 by player ID: playerID3 no: 2
+The node after the seesaw is Tile(-3,1,true,true,false,true)
+sh.unlockedSeesaw by player ID: playerID3 no: 2
+sh.lockedSeesaw with barcodenb 17 by player ID: playerID0 no: 1
+sh.unlockedSeesaw by player ID: playerID0 no: 1
+sh.lockedSeesaw with barcodenb 15 by player ID: playerID2 no: 3
+sh.unlockedSeesaw by player ID: playerID2 no: 3
+Current: (338.24041230570015,301.35145485342326), ori: -0.610694689065582
+Dead End: (378.2381401980415,300.9251176040289)
+sh.lockedSeesaw with barcodenb 13 by player ID: playerID0 no: 1
+sh.unlockedSeesaw by player ID: playerID0 no: 1
+Current: (61.03007528870377,256.18228007267965), ori: -173.36399941370374
+Dead End: (21.29806124081609,251.55982837488378)
+sh.lockedSeesaw with barcodenb 11 by player ID: playerID2 no: 3
+sh.unlockedSeesaw by player ID: playerID2 no: 3
+SEESAW LOCKED
+sh.lockedSeesaw with barcodenb 13 by player ID: playerID3 no: 2
+sh.playerFoundObj: player playerID0 found its ball
+The node after the seesaw is Tile(-3,4,true,true,true,true)
+sh.unlockedSeesaw by player ID: playerID3 no: 2
+ALARM Mazegraph lijn 172
+ALARM Mazegraph lijn 172
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
+Not same firstReadOrientation
 EM.Fixing possible deadlock
-(1,2)(0,2)(0,1)(0,0)
-(1,2)(0,2)(0,1)(0,0)
+No path found...
+No path found...
+No path found...
+(1,1)(2,1)(3,1)
+(1,1)(2,1)(3,1)
+sh.lockedSeesaw with barcodenb 11 by player ID: playerID1 no: 4
+sh.unlockedSeesaw by player ID: playerID1 no: 4
+sh.playerFoundObj: player playerID2 found its ball
 EM.Fixing possible deadlock
-(0,0)
-(0,0)
-BallBarcodebits: 001000
-RobotPilot: teamNumber = 1
-Current: (100.78631373112282,21.010570332405443), ori: 179.39132997569524
-Dead End: (60.78857079824659,21.435494179170504)
-sh.playerFoundObj: player playerID3 found its ball
-PLAYER 1 JOINS TEAM 1
-PlayerID = playerID3
-Current: (258.09586946831956,21.535603238257732), ori: 3.6297209874200007
-Dead End: (298.01563038377526,24.067931900350736)
-tc 1
-EM.Fixing possible deadlock
-(-2,4)(-2,3)(-2,2)(-1,2)(0,2)(0,1)(0,0)
-(-2,4)(-2,3)(-2,2)(-1,2)(0,2)(0,1)(0,0)
-ph.GameWon by Team 0
-sh.GameWon by Team 0
-sh.playerReady: playerID2
+No path found...
+No path found...
+No path found...
+(3,1)
+(3,1)
+ph.GameWon by Team 1
+sh.GameWon by Team 1
 sh.gameStopped
-sh.playerReady: playerID1
-sh.playerReady: playerID0
 sh.playerReady: playerID3
+sh.playerReady: playerID0
+sh.playerReady: playerID2
+sh.playerReady: playerID1

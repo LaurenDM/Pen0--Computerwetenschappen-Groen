@@ -234,14 +234,15 @@ public class ExploreMaze{
 	public void updatePosition(TileNode node, Orientation orientation){
 		if(node != null){
 			robot.updatePosition(node.getX(), node.getY(), orientation.getAngleToHorizontal());
+			if(Seesaw.class.isAssignableFrom(node.getClass())){
+				robot.handleSeesaw(maze.getCurrentTile().getBarcodeNumber());
+			}
 		}
 	}
 	
 	private boolean nextTileIsSeesaw(){
 		return maze.nextTileIsSeesaw();
 	}
-	
-
 	
 	private boolean checkBadPosition(double[] distances){
 		for (int i = 0; i < distances.length; i++) {
@@ -595,12 +596,15 @@ public class ExploreMaze{
 	}
 
 	public void driveOverSeesaw() {
-		if(maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()).isAccessible()){
-			updatePosition((TileNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()),maze.getCurrentRobotOrientation());
+		Orientation o = maze.getCurrentRobotOrientation();
+		if(maze.getCurrentTile().getNodeAt(o).isAccessible()){
+			TileNode afterSeesawNode = (TileNode) ((TileNode) ((TileNode) maze.getCurrentTile().getNodeAt(o)).getNodeAt(o)).getNodeAt(o);
+			updatePosition(afterSeesawNode, o);
+			//updatePosition((TileNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()),maze.getCurrentRobotOrientation());
 			maze.move();
-			updatePosition((TileNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()),maze.getCurrentRobotOrientation());
+			//updatePosition((TileNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()),maze.getCurrentRobotOrientation());
 			maze.move();
-			updatePosition((TileNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()),maze.getCurrentRobotOrientation());
+			//updatePosition((TileNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()),maze.getCurrentRobotOrientation());
 			maze.move();
 			((SeesawNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation().getBack())).setUp(false);
 			System.out.println("The node after the seesaw is "+maze.getCurrentTile());
