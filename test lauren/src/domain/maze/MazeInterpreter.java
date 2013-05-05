@@ -150,7 +150,7 @@ public class MazeInterpreter {
 					
 				}
 				} catch (Exception e) {
-					System.out.println("There was an exception code 9843");
+	//				System.out.println("There was an exception code 9843");
 				}
 			}
 		}
@@ -177,7 +177,7 @@ public class MazeInterpreter {
 		}
 		for(int x = xOffset; x<newMap.length;x++){
 			for (int y=yOffset ;y<newMap[x].length; y++){
-				System.out.println("xy = " + x + ", " + y);
+//				System.out.println("xy = " + x + ", " + y);
 				if(map[x-xOffset][y-yOffset].equals(MatchMap.dummyString))
 					newMap[x][y] = "Cross";
 				else
@@ -228,7 +228,7 @@ public class MazeInterpreter {
 		e.printStackTrace();
 		  System.err.println("Error reading maze.");
 		  }
-	System.out.println("X,Y = " + startX + " " + startY);
+//	System.out.println("X,Y = " + startX + " " + startY);
 	}
 	
 	
@@ -293,7 +293,7 @@ public class MazeInterpreter {
 		}
 		if(commandSplit.length>2){
 			if(commandSplit[2].equals("V")){
-				System.out.println("Object");
+//				System.out.println("Object");
 				createBall(XCoo, YCoo);
 			}
 			else if(commandSplit[2].contains("S")){
@@ -315,12 +315,12 @@ public class MazeInterpreter {
 	}
 	
 	public void createInitialPosition(int XCoo, int YCoo, String orientString, int playernb){
-		System.out.println("1 Xcoo "+XCoo+" YCoo"+YCoo);
+//		System.out.println("1 Xcoo "+XCoo+" YCoo"+YCoo);
 		int MAZECONSTANT = MazeElement.getMazeConstant();
 		XCoo = XCoo*MAZECONSTANT + MAZECONSTANT/2;
 		YCoo = YCoo*MAZECONSTANT + MAZECONSTANT/2;
 		Orientation orientation = Orientation.getOrientation(orientString);
-		System.out.println("1 Xcoo "+XCoo+" YCoo"+YCoo);
+//		System.out.println("1 Xcoo "+XCoo+" YCoo"+YCoo);
 		Pose pos = new Pose(XCoo,YCoo,orientation);
 		board.addInitialPosition(pos, playernb);
 	}

@@ -16,6 +16,7 @@ import domain.maze.Direction;
 import domain.maze.Orientation;
 import domain.maze.Seesaw;
 import domain.maze.Wall;
+import domain.maze.barcodes.Barcode;
 import domain.maze.graph.MazeGraph;
 import domain.maze.graph.MazePath;
 import domain.maze.graph.SeesawNode;
@@ -92,7 +93,12 @@ public class ExploreMaze{
 				//robot.setMovingSpeed(robot.getDefaultMovingSpeed());
 				checkForOtherRobots();
 				Direction direction = getNextDirection(distances);
-				updatePosition(direction);
+				if(checkSeesaw(direction)){
+					System.out.println("Handle Seesaw with barcodenb " + maze.getCurrentTile().getBarcodeNumber());
+					robot.handleSeesaw(maze.getCurrentTile().getBarcodeNumber());
+				}
+				else{
+					updatePosition(direction);
 				if(direction == null){
 					countAtSamePos++;
 					if(countAtSamePos > 3){
@@ -130,6 +136,7 @@ public class ExploreMaze{
 				}
 				countAtSamePos = 0;
 				//System.out.println("Now at "+maze.getCurrentNode().getX()+" "+maze.getCurrentNode().getY());
+				}
 			}
 		}
 		if(Controller.isStopped()==false){
@@ -137,6 +144,26 @@ public class ExploreMaze{
 			robot.setDriveToFinishSpeed();
 			driveToFinish(robot);
 		}
+	}
+	
+	public boolean checkSeesaw(Direction direction){
+		if(direction == null){
+			return false;
+		}
+		return checkSeesaw(maze.getCurrentRobotOrientation().getOffset(direction.getOffset()));
+	}
+	
+	public boolean checkSeesaw(Orientation orientation){
+		if(orientation == null){
+			return false;
+		}
+		if(maze.getCurrentTile().hasBarcode()){
+			if(Barcode.isSeesawBC(maze.getCurrentTile().getBarcodeNumber()))
+				if(maze.getCurrentTile().getNodeAt(orientation).getClass().equals(SeesawNode.class)){
+					return true;
+				}
+		}
+		return false;
 	}
 	
 	public void fixDeadlock1(){
@@ -225,18 +252,12 @@ public class ExploreMaze{
 		}
 		Orientation nextOrientation = maze.getCurrentRobotOrientation().getOffset(direction.getOffset());
 		TileNode nextNode = (TileNode) maze.getCurrentTile().getNodeAt(nextOrientation);
-		robot.updatePosition(nextNode.getX(), nextNode.getY(), nextOrientation.getAngleToHorizontal());
-		if(Seesaw.class.isAssignableFrom(nextNode.getClass())){
-			robot.handleSeesaw(maze.getCurrentTile().getBarcodeNumber());
-		}
+		robot.updatePosition(nextNode.getX(), nextNode.getY(), nextOrientation.getAngleToHorizontal());			
 	}
 	
 	public void updatePosition(TileNode node, Orientation orientation){
-		if(node != null){
+		if(node != null){	
 			robot.updatePosition(node.getX(), node.getY(), orientation.getAngleToHorizontal());
-			if(Seesaw.class.isAssignableFrom(node.getClass())){
-				robot.handleSeesaw(maze.getCurrentTile().getBarcodeNumber());
-			}
 		}
 	}
 	
@@ -291,8 +312,8 @@ public class ExploreMaze{
 		double orientation = robot.getOrientation();
 		double deadEndX = robot.getPosition().getX()+Math.cos(orientation/180*Math.PI)*MAZECONSTANT;
 		double deadEndY = robot.getPosition().getY()+Math.sin(orientation/180*Math.PI)*MAZECONSTANT;
-		System.out.println("Current: ("+robot.getPosition().getX()+","+robot.getPosition().getY()+"), ori: "+orientation);
-		System.out.println("Dead End: ("+deadEndX+","+deadEndY+")");
+	//	System.out.println("Current: ("+robot.getPosition().getX()+","+robot.getPosition().getY()+"), ori: "+orientation);
+	//	System.out.println("Dead End: ("+deadEndX+","+deadEndY+")");
 		calculateWall(deadEndX, deadEndY, orientation, Direction.LEFT);
 		calculateWall(deadEndX, deadEndY, orientation, Direction.FORWARD);
 		calculateWall(deadEndX, deadEndY, orientation, Direction.RIGHT);
@@ -558,6 +579,10 @@ public class ExploreMaze{
 				if((nextOrientation==null || nextOrientation.getBack().equals(maze.getCurrentRobotOrientation())) && !first){
 					//Do nothing, see if we can't reach any of the next tiles in the list (handy when driving over seesaws on the way to the finish).
 				} else {
+					if(checkSeesaw(nextOrientation)){
+						System.out.println("Checking Seesaw in driveMazePath");
+						robot.handleSeesaw(maze.getCurrentTile().getBarcodeNumber());
+					}
 					updatePosition(nextNode, nextOrientation);
 					maze.turnToNextOrientation(robot, maze.getCurrentRobotOrientation(), nextOrientation);
 					try {
@@ -595,11 +620,12 @@ public class ExploreMaze{
 		return maze.getShortestPath();
 	}
 
-	public void driveOverSeesaw() {
+	public void driveOverSeesaw() throws IllegalStateException {
 		Orientation o = maze.getCurrentRobotOrientation();
 		if(maze.getCurrentTile().getNodeAt(o).isAccessible()){
 			TileNode afterSeesawNode = (TileNode) ((TileNode) ((TileNode) maze.getCurrentTile().getNodeAt(o)).getNodeAt(o)).getNodeAt(o);
 			updatePosition(afterSeesawNode, o);
+	//		System.out.println("After Seesaw: " + afterSeesawNode);
 			//updatePosition((TileNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()),maze.getCurrentRobotOrientation());
 			maze.move();
 			//updatePosition((TileNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()),maze.getCurrentRobotOrientation());
@@ -607,7 +633,10 @@ public class ExploreMaze{
 			//updatePosition((TileNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation()),maze.getCurrentRobotOrientation());
 			maze.move();
 			((SeesawNode)maze.getCurrentTile().getNodeAt(maze.getCurrentRobotOrientation().getBack())).setUp(false);
-			System.out.println("The node after the seesaw is "+maze.getCurrentTile());
+	//		System.out.println("The node after the seesaw is "+maze.getCurrentTile());
+		}
+		else{
+			throw new IllegalStateException();
 		}
 	}
 
