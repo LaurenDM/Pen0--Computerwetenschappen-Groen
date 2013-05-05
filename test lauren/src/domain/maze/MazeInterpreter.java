@@ -99,10 +99,20 @@ public class MazeInterpreter {
 	
 	private String[][] correctOrientation(String[][] map,Orientation orientation){
 		switch(orientation){
-		case NORTH: return MatchMap.get270Permutation(map);
-		case WEST: return MatchMap.get180Permutation(map); 
-		case SOUTH: return MatchMap.get90Permutation(map);
-		default: return map;
+		case NORTH: map = MatchMap.get270Permutation(map);
+		case WEST: map = MatchMap.get180Permutation(map); 
+		case SOUTH: map = MatchMap.get90Permutation(map);
+		default: //nothing
+		//change row order
+		int lastRow = map[0].length-1;
+		for(int i=0; i<map[0].length;i++){
+			for(int j=0;j<map.length;j++){
+				String temp = map[j][i];
+				map[j][i] = map[j][lastRow-i];
+				map[j][lastRow-i] = temp;
+			}
+		}
+		return map;
 		}
 	}
 	
@@ -298,6 +308,9 @@ public class MazeInterpreter {
 			if(commandSplit[2].equals("V")){
 //				System.out.println("Object");
 				createBall(XCoo, YCoo);
+			}
+			else if(commandSplit[2].contains("START")){
+				// do nothing
 			}
 			else if(commandSplit[2].contains("S")){
 				char[] args = commandSplit[2].toCharArray();
