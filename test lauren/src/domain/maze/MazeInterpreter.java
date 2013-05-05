@@ -36,7 +36,7 @@ public class MazeInterpreter {
 	
 	public void readMap(String[][] map, Orientation orientation){
 		map = correctOrientation(map, orientation);
-		System.out.println("correctOrient:");
+		System.out.println("Changed row order");
 		System.out.println(MatchMap.matrixToString(map));
 		map = fixEntireMap(map);
 		System.out.println("FixEntireMap:");
@@ -99,13 +99,16 @@ public class MazeInterpreter {
 	
 	private String[][] correctOrientation(String[][] map,Orientation orientation){
 		switch(orientation){
-		case NORTH: map = MatchMap.get270Permutation(map);
-		case WEST: map = MatchMap.get180Permutation(map); 
-		case SOUTH: map = MatchMap.get90Permutation(map);
-		default: //nothing
+		case NORTH: map= MatchMap.get270Permutation(map); break;
+		case WEST: map= MatchMap.get180Permutation(map); break;
+		case SOUTH: map = MatchMap.get90Permutation(map); break;
+		default:  break;
+		}
+		System.out.println("correctOrient:");
+		System.out.println(MatchMap.matrixToString(map));
 		//change row order
 		int lastRow = map[0].length-1;
-		for(int i=0; i<map[0].length;i++){
+		for(int i=0; i<=lastRow/2;i++){
 			for(int j=0;j<map.length;j++){
 				String temp = map[j][i];
 				map[j][i] = map[j][lastRow-i];
@@ -113,7 +116,6 @@ public class MazeInterpreter {
 			}
 		}
 		return map;
-		}
 	}
 	
 	private String[][] eliminateDummies(String[][] map){

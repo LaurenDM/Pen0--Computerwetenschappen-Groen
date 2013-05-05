@@ -953,8 +953,7 @@ public class MatchMap {
 		counter+=checkBarcodeEquality(maze,originalX-1,originalY+1,permX-1,permY+1);	
 		if(counter > 7)
 			return true;
-		return false;
-		
+		return false;		
 	}
 	
 	private static int checkBarcodeEquality(String[][] maze,int originalX,int originalY, int permX, int permY){
