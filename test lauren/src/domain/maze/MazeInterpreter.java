@@ -38,14 +38,17 @@ public class MazeInterpreter {
 		map = correctOrientation(map, orientation);
 		System.out.println("correctOrient:");
 		System.out.println(MatchMap.matrixToString(map));
-		map = eliminateDummies(map);
-		System.out.println("elimDummys:");
+		map = fixEntireMap(map);
+		System.out.println("FixEntireMap:");
 		System.out.println(MatchMap.matrixToString(map));
-		map = addCrosses(map);
-		System.out.println("adCrosses:");
-		System.out.println(MatchMap.matrixToString(map));
-		System.out.println("resultmap after readmap");
-		System.out.println(MatchMap.matrixToString(map));
+//		map = eliminateDummies(map);
+//		System.out.println("elimDummys:");
+//		System.out.println(MatchMap.matrixToString(map));
+//		map = addCrosses(map);
+//		System.out.println("adCrosses:");
+//		System.out.println(MatchMap.matrixToString(map));
+//		System.out.println("resultmap after readmap");
+//		System.out.println(MatchMap.matrixToString(map));
 		firstLine = 0;
 		System.out.println("READMAP");
 		for(int x = 0; x<map.length; x++){
@@ -60,31 +63,31 @@ public class MazeInterpreter {
 		int startXPos = 0;
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[0].length; j++) {
-				if(! map[i][j].equals(MatchMap.dummyString)){
-					startXPos = j;
-				}
-				j = map[0].length;
-				i = map.length;
+				if(!map[i][j].contains(MatchMap.dummyString)){
+					startXPos = i;
+					j = map[0].length;
+					i = map.length;
+				}		
 			}
 		}
 		int startYPos = 0;
 		//Get the row heigth
 		for (int i = 0; i < map[0].length; i++) {
 			for (int j = 0; j < map.length; j++) {
-				if(! map[i][j].equals(MatchMap.dummyString)){
-					startYPos = j;
+				if(!map[j][i].contains(MatchMap.dummyString)){
+					startYPos = i;
+					j = map.length;
+					i = map[0].length;
 				}
-				j = map.length;
-				i = map[0].length;
 			}
 		}
 		String[][] resultList = new String[map.length-startXPos][map[0].length-startYPos];
 		int x = 0;
 		int y = 0;
-		for (int i = startXPos; i < resultList.length; i++) {
-			for (int j = startYPos; j < resultList[0].length; j++) {
-				System.out.println("merging : "+map[startXPos][startYPos]);
-					resultList[x][y] = map[startXPos][startYPos];
+		for (int i = startXPos; i < map.length; i++) {
+			for (int j = startYPos; j < map[0].length; j++) {
+				System.out.println("merging : "+map[i][j]);
+				resultList[x][y] = map[i][j];
 				y++;
 			}
 			y = 0;

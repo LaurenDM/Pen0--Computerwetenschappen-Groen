@@ -1,24 +1,4 @@
 PlayerID = playerID1
 Deelname geslaagd.
-ph.gameRolled: playerNumber:4 objectNumber:3
-
-Player 4 on seesaw 15
-PLAYER 4 JOINS TEAM 0
-ph.teamconnected: playerID0
-RP.teamTilesReceived
-ph.Tiles recieved 'List<Tile>
-starting to merge
-Player 4 on seesaw 11
-Player 3 on seesaw 13
-Player 3 on seesaw 17
-EM.Fixing possible deadlock
-No path found...
-No path found...
-No path found...
-No path found...
-No path found...
-No path found...
-No path found...
-Player 2 on seesaw 15
-tc 1
-ph.GameWon by Team 1
+ph.gameRolled: playerNumber:3 objectNumber:2
+ph.GameWon by Team 0
