@@ -379,7 +379,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	
 	public void handleSeesaw(int barcodeNb,Seesaw foundSeesaw){
 		boolean upAtThisSide = detectInfrared();
-		System.out.println("set up seesaw based on infrared detection, barcodeNb: "+ barcodeNb+ " up: " + upAtThisSide);
+		//System.out.println("set up seesaw based on infrared detection, barcodeNb: "+ barcodeNb+ " up: " + upAtThisSide);
 		foundSeesaw.setUpAt(barcodeNb, upAtThisSide);
 		
 		getMaze().setNextTileToSeesaw(upAtThisSide || foundSeesaw.isLocked());
@@ -596,10 +596,10 @@ public abstract class RobotPilot implements PlayerHandler{
 		System.out.println("ph.teamPosition: (" + x + "," + y +")");
 		//printMessage("ph.teamPosition: (" + x + "," + y +")");
 		Pose relativePose = new Pose(40*x,40*y,Orientation.getOrientation(angle));
-		System.out.println("relative: " + relativePose);
-		System.out.println("initial: " + getTeamInitialPose());
+		//System.out.println("relative: " + relativePose);
+		//System.out.println("initial: " + getTeamInitialPose());
 		Pose absolutePose = Position.getAbsolutePose(getTeamInitialPose(), relativePose);
-		System.out.println("absolute: " + absolutePose);
+		//System.out.println("absolute: " + absolutePose);
 		relativePose = Position.getRelativePose(getInitialPosition(), absolutePose);
 		maze.setPartnerPosition(((int) Math.round(relativePose.getX()/40.0)),(int) Math.round(relativePose.getY()/40.0));
 		Position teamPosition = absolutePose.getPosition();
@@ -610,8 +610,8 @@ public abstract class RobotPilot implements PlayerHandler{
 	}
 	
 	private void won(){
-		System.out.println("GEWONNEN");
-		printMessage("GEWONNEN!");
+		Controller.setStopped(true);
+		maze.setInterrupted(true);
 		try {
 			playerClient.win();
 		} catch (IllegalStateException e) {
@@ -621,8 +621,8 @@ public abstract class RobotPilot implements PlayerHandler{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		maze.setInterrupted(true);
-		Controller.setStopped(true);
+		System.out.println("GEWONNEN");
+		printMessage("GEWONNEN!");
 	}
 	
 	public void setReady(boolean ready) {

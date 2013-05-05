@@ -500,12 +500,12 @@ public class MazeGraph {
 	
 	private void setTileToFinish(TileNode tile) {
 		if(tile!=null){
-		for(TileNode node:tileNodes){
-			if(node.isFinish() && !node.equals(tile)){
-				node.setFinish(false);
+			for(TileNode node:tileNodes){
+				if(node.isFinish() && !node.equals(tile)){
+					node.setFinish(false);
+				}
 			}
-		}
-		tile.setFinish(true);
+			tile.setFinish(true);
 		}
 	}
 	
@@ -798,6 +798,11 @@ public class MazeGraph {
 	 * @param partnerY
 	 */
 	public void setPartnerPosition(int partnerX, int partnerY) {
+		ContentPanel.writeToDebug("Partner at (" + partnerX + "," + partnerY + ")");
+		System.out.println("Partner at (" + partnerX + "," + partnerY + ")");
+		if(getTileNodeAt(partnerX, partnerY)==null){
+			System.out.println("!!");
+		}
 		setTileToFinish(getTileNodeAt(partnerX, partnerY));
 		setDrivingToPartner(true);
 	}

@@ -658,7 +658,7 @@ public class ExploreMaze{
 	} //TODO oproepen
 
 	public void setPartnerPosition(int partnerX, int partnerY) {
-		ContentPanel.writeToDebug("Partner at (" + partnerX + "," + partnerY + ")");
+		
 		maze.setPartnerPosition(partnerX, partnerY);
 	}
 	

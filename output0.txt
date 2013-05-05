@@ -1,24 +1,52 @@
 PlayerID = playerID0
 Deelname geslaagd.
-ph.gameRolled: playerNumber:3 objectNumber:2
+ph.gameRolled: playerNumber:2 objectNumber:1
 
-Player 2 on seesaw 15
-Player 1 on seesaw 17
+Going to run already known seesaw Action
+Going to run already known seesaw Action
 Player 4 on seesaw 15
-set up seesaw based on infrared detection, barcodeNb: 17 up: false
+PLAYER 2 JOINS TEAM 0
 Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 17 up: false
 Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 17 up: false
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
 Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
 Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-java.lang.IllegalStateException: Cannot find object when not playing.
-	at peno.htttp.PlayerClient.foundObject(PlayerClient.java:1129)
-	at domain.robots.RobotPilot.foundBall(RobotPilot.java:325)
-	at domain.maze.barcodes.FetchBallAction.run(FetchBallAction.java:14)
+Going to run already known seesaw Action
+Going to run already known seesaw Action
+Going to run already known seesaw Action
+Going to run already known seesaw Action
+Going to run already known seesaw Action
+Going to run already known seesaw Action
+Going to run already known seesaw Action
+Going to run already known seesaw Action
+Going to run already known seesaw Action
+Going to run already known seesaw Action
+Going to run already known seesaw Action
+Going to run already known seesaw Action
+Going to run already known seesaw Action
+Going to run already known seesaw Action
+Going to run already known seesaw Action
+Going to run already known seesaw Action
+Going to run already known seesaw Action
+Going to run already known seesaw Action
+ph.teamconnected: playerID1
+RP.teamTilesReceived
+ph.Tiles recieved 'List<Tile>
+Player 4 on seesaw 11
+Player 3 on seesaw 13
+EM.Fixing possible deadlock
+No path found...
+No path found...
+No path found...
+(0,-3)(-1,-3)
+(0,-3)(-1,-3)
+Player 3 on seesaw 17
+Player 2 on seesaw 15
+ph.GameWon by Team 1
+java.lang.IllegalStateException: Player number not determined yet.
+	at peno.htttp.PlayerClient.getPlayerNumber(PlayerClient.java:777)
+	at peno.htttp.PlayerClient.unlockSeesaw(PlayerClient.java:1009)
+	at domain.robots.RobotPilot.handleSeesaw(RobotPilot.java:406)
+	at domain.maze.barcodes.SeesawAction.run(SeesawAction.java:56)
 	at domain.maze.barcodes.Barcode.runAction(Barcode.java:142)
 	at domain.robotFunctions.BarcodeGenerator.generateBarcode(BarcodeGenerator.java:65)
 	at domain.robots.SimRobotPilot.move(SimRobotPilot.java:309)
@@ -26,53 +54,27 @@ java.lang.IllegalStateException: Cannot find object when not playing.
 	at domain.robotFunctions.ExploreMaze.robotMoveStraighten(ExploreMaze.java:364)
 	at domain.robotFunctions.ExploreMaze.moveWithStraighten(ExploreMaze.java:357)
 	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:121)
+	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:78)
+	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:116)
+	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:78)
+	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:116)
+	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:78)
+	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:116)
+	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:78)
+	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:116)
+	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:78)
+	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:116)
+	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:78)
+	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:116)
+	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:78)
+	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:116)
+	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:78)
+	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:116)
+	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:78)
+	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:116)
+	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:78)
+	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:116)
 	at domain.robotFunctions.ExploreMaze.start(ExploreMaze.java:54)
 	at domain.robots.RobotPilot.startExplore(RobotPilot.java:268)
 	at controller.Controller$3.run(Controller.java:307)
 	at java.lang.Thread.run(Thread.java:680)
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
-Going to run already known seesaw Action
-set up seesaw based on infrared detection, barcodeNb: 13 up: true
