@@ -81,11 +81,11 @@ public class MazeInterpreter {
 				}
 			}
 		}
-		String[][] resultList = new String[map.length-startXPos][map[0].length-startYPos];
+		String[][] resultList = new String[map.length-startXPos+startX][map[0].length-startYPos+startY];
 		int x = 0;
 		int y = 0;
-		for (int i = startXPos; i < map.length; i++) {
-			for (int j = startYPos; j < map[0].length; j++) {
+		for (int i = startXPos-startX; i < map.length; i++) {
+			for (int j = startYPos-startY; j < map[0].length; j++) {
 				System.out.println("merging : "+map[i][j]);
 				resultList[x][y] = map[i][j];
 				y++;

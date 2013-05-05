@@ -2,9 +2,6 @@ PlayerID = playerID2
 ph.gameRolled: playerNumber:2 objectNumber:1
 Deelname geslaagd.
 
-EM.Fixing possible deadlock
-(2,2)(1,2)(0,2)(0,1)(0,0)
-(2,2)(1,2)(0,2)(0,1)(0,0)
 PLAYER 2 JOINS TEAM 0
 ph.teamconnected: playerID0
 RP.teamTilesReceived
@@ -18,7 +15,7 @@ coord of merge   0    1
 
 DeadEnd.W           Straight.E.6        Straight.E          T.N                 Straight.E          Straight.E.3        DeadEnd.E           
 dummy               dummy               dummy               Straight.N          dummy               dummy               dummy               
-dummy               dummy               dummy               Cross.N             Straight.E          DeadEnd.E.OTHERSTARTdummy               
+dummy               DeadEnd.W           Straight.E          Cross.N             Straight.E          DeadEnd.E.OTHERSTARTdummy               
 dummy               dummy               dummy               Straight.N          dummy               dummy               dummy               
 dummy               dummy               Straight.E          Cross.N             Straight.E          dummy               dummy               
 dummy               dummy               dummy               Straight.N.47       dummy               dummy               dummy               
@@ -35,7 +32,7 @@ coord of merge   0    5
 
 DeadEnd.W           Straight.E.6        Straight.E          T.N                 Straight.E          Straight.E.3        DeadEnd.E           
 dummy               dummy               dummy               Straight.N          dummy               dummy               dummy               
-dummy               dummy               dummy               Cross.N             Straight.E          DeadEnd.E.OTHERSTARTdummy               
+dummy               DeadEnd.W           Straight.E          Cross.N             Straight.E          DeadEnd.E.OTHERSTARTdummy               
 dummy               dummy               dummy               Straight.N          dummy               dummy               dummy               
 dummy               dummy               Straight.E          Cross.N             Straight.E          dummy               dummy               
 dummy               dummy               dummy               Straight.N.47       dummy               dummy               dummy               
@@ -52,6 +49,9 @@ equality found on
 test
 MERGEPOINT HAS BEEN SET
 Merged
+EM.Fixing possible deadlock
+(2,1)(2,2)(1,2)(0,2)(0,1)(0,0)
+(2,1)(2,2)(1,2)(0,2)(0,1)(0,0)
 correctOrient:
 
 dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
@@ -82,6 +82,20 @@ dummy               dummy               dummy               dummy               
 dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
 dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
 dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
 merging : DeadEnd.W
 merging : dummy
 merging : dummy
@@ -378,40 +392,28 @@ merging : dummy
 merging : dummy
 FixEntireMap:
 
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-DeadEnd.W           Straight.W.4        Straight.W          T.N                 Straight.W          Straight.W.1        DeadEnd.E           dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               Straight.S.47       dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               Straight.W          Cross.S             Straight.W          dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               Straight.S          dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               DeadEnd.W.OTHERSTARTStraight.W          Cross.S             Straight.W          DeadEnd.E.MYSTART   dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-dummy               dummy               dummy               Straight.S          dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
-DeadEnd.W           Straight.W.3        Straight.W          T.S                 Straight.W          Straight.W.6        DeadEnd.E           dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               DeadEnd.W           Straight.W.4        Straight.W          T.N                 Straight.W          Straight.W.1        DeadEnd.E           dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               Straight.S.47       dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               Straight.W          Cross.S             Straight.W          dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               Straight.S          dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               DeadEnd.W.OTHERSTARTStraight.W          Cross.S             Straight.W          DeadEnd.E.MYSTART   dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               Straight.S          dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               DeadEnd.W           Straight.W.3        Straight.W          T.S                 Straight.W          Straight.W.6        DeadEnd.E           dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
 READMAP
+ph.teamPosition: (-2,-2)
+Partner at (-2,2)
+ph.teamPosition: (-1,-2)
+Partner at (-1,2)
 ph.teamPosition: (0,-2)
 Partner at (0,2)
-ph.teamPosition: (0,-3)
-Partner at (0,1)
-DRIVING TO PARTNER
-Finish node: Tile(0,1,true,true,true,true)
-DRIVING TO PARTNER
-Finish node: Tile(0,1,true,true,true,true)
-ph.teamPosition: (0,-2)
-Partner at (0,2)
-DRIVING TO PARTNER
-Finish node: Tile(0,2,true,true,true,true)
-ph.teamPosition: (1,-2)
-Partner at (1,2)
-DRIVING TO PARTNER
-Finish node: Tile(1,2,true,true,true,true)
-ph.teamPosition: (1,-2)
-Partner at (1,2)
-ANGLE = 91.40124014942096
+ANGLE = 92.07387129855236
 DETECTING PARTNER
 GEWONNEN
 GEWONNEN!
