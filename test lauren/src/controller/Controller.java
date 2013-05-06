@@ -57,7 +57,7 @@ public class Controller {
 		if(GUI.getPlayerID()!=null){
 	    	playerID = GUI.getPlayerID();
 	    }
-		
+		System.out.println("PlayerID = "+ getPlayerID());
 		connectNewSimRobot(0, new Position(20,20), playerID);
 //		connectNewBtRobot();
 	}

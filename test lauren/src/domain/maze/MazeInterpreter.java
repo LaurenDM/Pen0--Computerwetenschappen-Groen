@@ -36,16 +36,19 @@ public class MazeInterpreter {
 	
 	public void readMap(String[][] map, Orientation orientation){
 		map = correctOrientation(map, orientation);
-		System.out.println("correctOrient:");
+		System.out.println("Changed row order");
 		System.out.println(MatchMap.matrixToString(map));
-		map = eliminateDummies(map);
-		System.out.println("elimDummys:");
+		map = fixEntireMap(map);
+		System.out.println("FixEntireMap:");
 		System.out.println(MatchMap.matrixToString(map));
-		map = addCrosses(map);
-		System.out.println("adCrosses:");
-		System.out.println(MatchMap.matrixToString(map));
-		System.out.println("resultmap after readmap");
-		System.out.println(MatchMap.matrixToString(map));
+//		map = eliminateDummies(map);
+//		System.out.println("elimDummys:");
+//		System.out.println(MatchMap.matrixToString(map));
+//		map = addCrosses(map);
+//		System.out.println("adCrosses:");
+//		System.out.println(MatchMap.matrixToString(map));
+//		System.out.println("resultmap after readmap");
+//		System.out.println(MatchMap.matrixToString(map));
 		firstLine = 0;
 		System.out.println("READMAP");
 		for(int x = 0; x<map.length; x++){
@@ -60,47 +63,61 @@ public class MazeInterpreter {
 		int startXPos = 0;
 		for (int i = 0; i < map.length; i++) {
 			for (int j = 0; j < map[0].length; j++) {
-				if(! map[i][j].equals(MatchMap.dummyString)){
-					startXPos = j;
-				}
-				j = map[0].length;
-				i = map.length;
+				if(!map[i][j].contains(MatchMap.dummyString)){
+					startXPos = i;
+					j = map[0].length;
+					i = map.length;
+				}		
 			}
 		}
 		int startYPos = 0;
 		//Get the row heigth
 		for (int i = 0; i < map[0].length; i++) {
 			for (int j = 0; j < map.length; j++) {
-				if(! map[i][j].equals(MatchMap.dummyString)){
-					startYPos = j;
+				if(!map[j][i].contains(MatchMap.dummyString)){
+					startYPos = i;
+					j = map.length;
+					i = map[0].length;
 				}
-				j = map.length;
-				i = map[0].length;
 			}
 		}
+		
+		
 		String[][] resultList = new String[map.length-startXPos][map[0].length-startYPos];
 		int x = 0;
 		int y = 0;
-		for (int i = startXPos; i < resultList.length; i++) {
-			for (int j = startYPos; j < resultList[0].length; j++) {
-				System.out.println("merging : "+map[startXPos][startYPos]);
-					resultList[x][y] = map[startXPos][startYPos];
+		for (int i = startXPos; i < map.length; i++) {
+			for (int j = startYPos; j < map[0].length; j++) {
+				System.out.println("merging : "+map[i][j]);
+				resultList[x][y] = map[i][j];
 				y++;
 			}
 			y = 0;
 			x++;
 		}
-		return resultList;
+		return addCrosses(resultList);
 	}
 	
 	
 	private String[][] correctOrientation(String[][] map,Orientation orientation){
 		switch(orientation){
-		case NORTH: return MatchMap.get270Permutation(map);
-		case WEST: return MatchMap.get180Permutation(map); 
-		case SOUTH: return MatchMap.get90Permutation(map);
-		default: return map;
+		case NORTH: map= MatchMap.get270Permutation(map); break;
+		case WEST: map= MatchMap.get180Permutation(map); break;
+		case SOUTH: map = MatchMap.get90Permutation(map); break;
+		default:  break;
 		}
+		System.out.println("correctOrient:");
+		System.out.println(MatchMap.matrixToString(map));
+		//change row order
+		int lastRow = map[0].length-1;
+		for(int i=0; i<=lastRow/2;i++){
+			for(int j=0;j<map.length;j++){
+				String temp = map[j][i];
+				map[j][i] = map[j][lastRow-i];
+				map[j][lastRow-i] = temp;
+			}
+		}
+		return map;
 	}
 	
 	private String[][] eliminateDummies(String[][] map){
@@ -150,7 +167,7 @@ public class MazeInterpreter {
 					
 				}
 				} catch (Exception e) {
-					System.out.println("There was an exception code 9843");
+	//				System.out.println("There was an exception code 9843");
 				}
 			}
 		}
@@ -177,7 +194,7 @@ public class MazeInterpreter {
 		}
 		for(int x = xOffset; x<newMap.length;x++){
 			for (int y=yOffset ;y<newMap[x].length; y++){
-				System.out.println("xy = " + x + ", " + y);
+//				System.out.println("xy = " + x + ", " + y);
 				if(map[x-xOffset][y-yOffset].equals(MatchMap.dummyString))
 					newMap[x][y] = "Cross";
 				else
@@ -228,7 +245,7 @@ public class MazeInterpreter {
 		e.printStackTrace();
 		  System.err.println("Error reading maze.");
 		  }
-	System.out.println("X,Y = " + startX + " " + startY);
+//	System.out.println("X,Y = " + startX + " " + startY);
 	}
 	
 	
@@ -293,8 +310,11 @@ public class MazeInterpreter {
 		}
 		if(commandSplit.length>2){
 			if(commandSplit[2].equals("V")){
-				System.out.println("Object");
+//				System.out.println("Object");
 				createBall(XCoo, YCoo);
+			}
+			else if(commandSplit[2].contains("START")){
+				// do nothing
 			}
 			else if(commandSplit[2].contains("S")){
 				char[] args = commandSplit[2].toCharArray();
@@ -315,12 +335,12 @@ public class MazeInterpreter {
 	}
 	
 	public void createInitialPosition(int XCoo, int YCoo, String orientString, int playernb){
-		System.out.println("1 Xcoo "+XCoo+" YCoo"+YCoo);
+//		System.out.println("1 Xcoo "+XCoo+" YCoo"+YCoo);
 		int MAZECONSTANT = MazeElement.getMazeConstant();
 		XCoo = XCoo*MAZECONSTANT + MAZECONSTANT/2;
 		YCoo = YCoo*MAZECONSTANT + MAZECONSTANT/2;
 		Orientation orientation = Orientation.getOrientation(orientString);
-		System.out.println("1 Xcoo "+XCoo+" YCoo"+YCoo);
+//		System.out.println("1 Xcoo "+XCoo+" YCoo"+YCoo);
 		Pose pos = new Pose(XCoo,YCoo,orientation);
 		board.addInitialPosition(pos, playernb);
 	}

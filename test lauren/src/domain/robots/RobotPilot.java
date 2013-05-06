@@ -56,6 +56,7 @@ public abstract class RobotPilot implements PlayerHandler{
 		this.movement=MoveType.STOPPED;
 		this.robotPolygon=new RobotPolygon(this);
 		this.playerID = playerID;
+		
 	}
 	
 	public abstract PlayerType getPlayerType();
@@ -298,7 +299,7 @@ public abstract class RobotPilot implements PlayerHandler{
 			playerClient.foundObject();
 			playerClient.joinTeam(getTeamNumber());
 			System.out.println("PLAYER "  + playerNb + " JOINS TEAM " + getTeamNumber());
-			System.out.println("PlayerID = "+ getPlayerID());
+			
 		} catch (IllegalStateException e) {
 			//  Auto-generated catch block
 			e.printStackTrace();
@@ -330,7 +331,7 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	public void setTeamNumber(int teamNumber) {
 		this.teamNumber = teamNumber;
-		System.out.println("RobotPilot: teamNumber = " + teamNumber);
+//		System.out.println("RobotPilot: teamNumber = " + teamNumber);
 	}
 	
 	public int getTeamNumber(){
@@ -338,24 +339,27 @@ public abstract class RobotPilot implements PlayerHandler{
 	}
 	
 	public void handleSeesaw(int barcodeNb){
+		System.out.println("Get barcode at " + getPosition());
 		Barcode barcode = board.getBarcodeAt(getPosition());
+		System.out.println("Barcode has number " + barcode.getDecimal());
 		if(barcode.getDecimal()!=barcodeNb){
 			throw new IllegalArgumentException();
 		}
+		System.out.println("Barcode action = " + barcode.getAction());
+		ContentPanel.writeToDebug("NOW!!!");
 		barcode.getAction().run(this);
 	}
 	
 	
 	public void handleSeesaw(int barcodeNb,Seesaw foundSeesaw){
 		boolean upAtThisSide = detectInfrared();
-		//System.out.println("We change the seesaw based on infrared detection, barcodeNb: "+ barcodeNb+ " upats: " + upAtThisSide);
+		//System.out.println("set up seesaw based on infrared detection, barcodeNb: "+ barcodeNb+ " up: " + upAtThisSide);
 		foundSeesaw.setUpAt(barcodeNb, upAtThisSide);
 		
 		getMaze().setNextTileToSeesaw(upAtThisSide || foundSeesaw.isLocked());
 		if (!foundSeesaw.isLocked() && !upAtThisSide) {
 			try {
 				playerClient.lockSeesaw(barcodeNb);
-				System.out.println("SEESAW LOCKED");
 			} catch (IllegalStateException e) {
 				// Auto-generated catch block
 				e.printStackTrace();
@@ -366,8 +370,12 @@ public abstract class RobotPilot implements PlayerHandler{
 				System.out.println("There was a NullPointerException code 8");
 				//Dit wil wss zeggen dat we niet met htttp werken 
 			}
+			try{
+				getMaze().driveOverSeesaw();
+			} catch( IllegalStateException e){
+				e.printStackTrace();
+			}
 			driveOverSeeSaw(barcodeNb);
-			getMaze().driveOverSeesaw();
 			try {
 				playerClient.unlockSeesaw();
 			} catch (IllegalStateException e) {
@@ -381,8 +389,8 @@ public abstract class RobotPilot implements PlayerHandler{
 
 				//Dit wil wss zeggen dat we niet met htttp werken 
 			}
-		}
-		getMaze().atBarcode(barcodeNb);
+			getMaze().atBarcode(foundSeesaw.getOtherBarcode(barcodeNb));
+		}	
 	}
 
 	public  boolean detectInfrared(){
@@ -409,7 +417,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	public void teleportToStartPosition(){
 		initialPosition = getWorldSimulator().getInitialPositionFromPlayer(playerNb);
 		if(initialPosition != null){
-			System.out.println("Setting initial pos to:"+initialPosition.getX()+" y:"+initialPosition.getY());
+//			System.out.println("Setting initial pos to:"+initialPosition.getX()+" y:"+initialPosition.getY());
 			setPose(initialPosition.getOrientation().getAngleToHorizontal(), (int) initialPosition.getX(), (int) initialPosition.getY());
 		}
 	}
@@ -559,7 +567,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	@Override
 	public void teamPosition(long x, long y, double angle) {
 		if(merged){
-		//System.out.println("ph.teamPosition: (" + x + "," + y +")");
+		System.out.println("ph.teamPosition: (" + x + "," + y +")");
 		//printMessage("ph.teamPosition: (" + x + "," + y +")");
 		Pose relativePose = new Pose(40*x,40*y,Orientation.getOrientation(angle));
 		//System.out.println("relative: " + relativePose);
@@ -576,8 +584,8 @@ public abstract class RobotPilot implements PlayerHandler{
 	}
 	
 	private void won(){
-		System.out.println("GEWONNEN");
-		printMessage("GEWONNEN!");
+		Controller.setStopped(true);
+		maze.setInterrupted(true);
 		try {
 			playerClient.win();
 		} catch (IllegalStateException e) {
@@ -587,8 +595,8 @@ public abstract class RobotPilot implements PlayerHandler{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		maze.setInterrupted(true);
-		Controller.setStopped(true);
+		System.out.println("GEWONNEN");
+		printMessage("GEWONNEN!");
 	}
 	
 	public void setReady(boolean ready) {

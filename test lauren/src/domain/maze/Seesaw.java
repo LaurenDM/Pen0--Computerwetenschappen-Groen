@@ -190,7 +190,15 @@ public class Seesaw extends MazeElement {
 
 	public int getOtherBarcode(){
 		return highBarcodeNb==makeBarcode?lowBarcodeNb:highBarcodeNb;
-		
+	}
+	
+	public int getOtherBarcode(int barcode){
+		if(barcode == highBarcodeNb){
+			return lowBarcodeNb;
+		}
+		else{
+			return highBarcodeNb;
+		}
 	}
 
 

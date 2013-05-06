@@ -40,7 +40,7 @@ public class Board {
 	}
 	
 	public void addInitialPosition(Pose pos, int nb){
-		System.out.println("init pos added: x:"+pos.getX()+" y:"+pos.getY()+" nb:"+nb);
+//		System.out.println("init pos added: x:"+pos.getX()+" y:"+pos.getY()+" nb:"+nb);
 		initialPositions.put(nb, pos);
 	}
 	
@@ -126,7 +126,9 @@ public class Board {
 	}
 	
 	public synchronized void addBarcode(Barcode barcode){
-		barcodes.add(barcode);
+		if(!barcodes.contains(barcode)){
+				barcodes.add(barcode);
+		}
 	}
 //	public synchronized void removeFoundBarcode(Barcode barcode){
 //		foundBarcodes.remove(barcode);
@@ -144,6 +146,7 @@ public class Board {
 	}
 	
 	public Barcode getBarcodeAt(Position pos){
+		
 		for(Barcode barcode : barcodes){
 			if(barcode.containsPosition(pos)) return barcode;
 		}

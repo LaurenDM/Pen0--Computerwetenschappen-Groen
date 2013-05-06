@@ -26,31 +26,31 @@ public class SeesawAction implements Action {
 	@Override
 	public void run(RobotPilot robot) {
 		Seesaw foundSeesaw = robot.getWorldSimulator().getBoard().getSeesaw(center);
-		robot.getFoundBoard().addSeesaw(foundSeesaw);
 		//Seesaw foundSeesaw=robot.getFoundBoard().getSeesaw(center);
 		
 		if (foundSeesaw == null) {
 			foundSeesaw = new Seesaw(center, orientation, barcodeNb, false, robot.getFoundBoard());
-			robot.getFoundBoard().addSeesaw(foundSeesaw);
-			int snappedOrientation = Orientation.snapAngle(90, 0,
-					robot.getOrientation());
-			final Position otherBarcodePosition = robot.getPosition()
-					.getNewPosition(snappedOrientation,
-							MAZECONSTANT * 3);
-			otherBarcodePosition.snapTo(MAZECONSTANT,MAZECONSTANT/2, MAZECONSTANT/2);
-			Orientation otherBarcodeOrientation = Orientation.getOrientation(
-					snappedOrientation).getBack();
-			
-			Barcode newBarcode = new Barcode(foundSeesaw.getOtherBarcode(),
-					otherBarcodePosition, otherBarcodeOrientation);
-
-			robot.getFoundBoard().addBarcode(newBarcode);
-		//System.out.println("We are going to handle a newly found seesaw");
-
 		}
+			
+		//System.out.println("We are going to handle a newly found seesaw");
 		else{
 			//System.out.println("We are going to handle an already found seesaw");
 		}
+		
+		robot.getFoundBoard().addSeesaw(foundSeesaw);
+		int snappedOrientation = Orientation.snapAngle(90, 0,
+				robot.getOrientation());
+		final Position otherBarcodePosition = robot.getPosition()
+				.getNewPosition(snappedOrientation,
+						MAZECONSTANT * 3);
+		otherBarcodePosition.snapTo(MAZECONSTANT,MAZECONSTANT/2, MAZECONSTANT/2);
+		Orientation otherBarcodeOrientation = Orientation.getOrientation(
+				snappedOrientation).getBack();
+		
+		Barcode newBarcode = new Barcode(foundSeesaw.getOtherBarcode(barcodeNb),
+				otherBarcodePosition, otherBarcodeOrientation);
+
+		robot.getFoundBoard().addBarcode(newBarcode);
 			
 			//Note that in the handleSeesaw, we take into account whether the seesaw is locked or not.
 		robot.handleSeesaw(barcodeNb, foundSeesaw);

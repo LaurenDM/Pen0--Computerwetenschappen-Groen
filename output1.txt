@@ -1,77 +1,13 @@
-Object
-1 Xcoo 6 YCoo0
-1 Xcoo 260 YCoo20
-init pos added: x:260.0 y:20.0 nb:1
-Object
-BallBarcodebits: 001000
-1 Xcoo 2 YCoo2
-1 Xcoo 100 YCoo100
-init pos added: x:100.0 y:100.0 nb:3
-Object
-1 Xcoo 2 YCoo6
-1 Xcoo 100 YCoo260
-init pos added: x:100.0 y:260.0 nb:4
-1 Xcoo 6 YCoo7
-1 Xcoo 260 YCoo300
-init pos added: x:260.0 y:300.0 nb:2
-Object
-X,Y = 0 0
-sh.playerJoined: playerID3
-sh.playerJoined: playerID0
-sh.playerJoined: playerID1
-Deelname geslaagd.
-sh.playerJoined: playerID2
-ph.gameRolled: playerNumber:4 objectNumber:3
-sh.playerReady: playerID2
-sh.playerReady: playerID0
-sh.playerReady: playerID1
-sh.playerReady: playerID3
-sh.gameStarted
-sh.gameStarted
-sh.gameStarted
-sh.gameStarted
-Setting initial pos to:100.0 y:260.0
-
-BallBarcodebits: 110000
-RobotPilot: teamNumber = 0
-Current: (60.54018751810289,260.93735063005903), ori: 176.23715817690533
-Dead End: (20.62641794872146,263.5624218219167)
-sh.playerFoundObj: player playerID1 found its ball
-PLAYER 4 JOINS TEAM 0
 PlayerID = playerID1
-sh.lockedSeesaw with barcodenb 15 by player ID: playerID3 no: 2
-sh.unlockedSeesaw by player ID: playerID3 no: 2
-Tile(1,-1,true,true,true,true),Tile(2,-1,true,true,true,true)
-sh.lockedSeesaw with barcodenb 11 by player ID: playerID3 no: 2
-Tile(1,-4,true,true,true,true),Tile(2,-4,true,true,true,true)
-sh.unlockedSeesaw by player ID: playerID3 no: 2
-sh.lockedSeesaw with barcodenb 17 by player ID: playerID0 no: 1
-Current: (338.4655170315818,300.57351398654015), ori: 2.519520822589527
-Dead End: (378.4268491259173,302.331904513764)
-sh.unlockedSeesaw by player ID: playerID0 no: 1
-sh.lockedSeesaw with barcodenb 15 by player ID: playerID2 no: 3
-sh.unlockedSeesaw by player ID: playerID2 no: 3
-sh.lockedSeesaw with barcodenb 13 by player ID: playerID0 no: 1
-sh.unlockedSeesaw by player ID: playerID0 no: 1
-sh.lockedSeesaw with barcodenb 11 by player ID: playerID2 no: 3
-sh.unlockedSeesaw by player ID: playerID2 no: 3
-sh.lockedSeesaw with barcodenb 13 by player ID: playerID3 no: 2
-sh.playerFoundObj: player playerID0 found its ball
-sh.unlockedSeesaw by player ID: playerID3 no: 2
-Current: (301.38892806075194,60.97479354429473), ori: -92.08159902408687
-Dead End: (299.93601746481175,21.0011891183713)
-Current: (141.94439872699118,60.614144737274046), ori: -91.72657771437923
-Dead End: (140.73920251366036,20.63230508365914)
-tc 1
-SEESAW LOCKED
-sh.lockedSeesaw with barcodenb 11 by player ID: playerID1 no: 4
-The node after the seesaw is Tile(0,-1,true,true,true,true)
-sh.unlockedSeesaw by player ID: playerID1 no: 4
-sh.playerFoundObj: player playerID2 found its ball
-ph.GameWon by Team 1
-sh.GameWon by Team 1
-sh.gameStopped
-sh.playerReady: playerID3
-sh.playerReady: playerID0
-sh.playerReady: playerID2
-sh.playerReady: playerID1
+<<<<<<< HEAD
+ph.gameRolled: playerNumber:2 objectNumber:1
+Deelname geslaagd.
+
+EM.Fixing possible deadlock
+(0,1)(1,1)(2,1)(2,0)(1,0)(0,0)
+(0,1)(1,1)(2,1)(2,0)(1,0)(0,0)
+ph.GameWon by Team 0
+=======
+Deelname geslaagd.
+ph.gameRolled: playerNumber:4 objectNumber:3
+>>>>>>> c4b31c88546de34abaf403365f9e190180860d57

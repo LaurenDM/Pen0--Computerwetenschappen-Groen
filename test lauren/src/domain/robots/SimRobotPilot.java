@@ -50,8 +50,8 @@ public class SimRobotPilot extends RobotPilot {
 
 	private int sensorAngle;
 
-	private final int defaultMovingSpeed=80; //was 80
-	private final int defaultTurningSpeed=200;
+	private final int defaultMovingSpeed=20; //was 80
+	private final int defaultTurningSpeed=100;
 	
 	private double lastDistance = 0;
 
@@ -297,14 +297,7 @@ public class SimRobotPilot extends RobotPilot {
 
 			double currDistance = getPosition().getDistance(pos1);
 			if (detectBlackLine()) {
-
-				if(isScanningBarcode){
-					int i=0; //for debug
-				}
 				if (!isScanningBarcode  &&!ignoreBarcodes) {
-
-					
-
 					Position pos = getPosition().getNewPosition(
 							getOrientation(),
 							DISTANCE_BETWEEN_SENSOR_AND_WHEELS);
@@ -336,7 +329,7 @@ public class SimRobotPilot extends RobotPilot {
 							isScanningBarcode = true;
 
 							stop();
-							//System.out.println("going to run action");
+							System.out.println("Going to run already known seesaw Action");
 							getFoundBoard().getBarcodeAt(pos).runAction(this);
 							isScanningBarcode = false;
 						} else {
