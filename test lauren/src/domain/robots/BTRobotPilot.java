@@ -33,7 +33,7 @@ public class BTRobotPilot extends RobotPilot  {
 	private  final float wheelsDiameter = 5.43F;
 	//	private static final float wheelDiameterLeft = 5.43F;
 	//	private static final float wheelDiameterRight = 5.43F;
-	private  final float trackWidth = 16.9F;
+	private  final float trackWidth = 16.5F;
 	private int prevLightValue;
 	private int prevUltrasonicValue;
 	private int prevIRValue;
