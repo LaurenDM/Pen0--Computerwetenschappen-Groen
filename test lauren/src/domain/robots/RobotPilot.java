@@ -201,33 +201,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	
 	public abstract double readUltrasonicValue();
 	
-	public double readLongestUltrasonicValue(int extraAngle){
-		extraAngle=Math.abs(extraAngle);
-		double mostAccurateDist = readUltrasonicValue();
-		if (mostAccurateDist < MazeElement.getMazeConstant()) {
-			turnUltrasonicSensor(extraAngle);
-			
-			double littleLeftDist = readUltrasonicValue();
-			if (littleLeftDist < MazeElement.getMazeConstant()) {
-				turnUltrasonicSensor(-2*extraAngle);
-				double littleRightDist = readUltrasonicValue();
-				turnUltrasonicSensor(extraAngle);
-
-
-				if (littleRightDist >MazeElement.getMazeConstant()) {
-					mostAccurateDist = Math.round(Math.cos(extraAngle)
-							* littleRightDist);
-				}
-			}
-			else{
-				turnUltrasonicSensor(-extraAngle);
-				mostAccurateDist=littleLeftDist*Math.cos(extraAngle);
-				
-			}
-		}
-		return mostAccurateDist;
-
-	}
+	public abstract double readLongestUltrasonicValue(int extraAngle);
 	
 	public abstract void calibrateLightHigh();
 	

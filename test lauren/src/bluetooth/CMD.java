@@ -199,4 +199,8 @@ public interface CMD {
 	public static final int SNAPPOSETOTILEMID =36;
 	public void snapPoseToTileMid();
 
+	public static final int READLONGESTDISTANCE = 37;
+	public int readLongestDistance(int viewAngle);
+
+
 }
