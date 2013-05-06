@@ -29,6 +29,7 @@ import domain.maze.barcodes.Barcode;
 import domain.robots.BTRobotPilot;
 import domain.robots.CannotMoveException;
 import domain.robots.RobotPilot;
+import domain.robots.RobotPilot.PlayerState;
 import domain.robots.SimRobotPilot;
 import domain.util.ColorPolygon;
 
@@ -489,6 +490,10 @@ public class Controller {
 	
 	public void throwException() throws Exception{
 		throw new Exception();
+	}
+	
+	public synchronized PlayerState getPlayerState(int playernb){
+		return currentRobot.getWorldSimulator().getPlayerState(playernb);
 	}
 	
 }

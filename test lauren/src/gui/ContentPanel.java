@@ -23,6 +23,7 @@ import controller.Controller;
 import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
 import domain.robots.CannotMoveException;
+import domain.robots.RobotPilot;
 import domain.util.ColorPolygon;
 import exceptions.ConnectErrorException;
 /**
@@ -39,13 +40,21 @@ public class ContentPanel implements ActionListener {
 //    static JFrame barcodeFrame = new JFrame("P&O - Groen - Set the barcode values");
     static JFrame connectionFrame = new JFrame("P&O - Groen - Connection through HTTTP");
     private static ControllerPoller controllerPoller;
-    private JPanel titlePanel, buttonPanel, debugPanel, bottomButtonPanel;
-    private JLabel actionLabel, titleLabel;
+    private static JPanel titlePanel;
+	private JPanel buttonPanel;
+	private JPanel debugPanel;
+	private JPanel bottomButtonPanel;
+    private static JLabel actionLabel;
+	private static JLabel titleLabel;
+	private JLabel player1Label;
+	private JLabel player2Label;
+	private JLabel player3Label;
+	private JLabel player4Label;
     private JLabel xLabel, yLabel, speedLabel, angleLabel, infraredLabel, lineLabel;
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, connectButton, 
     calibrateButton, loadMazeButton, connectionButton,
     rotateLittleLeft,rotateLittleRight,startButton, finishButton, resumeButton, resetButton, recoverButton;
-    private static JTextArea debugText;
+ //   private static JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
     final static int totalXDimensions = 1100;
@@ -286,14 +295,26 @@ public class ContentPanel implements ActionListener {
 	}
 	private void createDebugPanel() {
 		debugPanel = new JPanel(null);
-        debugText = new JTextArea(5,22);
-        debugText.setLineWrap(true);
-        JScrollPane scrollPane = new JScrollPane(debugText);
-        debugText.setEditable(false);
-        debugPanel.add(scrollPane);
+		player1Label = new JLabel("Player 1: STATE");
+		player2Label = new JLabel("Player 2: STATE");
+		player3Label = new JLabel("Player 3: STATE");
+		player4Label = new JLabel("Player 4: STATE");
+//        debugText = new JTextArea(5,22);
+//        debugText.setLineWrap(true);
+//        JScrollPane scrollPane = new JScrollPane(debugText);
+//        debugText.setEditable(false);
+//        debugPanel.add(scrollPane);
         fixPanelLayout(debugPanel, rightPanelWidth+30, debugPanelHeight , 750, yPaddingTop);
-        scrollPane.setLocation(0, 0);
-        scrollPane.setSize(rightPanelWidth,100);
+        player1Label.setHorizontalTextPosition(SwingConstants.LEFT);
+        player2Label.setHorizontalTextPosition(SwingConstants.LEFT);
+        player3Label.setHorizontalTextPosition(SwingConstants.LEFT);
+        player4Label.setHorizontalTextPosition(SwingConstants.LEFT);
+        fixLabelLayout(debugPanel, player1Label, 200, 20, 0, 0);
+        fixLabelLayout(debugPanel, player2Label, 200, 20, 150, 0);
+        fixLabelLayout(debugPanel, player3Label, 200, 20, 0, 50);
+        fixLabelLayout(debugPanel, player4Label, 200, 20, 150, 50);
+//        scrollPane.setLocation(0, 0);
+//        scrollPane.setSize(rightPanelWidth,100);
  //       writeToDebug("Program started successfully");
         //Infolabels
         xLabel = new JLabel("X: 0");
@@ -354,6 +375,7 @@ public class ContentPanel implements ActionListener {
 					if(i==3){drawingPanel.reDrawMyPolygon(collection.get(i), Color.GREEN);}
 					if(i>3){drawingPanel.reDrawMyPolygon(collection.get(i), Color.ORANGE);}
 				}
+				
 //				for (ColorPolygon colorPoly:collection) {
 //					drawingPanel.reDrawMyPolygon(colorPoly);
 //				}
@@ -404,6 +426,7 @@ public class ContentPanel implements ActionListener {
 						}
 					}
 					contentPanel.updateBoard(controller.getColorPolygons());
+					contentPanel.setPlayerStates();
 					contentPanel.setRobotX(controller.getXCo());
 					contentPanel.setRobotY(controller.getYCo());
 					contentPanel.setRobotSpeed(controller.getSpeed());
@@ -429,7 +452,8 @@ public class ContentPanel implements ActionListener {
     }
 	
 	public void ballAlert(){
-		debugText.append("Robot picked up ball" + "\n");
+	//	debugText.append("Robot picked up ball" + "\n");
+		actionLabel.setText("Robot picked up ball");
 		drawingPanel.removeBall(controller.getBall());
 	}
 	
@@ -573,7 +597,7 @@ public class ContentPanel implements ActionListener {
 		else if(e.getSource() == resetButton){
 			controller.reset();
 			drawingPanel.reset();
-			debugText.setText("");
+//			debugText.setText("");
 			buttonPanel.requestFocusInWindow();
 		} else if(e.getSource() == recoverButton){
 			controller.recoverToLastUpdatedPose();
@@ -652,17 +676,21 @@ public class ContentPanel implements ActionListener {
 		return totalGUI;
 	}
 	
-	/**
-	 * Write a line to the debugging text area.
-	 * @param text This line will appear at the bottom of the text area.
-	 */
-	public static void writeToDebug(final String text) {
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				debugText.append(text + "\n");
-			}
-		});
+//	/**
+//	 * Write a line to the debugging text area.
+//	 * @param text This line will appear at the bottom of the text area.
+//	 */
+//	public static void writeToDebug(final String text) {
+//		SwingUtilities.invokeLater(new Runnable() {
+//			@Override
+//			public void run() {
+//				debugText.append(text + "\n");
+//			}
+//		});
+//	}
+	
+	public static void setActionLabel(String text){
+		actionLabel.setText(text);
 	}
 
 	/**
@@ -746,13 +774,20 @@ public class ContentPanel implements ActionListener {
 		for(Barcode b :controller.getRobot().getFoundBoard().getBarcodes()){
 			if(!b.getPrinted()){
 				b.setPrinted(true);
-				writeToDebug("Barcode "+b.getReadBits()[0]+b.getReadBits()[1]+b.getReadBits()[2]+b.getReadBits()[3]+b.getReadBits()[4]+b.getReadBits()[5]+" with value "+b.getPossibleDecimal()+" added.");
+				actionLabel.setText("Barcode " +b.getPossibleDecimal()+" added.");
 				if(b.getAction()!=null){
-				writeToDebug("Action: "+b.getAction().toString());
+				actionLabel.setText("Action: "+b.getAction().toString());
 				}
 
 			}
 		}
+	}
+	
+	public synchronized void setPlayerStates(){
+		player1Label.setText("Player 1: " + controller.getPlayerState(1));
+		player2Label.setText("Player 2: " + controller.getPlayerState(2));
+		player3Label.setText("Player 3: " + controller.getPlayerState(3));
+		player4Label.setText("Player 4: " + controller.getPlayerState(4));
 	}
 	
 
@@ -922,20 +957,24 @@ public class ContentPanel implements ActionListener {
 
 	    }
 	
-	public void automaticConnection(){
-//		controller.readMazeFromFile("mazes/MergeTestMaze");
-		controller.readMazeFromFile("test lauren/mazes/KoenBug2");
-    	drawingPanel.drawSimulatedWalls();
-    	try {
-			Thread.sleep(5000);
-	    	controller.teleport();
-	    	//controller.setReady(true);
-		} catch (InterruptedException e) {
-			//  Auto-generated catch block
-			e.printStackTrace();
-		}
-
+	public static void setPlayerNumber(int playernb){
+		frame.setName("P&O - Groen - player " + playernb);
+		titleLabel.setText("P&O - Team Groen - PLAYER " + playernb);
 	}
+	
+		public void automaticConnection(){
+//			controller.readMazeFromFile("mazes/MergeTestMaze");
+			controller.readMazeFromFile("test lauren/mazes/sem2demo2maze");
+			drawingPanel.drawSimulatedWalls();
+			try {
+				Thread.sleep(5000);
+				controller.teleport();
+				//controller.setReady(true);
+			} catch (InterruptedException e) {
+				//  Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 }
 
  

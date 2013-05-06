@@ -11,6 +11,7 @@ import domain.Position.Position;
 import domain.maze.barcodes.Barcode;
 import domain.robots.RobotPilot;
 import domain.robots.SimRobotPilot;
+import domain.robots.RobotPilot.PlayerState;
 import peno.htttp.DisconnectReason;
 import peno.htttp.PlayerDetails;
 import peno.htttp.SpectatorHandler;
@@ -209,8 +210,8 @@ public class WorldSimulator implements SpectatorHandler {
 
 	@Override
 	public void playerReady(String playerID, boolean isReady) {
-		if(isReady)
-			printMessage("sh.playerReady: " + playerID);
+	//	if(isReady)
+		//	printMessage("sh.playerReady: " + playerID);
 		//moeten wij niets met doen
 	}
 	
@@ -222,43 +223,47 @@ public class WorldSimulator implements SpectatorHandler {
 	
 	@Override
 	public void playerJoined(String playerID) {
-		printMessage("sh.playerJoined: " + playerID);
+	//	printMessage("sh.playerJoined: " + playerID);
 //		htttpImplementation.updateOtherPlayers(playerID);
 	}
 	
 	@Override
 	public void playerFoundObject(String playerID, int playerNumber) {
-		printMessage("sh.playerFoundObj: player "+playerID+" found its ball");
+	//	printMessage("sh.playerFoundObj: player "+playerID+" found its ball");
+		RobotPilot robot = otherRobots.get(playerID);
+		robot.setPlayerState(PlayerState.FOUND_OBJECT);
 		//moeten wij niets met doen
 	}
 	
 	@Override
 	public void playerDisconnected(String playerID, DisconnectReason reason) {
-		printMessage("sh.playerDisc: " + playerID + ", " + reason);
+	//	printMessage("sh.playerDisc: " + playerID + ", " + reason);
+		RobotPilot robot = otherRobots.get(playerID);
+		robot.setPlayerState(PlayerState.DISCONNECTED);
 		//moeten wij niets met doen
 	}
 	
 	@Override
 	public void gameStopped() {
-		printMessage("sh.gameStopped");
+	//	printMessage("sh.gameStopped");
 		//wordt afgehandeld in PlayerHandler volgens mij?
 	}
 	
 	@Override
 	public void gameStarted() {
-		printMessage("sh.gameStarted");
+//		printMessage("sh.gameStarted");
 		//wordt afgehandeld in PlayerHandler volgens mij?
 	}
 	
 	@Override
 	public void gamePaused() {
-		printMessage("sh.GamePaused");
+	//	printMessage("sh.GamePaused");
 		//wordt afgehandeld in PlayerHandler volgens mij?
 	}
 
 	@Override
 	public void gameWon(int teamNumber) {
-		printMessage("sh.GameWon by Team " + teamNumber);
+//		printMessage("sh.GameWon by Team " + teamNumber);
 	}
 
 	@Override
@@ -276,8 +281,10 @@ public class WorldSimulator implements SpectatorHandler {
 			Pose relativePose = new Pose(40*x,40*y,Orientation.getOrientation(angle));
 			Pose newPose = Position.getAbsolutePose(initialPose, relativePose);
 			robot.setPose(newPose.getOrientation().getAngleToHorizontal(), (int)newPose.getX(), (int)newPose.getY());
-			if(foundObject)
+			if(foundObject){
 				robot.setFoundBall(playerNumber);
+				robot.setPlayerState(PlayerState.FOUND_OBJECT);
+			}
 		}
 		else{
 //			System.err.println("Can't get robot from playerID to update position");
@@ -294,7 +301,7 @@ public class WorldSimulator implements SpectatorHandler {
 	@Override
 	public void lockedSeesaw(String playerID, int playerNumber, int barcode) {
 		System.out.println("Player " + playerNumber + " on seesaw " + barcode);
-		printMessage("sh.lockedSeesaw with barcodenb " + barcode + " by player ID: " + playerID + " no: " + playerNumber);
+//		printMessage("sh.lockedSeesaw with barcodenb " + barcode + " by player ID: " + playerID + " no: " + playerNumber);
 		if(!robot.getPlayerID().equals(playerID)){
 		rollSeeSawWithBarcode(barcode);
 		}
@@ -302,22 +309,38 @@ public class WorldSimulator implements SpectatorHandler {
 
 	@Override
 	public void unlockedSeesaw(String playerID, int playerNumber, int barcode) {
-		printMessage("sh.unlockedSeesaw by player ID: " + playerID + " no: " + playerNumber);
+	//	printMessage("sh.unlockedSeesaw by player ID: " + playerID + " no: " + playerNumber);
 		if(!robot.getPlayerID().equals(playerID)){
 		unlockSeesawWithBarcode(barcode);
 		}
 	}
 	
-	private void printMessage(String message){
-	//	System.out.println(message);
-		ContentPanel.writeToDebug(message);
-	}
+//	private void printMessage(String message){
+//	//	System.out.println(message);
+//		ContentPanel.writeToDebug(message);
+//	}
 
+	public synchronized PlayerState getPlayerState(int playernb){
+		for(RobotPilot robot : otherRobots.values()){
+			if(robot.getPlayerNb() == playernb){
+				return robot.getPlayerState();
+			}
+		}
+		return robot.getPlayerState();
+	}
+	
 	@Override
 	public void playerRolled(PlayerDetails playerDetails, int playerNumber) {
+		if(!otherRobots.containsKey(playerDetails.getPlayerID()) && !robot.getPlayerID().equals(playerDetails.getPlayerID())){
+			//ID not yet in system and not your own ID
+			connectExternalSimRobot(0,new Position(0,0),playerDetails.getPlayerID());
+			//System.out.println("NEW ROBOT ADDED "+playerDetails.getPlayerID());
+		}
 		RobotPilot robot = otherRobots.get(playerDetails.getPlayerID());
 		if(robot!=null){
 			Pose initialPose = getInitialPositionFromPlayer(playerNumber);
+			robot.setPlayerNb(playerNumber);
+			robot.setPlayerState(PlayerState.STARTED);
 			robot.setPose(initialPose.getOrientation().getAngleToHorizontal(), (int)initialPose.getX(), (int)initialPose.getY());
 		}
 	}

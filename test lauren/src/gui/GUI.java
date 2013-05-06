@@ -81,12 +81,12 @@ public class GUI{
     	contentPanel.setRobotAngle(angle);
     }
     
-    /**
-     * Write a new line to the debug info panel
-     */
-    public void writeToDebug(String debugInfo){
-    	ContentPanel.writeToDebug(debugInfo);
-    }
+//    /**
+//     * Write a new line to the debug info panel
+//     */
+//    public void writeToDebug(String debugInfo){
+//    	ContentPanel.writeToDebug(debugInfo);
+//    }
     
     public static String getGameID(){
     	return gameID;
