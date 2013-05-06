@@ -854,14 +854,14 @@ public class MatchMap {
 				if(getBarcodeValue(getOurMaze()[i][j]) > 0)
 					try {
 						if(checkForBarcodeMatches(str[1], getBarcodeValue(getOurMaze()[i][j]),i,j)){
-						System.out.println("MERGEPOINT HAS BEEN SET");
-						ourMergePointX = i;
-						ourMergePointY = j;
-						ourStartMergeX = i;
-						ourStartMergeY = j;
-						j = getOurMaze()[0].length;
-						i = getOurMaze().length;
-					}
+							System.out.println("MERGEPOINT HAS BEEN SET");
+							ourMergePointX = i;
+							ourMergePointY = j;
+							ourStartMergeX = i;
+							ourStartMergeY = j;
+							j = getOurMaze()[0].length;
+							i = getOurMaze().length;
+						}
 					} catch (Exception e) {
 //						System.out.println("There was a Exception code 764653");
 					}
@@ -922,14 +922,13 @@ public class MatchMap {
 				try {
 					if (getBarcodeValue(maze[i][j]) == number){
 						if(checkBarcodeSurrounding(maze,originalX,originalY,i,j)) {
-						System.out.println("equality found on");
-						otherMergePointX = i;
-						otherStartMergeX = i;
-						otherStartMergeY = j;
-						otherMergePointY = j;
-						return true;
-					}
-						
+							System.out.println("equality found on");
+							otherMergePointX = i;
+							otherStartMergeX = i;
+							otherStartMergeY = j;
+							otherMergePointY = j;
+							return true;
+						}	
 					}
 				} catch (Exception e) {
 					
@@ -953,8 +952,7 @@ public class MatchMap {
 		counter+=checkBarcodeEquality(maze,originalX-1,originalY+1,permX-1,permY+1);	
 		if(counter > 7)
 			return true;
-		return false;
-		
+		return false;		
 	}
 	
 	private static int checkBarcodeEquality(String[][] maze,int originalX,int originalY, int permX, int permY){
