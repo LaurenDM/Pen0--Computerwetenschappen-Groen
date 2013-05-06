@@ -43,6 +43,7 @@ public class ContentPanel implements ActionListener {
     private static JPanel titlePanel;
 	private JPanel buttonPanel;
 	private JPanel debugPanel;
+	private JPanel playerPanel;
 	private JPanel bottomButtonPanel;
     private static JLabel actionLabel;
 	private static JLabel titleLabel;
@@ -54,7 +55,7 @@ public class ContentPanel implements ActionListener {
     private JButton upButton, rightButton,leftButton, downButton, cancelButton, connectButton, 
     calibrateButton, loadMazeButton, connectionButton,
     rotateLittleLeft,rotateLittleRight,startButton, finishButton, resumeButton, resetButton, recoverButton;
- //   private static JTextArea debugText;
+    private static JTextArea debugText;
     final JPanel totalGUI = new JPanel();
     final JPanel variableGUI = new JPanel();
     final static int totalXDimensions = 1100;
@@ -242,12 +243,13 @@ public class ContentPanel implements ActionListener {
         //_____________________________________________________
         // Creation of a Panel to contain the debug information
         createDebugPanel();
+        createPlayerLabels();
         
         
         //_________________________________________________________________________
         // Creation of a Drawing Panel to display the map and the robot's movements
         drawingPanel = new DrawingPanel(this);
-        fixPanelLayout(drawingPanel, 700, 600, 25, yPaddingTop);
+        fixPanelLayout(drawingPanel, 600, 600, 25, yPaddingTop);
         drawingPanel.setBackground(Color.WHITE);
         
         //________________________
@@ -295,27 +297,16 @@ public class ContentPanel implements ActionListener {
 	}
 	private void createDebugPanel() {
 		debugPanel = new JPanel(null);
-		player1Label = new JLabel("Player 1: STATE");
-		player2Label = new JLabel("Player 2: STATE");
-		player3Label = new JLabel("Player 3: STATE");
-		player4Label = new JLabel("Player 4: STATE");
-//        debugText = new JTextArea(5,22);
-//        debugText.setLineWrap(true);
-//        JScrollPane scrollPane = new JScrollPane(debugText);
-//        debugText.setEditable(false);
-//        debugPanel.add(scrollPane);
+        debugText = new JTextArea(5,22);
+        debugText.setLineWrap(true);
+        JScrollPane scrollPane = new JScrollPane(debugText);
+        debugText.setEditable(false);
+        debugPanel.add(scrollPane);
         fixPanelLayout(debugPanel, rightPanelWidth+30, debugPanelHeight , 750, yPaddingTop);
-        player1Label.setHorizontalTextPosition(SwingConstants.LEFT);
-        player2Label.setHorizontalTextPosition(SwingConstants.LEFT);
-        player3Label.setHorizontalTextPosition(SwingConstants.LEFT);
-        player4Label.setHorizontalTextPosition(SwingConstants.LEFT);
-        fixLabelLayout(debugPanel, player1Label, 200, 20, 0, 0);
-        fixLabelLayout(debugPanel, player2Label, 200, 20, 150, 0);
-        fixLabelLayout(debugPanel, player3Label, 200, 20, 0, 50);
-        fixLabelLayout(debugPanel, player4Label, 200, 20, 150, 50);
-//        scrollPane.setLocation(0, 0);
-//        scrollPane.setSize(rightPanelWidth,100);
- //       writeToDebug("Program started successfully");
+        
+        scrollPane.setLocation(0, 0);
+        scrollPane.setSize(rightPanelWidth,100);
+      //  writeToDebug("Program started successfully");
         //Infolabels
         xLabel = new JLabel("X: 0");
         xLabel.setHorizontalTextPosition(SwingConstants.LEFT);
@@ -354,6 +345,25 @@ public class ContentPanel implements ActionListener {
         graphPanel.fixPanelLayout(rightPanelWidth,sensorGraphsPanelHeight, 750, yPaddingTop+debugPanelHeight);
         totalGUI.add(graphPanel);
 
+	}
+	
+	private void createPlayerLabels(){
+		playerPanel = new JPanel(null);
+		fixPanelLayout(playerPanel, 100, 600 , 620, 720);
+		player1Label = new JLabel("Player 1: \n STATE");
+		player2Label = new JLabel("Player 2: \n STATE");
+		player3Label = new JLabel("Player 3: \n STATE");
+		player4Label = new JLabel("Player 4: \n STATE");
+		player1Label.setHorizontalTextPosition(SwingConstants.LEFT);
+        player2Label.setHorizontalTextPosition(SwingConstants.LEFT);
+        player3Label.setHorizontalTextPosition(SwingConstants.LEFT);
+        player4Label.setHorizontalTextPosition(SwingConstants.LEFT);
+        fixLabelLayout(playerPanel, player1Label, 100, 50, 0, 0);
+        fixLabelLayout(playerPanel, player2Label, 100, 50, 0, 50);
+        fixLabelLayout(playerPanel, player3Label, 100, 50, 0, 100);
+        fixLabelLayout(playerPanel, player4Label, 100, 50, 0, 150);
+        playerPanel.requestFocusInWindow();
+	
 	}
 	
 	
@@ -597,7 +607,7 @@ public class ContentPanel implements ActionListener {
 		else if(e.getSource() == resetButton){
 			controller.reset();
 			drawingPanel.reset();
-//			debugText.setText("");
+			debugText.setText("");
 			buttonPanel.requestFocusInWindow();
 		} else if(e.getSource() == recoverButton){
 			controller.recoverToLastUpdatedPose();
@@ -676,18 +686,18 @@ public class ContentPanel implements ActionListener {
 		return totalGUI;
 	}
 	
-//	/**
-//	 * Write a line to the debugging text area.
-//	 * @param text This line will appear at the bottom of the text area.
-//	 */
-//	public static void writeToDebug(final String text) {
-//		SwingUtilities.invokeLater(new Runnable() {
-//			@Override
-//			public void run() {
-//				debugText.append(text + "\n");
-//			}
-//		});
-//	}
+	/**
+	 * Write a line to the debugging text area.
+	 * @param text This line will appear at the bottom of the text area.
+	 */
+	public static void writeToDebug(final String text) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				debugText.append(text + "\n");
+			}
+		});
+	}
 	
 	public static void setActionLabel(String text){
 		actionLabel.setText(text);
@@ -784,10 +794,10 @@ public class ContentPanel implements ActionListener {
 	}
 	
 	public synchronized void setPlayerStates(){
-		player1Label.setText("Player 1: " + controller.getPlayerState(1));
-		player2Label.setText("Player 2: " + controller.getPlayerState(2));
-		player3Label.setText("Player 3: " + controller.getPlayerState(3));
-		player4Label.setText("Player 4: " + controller.getPlayerState(4));
+		player1Label.setText("Player 1: \n" + controller.getPlayerState(1));
+		player2Label.setText("Player 2: \n" + controller.getPlayerState(2));
+		player3Label.setText("Player 3: \n" + controller.getPlayerState(3));
+		player4Label.setText("Player 4: \n" + controller.getPlayerState(4));
 	}
 	
 

@@ -61,7 +61,7 @@ public class DrawingPanel extends JPanel {
 			
 	}
 
-	public static final int IMG_WIDTH = 700;
+	public static final int IMG_WIDTH = 600;
 	public static final int IMG_HEIGHT = 600;
 
 	private BufferedImage image = new BufferedImage(IMG_WIDTH, IMG_HEIGHT,

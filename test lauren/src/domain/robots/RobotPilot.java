@@ -584,13 +584,13 @@ public abstract class RobotPilot implements PlayerHandler{
 	}
 	
 	private void printMessage(String message){
-		System.out.println(message);
-//		ContentPanel.writeToDebug(message);
+	//	System.out.println(message);
+		ContentPanel.writeToDebug(message);
 	}
 
 	@Override
 	public void gameWon(int teamNumber) {
-		printMessage("ph.GameWon by Team " + teamNumber);
+		//printMessage("ph.GameWon by Team " + teamNumber);
 		Controller.setStopped(true);
 	}
 

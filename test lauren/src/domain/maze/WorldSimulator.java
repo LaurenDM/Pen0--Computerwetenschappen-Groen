@@ -211,7 +211,7 @@ public class WorldSimulator implements SpectatorHandler {
 	@Override
 	public void playerReady(String playerID, boolean isReady) {
 	//	if(isReady)
-		//	printMessage("sh.playerReady: " + playerID);
+			printMessage("sh.playerReady: " + playerID);
 		//moeten wij niets met doen
 	}
 	
@@ -223,7 +223,7 @@ public class WorldSimulator implements SpectatorHandler {
 	
 	@Override
 	public void playerJoined(String playerID) {
-	//	printMessage("sh.playerJoined: " + playerID);
+		printMessage("sh.playerJoined: " + playerID);
 //		htttpImplementation.updateOtherPlayers(playerID);
 	}
 	
@@ -237,7 +237,7 @@ public class WorldSimulator implements SpectatorHandler {
 	
 	@Override
 	public void playerDisconnected(String playerID, DisconnectReason reason) {
-	//	printMessage("sh.playerDisc: " + playerID + ", " + reason);
+		printMessage("sh.playerDisc: " + playerID + ", " + reason);
 		RobotPilot robot = otherRobots.get(playerID);
 		robot.setPlayerState(PlayerState.DISCONNECTED);
 		//moeten wij niets met doen
@@ -245,25 +245,25 @@ public class WorldSimulator implements SpectatorHandler {
 	
 	@Override
 	public void gameStopped() {
-	//	printMessage("sh.gameStopped");
+		printMessage("sh.gameStopped");
 		//wordt afgehandeld in PlayerHandler volgens mij?
 	}
 	
 	@Override
 	public void gameStarted() {
-//		printMessage("sh.gameStarted");
+		printMessage("sh.gameStarted");
 		//wordt afgehandeld in PlayerHandler volgens mij?
 	}
 	
 	@Override
 	public void gamePaused() {
-	//	printMessage("sh.GamePaused");
+		printMessage("sh.GamePaused");
 		//wordt afgehandeld in PlayerHandler volgens mij?
 	}
 
 	@Override
 	public void gameWon(int teamNumber) {
-//		printMessage("sh.GameWon by Team " + teamNumber);
+		printMessage("sh.GameWon by Team " + teamNumber);
 	}
 
 	@Override
@@ -301,7 +301,7 @@ public class WorldSimulator implements SpectatorHandler {
 	@Override
 	public void lockedSeesaw(String playerID, int playerNumber, int barcode) {
 		System.out.println("Player " + playerNumber + " on seesaw " + barcode);
-//		printMessage("sh.lockedSeesaw with barcodenb " + barcode + " by player ID: " + playerID + " no: " + playerNumber);
+		printMessage("sh.lockedSeesaw with barcodenb " + barcode + " by player " + playerNumber);
 		if(!robot.getPlayerID().equals(playerID)){
 		rollSeeSawWithBarcode(barcode);
 		}
@@ -315,10 +315,10 @@ public class WorldSimulator implements SpectatorHandler {
 		}
 	}
 	
-//	private void printMessage(String message){
-//	//	System.out.println(message);
-//		ContentPanel.writeToDebug(message);
-//	}
+	private void printMessage(String message){
+	//	System.out.println(message);
+		ContentPanel.writeToDebug(message);
+	}
 
 	public synchronized PlayerState getPlayerState(int playernb){
 		for(RobotPilot robot : otherRobots.values()){

@@ -798,7 +798,7 @@ public class MazeGraph {
 	 * @param partnerY
 	 */
 	public void setPartnerPosition(int partnerX, int partnerY) {
-//		ContentPanel.writeToDebug("Partner at (" + partnerX + "," + partnerY + ")");
+		ContentPanel.writeToDebug("Partner at (" + partnerX + "," + partnerY + ")");
 		System.out.println("Partner at (" + partnerX + "," + partnerY + ")");
 		if(getTileNodeAt(partnerX, partnerY)==null){
 			System.out.println("!!");

@@ -1,4 +1,3 @@
 PlayerID = playerID1
 Deelname geslaagd.
-ph.gameRolled: playerNumber:2 objectNumber:1
-
+ph.gameRolled: playerNumber:1 objectNumber:0
