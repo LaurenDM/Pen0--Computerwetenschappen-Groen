@@ -50,8 +50,8 @@ public class SimRobotPilot extends RobotPilot {
 
 	private int sensorAngle;
 
-	private final int defaultMovingSpeed=80; //was 80
-	private final int defaultTurningSpeed=200;
+	private final int defaultMovingSpeed=20; //was 80
+	private final int defaultTurningSpeed=100;
 	
 	private double lastDistance = 0;
 
