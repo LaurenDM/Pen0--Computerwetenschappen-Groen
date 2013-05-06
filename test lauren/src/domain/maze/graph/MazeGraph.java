@@ -178,9 +178,10 @@ public class MazeGraph {
 		//If we're driving towards our teammate we'll only consider paths to their location.
 		//If not all unexpanded tiles are added to the list.
 		if(drivingToPartner){
-			//System.out.println("DRIVING TO PARTNER");
+			System.out.println("DRIVING TO PARTNER");
+			System.out.println("Finish node: " + getFinishNode());
 			for(Orientation o : Orientation.values()){
-				if(getFinishNode().getNodeAt(o).isAccessible())
+				if(getFinishNode() != null && getFinishNode().getNodeAt(o) != null && getFinishNode().getNodeAt(o).isAccessible())
 					unexpanded.add((TileNode) getFinishNode().getNodeAt(o));
 			}
 		} else {
@@ -498,12 +499,14 @@ public class MazeGraph {
 	}
 	
 	private void setTileToFinish(TileNode tile) {
-		for(TileNode node:tileNodes){
-			if(node.isFinish() && !node.equals(tile)){
-				node.setFinish(false);
+		if(tile!=null){
+			for(TileNode node:tileNodes){
+				if(node.isFinish() && !node.equals(tile)){
+					node.setFinish(false);
+				}
 			}
+			tile.setFinish(true);
 		}
-		tile.setFinish(true);
 	}
 	
 	/**
@@ -521,7 +524,7 @@ public class MazeGraph {
 		setTileBarcode(getCurrentTile(),barcodeNumber);
 	}
 
-	private void setTileBarcode(TileNode tile, int barcodeNumber) {
+	public void setTileBarcode(TileNode tile, int barcodeNumber) {
 		tile.setBarcode(barcodeNumber);
 	}
 
@@ -576,7 +579,7 @@ public class MazeGraph {
 	
 	private TileNode getFinishNode() {
 		for(TileNode node: tileNodes){
-			if(node.isFinish()) return node;
+			if(node != null && node.isFinish()) return node;
 		}
 		return null;
 	}
@@ -702,7 +705,7 @@ public class MazeGraph {
 			generateTileNodeAt(seesaw1.getPairedNode(), getCurrentRobotOrientation());
 			generateWallNodeAt((TileNode)seesaw1.getPairedNode().getNodeAt(getCurrentRobotOrientation()), getCurrentRobotOrientation().getRelativeOrientation(Orientation.WEST));
 			generateWallNodeAt((TileNode)seesaw1.getPairedNode().getNodeAt(getCurrentRobotOrientation()), getCurrentRobotOrientation().getRelativeOrientation(Orientation.EAST));
-			System.out.println(seesaw1+","+seesaw1.getPairedNode());
+//			System.out.println(seesaw1+","+seesaw1.getPairedNode());
 		}
 		if(getCurrentTile().getNodeAt(getCurrentRobotOrientation())!=null && getCurrentTile().getNodeAt(getCurrentRobotOrientation()).getClass().equals(SeesawNode.class)){
 			SeesawNode seesaw1 = (SeesawNode)getCurrentTile().getNodeAt(getCurrentRobotOrientation());
@@ -795,6 +798,11 @@ public class MazeGraph {
 	 * @param partnerY
 	 */
 	public void setPartnerPosition(int partnerX, int partnerY) {
+		ContentPanel.writeToDebug("Partner at (" + partnerX + "," + partnerY + ")");
+		System.out.println("Partner at (" + partnerX + "," + partnerY + ")");
+		if(getTileNodeAt(partnerX, partnerY)==null){
+			System.out.println("!!");
+		}
 		setTileToFinish(getTileNodeAt(partnerX, partnerY));
 		setDrivingToPartner(true);
 	}

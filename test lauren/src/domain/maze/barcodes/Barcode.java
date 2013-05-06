@@ -96,6 +96,14 @@ public class Barcode extends MazeElement{
 //		}
 //	}
 	
+	public static boolean isSeesawBC(int number){
+		for(int n : seesawNumbers){
+			if(n == number)
+				return true;
+		}
+		return false;
+	}
+	
 	public boolean isSeesawBC(){
 		for(int n : seesawNumbers){
 			if(n == decimal)
@@ -106,14 +114,14 @@ public class Barcode extends MazeElement{
 	
 	public Action getAction(int number){
 		if((number<8) && (ownBallNumber == number%4)){
-			System.out.println("BallBarcodebits: " + readBits[0]+readBits[1]+readBits[2]+readBits[3]+readBits[4]+readBits[5]);
+//			System.out.println("BallBarcodebits: " + readBits[0]+readBits[1]+readBits[2]+readBits[3]+readBits[4]+readBits[5]);
 			int teamNb = readBits[2];
 			return new FetchBallAction(teamNb);
 		}
 		if(isOtherBallNumber(number)){
 			return new DoNothingAction();
 		}
-		else if(isSeesawBC()){
+		else if(isSeesawBC(decimal)){
 			Position pos = getCenterPosition().getNewPosition(getOrientation().getAngleToHorizontal(), 60);
 			return new SeesawAction(number, pos, getOrientation());
 		}
@@ -334,5 +342,15 @@ public class Barcode extends MazeElement{
 	
 	public int getDecimal(){
 		return decimal;
+	}
+	
+	@Override
+	public boolean equals(Object other){
+		return ((Barcode) other).getDecimal() == getDecimal();
+	}
+	
+	@Override
+	public int hashCode(){
+		return getDecimal();
 	}
 }

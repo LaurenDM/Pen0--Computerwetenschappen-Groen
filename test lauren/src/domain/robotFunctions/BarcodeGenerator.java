@@ -20,13 +20,10 @@ public class BarcodeGenerator {
 		double turnSpeed = robot.getTurningSpeed();
 		double moveSpeed = robot.getMovingSpeed();
 		if(robot.getFoundBoard().detectBarcodeAt(robot.getPosition())){
-			try {
-				System.out.println("ROBOT MOVES 8; BARCODE FOUND");
-				robot.move(8);
-			} catch (CannotMoveException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			System.out.println("Reading barcode that is already known");
+			Barcode barcode = robot.getFoundBoard().getBarcodeAt(robot.getPosition());
+			barcode.runAction(robot);
+			return;
 		}
 		robot.setMovingSpeed(0.5);
 		robot.backward();
