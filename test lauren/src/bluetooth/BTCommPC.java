@@ -327,7 +327,7 @@ public class BTCommPC  implements SpecialReplyCode {
 		}
 	}
 
-	private int[] sendCommandForReal(int command, int argument)
+	private synchronized int[] sendCommandForReal(int command, int argument)
 			throws BluetoothStateException {
 
 
