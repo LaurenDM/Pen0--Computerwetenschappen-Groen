@@ -1,6 +1,6 @@
 DeadEnd.N	DeadEnd.N	Cross	Cross	Cross	Cross
 Straight.N.0	Straight.N.2	Cross	Cross	Cross	Cross
-Corner.S		T.S			T.N		T.N		Straight.E	DeadEnd.E
+Corner.S.S4N		T.S			T.N		T.N		Straight.E	DeadEnd.E.S1N
 Cross		Cross		T.W		T.E		Cross	Cross
 Cross		Cross		Straight.S	Straight.S	Cross	Cross
-Cross		Cross		DeadEnd.S	DeadEnd.S	Cross      Cross
+Cross		Cross		DeadEnd.S.S3N	DeadEnd.S.S2N	Cross      Cross
