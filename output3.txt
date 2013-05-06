@@ -1,5 +1,6 @@
 PlayerID = playerID3
 Deelname geslaagd.
+<<<<<<< HEAD
 ph.gameRolled: playerNumber:3 objectNumber:2
 
 PLAYER 3 JOINS TEAM 0
@@ -424,3 +425,6 @@ Partner at (3,1)
 DRIVING TO PARTNER
 Finish node: Tile(3,1,true,true,true,true)
 ph.GameWon by Team 0
+=======
+ph.gameRolled: playerNumber:1 objectNumber:0
+>>>>>>> c4b31c88546de34abaf403365f9e190180860d57

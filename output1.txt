@@ -1,4 +1,5 @@
 PlayerID = playerID1
+<<<<<<< HEAD
 ph.gameRolled: playerNumber:2 objectNumber:1
 Deelname geslaagd.
 
@@ -6,3 +7,7 @@ EM.Fixing possible deadlock
 (0,1)(1,1)(2,1)(2,0)(1,0)(0,0)
 (0,1)(1,1)(2,1)(2,0)(1,0)(0,0)
 ph.GameWon by Team 0
+=======
+Deelname geslaagd.
+ph.gameRolled: playerNumber:4 objectNumber:3
+>>>>>>> c4b31c88546de34abaf403365f9e190180860d57
