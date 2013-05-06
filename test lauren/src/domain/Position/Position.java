@@ -35,8 +35,16 @@ public class Position implements Cloneable {
 	}
 	
 	public Position getNewPosition(double orientation, double distance){
+		return getNewPosition(orientation, distance, false);
+	}
+	
+	public Position getNewPosition(double orientation, double distance, boolean yPositiveUp){
+		int factor = 1;
+		if(yPositiveUp){
+			factor = -1;
+		}
 		double x = getX()+Math.cos(Math.toRadians(orientation))*distance;
-		double y = getY()+Math.sin(Math.toRadians(orientation))*distance;
+		double y = getY()+Math.sin(Math.toRadians(orientation))*factor*distance;
 		return new Position(x,y);
 	}
 	
@@ -157,13 +165,17 @@ public class Position implements Cloneable {
 			return absolutePose;
 		}
 		Orientation startOrient = initialPose.getOrientation();
+		//System.out.println("StartOrient = " + startOrient);
 		int offset = startOrient.getOffsetTo(MazeGraph.getInitialOrientation());
+		//System.out.println("Offset = " + offset);
 		Orientation xOrient = MazeGraph.getInitialOrientation().getOffset(offset);
-		double deltaY = initialPose.getY()-absolutePose.getY();
-		double deltaX = initialPose.getX()-absolutePose.getX();
+		//System.out.println("xOrient = " + xOrient);
+		//System.out.println("yOrient = " + xOrient.getOffset(1));
+		double deltaY = absolutePose.getY()-initialPose.getY();
+		double deltaX = absolutePose.getX()-initialPose.getX();
 		Pose relativeStart = new Pose(0,0,MazeGraph.getInitialOrientation());
-		Position newPos = relativeStart.getNewPosition(xOrient.getAngleToHorizontal(), deltaX);
-		newPos = newPos.getNewPosition(xOrient.getOffset(-1).getAngleToHorizontal(), deltaY);
+		Position newPos = relativeStart.getNewPosition(xOrient.getAngleToHorizontal(), deltaX,true);
+		newPos = newPos.getNewPosition(xOrient.getOffset(1).getAngleToHorizontal(), deltaY,true);
 //		System.out.println("ABSOLUTE: "+ absolutePose);
 //		System.out.println("INITIAL: " + initialPose);
 //		System.out.println("RELATIVE: " + new Pose(newPos, Orientation.EAST));
