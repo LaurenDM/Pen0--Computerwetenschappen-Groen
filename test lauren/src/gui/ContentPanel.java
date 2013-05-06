@@ -349,7 +349,7 @@ public class ContentPanel implements ActionListener {
 	
 	private void createPlayerLabels(){
 		playerPanel = new JPanel(null);
-		fixPanelLayout(playerPanel, 100, 600 , 620, 720);
+		fixPanelLayout(playerPanel, 100, 600 , 630, 40);
 		player1Label = new JLabel("Player 1: \n STATE");
 		player2Label = new JLabel("Player 2: \n STATE");
 		player3Label = new JLabel("Player 3: \n STATE");
