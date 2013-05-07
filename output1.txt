@@ -1,2 +1,710 @@
 PlayerID = playerID1
 Deelname geslaagd.
+
+Player 2 on seesaw 15
+PLAYER 2 JOINS TEAM 0
+Player 2 on seesaw 11
+RP.teamTilesReceived
+starting to merge
+trying to merge by barcode
+___________________
+ori
+90
+
+Seesaw.N            dummy               dummy               dummy               dummy               dummy               dummy               Seesaw.N            dummy               dummy               
+Seesaw.S            dummy               Corner.N            T.N                 Straight.E.37       Corner.E            dummy               Seesaw.S            DeadEnd.N           dummy               
+Straight.N.15       Corner.N            Cross.N             Corner.S            DeadEnd.N           Corner.W            Corner.E            Straight.N.13       Straight.N.6        dummy               
+T.W                 T.S                 Corner.S            DeadEnd.N           Straight.N.0        DeadEnd.N           Corner.W            T.S                 Corner.S            dummy               
+Corner.W            Straight.E.39       Straight.E          T.S                 T.S                 T.S                 Straight.E          Straight.E          Straight.E          Corner.S.OTHERSTART 
+180
+270
+___________________
+ori
+90
+
+Seesaw.N            dummy               dummy               dummy               dummy               dummy               dummy               Seesaw.N            dummy               dummy               
+Seesaw.S            dummy               Corner.N            T.N                 Straight.E.37       Corner.E            dummy               Seesaw.S            DeadEnd.N           dummy               
+Straight.N.15       Corner.N            Cross.N             Corner.S            DeadEnd.N           Corner.W            Corner.E            Straight.N.13       Straight.N.6        dummy               
+T.W                 T.S                 Corner.S            DeadEnd.N           Straight.N.0        DeadEnd.N           Corner.W            T.S                 Corner.S            dummy               
+Corner.W            Straight.E.39       Straight.E          T.S                 T.S                 T.S                 Straight.E          Straight.E          Straight.E          Corner.S.OTHERSTART 
+180
+270
+___________________
+ori
+coord of merge   1    5
+90
+
+Seesaw.N            dummy               dummy               dummy               dummy               dummy               dummy               Seesaw.N            dummy               dummy               
+Seesaw.S            dummy               Corner.N            T.N                 Straight.E.37       Corner.E            dummy               Seesaw.S            DeadEnd.N           dummy               
+Straight.N.15       Corner.N            Cross.N             Corner.S            DeadEnd.N           Corner.W            Corner.E            Straight.N.13       Straight.N.6        dummy               
+T.W                 T.S                 Corner.S            DeadEnd.N           Straight.N.0        DeadEnd.N           Corner.W            T.S                 Corner.S            dummy               
+Corner.W            Straight.E.39       Straight.E          T.S                 T.S                 T.S                 Straight.E          Straight.E          Straight.E          Corner.S.OTHERSTART 
+coord of merge   1    5
+180
+coord of merge   1    5
+270
+coord of merge   1    5
+equality found on
+test
+MERGEPOINT HAS BEEN SET
+Merged
+correctOrient:
+
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Corner.N.OTHERSTART Straight.W          Straight.W          Straight.W          T.N                 T.N                 T.N                 Straight.W          Straight.W.39       Corner.E.MYSTART    dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Straight.N.55       Corner.N            T.N                 Corner.E            DeadEnd.S           Straight.N.0        DeadEnd.S           Corner.N            T.N                 T.E                 dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Straight.N          Straight.N.6        Straight.N.13       Corner.W            Corner.E            DeadEnd.S           Corner.N            Cross.W             Corner.S            Straight.N.15       dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Straight.N          DeadEnd.S           Seesaw.N            dummy               Corner.W            Straight.W.37       T.S                 Corner.S            dummy               Seesaw.N            dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Straight.N          DeadEnd.N           Seesaw.S            dummy               dummy               dummy               dummy               dummy               dummy               Seesaw.S            dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Straight.N          Straight.N.1        Straight.N.11       dummy               Cross.W             Straight.W          T.S                 Cross.W             dummy               Straight.N.17       dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Straight.N          Corner.W            T.S                 T.S                 Corner.S            DeadEnd.W           Straight.W.7        T.S                 T.S                 T.E                 dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Corner.W            Straight.W          Straight.W.47       Straight.W          Straight.W          Straight.W          Straight.W          Straight.W          Straight.W          Corner.S            dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+Changed row order
+
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Corner.W            Straight.W          Straight.W.47       Straight.W          Straight.W          Straight.W          Straight.W          Straight.W          Straight.W          Corner.S            dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Straight.N          Corner.W            T.S                 T.S                 Corner.S            DeadEnd.W           Straight.W.7        T.S                 T.S                 T.E                 dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Straight.N          Straight.N.1        Straight.N.11       dummy               Cross.W             Straight.W          T.S                 Cross.W             dummy               Straight.N.17       dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Straight.N          DeadEnd.N           Seesaw.S            dummy               dummy               dummy               dummy               dummy               dummy               Seesaw.S            dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Straight.N          DeadEnd.S           Seesaw.N            dummy               Corner.W            Straight.W.37       T.S                 Corner.S            dummy               Seesaw.N            dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Straight.N          Straight.N.6        Straight.N.13       Corner.W            Corner.E            DeadEnd.S           Corner.N            Cross.W             Corner.S            Straight.N.15       dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Straight.N.55       Corner.N            T.N                 Corner.E            DeadEnd.S           Straight.N.0        DeadEnd.S           Corner.N            T.N                 T.E                 dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               Corner.N.OTHERSTART Straight.W          Straight.W          Straight.W          T.N                 T.N                 T.N                 Straight.W          Straight.W.39       Corner.E.MYSTART    dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               dummy               
+merging : Corner.N.OTHERSTART
+merging : Straight.N.55
+merging : Straight.N
+merging : Straight.N
+merging : Straight.N
+merging : Straight.N
+merging : Straight.N
+merging : Corner.W
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : Straight.W
+merging : Corner.N
+merging : Straight.N.6
+merging : DeadEnd.S
+merging : DeadEnd.N
+merging : Straight.N.1
+merging : Corner.W
+merging : Straight.W
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : Straight.W
+merging : T.N
+merging : Straight.N.13
+merging : Seesaw.N
+merging : Seesaw.S
+merging : Straight.N.11
+merging : T.S
+merging : Straight.W.47
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : Straight.W
+merging : Corner.E
+merging : Corner.W
+merging : dummy
+merging : dummy
+merging : dummy
+merging : T.S
+merging : Straight.W
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : T.N
+merging : DeadEnd.S
+merging : Corner.E
+merging : Corner.W
+merging : dummy
+merging : Cross.W
+merging : Corner.S
+merging : Straight.W
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : T.N
+merging : Straight.N.0
+merging : DeadEnd.S
+merging : Straight.W.37
+merging : dummy
+merging : Straight.W
+merging : DeadEnd.W
+merging : Straight.W
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : T.N
+merging : DeadEnd.S
+merging : Corner.N
+merging : T.S
+merging : dummy
+merging : T.S
+merging : Straight.W.7
+merging : Straight.W
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : Straight.W
+merging : Corner.N
+merging : Cross.W
+merging : Corner.S
+merging : dummy
+merging : Cross.W
+merging : T.S
+merging : Straight.W
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : Straight.W.39
+merging : T.N
+merging : Corner.S
+merging : dummy
+merging : dummy
+merging : dummy
+merging : T.S
+merging : Straight.W
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : Corner.E.MYSTART
+merging : T.E
+merging : Straight.N.15
+merging : Seesaw.N
+merging : Seesaw.S
+merging : Straight.N.17
+merging : T.E
+merging : Corner.S
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+merging : dummy
+pos in ons coord:9 5
+pos in map:9 5
+FixEntireMap:
+
+Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Corner.W            Straight.W          Straight.W.47       Straight.W          Straight.W          Straight.W          Straight.W          Straight.W          Straight.W          Corner.S            Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Straight.N          Corner.W            T.S                 T.S                 Corner.S            DeadEnd.W           Straight.W.7        T.S                 T.S                 T.E                 Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Straight.N          Straight.N.1        Straight.N.11       Cross               Cross.W             Straight.W          T.S                 Cross.W             Cross               Straight.N.17       Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Straight.N          DeadEnd.N           Seesaw.S            Cross               Cross               Cross               Cross               Cross               Cross               Seesaw.S            Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Straight.N          DeadEnd.S           Seesaw.N            Cross               Corner.W            Straight.W.37       T.S                 Corner.S            Cross               Seesaw.N            Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Straight.N          Straight.N.6        Straight.N.13       Corner.W            Corner.E            DeadEnd.S           Corner.N            Cross.W             Corner.S            Straight.N.15       Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Straight.N.55       Corner.N            T.N                 Corner.E            DeadEnd.S           Straight.N.0        DeadEnd.S           Corner.N            T.N                 T.E                 Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+Corner.N.OTHERSTART Straight.W          Straight.W          Straight.W          T.N                 T.N                 T.N                 Straight.W          Straight.W.39       Corner.E.MYSTART    Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               Cross               
+READMAP
+Maps merged and imported
+ph.teamPosition: (0,-4)
+Partner at (-5,0)
+DRIVING TO PARTNER
+Finish node: Tile(-5,0,true,true,true,true)
+ph.teamPosition: (0,-3)
+Partner at (-6,0)
+DRIVING TO PARTNER
+Finish node: Tile(-6,0,true,true,true,true)
+DRIVING TO PARTNER
+Finish node: Tile(-6,0,true,true,true,true)
+ph.teamPosition: (0,-2)
+Partner at (-7,0)
+DRIVING TO PARTNER
+Finish node: Tile(-7,0,true,true,true,true)
+ph.teamPosition: (0,-1)
+Partner at (-8,0)
+Player 3 on seesaw 13
+ph.teamPosition: (0,0)
+Partner at (-9,0)
+DRIVING TO PARTNER
+Finish node: Tile(-9,0,true,true,true,true)
+ph.teamPosition: (-1,0)
+Partner at (-9,-1)
+DRIVING TO PARTNER
+Finish node: Tile(-9,-1,true,true,true,true)
+DRIVING TO PARTNER
+Finish node: Tile(-9,-1,true,true,true,true)
+ph.teamPosition: (-2,0)
+Partner at (-9,-2)
+DRIVING TO PARTNER
+Finish node: Tile(-9,-2,true,true,true,true)
+ph.teamPosition: (-3,0)
+Partner at (-9,-3)
+DRIVING TO PARTNER
+Finish node: Tile(-9,-3,true,true,true,true)
+ph.teamPosition: (-4,0)
+Partner at (-9,-4)
+DRIVING TO PARTNER
+Finish node: Tile(-9,-4,true,true,true,true)
+ph.teamPosition: (-5,0)
+Partner at (-9,-5)
+DRIVING TO PARTNER
+Finish node: Tile(-9,-5,true,true,true,true)
+ph.teamPosition: (-6,0)
+Partner at (-9,-6)
+DRIVING TO PARTNER
+Finish node: Tile(-9,-6,true,true,true,true)
+ph.teamPosition: (-7,0)
+Partner at (-9,-7)
+ph.teamPosition: (-7,-1)
+Partner at (-8,-7)
+DRIVING TO PARTNER
+Finish node: Tile(-8,-7,true,true,true,true)
+ph.teamPosition: (-7,-2)
+Partner at (-7,-7)
+DRIVING TO PARTNER
+Finish node: Tile(-7,-7,true,true,true,true)
+DRIVING TO PARTNER
+Finish node: Tile(-7,-7,true,true,true,true)
+DRIVING TO PARTNER
+Finish node: Tile(-7,-7,true,true,true,true)
+ph.teamPosition: (-7,-3)
+Partner at (-6,-7)
+ph.teamPosition: (-7,-4)
+Partner at (-5,-7)
+DRIVING TO PARTNER
+Finish node: Tile(-5,-7,true,true,true,true)
+ph.teamPosition: (-7,-5)
+Partner at (-4,-7)
+DRIVING TO PARTNER
+Finish node: Tile(-4,-7,true,true,true,true)
+ph.teamPosition: (-7,-6)
+Partner at (-3,-7)
+DRIVING TO PARTNER
+Finish node: Tile(-3,-7,true,true,true,true)
+ph.teamPosition: (-7,-7)
+Partner at (-2,-7)
+DRIVING TO PARTNER
+Finish node: Tile(-2,-7,true,true,true,true)
+ph.teamPosition: (-7,-8)
+Partner at (-1,-7)
+DRIVING TO PARTNER
+Finish node: Tile(-1,-7,true,true,true,true)
+ph.teamPosition: (-7,-9)
+Partner at (0,-7)
+DRIVING TO PARTNER
+Finish node: Tile(0,-7,true,true,true,true)
+ph.teamPosition: (-6,-9)
+Partner at (0,-6)
+DRIVING TO PARTNER
+Finish node: Tile(0,-6,true,true,true,true)
+DRIVING TO PARTNER
+Finish node: Tile(0,-6,true,true,true,true)
+ph.teamPosition: (-6,-8)
+Partner at (-1,-6)
+DRIVING TO PARTNER
+Finish node: Tile(-1,-6,true,true,true,true)
+ph.teamPosition: (-6,-7)
+Partner at (-2,-6)
+DRIVING TO PARTNER
+Finish node: Tile(-2,-6,true,true,true,true)
+ph.teamPosition: (-5,-7)
+Partner at (-2,-5)
+DRIVING TO PARTNER
+Finish node: Tile(-2,-5,true,true,true,true)
+ph.teamPosition: (-5,-6)
+Partner at (-3,-5)
+DRIVING TO PARTNER
+Finish node: Tile(-3,-5,true,true,true,true)
+ph.teamPosition: (-5,-5)
+Partner at (-4,-5)
+DRIVING TO PARTNER
+Finish node: Tile(-4,-5,true,true,true,true)
+ph.teamPosition: (-5,-4)
+Partner at (-5,-5)
+DRIVING TO PARTNER
+Finish node: Tile(-5,-5,true,true,true,true)
+Player 3 on seesaw 17
+DRIVING TO PARTNER
+Finish node: Tile(-5,-5,true,true,true,true)
+DRIVING TO PARTNER
+Finish node: Tile(-5,-5,true,true,true,true)
+ph.teamPosition: (-6,-4)
+Partner at (-5,-6)
+ph.teamPosition: (-6,-3)
+Partner at (-6,-6)
+DRIVING TO PARTNER
+Finish node: Tile(-6,-6,true,true,true,true)
+ph.teamPosition: (-6,-2)
+Partner at (-7,-6)
+DRIVING TO PARTNER
+Finish node: Tile(-7,-6,true,true,true,true)
+DRIVING TO PARTNER
+Finish node: Tile(-7,-6,true,true,true,true)
+ph.teamPosition: (-6,-3)
+Partner at (-6,-6)
+DRIVING TO PARTNER
+Finish node: Tile(-6,-6,true,true,true,true)
+ph.teamPosition: (-5,-3)
+Partner at (-6,-5)
+DRIVING TO PARTNER
+Finish node: Tile(-6,-5,false,true,true,true)
+ph.teamPosition: (-5,-4)
+Partner at (-5,-5)
+DRIVING TO PARTNER
+Finish node: Tile(-5,-5,true,true,true,true)
+ph.teamPosition: (-4,-4)
+Partner at (-5,-4)
+DRIVING TO PARTNER
+Finish node: Tile(-5,-4,true,false,true,false)
+DRIVING TO PARTNER
+Finish node: Tile(-5,-4,true,false,true,false)
+ph.teamPosition: (-4,-4)
+Partner at (-5,-4)
+ANGLE = -87.91968041320327
+DETECTING PARTNER
+GEWONNEN

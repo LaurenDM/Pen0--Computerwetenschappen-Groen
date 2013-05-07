@@ -1,2 +1,7 @@
 PlayerID = playerID0
 Deelname geslaagd.
+
+Player 2 on seesaw 15
+Player 2 on seesaw 11
+Player 3 on seesaw 13
+Player 3 on seesaw 17
