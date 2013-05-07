@@ -313,8 +313,7 @@ public class SimRobotPilot extends RobotPilot {
 							// veroorzaakt
 							isScanningBarcode = false;
 						} catch (IllegalArgumentException e) {
-							ContentPanel
-									.writeToDebug("Could not read barcode, trying again");
+							ContentPanel.setActionLabel("Could not read barcode, trying again");
 							setMovingSpeed(moveSpeed);
 							setTurningSpeed(turnSpeed);
 							move(-40);

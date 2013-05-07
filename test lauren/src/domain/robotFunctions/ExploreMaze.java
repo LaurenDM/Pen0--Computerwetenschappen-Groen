@@ -55,7 +55,7 @@ public class ExploreMaze{
 	}
 	
 	private void initialSetup(){
-		ContentPanel.writeToDebug("Exploration started");
+		ContentPanel.setActionLabel("Exploration started");
 		double[] dummy = new double[3];
 		dummy = checkDistances();
 		robot.turnLeft();
@@ -140,7 +140,7 @@ public class ExploreMaze{
 			}
 		}
 		if(Controller.isStopped()==false){
-			ContentPanel.writeToDebug("Maze completed.");
+			ContentPanel.setActionLabel("Maze completed.");
 			robot.setDriveToFinishSpeed();
 			driveToFinish(robot);
 		}
@@ -558,7 +558,7 @@ public class ExploreMaze{
 	 */
 	public void driveToFinish(RobotPilot robotPilot){
 		driveMazePath(robotPilot, maze.findShortestPathToFinish());
-		ContentPanel.writeToDebug("Finish (or starting point) reached!");
+	//	ContentPanel.writeToDebug("Finish (or starting point) reached!");
 	}
 	
 	public void driveMazePath(RobotPilot robot, MazePath path){
