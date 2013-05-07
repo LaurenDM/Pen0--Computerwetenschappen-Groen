@@ -249,7 +249,7 @@ public class ContentPanel implements ActionListener {
         //_________________________________________________________________________
         // Creation of a Drawing Panel to display the map and the robot's movements
         drawingPanel = new DrawingPanel(this);
-        fixPanelLayout(drawingPanel, 600, 600, 25, yPaddingTop);
+        fixPanelLayout(drawingPanel, 700, 600, 25, yPaddingTop);
         drawingPanel.setBackground(Color.WHITE);
         
         //________________________
@@ -349,19 +349,19 @@ public class ContentPanel implements ActionListener {
 	
 	private void createPlayerLabels(){
 		playerPanel = new JPanel(null);
-		fixPanelLayout(playerPanel, 100, 600 , 630, 40);
-		player1Label = new JLabel("Player 1: \n STATE");
-		player2Label = new JLabel("Player 2: \n STATE");
-		player3Label = new JLabel("Player 3: \n STATE");
-		player4Label = new JLabel("Player 4: \n STATE");
+		fixPanelLayout(playerPanel, 700, 50 , 25, 610);
+		player1Label = new JLabel("Player 1: STATE");
+		player2Label = new JLabel("Player 2: STATE");
+		player3Label = new JLabel("Player 3: STATE");
+		player4Label = new JLabel("Player 4: STATE");
 		player1Label.setHorizontalTextPosition(SwingConstants.LEFT);
         player2Label.setHorizontalTextPosition(SwingConstants.LEFT);
         player3Label.setHorizontalTextPosition(SwingConstants.LEFT);
         player4Label.setHorizontalTextPosition(SwingConstants.LEFT);
-        fixLabelLayout(playerPanel, player1Label, 100, 50, 0, 0);
-        fixLabelLayout(playerPanel, player2Label, 100, 50, 0, 50);
-        fixLabelLayout(playerPanel, player3Label, 100, 50, 0, 100);
-        fixLabelLayout(playerPanel, player4Label, 100, 50, 0, 150);
+        fixLabelLayout(playerPanel, player1Label, 150, 50, 0, 0);
+        fixLabelLayout(playerPanel, player2Label, 150, 50, 150, 0);
+        fixLabelLayout(playerPanel, player3Label, 150, 50, 300, 0);
+        fixLabelLayout(playerPanel, player4Label, 150, 50, 450, 0);
         playerPanel.requestFocusInWindow();
 	
 	}
@@ -794,10 +794,10 @@ public class ContentPanel implements ActionListener {
 	}
 	
 	public synchronized void setPlayerStates(){
-		player1Label.setText("Player 1: \n" + controller.getPlayerState(1));
-		player2Label.setText("Player 2: \n" + controller.getPlayerState(2));
-		player3Label.setText("Player 3: \n" + controller.getPlayerState(3));
-		player4Label.setText("Player 4: \n" + controller.getPlayerState(4));
+		player1Label.setText("Player 1: " + controller.getPlayerState(1));
+		player2Label.setText("Player 2: " + controller.getPlayerState(2));
+		player3Label.setText("Player 3: " + controller.getPlayerState(3));
+		player4Label.setText("Player 4: " + controller.getPlayerState(4));
 	}
 	
 
@@ -974,7 +974,7 @@ public class ContentPanel implements ActionListener {
 	
 		public void automaticConnection(){
 //			controller.readMazeFromFile("mazes/MergeTestMaze");
-			controller.readMazeFromFile("test lauren/mazes/sem2demo2maze");
+			controller.readMazeFromFile("test lauren/mazes/KoenBug4");
 			drawingPanel.drawSimulatedWalls();
 			try {
 				Thread.sleep(5000);
