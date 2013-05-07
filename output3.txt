@@ -1,9 +1,4 @@
-2013-05-07 13:22:50.105 java[20375:707] In 'CFPasteboardCopyDataReturn __CFPasteboardCopyData(CFPasteboardRef, CFIndex, CFIndex, CFStringRef, Boolean)', file /SourceCache/CF/CF-744.18/AppServices.subproj/CFPasteboard.c, line 2373, during unlock, spin lock 0x112476018 has value 0x0, which is not locked.  The memory has been smashed or the lock is being unlocked when not locked.
 PlayerID = playerID3
 Deelname geslaagd.
 
 Player 2 on seesaw 15
-Player 2 on seesaw 11
-Player 3 on seesaw 13
-PLAYER 4 JOINS TEAM 1
-Player 3 on seesaw 17

@@ -50,7 +50,7 @@ public class SeesawNode extends TileNode {
 		}
 		if(up){
 			//System.out.println("SEESAW SETUP");
-			setBlockNavigationCount(5);
+			setBlockNavigationCount(10);
 		} else {
 			setBlockNavigationCount(0);
 		}

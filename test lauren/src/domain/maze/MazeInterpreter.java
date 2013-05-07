@@ -177,6 +177,12 @@ public class MazeInterpreter {
 		if(xOffset<0 || yOffset<0){
 			System.out.println("WARNING; offset less than zero! (mazeinterpreter addcrosses)");
 		}
+		if(xOffset<0){
+			xOffset = 0;
+		}
+		if(yOffset<0){
+			yOffset = 0;
+		}
 		
 		System.out.println("pos in ons coord:"+ ourX +" "+ ourY);
 		System.out.println("pos in map:"+ mapX +" "+ mapY);

@@ -2,8 +2,3 @@ PlayerID = playerID2
 Deelname geslaagd.
 
 Player 2 on seesaw 15
-Player 2 on seesaw 11
-PLAYER 1 JOINS TEAM 0
-RP.teamTilesReceived
-Player 3 on seesaw 13
-Player 3 on seesaw 17
