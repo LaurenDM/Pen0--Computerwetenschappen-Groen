@@ -34,6 +34,21 @@ import domain.util.TimeStamp;
 
 public abstract class RobotPilot implements PlayerHandler{
 	
+	public enum PlayerState{
+		STARTED("started"), FOUND_OBJECT("found object"), FOUND_PARTNER("WON"), DISCONNECTED("disconnected");
+		
+		private String string;
+		private PlayerState(String string){
+			this.string = string;
+		}
+		
+		@Override 
+		public String toString(){
+			return string;
+		}
+	}
+	
+	private PlayerState state;
 	
 	RobotPolygon robotPolygon;
 	private MoveType movement;
@@ -57,6 +72,14 @@ public abstract class RobotPilot implements PlayerHandler{
 		this.robotPolygon=new RobotPolygon(this);
 		this.playerID = playerID;
 		
+	}
+	
+	public synchronized void setPlayerState(PlayerState state){
+		this.state = state;
+	}
+	
+	public PlayerState getPlayerState(){
+		return state;
 	}
 	
 	public abstract PlayerType getPlayerType();
@@ -95,6 +118,10 @@ public abstract class RobotPilot implements PlayerHandler{
 	
 	public void setPlayerNb(int nb){
 		this.number = nb;
+	}
+	
+	public int getPlayerNb(){
+		return number;
 	}
 	
 	public RobotPolygon getRobotPolygon(){
@@ -265,7 +292,7 @@ public abstract class RobotPilot implements PlayerHandler{
 		if(maze!=null){
 			maze.resumeExplore(0, 0, null);
 		} else {
-			ContentPanel.writeToDebug("You haven't started exploring yet!");
+	//		ContentPanel.writeToDebug("You haven't started exploring yet!");
 		}
 	}
 
@@ -274,7 +301,7 @@ public abstract class RobotPilot implements PlayerHandler{
 			maze.stopExploring();
 			maze.driveToFinish();
 		} else {
-			ContentPanel.writeToDebug("You haven't started exploring yet!");
+		//	ContentPanel.writeToDebug("You haven't started exploring yet!");
 		}		
 	}
 	
@@ -297,6 +324,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	public void foundBall(){
 		try {
 			playerClient.foundObject();
+			setPlayerState(PlayerState.FOUND_OBJECT);
 			playerClient.joinTeam(getTeamNumber());
 			System.out.println("PLAYER "  + playerNb + " JOINS TEAM " + getTeamNumber());
 			
@@ -346,7 +374,7 @@ public abstract class RobotPilot implements PlayerHandler{
 			throw new IllegalArgumentException();
 		}
 		System.out.println("Barcode action = " + barcode.getAction());
-		ContentPanel.writeToDebug("NOW!!!");
+//		ContentPanel.writeToDebug("NOW!!!");
 		barcode.getAction().run(this);
 	}
 	
@@ -498,6 +526,8 @@ public abstract class RobotPilot implements PlayerHandler{
 		setInitialPositionNumber(playerNumber);
 		Barcode.setBallNumber(objectNumber);
 		setReady(true);
+		setPlayerState(PlayerState.STARTED);
+		ContentPanel.setPlayerNumber(playerNumber);
 	}
 
 	@Override
@@ -554,13 +584,13 @@ public abstract class RobotPilot implements PlayerHandler{
 	}
 	
 	private void printMessage(String message){
-		System.out.println(message);
+	//	System.out.println(message);
 		ContentPanel.writeToDebug(message);
 	}
 
 	@Override
 	public void gameWon(int teamNumber) {
-		printMessage("ph.GameWon by Team " + teamNumber);
+		//printMessage("ph.GameWon by Team " + teamNumber);
 		Controller.setStopped(true);
 	}
 
@@ -584,6 +614,7 @@ public abstract class RobotPilot implements PlayerHandler{
 	}
 	
 	private void won(){
+		setPlayerState(PlayerState.FOUND_PARTNER);
 		Controller.setStopped(true);
 		maze.setInterrupted(true);
 		try {

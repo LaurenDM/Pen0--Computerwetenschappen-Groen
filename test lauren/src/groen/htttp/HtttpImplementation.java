@@ -43,13 +43,13 @@ public class HtttpImplementation {
 		// Comment the section below depending on your connection
 		
 		// SSH
-//	    factory.setHost("localhost");
-//	    factory.setPort(8888);
+	    factory.setHost("localhost");
+	    factory.setPort(8888);
 	    
 //	    
 	    //CAMPUSNET
-	    factory.setHost("leuven.cs.kotnet.kuleuven.be");
-	    factory.setPort(5672);
+//	    factory.setHost("leuven.cs.kotnet.kuleuven.be");
+//	    factory.setPort(5672);
 	    
 	    //*******************************************************
 	    	    
@@ -78,13 +78,13 @@ public class HtttpImplementation {
 				@Override
 				public void onSuccess(Void result) {
 					System.out.println("Deelname geslaagd.");
-					ContentPanel.writeToDebug("Deelname geslaagd.");
+	//				ContentPanel.writeToDebug("Deelname geslaagd.");
 				}
 
 				@Override
 				public void onFailure(Throwable t) {
 					System.err.println("Fout bij deelname: " + t.getMessage());
-					ContentPanel.writeToDebug("Fout bij deelname: " + t.getMessage());
+	//				ContentPanel.writeToDebug("Fout bij deelname: " + t.getMessage());
 				}
 			});
 

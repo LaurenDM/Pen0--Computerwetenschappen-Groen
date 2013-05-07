@@ -538,12 +538,12 @@ public class MazeGraph {
 		//TODO find a way of finding a path through multiple checkpoints (very low priority)
 		TileNode checkpoint = checkpoints.size()!=0?checkpoints.get(0):null;
 		if(checkpoint == null){
-			ContentPanel.writeToDebug("No checkpoint found, driving straight to finish.");
+	//		ContentPanel.writeToDebug("No checkpoint found, driving straight to finish.");
 			checkpoint = getCurrentTile();
 		}
 		TileNode finishNode = getFinishNode();
 		if(finishNode == null){
-			ContentPanel.writeToDebug("No finish barcode found, driving to starting node instead.");
+//			ContentPanel.writeToDebug("No finish barcode found, driving to starting node instead.");
 			finishNode = startNode;
 		}
 		return findShortestPathFromTo(getCurrentTile(),checkpoint).append(findShortestPathFromTo(checkpoint,finishNode));
@@ -638,9 +638,9 @@ public class MazeGraph {
 				}
 			}
 			setCurrentRobotOrientation(o);
-			ContentPanel.writeToDebug("Starting exploration from "+"("+x+","+y+")"+" facing "+o);
+			ContentPanel.setActionLabel("Starting exploration from "+"("+x+","+y+")"+" facing "+o);
 		} else {
-			ContentPanel.writeToDebug("Continuing exploration.");
+			ContentPanel.setActionLabel("Continuing exploration.");
 		}
 		
 	}
@@ -684,7 +684,7 @@ public class MazeGraph {
 			generateWallNodeAt(deadEndNode, getCurrentRobotOrientation().getRelativeOrientation(Orientation.NORTH));
 			generateWallNodeAt(deadEndNode, getCurrentRobotOrientation().getRelativeOrientation(Orientation.EAST));
 		} else {
-			ContentPanel.writeToDebug("Couldn't create a dead end at the position in front of the robot.");
+	//		ContentPanel.writeToDebug("Couldn't create a dead end at the position in front of the robot.");
 		}
 	}
 
@@ -711,7 +711,7 @@ public class MazeGraph {
 			SeesawNode seesaw1 = (SeesawNode)getCurrentTile().getNodeAt(getCurrentRobotOrientation());
 			seesaw1.setUp(isUpAtThisSide);
 		} else {
-			ContentPanel.writeToDebug("Couldn't create a seesaw at the position in front of the robot.");
+//			ContentPanel.writeToDebug("Couldn't create a seesaw at the position in front of the robot.");
 		}
 	}
 	

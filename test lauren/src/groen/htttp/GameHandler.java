@@ -52,7 +52,7 @@ public class GameHandler implements peno.htttp.GameHandler {
 	
 	private void printMessage(String message){
 		System.out.println(message);
-		ContentPanel.writeToDebug(message);
+	//	ContentPanel.writeToDebug(message);
 	}
 
 	@Override
