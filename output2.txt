@@ -1,4 +1,7 @@
 PlayerID = playerID2
 Deelname geslaagd.
+<<<<<<< HEAD
 
 Player 2 on seesaw 15
+=======
+>>>>>>> 2bd16c7e769df3e19c59db4eafe69f5aee44b29e
