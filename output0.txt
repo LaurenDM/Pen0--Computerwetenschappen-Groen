@@ -1,2 +1,39 @@
 PlayerID = playerID0
 Deelname geslaagd.
+
+Player 2 on seesaw 15
+foundball
+told playerclient
+PLAYER 3 JOINS TEAM 1
+EM.Fixing possible deadlock
+(-6,-8)(-5,-8)(-4,-8)
+(-6,-8)(-5,-8)(-4,-8)
+Reading barcode that is already known
+Wrong measurement. There can be no wall there.
+java.lang.IllegalStateException: Object already found.
+	at peno.htttp.PlayerClient.foundObject(PlayerClient.java:1132)
+	at domain.robots.RobotPilot.foundBall(RobotPilot.java:327)
+	at domain.maze.barcodes.FetchBallAction.run(FetchBallAction.java:14)
+	at domain.maze.barcodes.Barcode.runAction(Barcode.java:142)
+	at domain.robotFunctions.BarcodeGenerator.generateBarcode(BarcodeGenerator.java:25)
+	at domain.robots.SimRobotPilot.move(SimRobotPilot.java:309)
+	at domain.robots.SimRobotPilot.move(SimRobotPilot.java:259)
+	at domain.robotFunctions.ExploreMaze.robotMoveStraighten(ExploreMaze.java:364)
+	at domain.robotFunctions.ExploreMaze.moveWithStraighten(ExploreMaze.java:357)
+	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:121)
+	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:78)
+	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:116)
+	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:78)
+	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:116)
+	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:78)
+	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:116)
+	at domain.robotFunctions.ExploreMaze.resumeExplore(ExploreMaze.java:78)
+	at domain.robotFunctions.ExploreMaze.continueExploring(ExploreMaze.java:116)
+	at domain.robotFunctions.ExploreMaze.start(ExploreMaze.java:54)
+	at domain.robots.RobotPilot.startExplore(RobotPilot.java:269)
+	at controller.Controller$3.run(Controller.java:308)
+	at java.lang.Thread.run(Thread.java:680)
+foundball
+Player 1 on seesaw 17
+Player 3 on seesaw 15
+tc 1

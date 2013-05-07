@@ -1,2 +1,11 @@
 PlayerID = playerID1
 Deelname geslaagd.
+
+Player 2 on seesaw 15
+foundball
+told playerclient
+PLAYER 1 JOINS TEAM 0
+tc 1
+Player 1 on seesaw 17
+Player 3 on seesaw 15
+Reading barcode that is already known

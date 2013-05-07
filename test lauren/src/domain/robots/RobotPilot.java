@@ -322,12 +322,13 @@ public abstract class RobotPilot implements PlayerHandler{
 	}
 	
 	public void foundBall(){
+		System.out.println("foundball");
 		try {
 			playerClient.foundObject();
-			setPlayerState(PlayerState.FOUND_OBJECT);
+			System.out.println("told playerclient");
 			playerClient.joinTeam(getTeamNumber());
 			System.out.println("PLAYER "  + playerNb + " JOINS TEAM " + getTeamNumber());
-			
+			setPlayerState(PlayerState.FOUND_OBJECT);
 		} catch (IllegalStateException e) {
 			//  Auto-generated catch block
 			e.printStackTrace();
@@ -532,7 +533,7 @@ public abstract class RobotPilot implements PlayerHandler{
 
 	@Override
 	public void teamConnected(String partnerID) {
-	//	System.out.println("RP.teamConnected");
+		System.out.println("RP.teamConnected");
 		printMessage("ph.teamconnected: "+partnerID);
 		try {
 			playerClient.sendTiles(getFoundTilesList());
