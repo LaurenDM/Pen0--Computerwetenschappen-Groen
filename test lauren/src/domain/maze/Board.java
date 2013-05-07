@@ -206,17 +206,15 @@ public class Board {
 	}
 
 	public List<SeesawIBeamer> getInfraredBeamers() {
-		return infraBeamers;
+		synchronized (infraBeamers) {
+		return infraBeamers;}
 	}
 	
-	public List<SeesawIBeamer> getHybridBeamers() {
-		return infraBeamers;
-	}
-
 	
 	public void addInfraBeamer(SeesawIBeamer infraredBeamer) {
+	synchronized (infraBeamers) {
 		infraBeamers.add(infraredBeamer);
-	}
+	}}
 
 	public void addHybridBeamer(RobotHybridBeamer robotHybridBeamer) {
 		hybridBeamers.add(robotHybridBeamer);

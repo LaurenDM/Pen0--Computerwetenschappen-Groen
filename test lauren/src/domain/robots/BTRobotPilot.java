@@ -477,8 +477,7 @@ public class BTRobotPilot extends RobotPilot  {
 
 	@Override
 	public double readLongestUltrasonicValue(int extraAngle) {
-//		return btComm.sendCommand(CMD.SNAPPOSETOTILEMID, extraAngle)[0];
-		return readUltrasonicValue();
+		return btComm.sendCommand(CMD.READLONGESTDISTANCE, extraAngle)[0];
 	}
 	
 
